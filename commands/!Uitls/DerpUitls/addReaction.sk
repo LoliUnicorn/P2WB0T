@@ -3,4 +3,4 @@ on guild message receive:
 		event-user.isBot() is false
 		getPoziom(event-member) < 1
 		loop "green", "red":
-			KamilAPI add reaction "%loop-value%" to event-message
+			KamilAPI add emote "%loop-value%" to event-message
