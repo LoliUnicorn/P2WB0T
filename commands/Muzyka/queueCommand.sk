@@ -81,6 +81,8 @@ discord command {@cmd} [<text>] [<number>]:
 						play loop-value
 			else:
 				KamilAPI command error "Nie ma takiego numeru w kolejce!" to event-message
+		else:
+			KamilAPI command error "Użyj: %{bot::prefix}%queue [(reset|remove)] [numer piosenki]" to event-message
 
 
 on reaction add:
