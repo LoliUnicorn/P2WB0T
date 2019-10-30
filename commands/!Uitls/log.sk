@@ -7,4 +7,18 @@ function getLastAuditLogs(typ: text) :: object:
 
 on message delete:
 	set {_test} to getLastAuditLogs("MESSAGE_DELETE")
-	reply with "%{_test}.getUser()%"
+
+	set {_c} to {_test}.getChannel()
+
+	create embed:
+		set the colour of the embed to color of red
+		set the timestamp of embed to now
+		set the footer of embed to footer with text "Wiadomość usunięta"
+	
+		add split field named "Treść wiadomości:" with value "później dodam" to embed
+		add split field named "Kanał:" with value "<##%{_c}.getId()%> (%{_c}.getName()%[%{_c}.getId()%])" to embed
+		add split field named "ID wiadomości:" with value "później dodam" to embed
+		add split field named "Usunięte przez:" with value "%getMention({_test}.getUser().getId())%(%getName({_test}.getUser().getId())%)" to embed
+	
+	set {_l} to last created embed
+	send {_l} to channel with id getConfig("Config.logi") with {bot::name}
