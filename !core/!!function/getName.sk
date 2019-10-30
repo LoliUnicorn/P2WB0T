@@ -1,0 +1,5 @@
+function getName(u: text) :: text:
+	set {_u} to getUser({_u})
+	if {_u} is not set:
+		return "None. (report to adm)"
+	return "%discord name of {_u}%##%discriminator of {_u}%"

@@ -1,0 +1,34 @@
+options:
+	cmd: karainfo
+
+on script load:
+	set {command::{@cmd}::poziom} to 1
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: karaid
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	trigger:
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%karainfo (ID kary)" to event-message
+		execute "SELECT * FROM akcje WHERE id=%unsafe arg-1%" in {bot::sql} and store result in {_kara::*}
+		if {_kara::id::*} is not set:
+			KamilAPI cmd error "Nie ma kary o takim ID!"
+		create embed:
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Kara ID: *" and icon "%avatar of event-bot%"
+			set the description of embed to "Informacje o karze nr. *"
+		
+			set the author info of the embed to author named getName(event-user.getId()) with no url and icon "%avatar of event-user%"
+			add field named "Karany:" with value "%getMention({_kara::karany::*})% (%getName({_kara::karany::*})%)" to embed
+			add field named "Administrator:" with value "%getMention({_kara::adm::*})%" to embed
+			add field named "Typ:" with value "%{_kara::typ::*}%" to embed
+			add field named "Powód:" with value "%{_kara::powod::*}%" to embed
+			add field named "Czas nadania:" with value "%{_kara::now::*}%" to embed
+			if "%{_kara::czas::*}%" is not "<none>" or "null":
+				add field named "Na jaki czas nadano:" with value "%{_kara::czas::*}%" to embed
+
+			set the thumbnail of embed to "%avatar of getUser({_kara::karany::*})%"
+		reply with last created embed
+		KamilAPI add emote "green" to event-message

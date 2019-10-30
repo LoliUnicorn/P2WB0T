@@ -1,0 +1,6 @@
+function isOwner(m: text) :: boolean:
+	set {_l::*} to yaml list "Config.owners" from file "plugins/Bot/config.yml"
+	loop {_l::*}:
+		if loop-value is {_m}:
+			return true
+	return false

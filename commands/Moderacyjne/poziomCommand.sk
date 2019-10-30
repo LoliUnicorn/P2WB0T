@@ -1,0 +1,16 @@
+options:
+	cmd: poziom
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	trigger:
+		set {_u} to event-user
+		set {_u} to getUser(arg-1)
+		set {_p} to getPoziom({_u}.getId())
+		reply with "Poziom użytkownika **%getName({_u}.getId())%** wynosi %{_p}% (%getPoziomSlowny({_p})%)"
+		KamilAPI add emote "green" to event-message
+		

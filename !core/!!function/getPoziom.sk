@@ -1,0 +1,27 @@
+function getPoziom(m: text) :: number:
+	set {_g} to guild with id getConfig("Config.guild")
+	set {_user} to getUser({_m})
+	
+	if {_user} is not set:
+		return 0
+
+	if isOwner({_user}.getId()) is true:
+		return 10
+
+	if discord owner of {_g} is ({_user} in {_g}):
+		return 5
+		
+	set {_roles::pomocnik} to getConfig("Config.pomocnik")
+	set {_roles::mod} to getConfig("Config.mod")
+	set {_roles::adm} to getConfig("Config.adm")
+	
+	loop ...({_user} in {_g}).getRoles():
+		set {_id} to loop-value.getId()
+		if {_id} is {_roles::pomocnik}:
+			return 1
+		if {_id} is {_roles::mod}:
+			return 2
+		if {_id} is {_roles::adm}:
+			return 3
+
+	return 0

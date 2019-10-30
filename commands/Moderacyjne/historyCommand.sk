@@ -1,0 +1,75 @@
+options:
+	cmd: history
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 3 seconds
+
+discord command {@cmd} [<text>] [<text>]:
+	aliases: modlogs, warny, warns, bany, bans
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	trigger:
+		set {v::%event-user.getId()%::history::user} to event-user
+		set {v::%event-user.getId()%::history::user} to getUser(arg-1)
+		
+		execute "SELECT * FROM akcje WHERE karany=%unsafe {v::%event-user.getId()%::history::user}.getId()%" in {bot::sql} and store result in {_warny::*}
+		if {_warny::id::1} is not set:
+			KamilAPI cmd error "Tego użytkownika nie ma w bazie danych!" to event-message
+
+		loop "unwarn", "warn", "ban", "kick", "mute", "tempmute":
+			set {_liczba::%loop-value%} to 0
+		loop {_warny::typ::*}:
+			add 1 to {_liczba::%loop-value%}
+
+		if arg-1 is not set:
+			set {_kurwa} to true
+		if {_liczba::%arg-2%} is not set:
+			set {_kurwa} to true
+
+		if {_kurwa} is true:
+			create embed:
+				set the title of embed to title with text getName({v::%event-user.getId()%::history::user}.getId())
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Historia kar" and icon "%avatar of event-bot%"
+				set the description of embed to "Użyj: %{bot::prefix}%history (osoba) [typ kary (np. mute, kick, ban)]"
+		
+				set the author info of the embed to author named getName({v::%event-user.getId()%::history::user}.getId()) with no url and icon "%avatar of {v::%event-user.getId()%::history::user}%"
+			
+				add split field named "Warny:" with value "%{_liczba::warn}% (Unwarny: %{_liczba::unwarn}%)" to embed
+				add split field named "Bany:" with value "%{_liczba::ban}%" to embed
+				add split field named "Kicki:" with value "%{_liczba::kick}%" to embed
+				add split field named "Muty:" with value "%{_liczba::mute}%" to embed
+				add split field named "Tempmuty:" with value "%{_liczba::tempmute}%" to embed
+
+				set the thumbnail of embed to "%avatar of {v::%event-user.getId()%::history::user}%"
+			reply with last created embed
+		else:
+			set {_m} to a message builder
+			append line "Liczba kar typu `%arg-2%`: %{_liczba::%arg-2%}%"
+			append line "Więcej info pod komendą %{bot::prefix}%karainfo (ID kary)%nl%"
+			append line "Administrator | Powód | Czas kiedy nadano. | ID%nl%%nl%"
+			create embed:
+				set the title of embed to title with text getName({v::%event-user.getId()%::history::user}.getId())
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "%arg-2%" and icon "%avatar of event-bot%"
+				loop (size of {_warny::id::*}) times:
+					add 1 to {_beka:}
+				loop (size of {_warny::id::*}) times:
+					set {_id} to "%{_beka:}%"
+					add 1 to {_zaduzo}
+					if {_zaduzo} > 10:
+						stop loop
+					if {_warny::typ::%{_id}%} is arg-2:
+						set {_adm} to {_warny::adm::%{_id}%}
+						set {_powod} to {_warny::powod::%{_id}%}
+						set {_now} to {_warny::now::%{_id}%}
+						append line "%getMention({_adm})% | %{_powod}% | %{_now}% | %{_id}%"
+					remove 1 from {_beka:}
+				set the description of embed to "%{_m}%"
+		
+				set the author info of the embed to author named getName({v::%event-user.getId()%::history::user}.getId()) with no url and icon "%avatar of {v::%event-user.getId()%::history::user}%"
+			reply with last created embed
+		delete {v::%event-user.getId()%::history::user}
+		KamilAPI add emote "green" to event-message

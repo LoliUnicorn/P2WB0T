@@ -1,0 +1,5 @@
+function deleteMessage(m: message, czas: number=0):
+	if {_czas} is not 0:
+		loop {_czas} times:
+			wait 20 tick
+	delete random message out of {_m} with "%{bot::name}%"

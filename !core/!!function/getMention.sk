@@ -1,0 +1,4 @@
+function getMention(m: text) :: text:
+  set {_r} to getUser({_m})
+  set {_id} to "<@%discord id of {_r}%>"
+  return "%{_id}%"

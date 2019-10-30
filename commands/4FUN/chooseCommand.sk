@@ -1,0 +1,22 @@
+options:
+	cmd: choose
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: wybierz
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	trigger:
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%choose <opcja 1;opcja 2; opcja 3;[. . .]>" to event-message
+		set {_s::*} to arg-1 split at ";"
+		if (size of {_s::*}) <= 1:
+			KamilAPI cmd error "Zbyt mało odpowiedzi! Użyj: %{bot::prefix}%choose <opcja 1;opcja 2; opcja 3;[. . .]>"
+		set {_rand} to random element of {_s::*}
+		reply with "**Wybieram...** :thinking:" and store it in {_m}
+		wait 10 tick
+		edit {_m} to show "Moja odpowiedź to: %getRegex({_rand})%"
+
+		KamilAPI add emote "green" to event-message

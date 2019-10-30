@@ -1,0 +1,7 @@
+function getTimespan(t: text) :: text:
+	replace all "days" and "day" with "d." in {_t}
+	replace all "minutes" and "minute" with "min." in {_t}
+	replace all "seconds" and "second" with "sek." in {_t}
+	replace all "hours" and "hour" with "godz." in {_t}
+	replace all " and " with " " in {_t}
+	return {_t}

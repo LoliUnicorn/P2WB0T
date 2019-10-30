@@ -1,0 +1,56 @@
+options:
+	cmd: cytuj
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>] [<text>]:
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	trigger:
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%{@cmd} id wiadomości[-id kanału]" to event-message
+
+		if arg-1 contains "-":
+			if getPoziom(event-user.getId()) < 1:
+				KamilAPI cmd error "Potrzebujesz poziomu 1 (%getPoziomSlowny(1)%), aby móc cytować wiadomości między kanałami." to event-message
+			set {_arg::*} to arg-1 split at "-"
+			set {_id} to {_arg::1} parsed as number
+			set {_ch} to channel with id {_arg::2} in event-guild
+
+			if {_id} is not set:
+				KamilAPI cmd error "Złe ID wiadomości!" to event-message
+			if {_ch} is not set:
+				KamilAPI cmd error "Złe ID kanału!" to event-message
+		
+		else:
+			set {_id} to arg-1 parsed as number
+			if {_id} is not set:
+				KamilAPI cmd error "Złe ID wiadomości!" to event-message
+
+		if {_ch} is not set:
+			set {_ch} to event-channel
+		retrieve message with id "%{_id}%" from {_ch}
+		set {_m} to last retrieved message
+
+		if {_m} is not set:
+			KamilAPI cmd error "Złe ID wiadomości!" to event-message
+		
+		if ...{_m}.getMessage().getEmbeds() is set:
+			KamilAPI cmd error "Wiadomość zawiera embed! Kiedyś będzie to dodane : D" to event-message
+			#set {_embedlol} to {_m}.getMessage().getEmbeds().get(0)
+			#reply with {_embedlol}.getTitle()
+			stop
+		#{_m} = message
+		set {_user} to discord author of {_m}
+		create embed:
+			set the title of embed to title with text "Treść wiadomości:"
+			set the description of embed to "%{_m}%"
+			set the author info of the embed to author named getName({_user}.getId()) with no url and icon "%avatar of {_user}%"
+			set the colour of the embed to color of getColor(event-member)
+			set the footer of embed to footer with text "Wykonane przez: %getName(event-user.getId())%" and icon "%avatar of event-user%"
+			set the timestamp of embed to now
+			if attachment url of attachment of {_m} is set:
+				set the image of embed to attachment url of attachment of {_m}
+		reply with the last created embed
+		KamilAPI add emote "green" to event-message

@@ -1,0 +1,4 @@
+function getPowod(t: text) :: text:
+  if {_t} is not set:
+    return "Brak powodu."
+  return {_t}

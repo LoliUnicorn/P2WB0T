@@ -1,0 +1,81 @@
+import:
+	org.bukkit.Server
+	org.bukkit.Bukkit
+
+on script load:
+	delete {bot::*}
+	delete {v::*}
+	wait 10 tick
+
+	set {_bukkit} to Bukkit.getServer()
+	set {_manager} to {_bukkit}.getPluginManager()
+
+	if {_manager}.getPlugin("Vixio") is not set:
+		log("&cPlugin Vixio nie zostal znaleziony! Nic nie bedzie dzialac.")
+		stop
+
+	if file "plugins/Bot/config.yml" doesn't exist:
+		log("Nie ma configu!")
+		set {_f} to "plugins/Bot/config.example.yml"
+		create file {_f}
+
+		set yml value "Mysql.link" from file {_f} to "!mysql://host:port/"
+		set yml value "Mysql.database" from file {_f} to "!Nazwa database (bazy danych)"
+		set yml value "Mysql.user" from file {_f} to "!Nazwa uzytkownika"
+		set yml value "Mysql.pass" from file {_f} to "!Haslo (jezeli nie ma wpisz ""<none>"")"
+
+		set yml value "Bot.token" from file {_f} to "!token Bota (ofc usun wszedzie te ""!"")"
+		set yml value "Bot.id" from file {_f} to "!id Bota"
+		set yml value "Bot.name" from file {_f} to "!nazwa Bota"
+		set yml value "Bot.prefix" from file {_f} to "!prefix Bota"
+
+		set yml value "Config.modlogi" from file {_f} to "!id kanalu"
+		set yml value "Config.guild" from file {_f} to "!id serwera"
+		set yml value "Config.muterole" from file {_f} to "!ID roli, ktora bedzie nadawana jak osoba dostnie muta"
+
+		set yml value "Config.pomocnik" from file {_f} to "!ID roli, ktora bedzie miala poziom 1"
+		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
+		set yml value "Config.adm" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
+
+		set yml value "emote.green" from file {_f} to "!id emotki green"
+		set yml value "emote.red" from file {_f} to "!id emotki red"
+
+		log("Stworzono config! Skonfiguruj plugins/Bot/config.yml do swoich potrzec i przeladuj jeszcze raz skrypt!")
+		stop
+
+	set {bot::name} to getConfig("Bot.name")
+	set {bot::id} to getConfig("Bot.id")
+	set {bot::guild} to getConfig("Config.guild")
+	set {bot::prefix} to getConfig("Bot.prefix")
+	set {bot::token} to getConfig("Bot.token")
+
+	log("&eLacze z baza danych MySQL...")
+	loop "link", "database", "user", "pass":
+		set {_db::%loop-value%} to yml value "Mysql.%loop-value%" from file "plugins/Bot/config.yml"
+
+	set {_m} to "%{_db::link}%%{_db::database}%?user=%{_db::user}%"
+	if {_db::pass} contains "<none>":
+		set {bot::sql} to the database "%{_db::link}%%{_db::database}%?user=%{_db::user}%&useSSL=false"
+		set {_db::pass} to "Brak"
+	else:
+		set {bot::sql} to the database "%{_db::link}%%{_db::database}%?user=%{_db::user}%&password=%{_db::pass}%&useSSL=false"
+
+	log("%{bot::sql}%")
+	log("&eKonfiguruje baze danych...")
+	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`akcje` ( `id` TEXT NOT NULL , `karany` TEXT NOT NULL , `adm` TEXT NOT NULL , `typ` TEXT NOT NULL , `powod` TEXT NOT NULL , `now` TEXT NOT NULL , `czas` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
+	set {_er} to last sql error
+	if {_er} is set:
+		log("&cWystapil blad podczas logownia do bazy MySQL! &7(%{_er}%)")
+		stop
+	else:
+		log("&aPoprawnie podlaczono do bazy danych.")
+
+	log("Loguje Bota..")
+
+	login to "%{bot::token}%" with the name "%{bot::name}%"
+	delete {bot::token}
+	set {_e} to last vixio error
+	if {_e} is set:
+		log("&cNie udalo sie zalogowac Bota! &r%{_e}%")
+	else:
+		log("&aPomyslnie zalogowano bota! Milego korzystania :D")

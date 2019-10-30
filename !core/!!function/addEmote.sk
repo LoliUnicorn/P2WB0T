@@ -1,0 +1,14 @@
+effect KamilAPI add emote %text% to %message%:
+	trigger:
+		set {_emote} to getConfig("emote.%expr-1%")
+		set {_g} to guild with id getConfig("Config.guild")
+		set {_message} to expr-2
+
+		loop emotes of {_g}:
+			set {_value} to "%loop-value%"
+			replace all ">" with "" in {_value}
+			set {_xd::*} to {_value} split at ":"
+
+			if {_xd::3} is {_emote}:
+				add loop-value to {_message} with {bot::name}
+				stop
