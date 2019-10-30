@@ -6,7 +6,6 @@ on script load:
 	set {command::{@cmd}::cooldown} to 0 seconds
 
 function queue(u: member, n: number) :: embed:
-
 	set {_g} to guild with id {bot::guild}
 	if {_n} is not 0:
 		loop queue of {bot::name} in {_g}:
@@ -16,14 +15,11 @@ function queue(u: member, n: number) :: embed:
 				stop loop
 	else:
 		set {_yt} to track {bot::name} is playing in {_g}
-
 	create embed:
-
 		set the colour of the embed to color of getColor({_u}) 
 		add split field named "Nazwa:" with value "[%{_yt}%](%url of {_yt}%)" to embed
 		add field named "Autor:" with value authors of {_yt} to embed
 		add split field named "Długość:" with value getTimespan("%duration of {_yt}%") to embed
-
 		if {_n} is 0:
 			add split field named "Pozostało:" with value getTimespan("%difference between position of {_yt} and duration of {_yt}%") to embed
 		set the image of embed to "https://i.ytimg.com/vi_webp/%last element of (url of {_yt} split at ""="")%/sddefault.webp"
@@ -32,7 +28,6 @@ function queue(u: member, n: number) :: embed:
 			set the footer of embed to footer with text "Aktualnie grane! (%{_n}%/%size of queue of {bot::name} in {_g}%)"
 		else:
 			set the footer of embed to footer with text "(%{_n}%/%size of queue of {bot::name} in {_g}%)"
-
 		set the timestamp of embed to now
 	set {_e} to last created embed
 	return {_e}
