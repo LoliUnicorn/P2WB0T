@@ -11,7 +11,7 @@ on message delete:
 	set {_c} to {_test}.getChannel()
 
 	create embed:
-		set the colour of the embed to color of red
+		set the colour of the embed to red
 		set the timestamp of embed to now
 		set the footer of embed to footer with text "Wiadomość usunięta"
 	
@@ -22,3 +22,4 @@ on message delete:
 	
 	set {_l} to last created embed
 	send {_l} to channel with id getConfig("Config.logi") with {bot::name}
+	reply with {_l}
