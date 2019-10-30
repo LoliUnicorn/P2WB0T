@@ -1,4 +1,5 @@
 function getLastAuditLogs(typ: text) :: object:
+	set {_g} to getGuild()
 	loop ...{_g}.retrieveAuditLogs().cache(false):
 		set {_v} to loop-value
 		if "%{_v}.getType()%" is {_typ}:
