@@ -1,6 +1,0 @@
-on script load:
-	set {_g} to guild with id getConfig("Config.guild")
-	log("%{_g}%")
-	loop ...{_g}.retrieveInvites():
-		log("%loop-value%")
-	log("koniec")

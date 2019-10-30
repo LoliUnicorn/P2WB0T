@@ -22,10 +22,10 @@ function queue(u: member, n: number) :: embed:
 		set the colour of the embed to color of getColor({_u}) 
 		add split field named "Nazwa:" with value "[%{_yt}%](%url of {_yt}%)" to embed
 		add field named "Autor:" with value authors of {_yt} to embed
-		add split field named "Długość:" with value getTimespan({_u}.getUser().getId(), "%duration of {_yt}%", "pl") to embed
+		add split field named "Długość:" with value getTimespan("%duration of {_yt}%") to embed
 
 		if {_n} is 0:
-			add split field named "Pozostało:" with value getTimespan({_u}.getUser().getId(), "%difference between position of {_yt} and duration of {_yt}%", "pl") to embed
+			add split field named "Pozostało:" with value getTimespan("%difference between position of {_yt} and duration of {_yt}%") to embed
 		set the image of embed to "https://i.ytimg.com/vi_webp/%last element of (url of {_yt} split at ""="")%/sddefault.webp"
 
 		if {_n} is 0:
