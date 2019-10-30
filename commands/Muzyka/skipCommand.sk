@@ -1,0 +1,47 @@
+options:
+	cmd: skip
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: pomin,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		if event-bot is not playing:
+			if queue of event-bot in event-guild is not set:
+				KamilAPI command error "Nic nie gram!" to event-message
+		set {_url} to url of track event-bot is playing in event-guild
+		if getBVC() != getMVC(event-user):
+			KamilAPI command error "Musisz być na tym samym kanale co bot!" to event-message
+		if {skip::%{_url}%::%event-user.getId()%} is set:
+			KamilAPI command error "Oddaleś już swój głos!" to event-message
+
+		loop ...(getBVC()).getMembers():
+			loop-value.getUser().isBot() is false
+			add 1 to {_user}
+
+		set {skip::%{_url}%::%event-user.getId()%} to true
+
+		if {_user} is 1:
+			set {_p} to true
+
+		if {_user} > 2:
+			if size of {skip::%{_url}%::*} >= rounded up 5:
+				set {_p} to true
+		if {_user} = 2:
+			if size of {skip::%{_url}%::*} = {_user}:
+				set {_p} to true
+		if {_p} is true:
+			KamilAPI add emote "green" to event-message
+			reply with "Pomijam **`%track event-bot is playing in event-guild%`**"
+			skip track event-bot is playing in event-guild
+			stop
+
+		KamilAPI add emote "green" to event-message
+		reply with "Pominąć utwór? (`%size of {skip::%{_url}%::*}%`**/**`%{_user}%`)"
+		KamilAPI add emote "green" to event-message
+
+on track end:
+	delete {skip::*}

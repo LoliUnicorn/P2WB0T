@@ -1,0 +1,5 @@
+function getMVC(m: user) :: channel:
+  set {_g} to guild with id {bot::guild}
+  set {_bot} to getUser({_m}.getId()) in {_g}
+  set {_vc} to voice channel of {_bot}
+  return {_vc}

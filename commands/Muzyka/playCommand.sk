@@ -1,0 +1,106 @@
+options:
+	cmd: loop
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: powtorz, powtarzaj
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		delete {v::%event-user.getId()%::play::*}
+		if arg-1 is not set:
+			KamilAPI command error "Użyj: %{bot::prefix}%play (nazwa utworu)" to event-message
+		if getMVC(event-user) is not set:
+			KamilAPI command error "Musisz być połączony z kanałem głosowym!" to event-message
+		if getBVC() != getMVC(event-user):
+			if getBVC() is set:
+				KamilAPI command error "Bot jest już połączony z kanałem głosowym! (`%(getBVC()).getName()%`)" to event-message
+
+		set {_bot} to getUser({bot::id}) in event-guild
+		set {_perm::*} to view channel, voice connect, voice speak
+		loop {_perm::*}:
+			if {_bot} doesn't have permission loop-value in getMVC(event-user):
+				add loop-value to {_er::*}
+		if {_er::*} is set:
+			KamilAPI command error "Bot nie ma permisji na tym kanale! Brakuje: `%{_er::*}%`" to event-message
+
+		reply with "Szukam `%arg-1%`..." and store it in {_msg}
+		search youtube for arg-1 and store the results in {_r::*}
+		if {_r::*} is not set:
+			deleteMessage({_msg}, 0)
+			KamilAPI command error "Nie znaleziono żadnych pasujących piosenek! :(" to event-message
+		
+		set {_m} to a message builder
+		append line "```asciidoc"
+		append line "= Napisz odpowiedni numer ="
+		append line "PROTIP:"
+		append line "Chcesz wybrać kilka piosenek?"
+		append line "Napisz np. ""1, 4, 2, 10""%nl%"
+		loop 10 times:
+			{_r::%loop-number%} is set
+			append line "%loop-number%. %{_r::%loop-number%}% :: %authors of {_r::%loop-number%}%"
+			set {v::%event-user.getId()%::play::piosenka::%loop-number%} to {_r::%loop-number%}
+		append line "```"
+		deleteMessage({_msg}, 0)
+		reply with {_m} and store it in {v::%event-user.getId()%::play::botmsg}
+		set {v::%event-user.getId()%::play::usermsg} to event-message
+
+function playError(u: text):
+	deleteMessage({v::%{_u}%::play::botmsg}, 0)
+	delete {v::%{_u}%::play::*}
+
+on guild message received:
+	{v::%event-user.getId()%::play::*} is set
+	set {_msg} to "%event-message%"
+	if {_msg} contains "%{bot::prefix}%":
+		delete {v::%event-user.getId()%::play::*}
+		stop
+	if {_msg} is "0":
+		reply with "Anuluje operacje."
+		playError(event-user.getId())
+		stop
+	if getMVC(event-user) is not set:
+		KamilAPI command error "Musisz być połączony z kanałem głosowym!" to event-message
+		playError(event-user.getId())
+		stop
+	if getBVC() != getMVC(event-user):
+		if getBVC() is set:
+			KamilAPI command error "Bot jest już połączony z kanałem głosowym! (`%(getBVC()).getName()%`)" to event-message
+			playError(event-user.getId())
+			stop
+
+	if {_msg} contains ",":
+		replace all " " with "" in {_msg}
+		set {_m::*} to {_msg} split at ","
+		loop {_m::*}:
+			{_t::%loop-value%} is not set
+			if {v::%event-user.getId()%::play::piosenka::%loop-value%} is set:
+				set {_t::%loop-value%} to true
+				play {v::%event-user.getId()%::play::piosenka::%loop-value%}
+		reply with "<@%event-user.getId()%>, dodaje **%size of {_t::*}%** utworów do kolejki!"
+		playError(event-user.getId())
+	else:
+		loop queue of event-bot in event-guild:
+			if url of loop-value is url of {v::%event-user.getId()%::play::piosenka::%{_msg}%}:
+				KamilAPI command error "Ten utwór jest już w kolejce!" in channel event-channel with user with id event-user.getId() in guild event-guild with {v::%event-user.getId()%::play::usermsg}
+				playError(event-user.getId())
+				stop
+		if {v::%event-user.getId()%::play::piosenka::%{_msg}%} is not set:
+			KamilAPI command error "Wybrałeś zły numer, anuluje operacje!" in channel event-channel with user with id event-user.getId() in guild event-guild with {v::%event-user.getId()%::play::usermsg}
+			delete {v::%event-user.getId()%::play::*}
+			playError(event-user.getId())
+			stop
+		else:
+			if event-bot is playing:
+				reply with "<@%event-user.getId()%>, dodaje **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`** do kolejki!"
+			# else: ## Efekt wykonywany w !Uitl/events.sk
+			# 	reply with "<@%event-user.getId()%>, puszczam **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`**"
+			play {v::%event-user.getId()%::play::piosenka::%{_msg}%}
+			KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}
+			playError(event-user.getId())
+	delete event-message
+	set {v::play::kanal} to event-channel
+	if getBVC() is not set:
+		join getMVC(event-user)

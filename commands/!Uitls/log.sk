@@ -17,6 +17,9 @@ on message delete:
 
 	set {_msg} to "Nie udało się wyciągnąć wiadomości."
 	set {_msg} to {v::messageCache::%discord id of event-message%}
+	set {_author} to getFullName({_msg}.getMessage().getAuthor().getId())
+	if {_author} is not set:
+		set {_author} to "Najprawdopodobniej bot, lub webhook."
 
 	create embed:
 		set the colour of the embed to red
@@ -24,7 +27,7 @@ on message delete:
 		set the footer of embed to footer with text "Wiadomość usunięta"
 	
 		add field named "Treść wiadomości:" with value "%{_msg}%" to embed
-		add field named "Autor wiadomości:" with value "%getFullName({_msg}.getMessage().getAuthor().getId())%" to embed
+		add field named "Autor wiadomości:" with value {_author} to embed
 		add field named "Kanał:" with value "<##%event-channel.getId()%> (%event-channel.getName()%[%event-channel.getId()%])" to embed
 		add field named "ID wiadomości:" with value "%{_id}%" to embed
 		add field named "Usunięte przez:" with value "%getMention({_test}.getUser().getId())%(%getName({_test}.getUser().getId())%)" to embed

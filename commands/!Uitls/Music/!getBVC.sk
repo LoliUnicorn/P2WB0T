@@ -1,0 +1,5 @@
+function getBVC(t: text="") :: channel:
+  set {_g} to guild with id {bot::guild}
+  set {_bot} to getUser({bot::id}) in {_g}
+  set {_vc} to voice channel of {_bot}
+  return {_vc}
