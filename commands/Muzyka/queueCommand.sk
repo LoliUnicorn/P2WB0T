@@ -101,8 +101,7 @@ on reaction add:
 
 	if {_e} is "⏹":
 		delete {v::%event-user.getId()%::queue::*}
-		loop "⏮", "◀", "⏹", "▶", "⏭", "🔢":
-			remove emote "%loop-value%" added by event-bot from event-message
+		KamilAPI clear reaction from event-message
 		stop
 	
 	if {_e} is "🔢":
