@@ -23,7 +23,13 @@ discord command {@cmd} [<text>]:
 
 		set {_info::3::Wersja Bukkita} to "%{_bukkit}.getBukkitVersion()%"
 		set {_info::4::Uptime Bota} to getTimespan("%uptime of event-bot%")
-		set {_info::5::Zużycie ramu} to "%free memory%/%total memory% (`%(free memory*100)/total memory%%%`)"
+
+		set {_total} to total memory
+		set {_free} to free memory
+		set {_used} to ({_total} - {_free}) / 1024 / 1024
+		set {_total} to {_total} / 1024 / 1024
+
+		set {_info::5::Zużycie ramu} to "%{_used}%/%{_total}% MB"
 		loop ...{_manager}.getPlugins():
 			add 1 to {_size}
 			if {_manager}.isPluginEnabled(loop-value) is true:
