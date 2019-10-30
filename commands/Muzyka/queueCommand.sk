@@ -1,0 +1,51 @@
+options:
+	cmd: queue
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: kolejka, q, quene,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		if arg-1 is not set:
+			if event-bot is not playing:
+				if queue of event-bot in event-guild is not set:
+					KamilAPI command error "Nic nie gram!"to event-message
+
+			KamilAPI add emote "green" to event-message
+			reply with "Wczytywanie..." and store it in {_msg}
+			DeleteEmbedPage(event-user.getId(), "queue")
+
+			set {_r::*} to queue of event-bot in event-guild
+			loop {_r::*}:
+				set {_yt} to loop-value
+				set {_imgae} to "https://i.ytimg.com/vi_webp/%last element of (url of {_yt} split at ""="")%/sddefault.webp"
+				AddEmbedPage(event-user.getId(), "queue", "", "", "", "", {_imgae}, "", ("Nazwa:", "Author:", "Długość:"), ("[%{_yt}%](%url of {_yt}%)", "%authors of {_yt}%", getTimespan("%duration of {_yt}%")))
+			KamilAPI set page for {_msg} to true with event-user and cmd "queue"
+
+		if arg-1 is "reset":
+			if queue of event-bot in event-guild is set:
+				reset queue of event-bot in event-guild
+				KamilAPI add emote "green" to event-message
+				reply with "Usunięto wszystkie utwory w kolejki."
+			else:
+				KamilAPI command error "Kolejka jest pusta"to event-message
+
+		if arg-1 is "remove":
+			if queue of event-bot in event-guild is not set:
+				KamilAPI command error "Kolejka jest pusta"to event-message
+			if arg-2 is not set:
+				KamilAPI command error "Użyj: %{bot::prefix}%quene (reset|remove) (numer piosenki)"to event-message
+			set {_q::*} to queue of event-bot in event-guild
+			if arg-2 is between 1 and size of {_q::*}:
+				KamilAPI add emote "green" to event-message
+				reply with "Usuwam **`%{_q::%arg-2%}%`** z kolejki"
+				reset queue of event-bot in event-guild
+				loop {_q::*}:
+					add 1 to {_num}
+					if {_num} is not arg-2:
+						play loop-value
+			else:
+				KamilAPI command error "Nie ma takiego numeru w kolejce!"to event-message

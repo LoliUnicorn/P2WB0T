@@ -1,5 +1,5 @@
 options:
-	cmd: loop
+	cmd: play
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
