@@ -6,5 +6,10 @@ function getLastAuditLogs(typ: text) :: object:
 			return {_v}
 
 on message delete:
-	set {_test} to getLastAuditLogs("MESSAGE_DELETE")
-	reply with "%{_test}%, %{_test}.getUser()%"
+	set {_g} to getGuild()
+	loop ...event.getGuild().retrieveAuditLogs().cache(false):
+		set {_v} to loop-value
+		log("%{_v}.getType()% is %{_typ}%")
+		if "%{_v}.getType()%" is {_typ}:
+			stop loop
+	reply with "%{_v}%, %{_v}.getUser()%"
