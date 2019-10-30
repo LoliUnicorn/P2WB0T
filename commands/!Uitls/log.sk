@@ -1,3 +1,6 @@
+import:
+	me.iblitzkriegi.vixio.util.UpdatingMessage as Updessage
+
 function getLastAuditLogs(typ: text) :: object:
 	set {_g} to getGuild()
 	loop ...{_g}.retrieveAuditLogs().cache(false):
@@ -5,21 +8,26 @@ function getLastAuditLogs(typ: text) :: object:
 		if "%{_v}.getType()%" is {_typ}:
 			return {_v}
 
+on guild message receive:
+	set {v::messageCache::%discord id of event-message%} to event-message
+
 on message delete:
 	set {_test} to getLastAuditLogs("MESSAGE_DELETE")
+	set {_id} to event.getJDAEvent().getMessageId()
 
-	set {_c} to {_test}.getChannel()
+	set {_msg} to "Nie udało się wyciągnąć wiadomości."
+	set {_msg} to {v::messageCache::%discord id of event-message%}
 
 	create embed:
 		set the colour of the embed to red
 		set the timestamp of embed to now
 		set the footer of embed to footer with text "Wiadomość usunięta"
 	
-		add split field named "Treść wiadomości:" with value "później dodam" to embed
-		add split field named "Kanał:" with value "<##%{_c}.getId()%> (%{_c}.getName()%[%{_c}.getId()%])" to embed
-		add split field named "ID wiadomości:" with value "później dodam" to embed
-		add split field named "Usunięte przez:" with value "%getMention({_test}.getUser().getId())%(%getName({_test}.getUser().getId())%)" to embed
+		add field named "Treść wiadomości:" with value "%{_msg}%" to embed
+		add field named "Autor wiadomości:" with value getFullName({_msg}.getMessage().getAuthor().getId()) to embed
+		add field named "Kanał:" with value "<##%event-channel.getId()%> (%event-channel.getName()%[%event-channel.getId()%])" to embed
+		add field named "ID wiadomości:" with value "%{_id}%" to embed
+		add field named "Usunięte przez:" with value "%getMention({_test}.getUser().getId())%(%getName({_test}.getUser().getId())%)" to embed
 	
 	set {_l} to last created embed
 	send {_l} to channel with id getConfig("Config.logi") with {bot::name}
-	reply with {_l}
