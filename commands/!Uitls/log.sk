@@ -24,10 +24,11 @@ on message delete:
 		set the footer of embed to footer with text "Wiadomość usunięta"
 	
 		add field named "Treść wiadomości:" with value "%{_msg}%" to embed
-		add field named "Autor wiadomości:" with value getFullName({_msg}.getMessage().getAuthor().getId()) to embed
+		add field named "Autor wiadomości:" with value "%getFullName({_msg}.getMessage().getAuthor().getId())%" to embed
 		add field named "Kanał:" with value "<##%event-channel.getId()%> (%event-channel.getName()%[%event-channel.getId()%])" to embed
 		add field named "ID wiadomości:" with value "%{_id}%" to embed
 		add field named "Usunięte przez:" with value "%getMention({_test}.getUser().getId())%(%getName({_test}.getUser().getId())%)" to embed
 	
 	set {_l} to last created embed
 	send {_l} to channel with id getConfig("Config.logi") with {bot::name}
+	delete {v::messageCache::%discord id of event-message%}

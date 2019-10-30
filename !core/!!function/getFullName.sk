@@ -1,3 +1,4 @@
 function getFullName(u: text) :: text:
 	set {_u} to getUser({_u})
 	set {_t} to "<@%{_u}.getId()%>[%discord name of {_u}%##%discriminator of {_u}%]"
+	return {_t}
