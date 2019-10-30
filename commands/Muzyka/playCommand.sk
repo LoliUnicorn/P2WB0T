@@ -84,11 +84,11 @@ on guild message received:
 	else:
 		loop queue of event-bot in event-guild:
 			if url of loop-value is url of {v::%event-user.getId()%::play::piosenka::%{_msg}%}:
-				KamilAPI command error "Ten utwór jest już w kolejce!" in channel event-channel with user with id event-user.getId() in guild event-guild with {v::%event-user.getId()%::play::usermsg}
+				KamilAPI command error "Ten utwór jest już w kolejce!" to event-message
 				playError(event-user.getId())
 				stop
 		if {v::%event-user.getId()%::play::piosenka::%{_msg}%} is not set:
-			KamilAPI command error "Wybrałeś zły numer, anuluje operacje!" in channel event-channel with user with id event-user.getId() in guild event-guild with {v::%event-user.getId()%::play::usermsg}
+			KamilAPI command error "Wybrałeś zły numer, anuluje operacje!" to event-message
 			delete {v::%event-user.getId()%::play::*}
 			playError(event-user.getId())
 			stop
