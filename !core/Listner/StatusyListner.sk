@@ -1,0 +1,3 @@
+# TODO: Dodać statusy
+
+#screen -S Minecraft java -Xmx1000M -Xms1000M -jar spigot.jar

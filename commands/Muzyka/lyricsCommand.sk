@@ -1,0 +1,52 @@
+options:
+	cmd: lyrics
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+discord command {@cmd} [<text>]:
+	aliases: tekst,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		if arg-1 is not set:
+			KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message
+		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=utf-8"
+		map json last response's body to {_r::*}
+
+		if {_r::error} is set:
+			KamilAPI command error "API zwróciło nieoczekiwany błąd! `%{_r::error}%`" to event-message
+		if {_r::*} is not set:
+			KamilAPI command error "Nie znaleziono takiej piosenki!" to event-message
+		
+		set {_r::title} to {_test}
+		set {_r::lyrics} to {_tekst}
+		set {_r::author} to {_r::author}
+
+		loop 10 times:
+			set {_wyswietlany} to first 1000 characters of {_tekst}
+			set {_replace} to {_wyswietlany}
+			replace all "\n" with nl in {_wyswietlany}
+			add {_wyswietlany} to {_field::*}
+			replace all {_replace} with "" in {_tekst}
+			if {_tekst}.length() < 1000:
+				stop loop
+
+		create embed:
+			set the colour of the embed to color of getColor(event-member)
+			set the thumbnail of embed to "%{_r::thumbnail::genius}%"
+
+			add split field named getMessage("lyrics.name", {_jezyk}) with value {_test} to embed
+			add split field named getMessage("lyrics.author", {_jezyk}) with value {_r::author} to embed
+
+		reply with the last created embed
+		set {_XD} to getMessage("lyrics.tekst", {_jezyk})
+		create embed:
+			set the footer of embed to footer with text "{@cmd}"
+			set the timestamp of embed to now
+			set the colour of the embed to color of getColor(event-member)
+			loop {_field::*}:
+				add field named "%{_XD}%" with value "%loop-value%" to embed
+				set {_XD} to ""
+		reply with the last created embed
+		KamilAPI add emote "green" to event-message
