@@ -39,7 +39,6 @@ discord command {@cmd} [<text>]:
 			skip track event-bot is playing in event-guild
 			stop
 
-		KamilAPI add emote "green" to event-message
 		reply with "Pominąć utwór? (`%size of {skip::%{_url}%::*}%`**/**`%{_user}%`)"
 		KamilAPI add emote "green" to event-message
 
