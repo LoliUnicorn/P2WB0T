@@ -32,15 +32,21 @@ discord command {@cmd} [<text>]:
 				set the title of embed to title with text "Komenda %{bot::prefix}%%arg-1%"
 
 				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::uzycie}%"
-				set {_s::2} to "Opis: %{command::%{_cmdinfo}%::opis}%"
+				set {_a::*} to aliases of {_cmdinfo}
+				if {_a::*} is not set:
+					set {_s::2} to "Aliasy: Brak."
+				else:
+					set {_s::2} to "Aliasy: %{_a::*}%"
+
+				set {_s::3} to "Opis: %{command::%{_cmdinfo}%::opis}%"
 				set {_s::4} to "Kategoria: %{command::%{_cmdinfo}%::kategoria}%"
 				set {_s::5} to "Poziom uprawnień: %{command::%{_cmdinfo}%:poziom}%"
 
 				if {command::%{_cmdinfo}%::cooldown} is not 0 seconds:
 					set {_t} to getTimespan("%{command::%{_cmdinfo}%::cooldown}%")
-					set {_s::5} to "Cooldown :: %{_t}%"
+					set {_s::6} to "Cooldown :: %{_t}%"
 				else:
-					set {_s::5} to "Cooldown :: Brak."
+					set {_s::6} to "Cooldown :: Brak."
 
 				set {_m} to a message builder
 				append line "```"
@@ -74,4 +80,3 @@ discord command {@cmd} [<text>]:
 				set {_m} to a message builder
 
 		reply with the last created embed
-		KamilAPI add emote "green" to event-message
