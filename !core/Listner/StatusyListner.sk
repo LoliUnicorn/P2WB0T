@@ -3,14 +3,14 @@ function setCustomStatus(typ: text="null", game: text="null", url: text=""):
 		if {_game} is "null":
 			if {bot::status} is not set:
 				set {bot::status} to true
-				if {bot::status} is false:
-					set {bot::status} to true
-				while true:
-					wait 25 seconds
-					{bot::status} is true
-					delete {_s::*}
-					set {_s::*} to "Prefix: %{bot::prefix}%", "%day%/%month%/%year%", "%{bot::prefix}%help", "DerpMC.pl", "Feerko.pl", "RoiZy.pl", "p2w.pl"
-					mark "%{bot::name}%" as playing "%(random element of {_s::*})%"
+			if {bot::status} is false:
+				set {bot::status} to true
+			while true:
+				wait 25 seconds
+				{bot::status} is true
+				delete {_s::*}
+				set {_s::*} to "Prefix: %{bot::prefix}%", "%day%/%month%/%year%", "%{bot::prefix}%help", "DerpMC.pl", "Feerko.pl", "RoiZy.pl", "p2w.pl"
+				mark "%{bot::name}%" as playing "%(random element of {_s::*})%"
 	else:
 		if {_game} is not "null":
 			if {_typ} is "1":
