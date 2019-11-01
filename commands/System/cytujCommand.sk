@@ -4,6 +4,9 @@ options:
 on script load:
 	set {command::{@cmd}::poziom} to 0
 	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::opis} to "Cytuje wiadomośc."
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "cytuj (id wiadomości[-id kanału])"
 
 discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "

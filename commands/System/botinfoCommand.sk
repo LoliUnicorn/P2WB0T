@@ -4,6 +4,9 @@ options:
 on script load:
 	set {command::{@cmd}::poziom} to 0
 	set {command::{@cmd}::cooldown} to 5 seconds
+	set {command::{@cmd}::opis} to "Wysyła informacje o bocie."
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "botinfo"
 
 import:
 	org.bukkit.Server

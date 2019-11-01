@@ -4,6 +4,9 @@ options:
 on script load:
 	set {command::{@cmd}::poziom} to 0
 	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::opis} to "Dodaje 10 utworów danego wykonawcy."
+	set {command::{@cmd}::kategoria} to "Muzyka"
+	set {command::{@cmd}::uzycie} to "wykonawca <nazwa wykonawcy>"
 
 discord command {@cmd} [<text>]:
 	aliases: ZmienToOk

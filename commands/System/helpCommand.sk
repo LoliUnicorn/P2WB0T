@@ -1,0 +1,78 @@
+options:
+	cmd: help
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::opis} to "Wyświetla komendy."
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "help [komenda]"
+
+discord command {@cmd} [<text>]:
+	aliases: pomoc, komendybota,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		set {_cmd::*} to all discord commands
+
+		loop {_cmd::*}:
+			if "%loop-value%" is arg-1:
+				set {_cmdinfo} to loop-value
+				stop loop
+			set {_a::*} to aliases of loop-value
+			loop {_a::*}:
+				if "%loop-value-2%" is arg-1:
+					set {_cmdinfo} to loop-value-1
+					stop loop
+
+		if {_cmdinfo} is set:
+			create embed:
+				set the footer of embed to footer with text "Help"
+				set the timestamp of embed to now
+				set the colour of the embed to color of getColor(event-member)
+				set the title of embed to title with text "Komenda %{bot::prefix}%%arg-1%"
+
+				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::opis}%"
+				set {_s::2} to "Opis: %{_opis}%"
+				set {_s::4} to "Kategoria: %{command::%{_cmdinfo}%::kategoria}%"
+				set {_s::5} to "Poziom uprawnień: %{command::%{_cmdinfo}%:poziom}%"
+
+				if {command::%{_cmdinfo}%::cooldown} is set:
+					set {_t} to getTimespan("%{command::%{_cmdinfo}%::cooldown}%")
+					set {_s::5} to "Cooldown :: %{_t}%"
+				else:
+					set {_s::5} to "Cooldown :: Brak."
+
+				set {_m} to a message builder
+				append line "```asciidoc"
+				loop {_s::*}:
+					append line "%loop-value%"
+				append line "```"
+
+				set the description of embed to "%{_m}%"
+			reply with the last created embed
+			KamilAPI add emote "green" to event-message
+			stop
+
+		loop {_cmd::*}: # patrzy jakie sa kategorie
+			set {_kate} to {command::%loop-value%::kate}
+			delete {_k::%{_kate}%}
+			set {_k::%{_kate}%} to {_kate}
+
+		create embed:
+			set the footer of embed to footer with text "Help"
+			set the timestamp of embed to now
+			set the title of embed to title with text "%size of {_cmd::*}% cmd."
+			set the colour of the embed to color of getColor(event-member)
+
+			set {_m} to a message builder
+			loop {_k::*}:
+				loop {_cmd::*}:
+					if {command::%loop-value-2%::kate} is loop-value-1:
+						append line "%{bot::prefix}%cmdUsage"
+						delete {_usage}
+				add field named "%loop-value%:" with value "%{_m}%" to embed
+				delete {_m}
+				set {_m} to a message builder
+
+		reply with the last created embed
+		KamilAPI add emote "green" to event-message
