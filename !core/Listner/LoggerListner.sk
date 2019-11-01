@@ -1,0 +1,6 @@
+on vixio command:
+  "%event-discordcommand%" is not "eval" 
+  set {kek::%event-user.getId()%} to "[%now%] %getName(event-user.getId())%[%event-user.getId()%] użył komendy %event-discordcommand%(%event.getArguments()%) na serwerze %event-guild%[%event-guild.getId()%]"
+  send "%{kek::%event-user.getId()%}%" to channel with id getConfig("Config.logiKomend") with event-bot
+  send "%{kek::%event-user.getId()%}%" to console
+  delete {kek::%event-user.getId()%}
