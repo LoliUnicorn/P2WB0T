@@ -31,19 +31,19 @@ discord command {@cmd} [<text>]:
 				set the colour of the embed to color of getColor(event-member)
 				set the title of embed to title with text "Komenda %{bot::prefix}%%arg-1%"
 
-				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::opis}%"
-				set {_s::2} to "Opis: %{_opis}%"
+				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::uzycie}%"
+				set {_s::2} to "Opis: %{command::%{_cmdinfo}%::opis}%"
 				set {_s::4} to "Kategoria: %{command::%{_cmdinfo}%::kategoria}%"
 				set {_s::5} to "Poziom uprawnień: %{command::%{_cmdinfo}%:poziom}%"
 
-				if {command::%{_cmdinfo}%::cooldown} is set:
+				if {command::%{_cmdinfo}%::cooldown} is not 0 seconds:
 					set {_t} to getTimespan("%{command::%{_cmdinfo}%::cooldown}%")
 					set {_s::5} to "Cooldown :: %{_t}%"
 				else:
 					set {_s::5} to "Cooldown :: Brak."
 
 				set {_m} to a message builder
-				append line "```asciidoc"
+				append line "```"
 				loop {_s::*}:
 					append line "%loop-value%"
 				append line "```"
@@ -54,22 +54,21 @@ discord command {@cmd} [<text>]:
 			stop
 
 		loop {_cmd::*}: # patrzy jakie sa kategorie
-			set {_kate} to {command::%loop-value%::kate}
+			set {_kate} to {command::%loop-value%::kategoria}
 			delete {_k::%{_kate}%}
 			set {_k::%{_kate}%} to {_kate}
 
 		create embed:
 			set the footer of embed to footer with text "Help"
 			set the timestamp of embed to now
-			set the title of embed to title with text "%size of {_cmd::*}% cmd."
+			set the title of embed to title with text "%size of {_cmd::*}% komend."
 			set the colour of the embed to color of getColor(event-member)
 
 			set {_m} to a message builder
 			loop {_k::*}:
 				loop {_cmd::*}:
-					if {command::%loop-value-2%::kate} is loop-value-1:
-						append line "%{bot::prefix}%cmdUsage"
-						delete {_usage}
+					if {command::%loop-value-2%::kategoria} is loop-value-1:
+						append line "%{bot::prefix}%%{command::%loop-value-2%::uzycie}%"
 				add field named "%loop-value%:" with value "%{_m}%" to embed
 				delete {_m}
 				set {_m} to a message builder
