@@ -40,7 +40,7 @@ discord command {@cmd} [<text>]:
 
 				set {_s::3} to "Opis: %{command::%{_cmdinfo}%::opis}%"
 				set {_s::4} to "Kategoria: %{command::%{_cmdinfo}%::kategoria}%"
-				set {_s::5} to "Poziom uprawnień: %{command::%{_cmdinfo}%::poziom}%"
+				set {_s::5} to "Poziom uprawnień: %{command::%{_cmdinfo}%::poziom}% (%getPoziomSlowny({command::%{_cmdinfo}%::poziom})%)"
 
 				if {command::%{_cmdinfo}%::cooldown} is not 0 seconds:
 					set {_t} to getTimespan("%{command::%{_cmdinfo}%::cooldown}%")
