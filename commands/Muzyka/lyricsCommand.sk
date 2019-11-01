@@ -11,35 +11,35 @@ discord command {@cmd} [<text>]:
 	trigger:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message
-		send a "GET" request to "https://some-random-api.ml/lyrics?title=%arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=utf-8"
+		reply with "Wczytywanie..." and store it in {_msg}
+		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=utf-8"
 		map json last response's body to {_r::*}
 
-		if {_r::error} is set:
-			KamilAPI command error "API zwróciło nieoczekiwany błąd! `%{_r::error}%`" to event-message
-		if {_r::*} is not set:
+		if {_r::error} is "Sorry i couldn't find that song's lyrics":
+			deleteMessage({_msg})
 			KamilAPI command error "Nie znaleziono takiej piosenki!" to event-message
-		
-		set {_r::title} to {_test}
-		set {_r::lyrics} to {_tekst}
-		set {_r::author} to {_r::author}
+		if {_r::error} is set:
+			deleteMessage({_msg})
+			KamilAPI command error "API zwróciło nieoczekiwany błąd! `%{_r::error}%`" to event-message
 
-		loop 10 times:
-			set {_wyswietlany} to first 1000 characters of {_tekst}
+		loop 25 times:
+			set {_wyswietlany} to first 1000 characters of {_r::lyrics}
 			set {_replace} to {_wyswietlany}
-			replace all "\n" with nl in {_wyswietlany}
+			replace all "\n" with "%nl%" in {_wyswietlany}
 			add {_wyswietlany} to {_field::*}
-			replace all {_replace} with "" in {_tekst}
-			if {_tekst}.length() < 1000:
+			replace all {_replace} with "" in {_r::lyrics}
+			if {_r::lyrics}.length() = 0:
 				stop loop
 
 		create embed:
 			set the colour of the embed to color of getColor(event-member)
-			set the thumbnail of embed to "%{_r::thumbnail::genius}%"
+			set the image of embed to "%{_r::thumbnail::genius}%"
 
-			add split field named "Nazwa:" with value {_test} to embed
-			add split field named "Author:" with value {_r::author} to embed
+			add split field named "Author:" with value "%{_r::author}%" to embed
+			add split field named "Nazwa:" with value "[%{_r::title}%](%{_r::links::genius}%)" to embed
 
-		reply with the last created embed
+		edit {_msg} to show last created embed
+		edit {_msg} to show " "
 		set {_XD} to "Tekst"
 		create embed:
 			set the footer of embed to footer with text "{@cmd}"
@@ -48,5 +48,5 @@ discord command {@cmd} [<text>]:
 			loop {_field::*}:
 				add field named "%{_XD}%" with value "%loop-value%" to embed
 				set {_XD} to ""
-		reply with the last created embed
+		reply with last created embed
 		KamilAPI add emote "green" to event-message
