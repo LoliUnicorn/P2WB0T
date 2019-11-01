@@ -1,0 +1,19 @@
+options:
+	cmd: ping
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wyświetla opóźnienie bota."
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "ping"
+
+discord command {@cmd} [<text>]:
+	aliases: pingbota,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		reply with ":ping_pong: Ping..." and store it in {_msg}
+		set {_now} to system millis
+		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem wynosi %difference between {_now} and system millis%ms. Gateway ping: %event.getMessage().getJDA().getGatewayPing()%ms"
+		KamilAPI add emote "green" to event-message
