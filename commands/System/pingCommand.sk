@@ -15,5 +15,5 @@ discord command {@cmd} [<text>]:
 	trigger:
 		reply with ":ping_pong: Ping..." and store it in {_msg}
 		set {_now} to system millis
-		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem wynosi %difference between {_now} and system millis%ms. Gateway ping: %event.getMessage().getJDA().getGatewayPing()%ms"
+		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem wynosi `%difference between {_now} and system millis%`ms. Gateway ping: %event.getMessage().getJDA().getGatewayPing()%ms"
 		KamilAPI add emote "green" to event-message
