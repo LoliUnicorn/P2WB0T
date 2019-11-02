@@ -17,10 +17,51 @@ discord command {@cmd} [<text>]:
 		reply with "Napisz nazwę kanału, na którym ma się pojawić konkurs..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
 		set {v::%event-user.getId()%::giveaway::typ} to "channel"
 
+function konkursDeleteMessage(u: text):
+	deleteMessage({v::%{_u}%::giveaway::botmsg})
+	delete {v::%{_u}%::giveaway::botmsg}
 
 on guild message receive:
+	if {v::%event-user.getId()%::giveaway::typ} is "czas":
+		konkursDeleteMessage(event-user.getId())
+		set {_czas} to "%event-message%"
+		replace all "d" with " day" in {_czas}
+		replace all "h" with " hour" in {_czas}
+		replace all "m" with " minute" in {_czas}
+		replace all "s" with " second" in {_czas}
+		set {_time} to "%{_czas}%" parsed as timespan
+		if {_time} is "<none>":
+			reply with "Zły czas! Anuluje operacje"
+			delete {v::%event-user.getId()%::giveaway::*}
+			stop
+
+		set {v::%event-user.getId()%::giveaway::koniec} to "%convert date {_now} to unix date%" # final koniec
+
+		set {_msg} to a message builder
+
+		# tutaj tworzyć konkurs
+		append line "Nagroda: %{v::%event-user.getId()%::giveaway::nagroda}%"
+		append line "Kanał: %{v::%event-user.getId()%::giveaway::kanal}%"
+		append line "Czas: %{v::%event-user.getId()%::giveaway::koniec}% (unix date (""{v::%event-user.getId()%::giveaway::koniec}"" parsed as number))"
+		delete {v::%event-user.getId()%::giveaway::*}
+		# tutaj tworzyć konkurs
+
+	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
+		konkursDeleteMessage(event-user.getId())
+		set {v::%event-user.getId()%::giveaway::nagroda} to "%event-message%" # final nagroda
+		reply with "Napisz za ile czasu będzie koniec! (5,[sekundy], 5m [minuty], 5h [godziny], 5d [dni]). Czasy nie mogą się łączyć!"
+		set {v::%event-user.getId()%::giveaway::typ} to "czas"
+
 	if {v::%event-user.getId()%::giveaway::typ} is "channel":
+		konkursDeleteMessage(event-user.getId())
+
 		set {_ch} to "%event-message%"
 		replace all "<" and "##" and ">" with "" in {_ch}
 		set {_c} to event-guild.getTextChannelById({_ch})
-		reply with "%{_c}.getName()% | %{_c}.getId()%"
+		if {_c} is not set:
+			reply with "Nieprawidłowy kanał, anuluje operacje."
+			delete {v::%event-user.getId()%::giveaway::*}
+		else:
+			set {v::%event-user.getId()%::giveaway::kanal} to {_c}.getId() # final channel
+			reply with "Napisz jaka będzie nagroda..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
+			set {v::%event-user.getId()%::giveaway::typ} to "nagroda"
