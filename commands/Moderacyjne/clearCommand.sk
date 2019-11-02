@@ -62,5 +62,8 @@ discord command {@cmd} [<text>] [<text>]:
 			set {_l} to loop-value
 			if {_l}.getMessage().getAuthor().getId() is {_u}.getId():
 				deleteMessage(loop-message)
+				add 1 to {_juz}
+				if {_juz} is arg-2:
+					stop loop
 		edit {_msg} to show "Usunięto **%arg-2%** wiadomości użytkownika %getName(arg-1)%"
 		deleteMessage({_msg}, 8)
