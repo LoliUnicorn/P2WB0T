@@ -9,16 +9,26 @@ on script load:
 	set {command::{@cmd}::kategoria} to "4FUN"
 	set {command::{@cmd}::uzycie} to "ship [rzecz 1] [rzecz 2]"
 
+function kurwaNieDzialaShip(b: bol=true):
+	if {_bol} is true:
+		if {ship::litera::A} is set:
+			stop
+	set {_alf} to "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ1234567890##!@$%%^&*()_+-="
+	set {_a::*} to split {_alf} at ""
+	loop {_a::*}:
+		set {_liczba} to rounded up random number between 1 and 20
+		set {_w} to "+"
+		chance of 30%:
+			set {_w} to "-"
+		set {ship::litera::%loop-value%} to "%{_liczba}%|%{_w}%"
+
 on script load:
-	if {ship::litera::A} is not set:
-		set {_alf} to "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ1234567890##!@$%%^&*()_+-="
-		set {_a::*} to split {_alf} at ""
-		loop {_a::*}:
-			set {_liczba} to rounded up random number between 1 and 20
-			set {_w} to "+"
-			chance of 30%:
-				set {_w} to "-"
-			set {ship::litera::%loop-value%} to "%{_liczba}%|%{_w}%"
+	wait 50 tick
+	kurwaNieDzialaShip()
+
+on vixio command:
+	"%event-discordcommand%" is "ship"
+	kurwaNieDzialaShip()
 
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: ZmienToOk
@@ -84,12 +94,17 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_kom} to "Brak wyniku. :cry:"
 		set {_d} to ({_wynik} /  100) * 100
 		set {_p} to (330 / 100) * {_d}	
+
 		create an image with width 339 and height 50 with background color rgb(54, 57, 63) and store the result to variable {_image}
 		draw a rounded rectangle with arc width 15 and height 15 with rectangle width 334 and height 19 with color rgb(80, 80, 80) on {_image} at location 4, 20
 		draw a rounded rectangle with arc width 10 and height 10 with rectangle width 330 and height 15 with color rgb(50, 50, 50) on {_image} at location 6, 22
 		draw a rounded rectangle with arc width 10 and height 10 with rectangle width {_p} and height 15 with (color of getColor(event-member)) on {_image} at location 6, 22
+
 		set {_s} to "zdjecia/ship/%event-user.getId()%.png"
 		save image {_image} to "%{_s}%"
-		upload "%{_s}%" with message ":hearts: `%{_arg::1}%` + `%{_arg::2}%` :two_hearts:%nl%Miłość na **%{_wynik}%%%**! %{_kom}%" to event-channel with event-bot
+
+		set {_xd::*} to getRegex("%{_arg::1}%"), getRegex("%{_arg::2}%")
+
+		upload "%{_s}%" with message ":hearts: `%{_xd::1}%` + `%{_xd::2}%` :two_hearts:%nl%Miłość na **%{_wynik}%%%**! %{_kom}%" to event-channel with event-bot
 		KamilAPI add emote "green" to event-message
 		delete file "zdjecia/ship/%event-user.getId()%.png"
