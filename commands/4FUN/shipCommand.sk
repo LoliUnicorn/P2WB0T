@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::kategoria} to "4FUN"
 	set {command::{@cmd}::uzycie} to "ship [rzecz 1] [rzecz 2]"
 
-function kurwaNieDzialaShip(b: bol=true):
+function kurwaNieDzialaShip(b: boolean=true):
 	if {_bol} is true:
 		if {ship::litera::A} is set:
 			stop
