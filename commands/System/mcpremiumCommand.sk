@@ -1,0 +1,46 @@
+options:
+	cmd: mcpremium
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to " "
+	set {command::{@cmd}::kategoria} to " "
+	set {command::{@cmd}::uzycie} to " "
+
+discord command {@cmd} [<text>]:
+	aliases: premka, minecraftpremium
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		if arg-1 is not set:
+			KamilAPI command error "Użyj: %{bot::prefix}%mcpremium (nick)"
+		set {_pl} to arg-1 parsed as offlineplayer
+		set {_p} to "%uuid of {_pl}%"
+		replace all "-" with "" in {_p}
+		send a request to "https://api.mojang.com/user/profiles/%{_p}%/names"
+		map json body of last http response to {_r::*}
+		if {_r::*} is not set:
+			KamilAPI command error "Taki użytkownik nie posiada Minecraft premium. Użyj: %{bot::prefix}%mcpremium (nick)"
+		loop {_r::*}:
+			loop {_r::%loop-index%::*}:
+				if loop-index-2 is "name":
+					add 1 to {_n}
+					set {_nick::%{_n}%} to "%{_n}%. %loop-value-2%"
+		set {_s} to size of {_nick::*}
+		set {_name} to a new message builder
+		loop (size of {_nick::*}) times:
+			append line "%{_nick::%{_s}%}%"
+			remove 1 from {_s}
+		create embed:
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			add field named "Nazwa:" with value "%{_pl}%" to embed
+			add field named "UUID:" with value "%{_p}%" to embed
+			add field named "Profil na namemc:" with value "[namemc.com](https://namemc.com/%arg-1%.1)" to embed
+			add field named "Historie nicku:" with value "```js%nl%%{_name}%%nl%```" to embed
+			set the footer of embed to footer with text "Informacje o nicku: %{_pl}%"
+			set the thumbnail of embed to "https://minotar.net/helm/%{_pl}%/2048"
+			set the image of embed to "https://minotar.net/armor/body/%{_pl}%/124.png"
+		reply with the last created embed
+		KamilAPI add emote "green" to event-message

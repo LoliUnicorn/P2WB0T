@@ -14,5 +14,6 @@ function setCustomStatus():
 		wait 25 seconds
 
 on script load:
+	wait 200 tick
 	delete {bot::status}
 	setCustomStatus()
