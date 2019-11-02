@@ -37,6 +37,9 @@ on guild message receive:
 			delete {v::%event-user.getId()%::giveaway::*}
 			stop
 
+		set {_now} to now
+		add {_time} to {_now}
+
 		set {v::%event-user.getId()%::giveaway::koniec} to "%convert date {_now} to unix date%" # final koniec
 
 		set {_msg} to a message builder
@@ -45,7 +48,9 @@ on guild message receive:
 		append line "Nagroda: %{v::%event-user.getId()%::giveaway::nagroda}%"
 		append line "Kanał: %{v::%event-user.getId()%::giveaway::kanal}%"
 		append line "Czas: %{v::%event-user.getId()%::giveaway::koniec}% (unix date (""{v::%event-user.getId()%::giveaway::koniec}"" parsed as number))"
+		reply with {_msg}
 		delete {v::%event-user.getId()%::giveaway::*}
+		stop
 		# tutaj tworzyć konkurs
 
 	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
