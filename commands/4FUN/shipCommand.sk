@@ -1,0 +1,84 @@
+options:
+	cmd: ship
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Czemu ja to zrobiłem."
+	set {command::{@cmd}::kategoria} to "4FUN"
+	set {command::{@cmd}::uzycie} to "ship [rzecz 1] [rzecz 2]"
+
+discord command {@cmd} [<text>] [<text>]:
+	aliases: ZmienToOk
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+		if arg-1 is not set:
+			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+		if arg-2 is not set:
+			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+		if arg-1 is arg-2:
+			KamilAPI command error "Po co chcesz shipowac 2 takie same rzeczy?" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+		set {_a::*} to arg-1, arg-2
+		set {_mem::*} to "%getUser(arg-1)%", "%getUser(arg-2)%"
+		loop {_mem::*}:
+			add 1 to {_num}
+			if "%loop-value%" is "<none>":
+				set {_arg::%{_num}%} to {_a::%{_num}%}
+			else if "%loop-value%" is set:
+				set {_arg::%{_num}%} to loop-value
+		loop 2 times:
+			set {_a::*} to split {_arg::%loop-number%} at ""
+			add {_a::*} to {_litery::*}
+		set {_wynik} to 10
+		loop {_litery::*}:
+			if {ship::litera::%loop-value%} is set:
+				set {_l} to {ship::litera::%loop-value%}
+				set {_liczba} to first element of ({_l} split at "|")
+				set {_liczba} to {_liczba} parsed as number
+				set {_bol} to last element of ({_l} split at "|")
+				if {_bol} is "-":
+					remove {_liczba} from {_wynik}
+				else if {_bol} is "+":
+					add {_liczba} to {_wynik}
+		if arg-3 is set:
+			if isOwner(event-user.getId()) is true:
+				set {_arg} to arg-3 parsed as number
+				if {_arg} is set:
+					if {_arg} < 0:
+						set {_arg} to 0
+					if {_arg} > 100:
+						set {_wynik} to 100
+					else:
+						set {_wynik} to {_arg}
+		if {_wynik} > 100:
+			set {_wynik} to 100
+		if {_wynik} < 0:
+			set {_wynik} to 0
+		if {_wynik} < 50:
+			set {_kom} to "Tak średnio bym powiedział, tak średnio."
+		if {_wynik} < 10:
+			set {_kom} to "Nic z tego nie wyjdzie."
+		if {_wynik} < 30:
+			set {_kom} to "Może coś z tego wyjdzie :v"
+		if {_wynik} > 50:
+			set {_kom} to "Tak pół na pół."
+		if {_wynik} > 60:
+			set {_kom} to "Możecie iść na randkę <3"
+		if {_wynik} > 70:
+			set {_kom} to "Kochają się!"
+		if {_wynik} = 100:
+			set {_kom} to "Pasują do siebie perfekcyjnie."
+		if {_wynik} is not set:
+			set {_kom} to "Brak wyniku. :cry:"
+		set {_d} to ({_wynik} /  100) * 100
+		set {_p} to (330 / 100) * {_d}	
+		create an image with width 339 and height 50 with background color rgb(54, 57, 63) and store the result to variable {_image}
+		draw a rounded rectangle with arc width 15 and height 15 with rectangle width 334 and height 19 with color rgb(80, 80, 80) on {_image} at location 4, 20
+		draw a rounded rectangle with arc width 10 and height 10 with rectangle width 330 and height 15 with color rgb(50, 50, 50) on {_image} at location 6, 22
+		draw a rounded rectangle with arc width 10 and height 10 with rectangle width {_p} and height 15 with (color of getColor(event-member)) on {_image} at location 6, 22
+		set {_s} to "zdjecia/ship/%event-user.getId()%.png"
+		save image {_image} to "%{_s}%"
+		upload "%{_s}%" with message ":hearts: `%{_arg::1}%` + `%{_arg::2}%` :two_hearts:%nl%Miłość na **%{_wynik}%%%**! %{_kom}%" to event-channel with event-bot
+		KamilAPI add emote "green" to event-message
+		delete file "zdjecia/ship/%event-user.getId()%.png"
