@@ -24,23 +24,30 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 		if (arg-1 parsed as number) is set:
-			set {_arg} to arg-1 parsed as number
-			set {_check} to checkNumber({_arg})
+			if getUser(arg-1) is not set:
+				set {_arg} to arg-1 parsed as number
+				set {_check} to checkNumber({_arg})
 
-			if {_check} is set:
-				KamilAPI cmd error {_check}
+				if {_check} is set:
+					KamilAPI cmd error {_check}
 
-			delete event-message
-			wait 5 tick
-			grab last {_arg}+1 messages in event-channel
+				delete event-message
+				wait 5 tick
+				grab last {_arg}+1 messages in event-channel
 
-			loop grabbed messages:
-				deleteMessage(loop-message, 0)
-				remove 1 from {_arg}
-				
-			add 1 to {_arg}
-			if {_arg} is 0:
-				reply with "Pomyślnie usunięto **%arg-1%** wiadomości." and store it in {_msg}
-			else:
-				reply with "Nie udało się usunąć niektórych wiadomości (%{_arg}%). Najprawdopodobniej ich data jest większa niż **2 tygodnie**, lub nie ma ich na kanale." and store it in {_msg}
-			deleteMessage({_msg}, 8)
+				loop grabbed messages:
+					deleteMessage(loop-message, 0)
+					remove 1 from {_arg}
+
+				add 1 to {_arg}
+				if {_arg} is 0:
+					reply with "Pomyślnie usunięto **%arg-1%** wiadomości." and store it in {_msg}
+				else:
+					reply with "Nie udało się usunąć niektórych wiadomości. Najprawdopodobniej ich data jest większa niż **2 tygodnie**, lub nie ma ich na kanale." and store it in {_msg}
+				deleteMessage({_msg}, 8)
+		set {_u} to getUser(arg-1)
+		if {_u} is not set:
+			KamilAPI cmd error "Nieprawidłowy użytkownik. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+		if (arg-2 parsed as number) is not set:
+			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+		reply with "Usuwam **%arg-2%** wiadomości użytkownika %getName(arg-1)%."
