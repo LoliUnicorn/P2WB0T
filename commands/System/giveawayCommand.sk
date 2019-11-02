@@ -22,6 +22,8 @@ function konkursDeleteMessage(u: text):
 	delete {v::%{_u}%::giveaway::botmsg}
 
 on guild message receive:
+	if "%event-message%" contains {bot::prefix}:
+		stop
 	if {v::%event-user.getId()%::giveaway::typ} is "czas":
 		konkursDeleteMessage(event-user.getId())
 		set {_czas} to "%event-message%"
