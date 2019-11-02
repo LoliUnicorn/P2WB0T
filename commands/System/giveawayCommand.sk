@@ -22,5 +22,5 @@ on guild message receive:
 	if {v::%event-user.getId()%::giveaway::typ} is "channel":
 		set {_ch} to "%event-message%"
 		replace all "<" and "##" and ">" with "" in {_ch}
-		set {_ch} to event-guild.getTextChannelById({_ch})
-		reply with "%{_ch}%"
+		set {_c} to event-guild.getTextChannelById({_ch})
+		reply with "%{_c}.getName()% | %{_c}.getId()%"
