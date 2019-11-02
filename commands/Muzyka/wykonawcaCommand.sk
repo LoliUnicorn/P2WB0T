@@ -44,5 +44,6 @@ discord command {@cmd} [<text>]:
 		edit {_msg} to show "Dodaje %size of {_m::*}% utworów wykonawcy `%arg-1%` do kolejki."
 		set {v::play::kanal} to event-channel
 		loop {_m::*}:
-			play loop-value
+			play("%url of loop-value%")
+			#play loop-value
 		KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}
