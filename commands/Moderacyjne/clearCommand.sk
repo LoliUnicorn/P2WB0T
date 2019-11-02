@@ -45,9 +45,22 @@ discord command {@cmd} [<text>] [<text>]:
 				else:
 					reply with "Nie udało się usunąć niektórych wiadomości. Najprawdopodobniej ich data jest większa niż **2 tygodnie**, lub nie ma ich na kanale." and store it in {_msg}
 				deleteMessage({_msg}, 8)
+				stop
 		set {_u} to getUser(arg-1)
 		if {_u} is not set:
 			KamilAPI cmd error "Nieprawidłowy użytkownik. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 		if (arg-2 parsed as number) is not set:
 			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
-		reply with "Usuwam **%arg-2%** wiadomości użytkownika %getName(arg-1)%."
+
+		set {_check} to checkNumber({_arg})
+			if {_check} is set:
+				KamilAPI cmd error {_check}
+
+		reply with "Usuwam **%arg-2%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
+		grab last 1000 messages in event-channel
+		loop grabbed messages:
+			set {_l} to loop-value
+			if {_l}.getMessage().getAuthor().getId() is {_u}.getId():
+				deleteMessage(loop-message)
+		edit {_msg} to show "Usunięto **%arg-2%** wiadomości użytkownika %getName(arg-1)%"
+		deleteMessage({_msg}, 8)
