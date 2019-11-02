@@ -82,7 +82,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_kom} to "Nic z tego nie wyjdzie."
 		if {_wynik} < 30:
 			set {_kom} to "Może coś z tego wyjdzie :v"
-		if {_wynik} > 50:
+		if {_wynik} >= 50:
 			set {_kom} to "Tak pół na pół."
 		if {_wynik} > 60:
 			set {_kom} to "Możecie iść na randkę <3"
