@@ -1,5 +1,5 @@
 # options:
-# 	cmd: update
+# 	cmd: commit
 
 # on script load:
 # 	set {command::{@cmd}::poziom} to 10

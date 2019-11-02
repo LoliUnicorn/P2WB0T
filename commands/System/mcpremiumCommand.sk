@@ -3,11 +3,11 @@ options:
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
-	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::cooldown} to 4 seconds
 
-	set {command::{@cmd}::opis} to " "
-	set {command::{@cmd}::kategoria} to " "
-	set {command::{@cmd}::uzycie} to " "
+	set {command::{@cmd}::opis} to "Wyświetla informacje o koncie Minecraft."
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "mcpremium (nick)"
 
 discord command {@cmd} [<text>]:
 	aliases: premka, minecraftpremium
