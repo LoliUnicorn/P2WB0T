@@ -1,0 +1,7 @@
+function play(url: text) :: boolean:
+	set {_g} to getGuild()
+	loop queue of {_b} in {_g}:
+		if "%loop-value%" is "%{_url}%":
+			return false
+	play "%{_url}%" in event-guild
+	return true
