@@ -9,6 +9,11 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Deweloperskie"
 	set {command::{@cmd}::uzycie} to "update"
 
+import:
+	java.io.BufferedReader
+	java.io.IOException
+	java.io.InputStreamReader
+
 discord command {@cmd} [<text>]:
 	aliases: cm,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
@@ -21,10 +26,12 @@ discord command {@cmd} [<text>]:
 		if arg-1 is "last":
 			reply with "Wczytywanie..." and store it in {v::update::botmsg}
 			delete file "plugins/Skript/scripts/log.api"
-			run script at "plugins/Skript/scripts/commit.sh"
+
+			Runtime.getRuntime().exec("./home/kamil0024/Boty/0024B0T/plugins/commit.sh")
+
 			set {_kek::*} to lines from file "plugins/Skript/scripts/log.api"
 			edit {v::update::botmsg} to show "%{_kek::*}%"
-
+			reply with "Eldo. %{_kek::*}%"
 
 		KamilAPI add emote "green" to event-message
 		delete {v::update::botmsg}
