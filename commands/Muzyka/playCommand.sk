@@ -44,7 +44,7 @@ discord command {@cmd} [<text>]:
 		loop 10 times:
 			{_r::%loop-number%} is set
 			append line "%loop-number%. %{_r::%loop-number%}% :: %authors of {_r::%loop-number%}%"
-			set {v::%event-user.getId()%::play::piosenka::%loop-number%} to url of {_r::%loop-number%}
+			set {v::%event-user.getId()%::play::piosenka::%loop-number%} to {_r::%loop-number%}
 		append line "```"
 		deleteMessage({_msg}, 0)
 		reply with {_m} and store it in {v::%event-user.getId()%::play::botmsg}
@@ -81,7 +81,7 @@ on guild message received:
 			{_t::%loop-value%} is not set
 			if {v::%event-user.getId()%::play::piosenka::%loop-value%} is set:
 				set {_t::%loop-value%} to true
-				play("%{v::%event-user.getId()%::play::piosenka::%loop-value%}%")
+				play("%url of {v::%event-user.getId()%::play::piosenka::%loop-value%}%")
 				#play {v::%event-user.getId()%::play::piosenka::%loop-value%}
 		reply with "<@%event-user.getId()%>, dodaje **%size of {_t::*}%** utworów do kolejki!"
 		playError(event-user.getId())
@@ -103,7 +103,7 @@ on guild message received:
 			# 	reply with "<@%event-user.getId()%>, puszczam **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`**"
 
 			#play {v::%event-user.getId()%::play::piosenka::%{_msg}%}
-			play("%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%")
+			play("%url of {v::%event-user.getId()%::play::piosenka::%{_msg}%}%")
 			
 			KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}
 			playError(event-user.getId())

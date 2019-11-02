@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::uzycie} to "wykonawca <nazwa wykonawcy>"
 
 discord command {@cmd} [<text>]:
-	aliases: ZmienToOk
+	aliases: wyk,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
 		if arg-1 is not set:
@@ -44,6 +44,7 @@ discord command {@cmd} [<text>]:
 		edit {_msg} to show "Dodaje %size of {_m::*}% utworów wykonawcy `%arg-1%` do kolejki."
 		set {v::play::kanal} to event-channel
 		loop {_m::*}:
+			wait a tick
 			play("%url of loop-value%")
 			#play loop-value
 		KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}

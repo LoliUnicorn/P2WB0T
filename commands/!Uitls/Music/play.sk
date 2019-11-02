@@ -4,5 +4,6 @@ function play(xd: text) :: boolean:
 	loop queue of {_b} in {_g}:
 		if "%url of loop-value%" is "%{_xd}%":
 			return false
+			stop
 	play "%{_xd}%" in {_g} with {bot::name}
 	return true
