@@ -23,3 +23,4 @@ on guild message receive:
 		set {_ch} to "%event-message%"
 		replace all "<" and "##" and ">" with "" in {_ch}
 		set {_ch} to event-guild.getTextChannelById({_ch})
+		reply with "%{_ch}%"
