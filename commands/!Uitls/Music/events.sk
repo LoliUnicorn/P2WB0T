@@ -9,4 +9,11 @@ on track end:
 
 on track start:
 	wait 30 tick
+	set {_g} to getGuild()
+	set {_mem} to getUser({bot::id}) in {_g}
+	loop ...{_mem}.getVoiceState().getChannel().getMembers():
+		set {_e} to loop-value
+		if {_e}.getUser().isBot() is false:
+			add 1 to {_size}
+	{_size} > 0
 	send "Puszczam **`%track {bot::name} is playing in event-guild%`**" to channel with id {v::play::kanal}.getId() with {bot::name}
