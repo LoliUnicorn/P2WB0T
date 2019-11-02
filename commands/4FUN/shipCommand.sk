@@ -9,7 +9,18 @@ on script load:
 	set {command::{@cmd}::kategoria} to "4FUN"
 	set {command::{@cmd}::uzycie} to "ship [rzecz 1] [rzecz 2]"
 
-discord command {@cmd} [<text>] [<text>]:
+on script load:
+	if {ship::litera::A} is not set:
+		set {_alf} to "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ1234567890##!@$%%^&*()_+-="
+		set {_a::*} to split {_alf} at ""
+		loop {_a::*}:
+			set {_liczba} to rounded up random number between 1 and 20
+			set {_w} to "+"
+			chance of 30%:
+				set {_w} to "-"
+			set {ship::litera::%loop-value%} to "%{_liczba}%|%{_w}%"
+
+discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: ZmienToOk
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
