@@ -14,11 +14,11 @@ discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
 		if arg-1 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)"
 		if arg-2 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+			KamilAPI command error "Użyj: %{bot::prefix}%ship (rzecz 1) (rzecz 2)"
 		if arg-1 is arg-2:
-			KamilAPI command error "Po co chcesz shipowac 2 takie same rzeczy?" in channel event-channel with user with id event-user.getId() in guild event-guild with event-message
+			KamilAPI command error "Po co chcesz shipowac 2 takie same rzeczy?"
 		set {_a::*} to arg-1, arg-2
 		set {_mem::*} to "%getUser(arg-1)%", "%getUser(arg-2)%"
 		loop {_mem::*}:

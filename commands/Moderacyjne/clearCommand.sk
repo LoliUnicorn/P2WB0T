@@ -53,8 +53,8 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 
 		set {_check} to checkNumber({_arg})
-			if {_check} is set:
-				KamilAPI cmd error {_check}
+		if {_check} is set:
+			KamilAPI cmd error {_check}
 
 		reply with "Usuwam **%arg-2%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
 		grab last 1000 messages in event-channel
