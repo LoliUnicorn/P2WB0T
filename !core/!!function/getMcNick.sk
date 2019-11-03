@@ -1,6 +1,6 @@
 function getMcNick(u: text) :: text:
 	set {_g} to getGuild()
-	set {_member} getUser({_u}) in {_g}
+	set {_member} to getUser({_u}) in {_g}
 	set {_nick} to "%discord nickname of {_member}%"
 	if {_nick} contains "[":
 		set {_nick} to last element of ({_nick} split at " ")
