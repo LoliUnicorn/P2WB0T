@@ -167,7 +167,8 @@ on guild message receive:
 		if {_c} is not set:
 			reply with "Nieprawidłowy kanał, anuluje operacje."
 			delete {v::%event-user.getId()%::giveaway::*}
+			stop
 		else:
 			set {v::%event-user.getId()%::giveaway::kanal} to {_c}.getId() # final channel
 			reply with "Napisz jaka będzie nagroda..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
-			set {v::%event-user.getId()%::giveaway::typ} to "nagroda"
+		set {v::%event-user.getId()%::giveaway::typ} to "nagroda"
