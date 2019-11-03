@@ -28,7 +28,7 @@ function konkursDeleteMessage(u: text):
 	delete {v::%{_u}%::giveaway::botmsg}
 
 function konkursGetUsers(m: message) :: strings:
-	loop ...{_m}.getMessage().getReactions():
+	loop ...{_m}.getReactions():
 		set {_r} to loop-value
 		loop ...{_r}.retrieveUsers():
 			set {_us} to loop-value-2
@@ -57,7 +57,7 @@ function updateKonkurs(id: text="null"):
 
 			log("DEBUG: %{_data}% < %now%")
 			if {_data} < now:
-				set {_us::*} to konkursGetUsers({_m})
+				set {_us::*} to konkursGetUsers({_m}.getMessage())
 				set {_wygrany} to random element out of {_us::*}
 				log("DEBUG: wygrany=%{_wygrany}% {_us::*}=%{_us::*}%")
 
