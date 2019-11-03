@@ -28,7 +28,7 @@ function konkursDeleteMessage(u: text):
 	delete {v::%{_u}%::giveaway::botmsg}
 
 function konkursGetUsers(m: message) :: strings:
-	loop ...{_m}.getReactions():
+	loop ...{_m}.getMessage().getReactions():
 		set {_r} to loop-value
 		loop ...{_r}.retrieveUsers():
 			set {_us} to loop-value-2
