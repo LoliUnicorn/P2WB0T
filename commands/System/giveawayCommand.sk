@@ -50,11 +50,11 @@ function updateKonkurs(id: text="null"):
 			log("DEBUG: %{_data}% < %now%")
 			if {_data} < now:
 				loop ...{_m}.getMessage().getReactions():
-					set {_r} to loop-value
+					set {_r} to loop-value-2
 					loop ...{_r}.retrieveUsers():
-						set {_us} to loop-value
+						set {_us} to loop-value-3
 						if {_u}.isBot() is false:
-							add {_us::*} to loop-value
+							add {_us} to {_us::*}
 							log("DEBUG: Dodaje %loop-value% do {_us::*}")
 				set {_wygrany} to random element out of {_us::*}
 				log("DEBUG: wygrany=%{_wygrany}%")
@@ -82,7 +82,7 @@ function updateKonkurs(id: text="null"):
 			edit {_m} to show last created embed
 			if {_wygrany} is set:
 				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %{_nagroda}%" to channel with id {_channel}.getId() with {bot::name}
-				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'"
+				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
 
 every 1 minute:
 	updateKonkurs()
