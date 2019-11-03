@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "giveaway (stworz|usun) [id]"
 
-discord command {@cmd} [<text>]:
+discord command {@cmd} [<text>] [<text>]:
 	aliases: konkurs,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
@@ -24,8 +24,6 @@ discord command {@cmd} [<text>]:
 			set {v::%event-user.getId()%::giveaway::typ} to "channel"
 		if arg-1 is "usun":
 			if arg-2 is not set:
-				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
-			if arg-2 parsed as number is not set:
 				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 			reply with "Zatrzymuje konkurs z ID ##%arg-2%"
 			execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe arg-2%'" in {bot::sql}

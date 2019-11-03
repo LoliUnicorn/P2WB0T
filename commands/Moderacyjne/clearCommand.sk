@@ -33,7 +33,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 				delete event-message
 				wait 5 tick
-				grab last {_arg}+1 messages in event-channel
+				grab last {_arg} messages in event-channel
 
 				loop grabbed messages:
 					deleteMessage(loop-message, 0)
