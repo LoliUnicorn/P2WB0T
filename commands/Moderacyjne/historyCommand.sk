@@ -57,6 +57,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
 				set the footer of embed to footer with text "%arg-2%" and icon "%avatar of event-bot%"
+
 				loop (size of {_warny::id::*}) times:
 					add 1 to {_beka}
 				loop (size of {_warny::id::*}) times:
@@ -70,7 +71,8 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_now} to {_warny::now::%{_id}%}
 						set {_dobreID} to {_warny::id::%{_id}%}
 						append line "%getMention({_adm})% | %{_powod}% | %{_now}% | %{_dobreID}%"
-					remove 1 from {_beka:}
+					remove 1 from {_beka}
+					
 				set the description of embed to "%{_m}%"
 		
 				set the author info of the embed to author named getName({v::%event-user.getId()%::history::user}.getId()) with no url and icon "%avatar of {v::%event-user.getId()%::history::user}%"
