@@ -21,6 +21,38 @@ function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})
 	delete {v::%{_u}%::giveaway::botmsg}
 
+function updateKonkurs(id: text="null"):
+	if {_id} is "null":
+		execute "SELECT * FROM konkurs WHERE aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+		loop size of {_r::id::*} times:
+			set {_id} to {_r::id::%loop-value%}
+			set {_kanal} to {_r::kanal::%loop-value%}
+			set {_koniec} to {_r::koniec::%loop-value%}
+			set {_messageId} to {_r::messageId::%loop-value%}
+			set {_nagroda} to {_r::nagroda::%loop-value%}
+			set {_sender} to {_r::sender::%loop-value%}
+
+			set {_data} to unix date {_koniec} as date
+			set {_end} to getTimespan("%difference between now and {_data}%")
+
+			create embed:
+				set the title of embed to title with text "Konkurs!"
+				set the colour of the embed to aqua
+				set the footer of embed to footer with text "ID: %{_id}%"
+
+				add field named "Do wygrania:" with value "%{_nagroda}%" to embed
+				
+				# Sprawdz czy już się nie skończył przypadkiem 
+
+				add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
+				add split field named "Organizowany przez:" with value "%getMention({_sender})%" to embed
+				add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
+			
+			set {_channel} to channel with id "%{_kanal}%"
+			retrieve message with id "%{_messageId}%" from {_ch}
+			set {_m} to last retrieved message
+			edit {_m} to show last created embed
+
 on guild message receive:
 	if "%event-message%" contains {bot::prefix}:
 		stop
@@ -58,7 +90,7 @@ on guild message receive:
 		if size of {_r::id::*} = 0:
 			set {_id} to "1"
 		else:
-			set {_id} to "%size of {_r::id::*}%"
+			set {_id} to "%size of {_r::id::*}+1%"
 
 		set {_kanal} to {v::%event-user.getId()%::giveaway::kanal}
 		set {_messageId} to {_msg}.getID()
@@ -70,9 +102,7 @@ on guild message receive:
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
-		reply with "id: %{_id}%"
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
-		reply with "last sql error: %last sql error% ::"
 		delete {v::%event-user.getId()%::giveaway::*}
 		stop
 		# tutaj tworzyć konkurs
