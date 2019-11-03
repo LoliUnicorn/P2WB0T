@@ -54,7 +54,6 @@ function updateKonkurs(id: text="null"):
 
 				if {_data} < now:
 					add split field named "Koniec za:" with value "-" to embed
-					set {_m} to last retrieved message
 
 					loop ...{_m}.getMessage().getReactions():
 						set {_r} to loop-value
@@ -69,11 +68,12 @@ function updateKonkurs(id: text="null"):
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
 				add split field named "Organizowany przez:" with value "%getMention({_sender})%" to embed
-				add field named "" with value "Konkurs sie skonczyl." to embed
+				if {_wygrany} is set:
+					add field named "" with value "Konkurs sie skonczyl." to embed
 			
 			edit {_m} to show last created embed
 			if {_wygrany} is set:
-				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %{_nagroda}%"
+				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %{_nagroda}%" to channel with id {_channel}.getId() with {bot::name}
 				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'"
 
 every 1 minute:
@@ -110,6 +110,7 @@ on guild message receive:
 			add split field named "Organizowany przez:" with value "?" to embed
 			add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
 		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name} and store it in {_msg}
+		add emote "tada" to reactions of {_msg} with event-bot
 
 		execute "SELECT id FROM konkurs" in {bot::sql} and store result in {_r::*}
 		if size of {_r::id::*} = 0:
