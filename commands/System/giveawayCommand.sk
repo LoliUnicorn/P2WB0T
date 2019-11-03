@@ -42,8 +42,6 @@ on guild message receive:
 
 		set {v::%event-user.getId()%::giveaway::koniec} to "%convert date {_now} to unix date%" # final koniec
 
-		set {_msg} to a message builder
-
 		# tutaj tworzyć konkurs
 		create embed:
 			set the title of embed to title with text "Konkurs!"
@@ -63,16 +61,18 @@ on guild message receive:
 			set {_id} to "%size of {_r::id::*}%"
 
 		set {_kanal} to {v::%event-user.getId()%::giveaway::kanal}
-		set {_messageId} to {_msg}.getId()
+		set {_messageId} to {_msg}.getID()
 		set {_sender} to event-user.getId()
+		set {_nagroda} to {v::%event-user.getId()%::giveaway::nagroda}
 
 		set {_xd} to "%now%"
 		set {_now} to "%unsafe {_xd}%"
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
+		reply with "id: %{_id}%"
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
-		reply with "last sql error: %last sql error%"
+		reply with "last sql error: %last sql error% ::"
 		delete {v::%event-user.getId()%::giveaway::*}
 		stop
 		# tutaj tworzyć konkurs
@@ -121,3 +121,10 @@ on guild message receive:
 			set {v::%event-user.getId()%::giveaway::kanal} to {_c}.getId() # final channel
 			reply with "Napisz jaka będzie nagroda..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
 			set {v::%event-user.getId()%::giveaway::typ} to "nagroda"
+
+```
+execute "SELECT * FROM konkurs" in {bot::sql} and store result in {_r::*}
+loop {_r::*}:
+	loop {_r::%loop-index%::*}:
+		reply with "%loop-index-1%::%loop-index-2% = %loop-value-2%"
+```
