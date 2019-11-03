@@ -54,13 +54,13 @@ on guild message receive:
 			add split field named "Koniec za:" with value "? (?)" to embed
 			add split field named "Organizowany przez:" with value "?" to embed
 			add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
-		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name}
+		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name} and store it in {_msg}
 
-		execute "SELECT ID ROM Discord" in {bot::sql} and store result in {_r::*}
-		if size of {_r::*} = 0:
+		execute "SELECT id FROM konkurs" in {bot::sql} and store result in {_r::*}
+		if size of {_r::id::*} = 0:
 			set {_id} to "1"
 		else:
-			set {_id} to "%size of {_r::*}%"
+			set {_id} to "%size of {_r::id::*}%"
 
 		set {_kanal} to {v::%event-user.getId()%::giveaway::kanal}
 		set {_messageId} to {_msg}.getId()
