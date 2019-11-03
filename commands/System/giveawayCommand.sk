@@ -49,7 +49,7 @@ function updateKonkurs(id: text="null"):
 				add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
 			
 			set {_channel} to channel with id "%{_kanal}%"
-			retrieve message with id "%{_messageId}%" from {_ch}
+			retrieve message with id "%{_messageId}%" from {_channel}
 			set {_m} to last retrieved message
 			edit {_m} to show last created embed
 
