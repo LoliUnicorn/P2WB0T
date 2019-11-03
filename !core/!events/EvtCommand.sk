@@ -1,6 +1,12 @@
 on vixio command:
 	send typing in event-channel
 	set {_cmd} to "%event-discordcommand%"
+	if {command::{_cmd}::kategoria} is "Muzyka":
+		if getPoziom(event-user.getId()) < 1:
+			reply with "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji."
+			KamilAPI add emote "red" to event-message
+			cancel event
+			stop
 	if {command::%{_cmd}%::cooldown} is set:
 		{command::%{_cmd}%::cooldown} != 0 seconds
 		isOwner(event-user.getId()) is false
