@@ -53,14 +53,22 @@ on guild message receive:
 			add field named "Do wygrania:" with value "?" to embed
 			add split field named "Koniec za:" with value "? (?)" to embed
 			add split field named "Organizowany przez:" with value "?" to embed
-			add field named "" with value "Aby wsiąć udził kliknij na reakcje :tada:" to embed
+			add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
 		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name}
 
-		set {_id} to "1"
+		execute "SELECT ID ROM Discord" in {bot::sql} and store result in {_r::*}
+		if size of {_r::*} = 0:
+			set {_id} to "1"
+		else:
+			set {_id} to "%size of {_r::*}%"
+
 		set {_kanal} to {v::%event-user.getId()%::giveaway::kanal}
 		set {_messageId} to {_msg}.getId()
 		set {_sender} to event-user.getId()
-		set {_now} to "%now%"
+
+		set {_xd} to "%now%"
+		set {_now} to "%unsafe {_xd}%"
+
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%',%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
