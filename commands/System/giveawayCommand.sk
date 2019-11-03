@@ -70,7 +70,7 @@ function updateKonkurs(id: text="null"):
 				if {_wygrany} is set:
 					add split field named "Koniec za:" with value "-" to embed
 
-					add split field named "Wygrany:" with value "%geMention({_wygrany}.getId())%" to embed
+					add split field named "Wygrany:" with value getMention({_wygrany}.getId()) to embed
 					
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
