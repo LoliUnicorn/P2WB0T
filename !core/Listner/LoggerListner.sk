@@ -4,3 +4,19 @@ on vixio command:
   send "%{kek::%event-user.getId()%}%" to channel with id getConfig("Config.logiKomend") with event-bot
   send "%{kek::%event-user.getId()%}%" to console
   delete {kek::%event-user.getId()%}
+
+on member join guild:
+	wait 50 tick
+	set {_ch} to getConfig("Config.logi")
+	create embed:
+		set the colour of the embed to color of getColor(event-member)
+		set the timestamp of embed to now
+		set the footer of embed to footer with text "Dołączenie na serwer"
+	
+		set the description of embed to "Dołączył na serwer: %now%"
+	
+		add field named "Nick:" with value "%getFullName(event-user.getId())% <%discord nickname of event-member%>" to embed
+		add field named "ID:" with value "%event-user.getId()%" to embed
+
+		set the thumbnail of embed to "%avatar of event-user%"
+	send last created embed to channel with id {_ch} with {bot::name}
