@@ -7,15 +7,21 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Tworzy konkurs/"
 	set {command::{@cmd}::kategoria} to "System"
-	set {command::{@cmd}::uzycie} to "giveaway"
+	set {command::{@cmd}::uzycie} to "giveaway (stworz|usun) [id]"
 
 discord command {@cmd} [<text>]:
 	aliases: konkurs,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
-		delete {v::%event-user.getId()%::giveaway::*}
-		reply with "Napisz nazwę kanału, na którym ma się pojawić konkurs..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
-		set {v::%event-user.getId()%::giveaway::typ} to "channel"
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+		if arg-1 is not "stworz" or "usun":
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+		if arg-1 is "stworz":
+			KamilAPI add emote "green" to event-message
+			delete {v::%event-user.getId()%::giveaway::*}
+			reply with "Napisz nazwę kanału, na którym ma się pojawić konkurs..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
+			set {v::%event-user.getId()%::giveaway::typ} to "channel"
 
 function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})
@@ -35,6 +41,10 @@ function updateKonkurs(id: text="null"):
 			set {_data} to unix date ("%{_koniec}%" parsed as number) as date
 			set {_end} to getTimespan("%difference between now and {_data}%")
 
+			set {_channel} to channel with id "%{_kanal}%"
+			retrieve message with id "%{_messageId}%" from {_channel}
+			set {_m} to last retrieved message
+
 			create embed:
 				set the title of embed to title with text "Konkurs!"
 				set the colour of the embed to aqua
@@ -42,16 +52,32 @@ function updateKonkurs(id: text="null"):
 
 				add field named "Do wygrania:" with value "%{_nagroda}%" to embed
 
-				# Sprawdz czy już się nie skończył przypadkiem 
+				if {_data} < now:
+					add split field named "Koniec za:" with value "-" to embed
+					set {_m} to last retrieved message
 
-				add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
+					loop ...{_m}.getMessage().getReactions():
+						set {_r} to loop-value
+						loop ...{_r}.retrieveUsers():
+								set {_us} to loop-value
+								if {_u}.isBot() is false:
+									add {_us::*} to loop-value
+
+					set {_wygrany} to random element out of {_us::*}
+					add split field named "Wygrany:" with value "%getMention({_wygrany}.getId())%" to embed
+					
+				else:
+					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
 				add split field named "Organizowany przez:" with value "%getMention({_sender})%" to embed
-				add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
+				add field named "" with value "Konkurs sie skonczyl." to embed
 			
-			set {_channel} to channel with id "%{_kanal}%"
-			retrieve message with id "%{_messageId}%" from {_channel}
-			set {_m} to last retrieved message
 			edit {_m} to show last created embed
+			if {_wygrany} is set:
+				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %{_nagroda}%"
+				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'"
+
+every 1 minute:
+	updateKonkurs()
 
 on guild message receive:
 	if "%event-message%" contains {bot::prefix}:
@@ -74,7 +100,6 @@ on guild message receive:
 
 		set {v::%event-user.getId()%::giveaway::koniec} to "%convert date {_now} to unix date%" # final koniec
 
-		# tutaj tworzyć konkurs
 		create embed:
 			set the title of embed to title with text "Konkurs!"
 			set the colour of the embed to aqua
@@ -104,25 +129,10 @@ on guild message receive:
 
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
 		delete {v::%event-user.getId()%::giveaway::*}
+		updateKonkurs()
 		stop
-		# tutaj tworzyć konkurs
-		# przez funkcje ofc
-
-		# 1. Uzyskanie daty z unixa:
-			# set {_e} to 1572808512 <- nasz czas
-			# set {_xD} to unix date {_e} as date
-			# reply with "%{_xD}%" <- data
-
-		# 2. Sprawdzanie czy konkurs się skończył:
-			# if {_xD} < now:
-			#		... koniec konkursu
-
-		# 3. Otrzymanie za ile konkurs sie skonczy:
-			# getTimespan("%difference between now and {_xD}%")
 
 		# Sugestie:
-			# Zapisz to do bazy danych (trudno będzie XDDD)
-			# Zrób id konkursu
 			# Nie usuwaj konkursu z bazy danych:
 				# Daj value Aktywny:Nie
 				# Daj zwycięzce konkursu
