@@ -62,7 +62,8 @@ on script load:
 
 	log("%{bot::sql}%")
 	log("&eKonfiguruje baze danych...")
-	#TODO: Dodać nick w mc execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`akcje` ( `id` TEXT NOT NULL , `karany` TEXT NOT NULL , `adm` TEXT NOT NULL , `typ` TEXT NOT NULL , `powod` TEXT NOT NULL , `now` TEXT NOT NULL , `czas` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
+
+	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`akcje` ( `id` TEXT NOT NULL , `karany` TEXT NOT NULL , `nick` TEXT NOT NULL , `adm` TEXT NOT NULL , `typ` TEXT NOT NULL , `powod` TEXT NOT NULL , `now` TEXT NOT NULL , `czas` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
 
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`konkurs` ( `id` TEXT NOT NULL , `nagroda` TEXT NOT NULL , `kanal` TEXT NOT NULL, `messageId` TEXT NOT NULL , `sender` TEXT NOT NULL, `now` TEXT NOT NULL , `koniec` TEXT NOT NULL , `aktywna` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 
