@@ -7,16 +7,12 @@ function modLog(karany: text, adm: text, typ: text, powod: text, czas: text="nul
 	set {_kurwa} to {_guild}.getMemberById({_adm}.getId())
 
 	set {_nickname} to discord nickname of ({_karany} in {_guild})
-	set {_embed::karany} to "%getMention({_karany}.getId())%(%getName({_karany}.getId())%)"
-	if {_nickname} != "%{_karany}%":
-		set {_embed::karany} to "%{_embed::karany}% [%getMcNick({_karany}.getId())%]"
+	set {_embed::karany} to "%{_embed::karany}%(%getName({_karany}.getId())%) [%getMcNick({_karany}.getId())%]"
 
 	create embed:
 		set the colour of the embed to color of getColor({_kurwa})
 		set the timestamp of embed to now
 		set the footer of embed to footer with text {_typ} and icon "%avatar of {_b}%"
-	
-		set the author info of the embed to author named "Author name (Can point to URL)" with no url and icon "link"
 	
 		add field named "Osoba karana:" with value {_embed::karany} to embed
 		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
