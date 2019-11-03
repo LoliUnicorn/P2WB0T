@@ -45,13 +45,54 @@ on guild message receive:
 		set {_msg} to a message builder
 
 		# tutaj tworzyć konkurs
-		append line "Nagroda: %{v::%event-user.getId()%::giveaway::nagroda}%"
-		append line "Kanał: %{v::%event-user.getId()%::giveaway::kanal}%"
-		append line "Czas: %{v::%event-user.getId()%::giveaway::koniec}% (unix date (""{v::%event-user.getId()%::giveaway::koniec}"" parsed as number))"
-		reply with {_msg}
+		create embed:
+			set the title of embed to title with text "Konkurs!"
+			set the colour of the embed to aqua
+			set the footer of embed to footer with text "ID: ?"
+
+			add field named "Do wygrania:" with value "?" to embed
+			add split field named "Koniec za:" with value "? (?)" to embed
+			add split field named "Organizowany przez:" with value "?" to embed
+			add field named "" with value "Aby wsiąć udził kliknij na reakcje :tada:" to embed
+		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name}
+
+		set {_id} to "1"
+		set {_kanal} to {v::%event-user.getId()%::giveaway::kanal}
+		set {_messageId} to {_msg}.getId()
+		set {_sender} to event-user.getId()
+		set {_now} to "%now%"
+		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
+
+		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%',%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
+		reply with "last sql error: %last sql error%"
 		delete {v::%event-user.getId()%::giveaway::*}
 		stop
 		# tutaj tworzyć konkurs
+		# przez funkcje ofc
+
+		# 1. Uzyskanie daty z unixa:
+			# set {_e} to 1572808512 <- nasz czas
+			# set {_xD} to unix date {_e} as date
+			# reply with "%{_xD}%" <- data
+
+		# 2. Sprawdzanie czy konkurs się skończył:
+			# if {_xD} < now:
+			#		... koniec konkursu
+
+		# 3. Otrzymanie za ile konkurs sie skonczy:
+			# getTimespan("%difference between now and {_xD}%")
+
+		# Sugestie:
+			# Zapisz to do bazy danych (trudno będzie XDDD)
+			# Zrób id konkursu
+			# Nie usuwaj konkursu z bazy danych:
+				# Daj value Aktywny:Nie
+				# Daj zwycięzce konkursu
+
+			# Zrób liste konkursów jakie były
+
+		# TODO: Zrobić na wczoraj ^
+
 
 	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
 		konkursDeleteMessage(event-user.getId())
