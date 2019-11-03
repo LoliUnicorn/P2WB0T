@@ -20,11 +20,12 @@ discord command {@cmd} [<text>]:
 		create embed:
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the footer of embed to footer with text "Kara ID: *" and icon "%avatar of event-bot%"
-			set the description of embed to "Informacje o karze nr. *"
+			set the footer of embed to footer with text "Kara ID: %arg-1%" and icon "%avatar of event-bot%"
+			set the description of embed to "Informacje o karze nr. %arg-1%"
 		
 			set the author info of the embed to author named getName(event-user.getId()) with no url and icon "%avatar of event-user%"
 			add field named "Karany:" with value "%getMention({_kara::karany::*})% (%getName({_kara::karany::*})%)" to embed
+			add field named "Nick w mc:" with value "%{_kara::nick::*}%" to embed
 			add field named "Administrator:" with value "%getMention({_kara::adm::*})%" to embed
 			add field named "Typ:" with value "%{_kara::typ::*}%" to embed
 			add field named "Powód:" with value "%{_kara::powod::*}%" to embed

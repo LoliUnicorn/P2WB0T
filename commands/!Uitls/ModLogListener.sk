@@ -19,7 +19,7 @@ function modLog(karany: text, adm: text, typ: text, powod: text, czas: text="nul
 		set the author info of the embed to author named "Author name (Can point to URL)" with no url and icon "link"
 	
 		add field named "Osoba karana:" with value {_embed::karany} to embed
-		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%) [%discord nickname of {_kurwa}%]" to embed
+		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%) [%getMcNick({_karany})%]" to embed
 		add field named "Powód:" with value getPowod({_powod}) to embed
 		if {_czas} != "null":
 			add field named "Mija o:" with value {_czas} to embed

@@ -1,9 +1,9 @@
 function addAkcje(karany: text, adm: text, typ: text, powod: text, czas: text="null"):
 	execute "SELECT id FROM akcje" in {bot::sql} and store result in {_kek::*}
 	set {_id} to "%(size of {_kek::id::*})+1%"
-
+	set {_nick} to getMcNick({_karany})
 	set {_now} to "%year%-%month%-%day% %hour%:%minute%:%second%"
 	if {_czas} is "null":
-		execute "INSERT INTO `akcje` (id,karany,adm,typ,powod,now) VALUES('%unsafe {_id}%', '%unsafe {_karany}%', '%unsafe {_adm}%', '%unsafe {_typ}%', '%unsafe getPowod({_powod})%', '%unsafe {_now}%')" in {bot::sql}
+		execute "INSERT INTO `akcje` (id,karany,nick,adm,typ,powod,now) VALUES('%unsafe {_id}%', '%unsafe {_karany}%', '%unsafe {_nick}%' , '%unsafe {_adm}%', '%unsafe {_typ}%', '%unsafe getPowod({_powod})%', '%unsafe {_now}%')" in {bot::sql}
 	else:
-		execute "INSERT INTO `akcje` (id,karany,adm,typ,powod,now,czas) VALUES('%unsafe {_id}%', '%unsafe {_karany}%', '%unsafe {_adm}%', '%unsafe {_typ}%', '%unsafe getPowod({_powod})%', '%unsafe {_now}%', '%unsafe {_czas}%')" in {bot::sql}
+		execute "INSERT INTO `akcje` (id,karany,nick,adm,typ,powod,now,czas) VALUES('%unsafe {_id}%', '%unsafe {_karany}%', '%unsafe {_nick}%' , '%unsafe {_adm}%', '%unsafe {_typ}%', '%unsafe getPowod({_powod})%', '%unsafe {_now}%', '%unsafe {_czas}%')" in {bot::sql}
