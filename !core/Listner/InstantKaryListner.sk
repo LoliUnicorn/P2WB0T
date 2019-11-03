@@ -1,0 +1,16 @@
+function checkBan(u: text):
+set {_nick} to getMcNick({_u})
+set {_user} to getUser({_u})
+
+if {_nick} contains "-":
+	stop
+
+execute "SELECT * FROM akcje WHERE nick='%unsafe {_nick}%'" in {bot::sql} and store result in {_o::*}
+if {_o::typ::1} is "Ban":
+	modLog({_user}.getId(), {_o::adm::1}, "Ban", "Ten nick (**%{_nick}%**) ma bana!")
+
+on member guild join:
+	wait 100 tick
+	checkBan(event-user.getId())
+
+# TODO: Dodaj tutaj mute i tempban/tempmute

@@ -28,11 +28,12 @@ discord command {@cmd} [<text>] [<text>]:
 
 		KamilAPI bypass event-member at {_member} with event-message
 
+		set {_nick} to getMcNick({_member}.getUser().getId())
 		ban getUser(arg-1) from event-guild with reason {_powod} with event-bot
 		set {_l} to last vixio error
 		if {_l} is set:
-			KamilAPI command error "Nie udało się wyrzucić użytkownika: Błąd: `%{_l}%`" to event-message
+			KamilAPI command error "Nie udało się zbanować użytkownika: Błąd: `%{_l}%`" to event-message
 
-		modLog({_member}.getUser().getId(), event-user.getId(), "Ban", {_powod})
+		modLog({_member}.getUser().getId(), event-user.getId(), "Ban", {_powod}, {_nick})
 		reply with "Pomyślnie zbanowano **%getName(arg-1)%** z powodem %getRegex({_powod})%"
 		KamilAPI add emote "green" to event-message
