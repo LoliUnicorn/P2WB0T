@@ -48,21 +48,21 @@ discord command {@cmd} [<text>] [<text>]:
 		set {_u} to getUser(arg-1)
 		if {_u} is not set:
 			KamilAPI cmd error "Nieprawidłowy użytkownik. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
-		if (arg-2 parsed as number) is not set:
+		set {_a} to arg-2 parsed as number
+		if {_a} is not set:
 			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
-
-		set {_check} to checkNumber(arg-2)
+		set {_check} to checkNumber({_a})
 		if {_check} is set:
 			KamilAPI cmd error {_check}
 
-		reply with "Usuwam **%arg-2%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
+		reply with "Usuwam **%{_a}%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
 		grab last 1000 messages in event-channel
 		loop grabbed messages:
 			set {_l} to loop-value
 			if {_l}.getMessage().getAuthor().getId() is {_u}.getId():
 				deleteMessage(loop-message)
 				add 1 to {_juz}
-				if {_juz} is arg-2:
+				if {_juz} is {_a}:
 					stop loop
-		edit {_msg} to show "Usunięto **%arg-2%** wiadomości użytkownika %getName(arg-1)%"
+		edit {_msg} to show "Usunięto **%{_a}%** wiadomości użytkownika %getName(arg-1)%"
 		deleteMessage({_msg}, 8)
