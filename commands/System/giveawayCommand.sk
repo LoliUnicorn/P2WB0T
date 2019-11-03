@@ -27,13 +27,15 @@ function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})
 	delete {v::%{_u}%::giveaway::botmsg}
 
-function konkursGetUsers(m: message) :: strings:
-	loop ...{_m}.getReactions():
+function konkursGetUsers(m: message) :: users:
+	loop ...{_m}.getMessage().getReactions():
 		set {_r} to loop-value
 		loop ...{_r}.retrieveUsers():
 			set {_us} to loop-value-2
-			if {_u}.isBot() is false:
+			if {_us}.isBot() is false:
 				add {_us} to {_us::*}
+				log("DEBUG: dodaje %{_us}%")
+	return {_us::*}
 
 function updateKonkurs(id: text="null"):
 	if {_id} is "null":
@@ -53,13 +55,10 @@ function updateKonkurs(id: text="null"):
 			set {_channel} to channel with id "%{_kanal}%"
 			retrieve message with id "%{_messageId}%" from {_channel}
 			set {_m} to last retrieved message
-			log("DEBUG: %{_channel}% | %{_messageId}%")
 
-			log("DEBUG: %{_data}% < %now%")
 			if {_data} < now:
-				set {_us::*} to konkursGetUsers({_m}.getMessage())
+				set {_us::*} to konkursGetUsers({_m})
 				set {_wygrany} to random element out of {_us::*}
-				log("DEBUG: wygrany=%{_wygrany}% {_us::*}=%{_us::*}%")
 
 			create embed:
 				set the title of embed to title with text "Konkurs!"
@@ -71,7 +70,7 @@ function updateKonkurs(id: text="null"):
 				if {_wygrany} is set:
 					add split field named "Koniec za:" with value "-" to embed
 
-					add split field named "Wygrany:" with value "%{_wygrany}%" to embed
+					add split field named "Wygrany:" with value "%geMention({_wygrany}.getId())%" to embed
 					
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
