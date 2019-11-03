@@ -142,16 +142,6 @@ on guild message receive:
 		updateKonkurs()
 		stop
 
-		# Sugestie:
-			# Nie usuwaj konkursu z bazy danych:
-				# Daj value Aktywny:Nie
-				# Daj zwycięzce konkursu
-
-			# Zrób liste konkursów jakie były
-
-		# TODO: Zrobić na wczoraj ^
-
-
 	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
 		konkursDeleteMessage(event-user.getId())
 		set {v::%event-user.getId()%::giveaway::nagroda} to "%event-message%" # final nagroda
