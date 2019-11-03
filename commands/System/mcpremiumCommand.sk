@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Wyświetla informacje o koncie Minecraft."
 	set {command::{@cmd}::kategoria} to "System"
-	set {command::{@cmd}::uzycie} to "mcpremium (nick)"
+	set {command::{@cmd}::uzycie} to "mcpremium <nick>"
 
 discord command {@cmd} [<text>]:
 	aliases: premka, minecraftpremium

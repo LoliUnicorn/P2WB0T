@@ -13,7 +13,7 @@ discord command {@cmd} [<text>]:
 	aliases: pingbota,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
-		reply with ":ping_pong: Ping..." and store it in {_msg}
 		set {_now} to system millis
+		reply with ":ping_pong: Ping..." and store it in {_msg}
 		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem: `%difference between {_now} and system millis%ms`. Opóźnienie w stosunku z Gatewayem: `%event.getMessage().getJDA().getGatewayPing()%ms`"
 		KamilAPI add emote "green" to event-message
