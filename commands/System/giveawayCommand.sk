@@ -64,7 +64,7 @@ function updateKonkurs(id: text="null"):
 									add {_us::*} to loop-value
 
 					set {_wygrany} to random element out of {_us::*}
-					add split field named "Wygrany:" with value "%getMention({_wygrany}.getId())%" to embed
+					add split field named "Wygrany:" with value "%{_wygrany}%" to embed
 					
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
