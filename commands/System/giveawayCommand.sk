@@ -30,6 +30,7 @@ function konkursDeleteMessage(u: text):
 function updateKonkurs(id: text="null"):
 	if {_id} is "null":
 		execute "SELECT * FROM konkurs WHERE aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+		size of {_r::id::*} != 0
 		loop size of {_r::id::*} times:
 			set {_id} to {_r::id::%loop-value%}
 			set {_kanal} to {_r::kanal::%loop-value%}
@@ -44,6 +45,7 @@ function updateKonkurs(id: text="null"):
 			set {_channel} to channel with id "%{_kanal}%"
 			retrieve message with id "%{_messageId}%" from {_channel}
 			set {_m} to last retrieved message
+			log("DEBUG: %{_channel}% | %{_messageId}% | %{_m}%")
 
 			log("DEBUG: %{_data}% < %now%")
 			if {_data} < now:
