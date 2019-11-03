@@ -32,7 +32,7 @@ function updateKonkurs(id: text="null"):
 			set {_nagroda} to {_r::nagroda::%loop-value%}
 			set {_sender} to {_r::sender::%loop-value%}
 
-			set {_data} to unix date {_koniec} as date
+			set {_data} to unix date ("%{_koniec}%" parsed as number) as date
 			set {_end} to getTimespan("%difference between now and {_data}%")
 
 			create embed:
@@ -41,7 +41,7 @@ function updateKonkurs(id: text="null"):
 				set the footer of embed to footer with text "ID: %{_id}%"
 
 				add field named "Do wygrania:" with value "%{_nagroda}%" to embed
-				
+
 				# Sprawdz czy już się nie skończył przypadkiem 
 
 				add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
@@ -151,10 +151,3 @@ on guild message receive:
 			set {v::%event-user.getId()%::giveaway::kanal} to {_c}.getId() # final channel
 			reply with "Napisz jaka będzie nagroda..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
 			set {v::%event-user.getId()%::giveaway::typ} to "nagroda"
-
-```
-execute "SELECT * FROM konkurs" in {bot::sql} and store result in {_r::*}
-loop {_r::*}:
-	loop {_r::%loop-index%::*}:
-		reply with "%loop-index-1%::%loop-index-2% = %loop-value-2%"
-```
