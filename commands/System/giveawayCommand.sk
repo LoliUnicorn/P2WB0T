@@ -27,6 +27,14 @@ function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})
 	delete {v::%{_u}%::giveaway::botmsg}
 
+function konkursGetUsers(m: message) :: strings:
+	loop ...{_m}.getReactions():
+		set {_r} to loop-value
+		loop ...{_r}.retrieveUsers():
+			set {_us} to loop-value-2
+			if {_u}.isBot() is false:
+				add {_us} to {_us::*}
+
 function updateKonkurs(id: text="null"):
 	if {_id} is "null":
 		execute "SELECT * FROM konkurs WHERE aktywna='Tak'" in {bot::sql} and store result in {_r::*}
@@ -45,19 +53,13 @@ function updateKonkurs(id: text="null"):
 			set {_channel} to channel with id "%{_kanal}%"
 			retrieve message with id "%{_messageId}%" from {_channel}
 			set {_m} to last retrieved message
-			log("DEBUG: %{_channel}% | %{_messageId}% | %{_m}%")
+			log("DEBUG: %{_channel}% | %{_messageId}%")
 
 			log("DEBUG: %{_data}% < %now%")
 			if {_data} < now:
-				loop ...{_m}.getMessage().getReactions():
-					set {_r} to loop-value-2
-					loop ...{_r}.retrieveUsers():
-						set {_us} to loop-value-3
-						if {_u}.isBot() is false:
-							add {_us} to {_us::*}
-							log("DEBUG: Dodaje %loop-value% do {_us::*}")
+				set {_us::*} to konkursGetUsers({_m})
 				set {_wygrany} to random element out of {_us::*}
-				log("DEBUG: wygrany=%{_wygrany}%")
+				log("DEBUG: wygrany=%{_wygrany}% {_us::*}=%{_us::*}%")
 
 			create embed:
 				set the title of embed to title with text "Konkurs!"
