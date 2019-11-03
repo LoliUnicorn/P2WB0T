@@ -45,6 +45,15 @@ function updateKonkurs(id: text="null"):
 			retrieve message with id "%{_messageId}%" from {_channel}
 			set {_m} to last retrieved message
 
+			if {_data} < now:
+				loop ...{_m}.getMessage().getReactions():
+					set {_r} to loop-value
+					loop ...{_r}.retrieveUsers():
+						set {_us} to loop-value
+						if {_u}.isBot() is false:
+							add {_us::*} to loop-value
+				set {_wygrany} to random element out of {_us::*}
+
 			create embed:
 				set the title of embed to title with text "Konkurs!"
 				set the colour of the embed to aqua
@@ -52,17 +61,9 @@ function updateKonkurs(id: text="null"):
 
 				add field named "Do wygrania:" with value "%{_nagroda}%" to embed
 
-				if {_data} < now:
+				if {_wygrany} is set:
 					add split field named "Koniec za:" with value "-" to embed
 
-					loop ...{_m}.getMessage().getReactions():
-						set {_r} to loop-value
-						loop ...{_r}.retrieveUsers():
-								set {_us} to loop-value
-								if {_u}.isBot() is false:
-									add {_us::*} to loop-value
-
-					set {_wygrany} to random element out of {_us::*}
 					add split field named "Wygrany:" with value "%{_wygrany}%" to embed
 					
 				else:
@@ -70,6 +71,8 @@ function updateKonkurs(id: text="null"):
 				add split field named "Organizowany przez:" with value "%getMention({_sender})%" to embed
 				if {_wygrany} is set:
 					add field named "" with value "Konkurs sie skonczyl." to embed
+				else:
+					add field named "" with value "Aby wziąć udział w konkursie kliknij reakcje :tada:" to embed
 			
 			edit {_m} to show last created embed
 			if {_wygrany} is set:
