@@ -22,6 +22,14 @@ discord command {@cmd} [<text>]:
 			delete {v::%event-user.getId()%::giveaway::*}
 			reply with "Napisz nazwę kanału, na którym ma się pojawić konkurs..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
 			set {v::%event-user.getId()%::giveaway::typ} to "channel"
+		if arg-1 is "usun":
+			if arg-2 is not set:
+				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			if arg-2 parsed as number is not set:
+				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			reply with "Zatrzymuje konkurs z ID ##%arg-2%"
+			execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe arg-2%'" in {bot::sql}
+			KamilAPI add emote "green" to event-message
 
 function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})
@@ -82,7 +90,7 @@ function updateKonkurs(id: text="null"):
 			
 			edit {_m} to show last created embed
 			if {_wygrany} is set:
-				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %{_nagroda}%" to channel with id {_channel}.getId() with {bot::name}
+				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %getRegex({_nagroda})%" to channel with id {_channel}.getId() with {bot::name}
 				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
 
 every 1 minute:
