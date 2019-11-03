@@ -71,7 +71,7 @@ on guild message receive:
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
-		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%',%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
+		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
 		reply with "last sql error: %last sql error%"
 		delete {v::%event-user.getId()%::giveaway::*}
 		stop
