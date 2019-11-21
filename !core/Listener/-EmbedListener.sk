@@ -119,7 +119,6 @@ on reaction add:
 			stop
 		if {_strona} < 1:
 			stop
-		log("dalej")
 		set {_embed} to GetEmbedPage({_id}, {_cmd}, "%{_strona}%")
 		edit event-message to show {_embed}
 		set {v::%{_id}%::StronyEmbeda::strona} to {_strona}

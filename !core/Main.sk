@@ -55,10 +55,10 @@ on script load:
 
 	set {_m} to "%{_db::link}%%{_db::database}%?user=%{_db::user}%"
 	if {_db::pass} contains "<none>":
-		set {bot::sql} to the database "%{_db::link}%%{_db::database}%?user=%{_db::user}%&useSSL=false"
+		set {bot::sql} to the database "%{_m}%&useSSL=false"
 		set {_db::pass} to "Brak"
 	else:
-		set {bot::sql} to the database "%{_db::link}%%{_db::database}%?user=%{_db::user}%&password=%{_db::pass}%&useSSL=false"
+		set {bot::sql} to the database "%{_m}%&password=%{_db::pass}%&useSSL=false"
 
 	log("%{bot::sql}%")
 	log("&eKonfiguruje baze danych...")
