@@ -1,0 +1,9 @@
+on guild message receive:
+	getPoziom(event-user.getId()) < 1
+	set {_message} to "%event-message%"
+	set {_beka} to regex replace all pattern "(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]" with "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124" in {_message}
+	if {_beka} contains "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124":
+		reply with ":octagonal_sign: %getMention(event-user.getId())% reklamowanie się jest zabronione :octagonal_sign:"
+		delete event-message
+	#TODO Daj tutaj jakąś karę
+	

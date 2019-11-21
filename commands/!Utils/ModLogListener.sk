@@ -1,0 +1,25 @@
+function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, czas: text="null"):
+	set {_guild} to guild with id {bot::guild}
+	set {_b} to {bot::name} parsed as bot
+
+	set {_karany} to getUser({_karany})
+	set {_adm} to getUser({_adm})
+	set {_kurwa} to {_guild}.getMemberById({_adm}.getId())
+
+	set {_nickname} to discord nickname of ({_karany} in {_guild})
+	set {_embed::karany} to "%{_embed::karany}%(%getName({_karany}.getId())%) [%{_nick}%]"
+
+	create embed:
+		set the colour of the embed to color of getColor({_kurwa})
+		set the timestamp of embed to now
+		set the footer of embed to footer with text {_typ} and icon "%avatar of {_b}%"
+	
+		add field named "Osoba karana:" with value {_embed::karany} to embed
+		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
+		add field named "Powód:" with value getPowod({_powod}) to embed
+		if {_czas} != "null":
+			add field named "Mija o:" with value {_czas} to embed
+	
+		set the thumbnail of embed to "%avatar of {_karany}%"
+	send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}
+	addAkcje({_karany}.getId(), {_adm}.getId(), {_typ}, {_powod}, {_nick}, {_czas})
