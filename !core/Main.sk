@@ -37,10 +37,15 @@ on script load:
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
 		set yml value "Config.adm" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
 
+		set yml value "Config.logiKomend" from file {_f} to "!Logi kanału do logow"
+
 		set yml value "emote.green" from file {_f} to "!id emotki green"
 		set yml value "emote.red" from file {_f} to "!id emotki red"
 
-		log("Stworzono config! Skonfiguruj plugins/Bot/config.yml do swoich potrzec i przeladuj jeszcze raz skrypt!")
+		loop 3 times:
+			add "!id ownera%loop-value% (owner ma wszystkie permy)" to yml list "Config.owners" from file "plugins/Bot/config.example.yml"
+
+		log("Stworzono config! Skonfiguruj plugins/Bot/config.example.yml do swoich potrzec i przeladuj jeszcze raz skrypt!")
 		stop
 
 	set {bot::name} to getConfig("Bot.name")

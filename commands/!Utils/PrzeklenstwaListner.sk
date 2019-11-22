@@ -8,7 +8,7 @@ on guild message receive:
 	loop {_kek::*}:
 		loop {_tak::*}:
 			if loop-value-1 is loop-value-2:
-				modLog(event-user.getId(), event-bot.getId(), "Warn", "Przekleństwo. %nl%%loop-value-1%`[<- to wykryło]`%nl%%loop-value-2%`[<- to napisał]`")
+				modLog(event-user.getId(), event-bot.getId(), "Warn", "Przekleństwo. %nl%%loop-value-1%`[<- to wykryło]`%nl%%loop-value-2%`[<- to napisał]`", getMcNick(event-user.getId())
 				stop
 	
 	#TODO Daj jakas kare

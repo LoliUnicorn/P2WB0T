@@ -29,6 +29,6 @@ discord command {@cmd} [<text>] [<text>]:
 		reply with "Pomyślnie nadomo warna dla **%getName(arg-1)%** z powodem **%getRegex({_powod})%**"
 
 		KamilAPI add emote "green" to event-message
-		modLog({_member}.getUser().getId(), event-user.getId(), "Warn", {_powod})
+		modLog({_member}.getUser().getId(), event-user.getId(), "Warn", {_powod}, getMcNick({_member}.getUser().getId()))
 
 		
