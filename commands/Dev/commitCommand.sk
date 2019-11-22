@@ -17,21 +17,21 @@ discord command {@cmd} [<text>]:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%commit (info|pull)"
 		if arg-1 is not "info" or "pull":
 			KamilAPI cmd error "Użyj: %{bot::prefix}%commit (info|pull)"
+		set {_l} to getConfigEmote("loading")
 
 		if arg-1 is "info":
-			reply with "Ładuje..." and store it in {v::update::botmsg}
+			reply with "%{_l}% Ładuje..." and store it in {v::update::botmsg}
 			run script at "plugins\Skript\scripts\0024B0T\commit.bat"
 
 			while true:
 				wait a tick
-				if file "plugins/Bot/config.yml" exist:
+				set {_commit::*} to lines from file "plugins\Skript\scripts\0024B0T\log.api"
+				if {_commit::1} is set:
 					stop loop
 				else:
 					add 1 to {_nokurwaniema}
 				if {_nokurwaniema} >= 100:
 					KamilAPI cmd error "Po **5** sekundach nie utworzył się plik `log.api`! Anuluje komendę..."
-
-			set {_commit::*} to lines from file "plugins\Skript\scripts\0024B0T\log.api"
 
 			send a request to "https://api.github.com/repos/KAMIL0024/0024B0T/commits/%{_commit::1}%"
 			map json body of last http response to {_r::*}
@@ -50,31 +50,45 @@ discord command {@cmd} [<text>]:
 				if {_edytowane::1} is set:
 					set the description of embed to "Zmienione pliki:%nl% %{_xD}%"
 
-				add field named "Aktualny commit" with value "%{_commit::1}%" to embed
+				add field named "Aktualny commit" with value "[Klik](%{_r::parents::1::html_url}%)" to embed
 				add field named "Author" with value "[%{_r::author::login}%](%{_r::author::html_url}%)" to embed
 				add field named "Treść commita" with value "%{_r::commit::message}%" to embed
-				add field named "Staty" with value "Dodanych linijek: %{_r::stats::additions}%%nl%Usunięte linijki: %{_r::stats::deletions}%" to embed
+				add field named "Staty" with value "Dodane linijki: %{_r::stats::additions}%%nl%Usunięte linijki: %{_r::stats::deletions}%" to embed
 				set the thumbnail of embed to "%{_r::author::avatar_url}%"
 
 			edit {v::update::botmsg} to show last created embed
 			edit {v::update::botmsg} to show " "
+			KamilAPI add emote "green" to event-message
+			delete {v::update::botmsg}
+			wait 15 tick
 			delete file "plugins\Skript\scripts\0024B0T\log.api"
+			stop
 
-		# if arg-1 is "last":
-		# 	reply with "Wczytywanie..." and store it in {v::update::botmsg}
-		# 	delete file "plugins/Skript/scripts/log.api"
+		if arg-1 is "pull":
+			reply with "%{_l}% Aktualizuje pliki..." and store it in {v::update::botmsg}
+			run script at "plugins\Skript\scripts\0024B0T\pull.bat"
+			while true:
+				wait a tick
+				set {_pull::*} to lines from file "plugins\Skript\scripts\0024B0T\pull.api"
+				if {_pull::1} is set:
+					stop loop
 
-		# 	set {_kek::*} to lines from file "plugins/Skript/scripts/log.api"
-		# 	edit {v::update::botmsg} to show "%{_kek::*}%"
-		# 	reply with "Eldo. %{_kek::*}%"
+			set {_xD} to "```%nl%%{_pull::*}%%nl%```"
+			replace all ", " and " and " with "" in {_xD}
 
-		# KamilAPI add emote "green" to event-message
+			if {_xd} is "```%nl%Already up to date.%nl%```":
+				deleteMessage({v::update::botmsg}, 0)
+				delete file "plugins\Skript\scripts\0024B0T\pull.api"
+				KamilAPI cmd error "Najnowsza aktualizacja jest już wgrana!" to event-message
 
-				# https://api.github.com/repos/KAMIL0024/0024B0T/commits
-				# https://api.github.com/repos/KAMIL0024/0024B0T/commits/5e8b5936618902a2f705a604d0527b4a6a755ab8
-				# https://api.github.com/repos/KAMIL0024/0024B0T/git/trees/ea097b61f74e8ecf1dfc130b01e8631e66fd8fcb
+			create embed:
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Commit info" and icon "%avatar of event-bot%"
+				set the description of embed to "Treść gita: %{_xD}%"
 
-				# zrobić coś przy użyciu "run sh cmd" i pozniej mozna pobrac z niego wyniki, patrz update skunity (https://forums.skunity.com/resources/skutilities.26/update?update=373)
-				# bierzemy aktualny commit "git rev-parse HEAD"
-
-		# TODO: To może wyjść kozak, jak uda się uzyskać last commita
+			edit {v::update::botmsg} to show last created embed
+			edit {v::update::botmsg} to show " "
+			delete {v::update::botmsg}
+			KamilAPI add emote "green" to event-message
+			delete file "plugins\Skript\scripts\0024B0T\pull.api"

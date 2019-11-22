@@ -41,6 +41,7 @@ on script load:
 
 		set yml value "emote.green" from file {_f} to "!id emotki green"
 		set yml value "emote.red" from file {_f} to "!id emotki red"
+		set yml value "emote.loading" from file {_f} to "!id emotki red"
 
 		loop 3 times:
 			add "!id ownera%loop-value% (owner ma wszystkie permy)" to yml list "Config.owners" from file "plugins/Bot/config.example.yml"
