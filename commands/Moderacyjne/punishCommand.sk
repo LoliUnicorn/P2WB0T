@@ -1,0 +1,34 @@
+options:
+	cmd: punish
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Taki se pun"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info)"
+
+discord command {@cmd} [<text>] [<text>]:
+	aliases: pun,
+	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	trigger:
+
+		if arg-1 is "info":
+			
+
+
+		else:
+
+			set {_member} to getUser(arg-1) in event-guild
+			if {_member} is not set:
+				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (osoba)" to event-message
+			
+			KamilAPI bypass event-member at {_member} with event-message
+
+			create embed:
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+
+				add split field named "Field Name" with value "Colour sets %nl%< that" to embed
+	
