@@ -37,7 +37,7 @@ discord command {@cmd} [<text>]:
 			map json body of last http response to {_r::*}
 			loop {_r::files::*}:
 				loop {_r::files::%loop-index%::*}:
-					if loop-index-2 is "previous_filename":
+					if loop-index-2 is "filename":
 						add "%loop-value-2%%nl%" to {_edytowane::*}
 
 			set {_xD} to "```%nl%%{_edytowane::*}%%nl%```"
