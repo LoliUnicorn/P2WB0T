@@ -1,0 +1,9 @@
+function rzeczownik(liczba: number, zamiana1: text, zamiana2: text, zamiana3: text) :: text:
+	if {_liczba} = 1:
+		return {_zamiana1}
+	if {_liczba} >= 2:
+		if {_liczba} <= 4:
+			return {_zamiana2}
+	if {_liczba} >= 5:
+		return {_zamiana3}
+	return {_zamiana1}

@@ -40,7 +40,6 @@ function konkursGetUsers(m: message) :: users:
 			set {_us} to loop-value-2
 			if {_us}.isBot() is false:
 				add {_us} to {_us::*}
-				log("DEBUG: dodaje %{_us}%")
 	return {_us::*}
 
 function updateKonkurs(id: text="null"):

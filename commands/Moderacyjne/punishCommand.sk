@@ -9,26 +9,56 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
 	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info)"
 
+function checkTier(index: text) :: number:
+	loop 20 times:
+		if {pun::list::%{_index}%::1::tier_%loop-value%} is set:
+			add 1 to {_num}
+		else:
+			stop loop
+	return {_num}
+
 discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
 	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
 	trigger:
+		if {pun::*} is not set:
+			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`"
 
+		loop {pun::list::*}:
+			add 1 to {_n}
+		set {_XD} to rzeczownik({_n}, "ób", "oby", "obów")
+
+		# TODO: Dodaj `Które tiery chcesz zobaczyć?` bo wyświetlanie wszystkiego ssie
 		if arg-1 is "info":
-			
+			loop {pun::list::*}:
+				set {_inx} to loop-index
+				set {_xd::%{_inx}%::name} to {pun::list::%{_inx}%::1::name}
+				set {_xd::%{_inx}%::tierow} to checkTier({_inx})
 
+				loop {_xd::%{_inx}%::tierow} times:
+					set {_xd::%{_inx}%::opis} to "Tier ##%loop-value-2% %nl%Ile trzeba mieć warnów: **%{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%**%nl%Rodzaj kary: **%{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%**%nl%Czas: **%{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::time}%**"
+
+			set {_des} to a message builder
+			create embed:
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Info o punie" and no icon
+			
+				set the description of embed to "Możesz ukarać kogoś na **%{_n}%** spos%{_xd}% : D"
+
+				loop size of {_xd::*} times:
+					set {_i} to loop-value-1
+
+					add field named "%{_xd::%{_i}%::name}%" with value "Ilość tierów: %{_xd::%{_i}%::tierow}%%nl%%{_xd::%{_inx}%::opis}%" to embed
+
+			reply with last created embed
 
 		else:
 
 			set {_member} to getUser(arg-1) in event-guild
 			if {_member} is not set:
-				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (osoba)" to event-message
+				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
 			
 			KamilAPI bypass event-member at {_member} with event-message
 
-			create embed:
-				set the colour of the embed to color of getColor(event-member)
-				set the timestamp of embed to now
-
-				add split field named "Field Name" with value "Colour sets %nl%< that" to embed
-	
+			reply with "Coś robimy xd"

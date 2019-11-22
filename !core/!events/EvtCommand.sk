@@ -3,10 +3,8 @@ on vixio command:
 	set {_cmd} to "%event-discordcommand%"
 	if {command::%{_cmd}%::kategoria} is "Muzyka":
 		if getPoziom(event-user.getId()) < 1:
-			reply with "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji."
-			KamilAPI add emote "red" to event-message
 			cancel event
-			stop
+			KamilAPI cmd error "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji."
 	if {command::%{_cmd}%::cooldown} is set:
 		{command::%{_cmd}%::cooldown} != 0 seconds
 		isOwner(event-user.getId()) is false
@@ -23,11 +21,9 @@ on vixio command:
 			stop
 
 	if {command::%{_cmd}%::poziom} is not set:
-		reply with "W tej komendzie poziom (`{command::%{_cmd}%::poziom}`) wynosi `null`. Poproś administratora o zmiane!"
-		KamilAPI add emote "red" to event-message
 		cancel event
-		stop
+		KamilAPI cmd error "W tej komendzie poziom (`{command::%{_cmd}%::poziom}`) wynosi `null`. Poproś administratora o zmiane!" to event-message
 		
 	if getPoziom(event-user.getId()) < {command::%{_cmd}%::poziom}:
-		reply with "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%getPoziom(event-user.getId())%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!"
 		cancel event
+		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%getPoziom(event-user.getId())%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!"

@@ -78,7 +78,7 @@ discord command {@cmd} [<text>] [<text>]:
 			coreAkcja(event-member)
 			edit {reload::botmsg} to show " "
 			coreAkcja(event-member, 1)
-			execute console command "sk reload !core/"
+			execute console command "sk reload 0024B0T/!core/"
 			coreAkcja(event-member, 2)
 			wait 10 tick
 			coreAkcja(event-member, 3)
@@ -88,29 +88,29 @@ discord command {@cmd} [<text>] [<text>]:
 			if arg-2 is not set:
 				set {_module} to "all"
 			else:
-				loop files in dir "plugins/Skript/scripts/commands/":
+				loop files in dir "plugins/Skript/scripts/0024B0T/commands/":
 					set {_l} to loop-value
-					set {_l} to last element of ({_l} split at "/")
+					set {_l} to last element of ({_l} split at "\")
 					set {_modules::%{_l}%} to true
 
 			reply with "Wczytywanie..." and store it in {reload::botmsg}
 			if {_module} is "all":
 				stop
-			commandAkcja(event-member, "%{_l}% Szukam modułu%nl%%{_r}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.")
+			commandAkcja(event-member, "%{_load}% Szukam modułu%nl%%{_r}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.")
 			edit {reload::botmsg} to show " "
 			if {_modules::%arg-2%} is not true:
 				commandAkcja(event-member, "%{_r}% Szukam modułu (Nie znaleziono takiego modułu!)%nl%%{_r}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.", true)
 				stop
 			commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_load}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.")
-			loop files in dir "plugins/Skript/scripts/commands/%arg-2%/":
+			loop files in dir "plugins/Skript/scripts/0024B0T/commands/%arg-2%/":
 				set {_l} to loop-value
-				set {_l} to last element of ({_l} split at "/")
+				set {_l} to last element of ({_l} split at "\")
 				add {_l} to {_cmd::*}
 			commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_g}% Szukam komendy%nl%%{_load}% Reload komend (0/%size of {_cmd::*}%)%nl%%{_r}% Kończe.")
 
 			set {_kurwa} to 0
 			loop {_cmd::*}:
-				execute console command "sk reload commands/%arg-2%/%loop-value%"
+				execute console command "sk reload 0024B0T/commands/%arg-2%/%loop-value%"
 				add 1 to {_kurwa}
 				commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_g}% Szukam komendy%nl%%{_load}% Reload komend (%{_kurwa}%/%size of {_cmd::*}%)%nl%%{_r}% Kończe.")
 

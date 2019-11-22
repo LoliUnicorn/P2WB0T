@@ -7,7 +7,7 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 	set {_kurwa} to {_guild}.getMemberById({_adm}.getId())
 
 	set {_nickname} to discord nickname of ({_karany} in {_guild})
-	set {_embed::karany} to "%{_embed::karany}%(%getName({_karany}.getId())%) [%{_nick}%]"
+	set {_embed::karany} to "<@%{_karany}.getId(%>(%getName({_karany}.getId())%) [%{_nick}%]"
 
 	create embed:
 		set the colour of the embed to color of getColor({_kurwa})
