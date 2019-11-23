@@ -19,7 +19,7 @@ function checkNumber(arg: number) :: text:
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: wyczysc
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"

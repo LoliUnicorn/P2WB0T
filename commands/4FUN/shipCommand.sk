@@ -31,8 +31,7 @@ on vixio command:
 	kurwaNieDzialaShip()
 
 discord command {@cmd} [<text>] [<text>] [<text>]:
-	aliases: ZmienToOk
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%ship <rzecz 1> <rzecz 2>"

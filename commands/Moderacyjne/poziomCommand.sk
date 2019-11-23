@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::uzycie} to "{@cmd} [member]"
 
 discord command {@cmd} [<text>]:
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_u} to event-user
 		set {_u} to getUser(arg-1)

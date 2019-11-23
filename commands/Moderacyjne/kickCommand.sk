@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: wywal
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%kick (osoba) [powód]" to event-message

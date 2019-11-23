@@ -11,7 +11,7 @@ on script load:
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: konkurs,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"

@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: profilowe, awatar
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_u} to event-user
 		set {_u} to getUser(arg-1)

@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: tekst,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message

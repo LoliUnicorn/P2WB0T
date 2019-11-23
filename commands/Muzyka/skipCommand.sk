@@ -11,7 +11,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: pomin,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if event-bot is not playing:
 			if queue of event-bot in event-guild is not set:

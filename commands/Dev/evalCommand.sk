@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: ev
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_arg} to arg-1
 		if {_arg} is not set:

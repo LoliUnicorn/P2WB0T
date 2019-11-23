@@ -65,7 +65,7 @@ function commandAkcja(m: member, t: text, b: boolean=false):
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: reloads,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_load} to getConfigEmote("loading")
 		set {_g} to getConfigEmote("green")

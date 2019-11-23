@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: modlogs, warny, warns, bany, bans
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {v::%event-user.getId()%::history::user} to event-user
 		set {v::%event-user.getId()%::history::user} to getUser(arg-1)

@@ -38,7 +38,7 @@ function queue(u: member, n: number) :: embed:
 
 discord command {@cmd} [<text>] [<number>]:
 	aliases: kolejka, q, quene,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			if event-bot is not playing:

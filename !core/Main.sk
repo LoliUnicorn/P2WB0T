@@ -89,3 +89,5 @@ on script load:
 		log("&cNie udalo sie zalogowac Bota! &r%{_e}%")
 	else:
 		log("&aPomyslnie zalogowano bota! Milego korzystania :D")
+	set {_bot} to "%{bot::name}%" parsed as bot
+	set {bot::helpmention} to "%mention tag of {_bot}% "

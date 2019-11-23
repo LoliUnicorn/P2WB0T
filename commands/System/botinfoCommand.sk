@@ -14,7 +14,7 @@ import:
 
 discord command {@cmd} [<text>]:
 	aliases: botstats
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_jda} to event-bot.getJDA()
 		set {_bukkit} to Bukkit.getServer()

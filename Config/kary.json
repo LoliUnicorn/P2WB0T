@@ -1,7 +1,7 @@
 {
 	"list": {
 		"1": [{
-			"name": "Wulgarne zachowanie.",
+			"name": "Wulgarne zachowanie",
 			"tier_1": [{
 				"maxWarns": 2,
 				"type": "Tempmute",
@@ -25,7 +25,7 @@
 		}],
 
 		"2": [{
-			"name": "Wulgarny status.",
+			"name": "Wulgarny status",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Kick",
@@ -44,7 +44,7 @@
 		}],
 
 		"3": [{
-			"name": "Obraza adm.",
+			"name": "Obraza adm",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Tempban",

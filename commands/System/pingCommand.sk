@@ -11,7 +11,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: pingbota,
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot%"
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		set {_now} to system millis
 		reply with ":ping_pong: Ping..." and store it in {_msg}

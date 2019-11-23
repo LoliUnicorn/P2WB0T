@@ -10,7 +10,7 @@ on script load:
 
 discord command {@cmd} [<text>]:
 	aliases: wybierz
-	prefixes: "%{bot::prefix}%", "%mention tag of event-bot% "
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%choose <opcja 1;opcja 2; opcja 3;[. . .]>" to event-message
