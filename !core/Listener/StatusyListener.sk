@@ -2,8 +2,6 @@ function setCustomStatus():
 
 	if {bot::status} is not set:
 		set {bot::status} to true
-	if {bot::status} is false:
-		set {bot::status} to true
 
 	while true:
 		wait a tick
@@ -13,7 +11,11 @@ function setCustomStatus():
 		mark "%{bot::name}%" as playing "%(random element of {_s::*})%"
 		wait 25 seconds
 
-on script load:
-	wait 200 tick
+function loadStatus():
 	delete {bot::status}
 	setCustomStatus()
+
+every 5 minutes:
+	set {_b} to "%{bot::name}%" parsed as bot
+	if game of getUser({_b}.getId()) is not set:
+		loadStatus()

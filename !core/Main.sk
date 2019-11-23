@@ -32,6 +32,7 @@ on script load:
 		set yml value "Config.modlogi" from file {_f} to "!id kanalu"
 		set yml value "Config.guild" from file {_f} to "!id serwera"
 		set yml value "Config.muterole" from file {_f} to "!ID roli, ktora bedzie nadawana jak osoba dostnie muta"
+		set yml value "Config.logiSerwera" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
 
 		set yml value "Config.pomocnik" from file {_f} to "!ID roli, ktora bedzie miala poziom 1"
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
@@ -69,7 +70,7 @@ on script load:
 	log("%{bot::sql}%")
 	log("&eKonfiguruje baze danych...")
 
-	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`akcje` ( `id` TEXT NOT NULL , `karany` TEXT NOT NULL , `nick` TEXT NOT NULL , `adm` TEXT NOT NULL , `typ` TEXT NOT NULL , `powod` TEXT NOT NULL , `now` TEXT NOT NULL , `czas` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
+	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`akcje` ( `id` TEXT NOT NULL , `karany` TEXT NOT NULL , `nick` TEXT NOT NULL , `adm` TEXT NOT NULL , `typ` TEXT NOT NULL , `powod` TEXT NOT NULL , `now` TEXT NOT NULL , `aktywna` TEXT NOT NULL , `czas` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
 
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`konkurs` ( `id` TEXT NOT NULL , `nagroda` TEXT NOT NULL , `kanal` TEXT NOT NULL, `messageId` TEXT NOT NULL , `sender` TEXT NOT NULL, `now` TEXT NOT NULL , `koniec` TEXT NOT NULL , `aktywna` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 
@@ -91,3 +92,4 @@ on script load:
 		log("&aPomyslnie zalogowano bota! Milego korzystania :D")
 	set {_bot} to "%{bot::name}%" parsed as bot
 	set {bot::helpmention} to "%mention tag of {_bot}% "
+	loadStatus()

@@ -17,6 +17,23 @@ function checkTier(index: text) :: number:
 			stop loop
 	return {_num}
 
+function getMaxWarnsByName(t: text, warns: number) :: text:
+	loop {pun::list::*}:
+		set {_inx} to loop-index
+		set {_name} to {pun::list::%{_inx}%::1::name}
+
+		if {_name} contains {_t}:
+			set {_tierow} to checkTier({_inx})
+			loop {_tierow} times:
+				set {_maxWarns} to {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
+				
+				if {_maxWarns} = {_warns}:
+					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
+
+				if {_warns} < {_maxWarns}:
+					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
+
+
 discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
@@ -79,14 +96,46 @@ discord command {@cmd} [<text>] [<text>]:
 				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
 			
 			KamilAPI bypass event-member at {_member} with event-message
-			if {_member} is event-member:
-				KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie!" to event-message
+			# if {_member} is event-member:
+			# 	KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie!" to event-message
+
+			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+			execute "SELECT * FROM akcje WHERE karany='%{_member}.getUser().getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+
+			loop {_r::powod::*}:
+				add 1 to {_warny::powod::%loop-value%}
+			
+			loop {pun::list::*}:
+				set {_inx} to loop-index
+				set {_n} to {pun::list::%{_inx}%::1::name}
+				set {_warns::%{_n}%} to 0
+				loop {_r::powod::*}:
+					if {_n} contains loop-value-2:
+						add 1 to {_warns::%{_n}%}
 
 			create embed:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
 				set the thumbnail of embed to "%avatar of {_member}%"
 
-				set the description of embed to "Napisz odpowiedni numer, aby nadać karę użytkownikowi."
+				set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
 			
-				add field named "Field Name" with value "Colour sets %nl%< that" to embed
+				set {_m} to a message builder
+				append line "0. Anuluj operacje."
+				loop {pun::list::*}:
+					set {_inx} to loop-index
+					set {_n} to {pun::list::%{_inx}%::1::name}
+
+					set {_jegoWarny} to 0
+					set {_jegoWarny} to {_warny::powod::%{_n}%}
+					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
+
+					append line "%{_inx}%. %{_n}% %{_warns::%{_n}%}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+				add field named "Wybierz kare..." with value "%{_m}%" to embed
+				
+			edit {_msg} to show last created embed
+			edit {_msg} to show " "
+			KamilAPI add emote "green" to event-message
+
+			# TODO: Dokończyć to (wybrać kare, dodawać warna)

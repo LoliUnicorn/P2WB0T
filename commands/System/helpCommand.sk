@@ -80,3 +80,4 @@ discord command {@cmd} [<text>]:
 				set {_m} to a message builder
 
 		reply with the last created embed
+		KamilAPI add emote "green" to event-message
