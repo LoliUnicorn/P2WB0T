@@ -1,14 +1,13 @@
 on guild message receive:
-	getPoziom(event-user.getId()) = 1
+	getPoziom(event-user.getId()) = 0
 	set {_message} to "%event-message%"
 
-	set {_kek::*} to lines from file "plugins\Skript\scripts\0024B0T\commands\!Uitls\Przeklenstwa.api"
+	set {_kek::*} to lines from file "plugins\Skript\scripts\0024B0T\commands\!Utils\Przeklenstwa.api"
 	set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
 	set {_tak::*} to {_tak} split at " "
 	loop {_kek::*}:
 		loop {_tak::*}:
 			if loop-value-1 is loop-value-2:
-				modLog(event-user.getId(), event-bot.getId(), "Warn", "Przekleństwo. %nl%%loop-value-1%`[<- to wykryło]`%nl%%loop-value-2%`[<- to napisał]`", getMcNick(event-user.getId()))
+				KamilAPI add pun to event-user with reason "Wulgarne zachowanie" in channel event-channel
+				reply with "%getMention(event-user.getId())% ładnie to tak przeklinać?"
 				stop
-	
-	#TODO Daj jakas kare

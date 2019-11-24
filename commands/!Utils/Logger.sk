@@ -62,9 +62,10 @@ on message delete:
 		set {_v} to loop-value
 		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
 			# TODO: Dodaj ifa {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)
-			log("if %event.getJDAEvent().getChannel().getId()%=%{_v}.getChannel().getId()%")
-			set {_name} to "Nie udało się uzyskać."
+			
 			set {_name} to getFullName((author of event-message).getId())
+			if {_name} contains "<none>":
+				set {_name} to "Nie udało się uzyskać."
 
 			set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
 			set {_sender} to getFullName({_v}.getUser().getId())

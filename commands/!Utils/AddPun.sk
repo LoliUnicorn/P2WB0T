@@ -1,0 +1,75 @@
+function getMaxWarnsByName(t: text, warns: number) :: text:
+	loop {pun::list::*}:
+		set {_inx} to loop-index
+		set {_name} to {pun::list::%{_inx}%::1::name}
+
+		if {_name} contains {_t}:
+			set {_tierow} to checkTier({_inx})
+			loop {_tierow} times:
+				set {_maxWarns} to {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
+				
+				if {_maxWarns} = {_warns}:
+					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
+
+				if {_warns} < {_maxWarns}:
+					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
+
+function checkTier(index: text) :: number:
+	loop 20 times:
+		if {pun::list::%{_index}%::1::tier_%loop-value%} is set:
+			add 1 to {_num}
+		else:
+			stop loop
+	return {_num}
+
+effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% [in channel %channel%]:
+	trigger:
+		set {_g} to guild with id {bot::guild}
+		set {_user} to expr-1
+
+		set {_adm} to getUser({bot::id})
+		if expr-3 is not set:
+			set {_adm} to event.getUser()
+			set {_channel} to event.getChannel()
+		else:
+			set {_channel} to expr-3
+
+		if {_user} is instance of User:
+			set {_u} to getUser({_user}.getId()) in {_g}
+		if {_user} is instance of Member:
+			set {_u} to getUser({_user}.getUser().getId()) in {_g}
+		if {_user} is instance of Text:
+			set {_u} to getUser({_user}) in {_g}
+		
+		if {_u} is not set:
+			stop
+
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
+		wait 30 tick
+		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
+
+		if expr-3 is not set:
+			send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+		else:
+			send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+
+		set {_warny} to size of {_r::adm::*}
+		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
+
+		if {_warny} = ({_info::2} parsed as number):
+			loop {pun::list::*}:
+				set {_inx} to loop-index
+				if {pun::list::%{_inx}%::1::name} contains expr-2:
+					set {_type} to {pun::list::%{_inx}%::1::tier_%{_info::1}%::1::type}
+					set {_time} to {pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
+					set {_reason} to "Osiągnięto maksymalną ilość warnów."
+					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
+					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+					if {_type} is "Kick":
+						kick {_u} from {_g} with reason {_powod} with {bot::name}
+						set {_kara} to "Kick"
+					# TODO: Inne kary
+					{_kara} is set
+					modLog({_u}.getUser().getId(), {_adm}.getId(), {_kara}, expr-2, getMcNick({_u}.getUser().getId()))
+		else:
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już warnów **%{_warny}%** `/` **%{_info::2}%**, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}

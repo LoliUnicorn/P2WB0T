@@ -1,6 +1,5 @@
 on script load:
-	delete {pun}
 	wait 150 tick
+	delete {pun::*}
 	send a request to "https://raw.githubusercontent.com/KAMIL0024/0024B0T/master/Config/kary.json"
-	map json body of last http response to {_pun::*}
-	log("%{_pun::list::1::name}%")
+	map json body of last http response to {pun::*}

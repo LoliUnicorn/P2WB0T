@@ -2,7 +2,7 @@ options:
 	cmd: warn
 
 on script load:
-	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::poziom} to 1
 	set {command::{@cmd}::cooldown} to 0 seconds
 	set {command::{@cmd}::opis} to "Nadje ostrzeżenie dla użytkownika."
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
@@ -30,5 +30,3 @@ discord command {@cmd} [<text>] [<text>]:
 
 		KamilAPI add emote "green" to event-message
 		modLog({_member}.getUser().getId(), event-user.getId(), "Warn", {_powod}, getMcNick({_member}.getUser().getId()))
-
-		

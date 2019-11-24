@@ -79,7 +79,7 @@ function updateKonkurs(id: text="null"):
 					
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
-				add split field named "Organizowany przez:" with value "%getMention({_sender})%" to embed
+				add split field named "Organizowany przez:" with value getMention({_sender}) to embed
 				if {_wygrany} is set:
 					add field named "" with value "Konkurs sie skonczyl." to embed
 				else:
@@ -142,6 +142,7 @@ on guild message receive:
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
+		log("INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')")
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
 		delete {v::%event-user.getId()%::giveaway::*}
 		updateKonkurs()
@@ -150,7 +151,7 @@ on guild message receive:
 	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
 		konkursDeleteMessage(event-user.getId())
 		set {v::%event-user.getId()%::giveaway::nagroda} to "%event-message%" # final nagroda
-		reply with "Napisz za ile czasu będzie koniec! (5,[sekundy], 5m [minuty], 5h [godziny], 5d [dni]). Czasy nie mogą się łączyć!"
+		reply with "Napisz za ile czasu będzie koniec! (5s,[sekundy], 5m [minuty], 5h [godziny], 5d [dni]). Czasy nie mogą się łączyć!"
 		set {v::%event-user.getId()%::giveaway::typ} to "czas"
 
 	if {v::%event-user.getId()%::giveaway::typ} is "channel":

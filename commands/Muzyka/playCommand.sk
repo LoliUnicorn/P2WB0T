@@ -41,6 +41,7 @@ discord command {@cmd} [<text>]:
 		append line "PROTIP:"
 		append line "Chcesz wybrać kilka piosenek?"
 		append line "Napisz np. ""1, 4, 2, 10""%nl%"
+		
 		loop 10 times:
 			{_r::%loop-number%} is set
 			append line "%loop-number%. %{_r::%loop-number%}% :: %authors of {_r::%loop-number%}%"

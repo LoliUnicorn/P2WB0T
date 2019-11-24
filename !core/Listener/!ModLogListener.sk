@@ -18,7 +18,10 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
 		add field named "Powód:" with value getPowod({_powod}) to embed
 		if {_czas} != "null":
-			add field named "Mija o:" with value {_czas} to embed
+			set {_now} to now
+			set {_xd} to {_czas} parsed as timespan
+			add {_xd} to {_now}
+			add field named "Mija o:" with value "%{_now}%" to embed
 	
 		set the thumbnail of embed to "%avatar of {_karany}%"
 	send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}

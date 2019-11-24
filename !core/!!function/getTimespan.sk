@@ -4,4 +4,5 @@ function getTimespan(t: text) :: text:
 	replace all "seconds" and "second" with "sek." in {_t}
 	replace all "hours" and "hour" with "godz." in {_t}
 	replace all " and " with " " in {_t}
-	return {_t}
+	set {_beka} to regex replace all pattern "\.(\d+)" with "" in {_t}
+	return {_beka}

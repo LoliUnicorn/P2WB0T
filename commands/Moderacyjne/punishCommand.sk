@@ -2,37 +2,12 @@ options:
 	cmd: punish
 
 on script load:
-	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::poziom} to 1
 	set {command::{@cmd}::cooldown} to 0 seconds
 
 	set {command::{@cmd}::opis} to "Taki se pun"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
 	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info) [typ kary]"
-
-function checkTier(index: text) :: number:
-	loop 20 times:
-		if {pun::list::%{_index}%::1::tier_%loop-value%} is set:
-			add 1 to {_num}
-		else:
-			stop loop
-	return {_num}
-
-function getMaxWarnsByName(t: text, warns: number) :: text:
-	loop {pun::list::*}:
-		set {_inx} to loop-index
-		set {_name} to {pun::list::%{_inx}%::1::name}
-
-		if {_name} contains {_t}:
-			set {_tierow} to checkTier({_inx})
-			loop {_tierow} times:
-				set {_maxWarns} to {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
-				
-				if {_maxWarns} = {_warns}:
-					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
-
-				if {_warns} < {_maxWarns}:
-					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
-
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
@@ -58,7 +33,7 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%   "
 						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns} >= 10:
 							set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%  "
-							
+							 
 						set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
 						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempban":
 							set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
@@ -101,7 +76,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-			execute "SELECT * FROM akcje WHERE karany='%{_member}.getUser().getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 
 			loop {_r::powod::*}:
 				add 1 to {_warny::powod::%loop-value%}
@@ -139,3 +114,4 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI add emote "green" to event-message
 
 			# TODO: Dokończyć to (wybrać kare, dodawać warna)
+			# TODO: Resetować warny (akrywna=nie) jak się osiągnie max tierów

@@ -1,7 +1,4 @@
 function addAkcje(karany: text, adm: text, typ: text, powod: text, nick: text, czas: text="null"):
-
-	# TODO: Sprwadzać czy to jest warn i sprawdzać czy typ nie zasługuje na kare, sprwadzać czy są dalsze tiery, jak nie to trzeba ustawić wszędzie Aktywna=nie
-
 	execute "SELECT id FROM akcje" in {bot::sql} and store result in {_kek::*}
 	set {_id} to "%(size of {_kek::id::*})+1%"
 	set {_now} to "%year%-%month%-%day% %hour%:%minute%:%second%"

@@ -2,7 +2,7 @@ options:
 	cmd: history
 
 on script load:
-	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::poziom} to 1
 	set {command::{@cmd}::cooldown} to 3 seconds
 	set {command::{@cmd}::opis} to "Sprawdza historie kar użytkownika"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
