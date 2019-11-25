@@ -9,5 +9,5 @@ on guild message receive:
 		loop {_tak::*}:
 			if loop-value-1 is loop-value-2:
 				KamilAPI add pun to event-user with reason "Wulgarne zachowanie" in channel event-channel
-				reply with "%getMention(event-user.getId())% ładnie to tak przeklinać?"
+				reply with "%getMention(event-user.getId())% ładnie to tak przeklinać? Dopisuje ostrzeżenie!"
 				stop

@@ -13,6 +13,7 @@ discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
+		delete {v::%event-user.getId()%::pun::*}	
 		if {pun::*} is not set:
 			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`"
 
@@ -89,6 +90,7 @@ discord command {@cmd} [<text>] [<text>]:
 					if {_n} contains loop-value-2:
 						add 1 to {_warns::%{_n}%}
 
+			set {v::%event-user%::pun::karany} to {_member}
 			create embed:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
@@ -106,12 +108,30 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_jegoWarny} to {_warny::powod::%{_n}%}
 					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
 
-					append line "%{_inx}%. %{_n}% %{_warns::%{_n}%}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+					if "%{_jegoWarny}%" = "%{_tier::2}%":
+						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
+					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 				add field named "Wybierz kare..." with value "%{_m}%" to embed
 				
 			edit {_msg} to show last created embed
 			edit {_msg} to show " "
 			KamilAPI add emote "green" to event-message
 
-			# TODO: Dokończyć to (wybrać kare, dodawać warna)
-			# TODO: Resetować warny (akrywna=nie) jak się osiągnie max tierów
+on guild message receive:
+	{v::%event-user.getId()%::pun::*} is set
+	set {_msg} to "%event-message%"
+	if {_msg} contains {bot::prefix}:
+		delete {v::%event-user.getId()%::pun::*}
+		stop
+	deleteMessage({_msg}, 0)
+	if {_msg} is "0":
+		delete {v::%event-user.getId()%::pun::*}
+		reply with "Anuluje operacje!"
+		stop
+	if {v::%event-user.getId()%::pun::%{_msg}%} is not set:
+		delete {v::%event-user.getId()%::pun::*}
+		reply with "Zły numer! Anuluje operacje."
+		stop
+	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user
+	delete {v::%event-user.getId()%::pun::*}

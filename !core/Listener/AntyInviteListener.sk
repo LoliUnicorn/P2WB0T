@@ -6,4 +6,3 @@ on guild message receive:
 		reply with ":octagonal_sign: %getMention(event-user.getId())% reklamowanie się jest zabronione :octagonal_sign:"
 		delete event-message
 	#TODO Daj tutaj jakąś karę
-	

@@ -63,7 +63,7 @@ discord command {@cmd} [<text>] [<text>]:
 				loop (size of {_warny::id::*}) times:
 					set {_id} to "%{_beka}%"
 					add 1 to {_zaduzo}
-					if {_zaduzo} > 10:
+					if {_zaduzo} = 10:
 						stop loop
 					if {_warny::typ::%{_id}%} is arg-2:
 						set {_adm} to {_warny::adm::%{_id}%}

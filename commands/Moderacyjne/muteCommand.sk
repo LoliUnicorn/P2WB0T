@@ -8,30 +8,28 @@ on script load:
 	set {command::{@cmd}::opis} to "Pernamentnie wycisza użytkownika"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
 	set {command::{@cmd}::uzycie} to "mute (member) [powód]"
-
+		
 discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_r} to role with id getConfig("Config.muterole")
+		set {_r} to role with id getConfig("Config.muterole")	
 		set {_m} to getUser(arg-1) in event-guild
 		set {_p} to getPowod(arg-2)
 
-		if {_r} is not set:
-			KamilAPI cmd error "`Config.muterole` jest źle ustawione! Popraw to!!!" to event-message
 		if {_m} is not set:
 			KamilAPI cmd error "Zły użytkownik! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		if {_m}.getUser().getId() is event-user.getId():
 			KamilAPI cmd error "Siebie checsz wyciszyć? xD" to event-message
+
 		loop ...{_m}.getRoles():
 			set {_v} to loop-value
 			if {_v}.getId() is {_r}.getId():
 				KamilAPI cmd error "Ten użytkownik jest już wyciszony!" to event-message
 
 		KamilAPI bypass event-member at {_m} with event-message
-		
-		add {_r} to roles of {_m} with event-bot
-		if last vixio error is set:
-			KamilAPI cmd error "Nie udało się wyciszyć użytkownika! (`%last vixio error%`)" to event-message
+		KamilAPI mute {_m} with reason {_p} by event-user
+		if {_error} is set:
+			KamilAPI cmd error "Nie udało się wyciszyć użytkownika! (`%{_error}%`)" to event-message
+
 		reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%**"
-		modLog({_m}.getUser().getId(), event-user.getId(), "Mute", {_p}, getMcNick({_m}.getUser().getId()))
 		KamilAPI add emote "green" to event-message

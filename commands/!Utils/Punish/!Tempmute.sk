@@ -1,0 +1,47 @@
+effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user%:
+	trigger:
+		checkRepairMute()
+		set {_g} to guild with id {bot::guild}
+		set {_r} to role with id getConfig("Config.muterole")
+		set {_user} to expr-1
+		set {_powod} to getPowod(expr-2)
+		set {_adm} to expr-4
+
+		set {_r} to role with id getConfig("Config.muterole")
+		if {_r} is not set:
+			KamilAPI set variable {_error} to "`Config.muterole` jest źle ustawione! Popraw to!!!" in event
+			stop
+
+		if {_user} is instance of User:
+			set {_u} to getUser({_user}.getId()) in {_g}
+		if {_user} is instance of Member:
+			set {_u} to getUser({_user}.getUser().getId()) in {_g}
+		if {_user} is instance of Text:
+			set {_u} to getUser({_user}) in {_g}
+		
+		if {_u} is not set:
+			KamilAPI set variable {_error} to "Użytkownik wynosi `null`?" in event
+			stop
+		if {_adm} is not set:
+			KamilAPI set variable {_error} to "Administrator wynosi `null`?" in event
+			stop
+			
+		set {_time} to expr-3
+		replace all "d" with " day" in {_time}
+		replace all "h" with " hour" in {_time}
+		replace all "m" with " minute" in {_time}
+		replace all "s" with " second" in {_time}
+		set {_time} to {_time} parsed as timespan
+		set {_now} to now
+
+		add {_time} to {_now}
+
+		if {_now} is now:
+			KamilAPI set variable {_error} to "Podano nieprawidłowy czas!" in event
+
+		add {_r} to roles of {_u} with {bot::name}
+		set {_v} to "%last vixio error%"
+		if {_v} = "<none>":
+			modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%")
+		else:
+			KamilAPI set variable {_error} to {_v} in event

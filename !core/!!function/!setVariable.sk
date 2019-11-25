@@ -1,0 +1,8 @@
+import:
+	ch.njol.skript.variables.Variables
+
+effect KamilAPI set (var|variable) %objects% to %object% in %event%:
+	trigger:
+		set {_variable} to raw expression-1
+		set {_name} to {_variable}.getName().toString(expression-3)
+		Variables.setVariable({_name}, expression-2, expression-3, {_variable}.isLocal())

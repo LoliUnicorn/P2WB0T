@@ -31,24 +31,10 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 		KamilAPI bypass event-member at {_m} with event-message
 		
-		set {_time} to arg-2
-		replace all "d" with " day" in {_time}
-		replace all "h" with " hour" in {_time}
-		replace all "m" with " minute" in {_time}
-		replace all "s" with " second" in {_time}
-		set {_time} to {_time} parsed as timespan
-		set {_now} to now
-
-		add {_time} to {_now}
-
-		if {_now} is now:
-			KamilAPI command error "Podano nieprawidłowy czas!" to event-message
-
-		add {_r} to roles of {_m} with event-bot
-		if last vixio error is set:
-			KamilAPI cmd error "Nie udało się wyciszyć użytkownika! (`%last vixio error%`)" to event-message
+		KamilAPI tempmute {_m} with reason {_p} in time arg-2 by event-user
 
 		set {_xD} to getTimespan("%{_time}%")
-		reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%** na czas **%{_xD}%**"
-		modLog({_m}.getUser().getId(), event-user.getId(), "Tempmute", {_p}, getMcNick({_m}.getUser().getId()), "%{_time}%")
-		KamilAPI add emote "green" to event-message
+		if {_error} is set:
+			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`"
+		else:
+			reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%** na czas **%arg-2%**"

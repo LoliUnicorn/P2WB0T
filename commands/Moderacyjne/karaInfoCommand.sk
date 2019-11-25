@@ -32,6 +32,7 @@ discord command {@cmd} [<text>]:
 			add field named "Czas nadania:" with value "%{_kara::now::*}%" to embed
 			if "%{_kara::czas::*}%" is not "<none>" or "null":
 				add field named "Na jaki czas nadano:" with value "%{_kara::czas::*}%" to embed
+			add field named "Aktywna?" with value "%{_kara::aktywna::*}%" to embed
 
 			set the thumbnail of embed to "%avatar of getUser({_kara::karany::*})%"
 		reply with last created embed
