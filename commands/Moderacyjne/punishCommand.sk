@@ -28,13 +28,15 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_xd::name} to {pun::list::%{_inx}%::1::name}
 					set {_xd::tierow} to checkTier({_inx})
 
+					# length()
+					set {_XDD} to 1
 					set {_xd::builder} to a message builder
 					append line "```vbs%nl%Tier | Warny |   Kara   | Czas"
 					loop {_xd::tierow} times:
 						set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%   "
 						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns} >= 10:
 							set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%  "
-							 
+							
 						set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
 						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempban":
 							set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
@@ -49,7 +51,7 @@ discord command {@cmd} [<text>] [<text>]:
 			if {_xd::name} is not set:
 				set {_k} to a message builder
 				loop {pun::list::*}:
-					append line {pun::list::% loop-index%::1::name}
+					append line "%loop-index%. %{pun::list::% loop-index%::1::name}%"
 				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%Sposoby na ukaranie: ```%nl%%{_k}%%nl%```" to event-message
 
 			set {_des} to a message builder
@@ -98,8 +100,11 @@ discord command {@cmd} [<text>] [<text>]:
 
 				set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
 			
-				set {_m} to a message builder
+				set {_lul} to 1
+				set {_m::%{_lul}%} to a message builder
 				append line "0. Anuluj operacje."
+				set {_field} to true
+
 				loop {pun::list::*}:
 					set {_inx} to loop-index
 					set {_n} to {pun::list::%{_inx}%::1::name}
@@ -111,8 +116,27 @@ discord command {@cmd} [<text>] [<text>]:
 					if "%{_jegoWarny}%" = "%{_tier::2}%":
 						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-				add field named "Wybierz kare..." with value "%{_m}%" to embed
+					log("%{_lul}% = %{_m::%{_lul}%}.length()%")
+					if {_m::%{_lul}%}.length() >= 900:
+						log("zmieniamy fielda")
+						add 1 to {_lul}
+						set {_m::%{_lul}%} to a message builder
+				loop {_m::*}:
+					if {_one} is not set:
+						add field named "Wybierz kare..." with value "%loop-value%" to embed
+						set {_one} to true
+					else:
+						add field named "Wybierz kare..." with value "%loop-value%" to embed
+					# if {_m::%{_lul}%}.length() >= 900:
+					# 	if {_field} is true:
+					# 		set {_field} to false
+					# 		add field named "Wybierz kare..." with value "%{_m::%{_lul}%}%" to embed
+					# 	else:
+					# 		add field named "test" with value "%{_m::%{_lul}%}%" to embed
+					# 		add 1 to {_lul}
+					# 		set {_m::%{_lul}%} to a message builder
 				
 			edit {_msg} to show last created embed
 			edit {_msg} to show " "
