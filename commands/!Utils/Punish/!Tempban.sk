@@ -1,0 +1,41 @@
+effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user%:
+	trigger:
+		set {_g} to guild with id {bot::guild}
+		set {_user} to expr-1
+		set {_powod} to getPowod(expr-2)
+		set {_adm} to expr-4
+
+		if {_user} is instance of User:
+			set {_u} to getUser({_user}.getId())
+		if {_user} is instance of Member:
+			set {_u} to getUser({_user}.getId())
+		if {_user} is instance of Text:
+			set {_u} to getUser({_user})
+		
+		if {_u} is not set:
+			KamilAPI set variable {_error} to "Użytkownik wynosi `null`?" in event
+			stop
+		if {_adm} is not set:
+			KamilAPI set variable {_error} to "Administrator wynosi `null`?" in event
+			stop
+			
+		set {_time} to expr-3
+		replace all "d" with " day" in {_time}
+		replace all "h" with " hour" in {_time}
+		replace all "m" with " minute" in {_time}
+		replace all "s" with " second" in {_time}
+		set {_time} to {_time} parsed as timespan
+		set {_now} to now
+
+		add {_time} to {_now}
+
+		if {_now} is now:
+			KamilAPI set variable {_error} to "Podano nieprawidłowy czas!" in event
+
+		set {_nick} to getMcNick({_u}.getId())
+		ban {_u} from {_g} with reason {_powod} with {bot::name}
+		set {_v} to "%last vixio error%"
+		if {_v} = "<none>":
+			modLog({_u}.getId(), {_adm}.getId(), "Tempban", {_powod}, {_nick}, "%{_time}%")
+		else:
+			KamilAPI set variable {_error} to {_v} in event

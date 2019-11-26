@@ -68,6 +68,7 @@ discord command {@cmd} [<text>]:
 			set the footer of embed to footer with text "Help"
 			set the timestamp of embed to now
 			set the title of embed to title with text "%size of {_cmd::*}% komend."
+			set the description of embed to "(1|2) - Argumenty do wyboru%nl%<arg> - Argument wymagany%nl%[arg] - Argument niewymagany"
 			set the colour of the embed to color of getColor(event-member)
 
 			set {_m} to a message builder

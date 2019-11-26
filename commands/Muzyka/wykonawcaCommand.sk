@@ -27,6 +27,7 @@ discord command {@cmd} [<text>]:
 			KamilAPI command error "Brak wyników wyszukiwania!" to event-message
 		loop queue of event-bot in event-guild:
 			set {_url::%url of loop-value%} to true
+
 		loop {_r::*}:
 			set {_tt} to "%loop-value%"
 			if {_tt} contains "%arg-1%":
@@ -36,6 +37,7 @@ discord command {@cmd} [<text>]:
 						add loop-value to {_m::*}
 					if size of {_m::*} >= 10:
 						stop loop
+						
 		if getBVC() is not set:
 			join getMVC(event-user)
 		if size of {_m::*} is 0:

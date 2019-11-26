@@ -10,18 +10,15 @@ on script load:
 	set {command::{@cmd}::uzycie} to "ship <rzecz 1> <rzecz 2>"
 
 function kurwaNieDzialaShip(b: boolean=true):
-	if {_bol} is true:
-		if {ship::litera::*} is set:
-			stop
+	delete {ship::litera::*}
 	set {_alf} to "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ1234567890##!@$%%^&*()_+-="
 	set {_a::*} to split {_alf} at ""
 	loop {_a::*}:
 		set {_liczba} to rounded up random number between 1 and 20
 		set {_w} to "+"
-		chance of 15%:
+		chance of 40%:
 			set {_w} to "-"
 		add "%loop-value%|%{_liczba}%|%{_w}%" to {ship::litera::*}
-	loop {ship::litera::*}:
 
 on script load:
 	wait 500 tick
@@ -35,11 +32,11 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%ship <rzecz 1> <rzecz 2>"
+			KamilAPI command error "Użyj: %{bot::prefix}%ship <rzecz 1> <rzecz 2>" to event-message
 		if arg-2 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%ship <rzecz 1> <rzecz 2>"
+			KamilAPI command error "Użyj: %{bot::prefix}%ship <rzecz 1> <rzecz 2>" to event-message
 		if arg-1 is arg-2:
-			KamilAPI command error "Po co chcesz shipowac 2 takie same rzeczy?"
+			KamilAPI command error "Po co chcesz shipowac 2 takie same rzeczy?" to event-message
 		set {_a::*} to arg-1, arg-2
 		set {_mem::*} to "%getUser(arg-1)%", "%getUser(arg-2)%"
 		loop {_mem::*}:
@@ -53,19 +50,23 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			add {_a::*} to {_litery::*}
 		set {_wynik} to 10
 
-
 		loop {ship::litera::*}:
-			set {_xd::*} to loop-value split at "|"
-			set {_litera} to {_xd::1}
-			set {_liczba} to {_xd::2}
-			set {_bol} to {_xd::3}
 			loop {_litery::*}:
+				set {_xd::*} to loop-value-1 split at "|"
+				set {_litera} to {_xd::1}
+				set {_liczba} to {_xd::2}
+				set {_bol} to {_xd::3}
 				{_litera} != ""
 				if {_litera} = loop-value-2:
+
 					if {_bol} is "+":
 						add ({_liczba} parsed as number) to {_wynik}
+						log("add %{_liczba}% to %{_wynik}%")
+						
 					else if {_bol} is "-":
 						remove ({_liczba} parsed as number) from {_wynik}
+						log("remove %{_liczba}% to %{_wynik}%")
+						
 	
 		if arg-3 is set:
 			if isOwner(event-user.getId()) is true:

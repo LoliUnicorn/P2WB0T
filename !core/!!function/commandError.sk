@@ -1,9 +1,15 @@
+import:
+	me.iblitzkriegi.vixio.util.UpdatingMessage as Updessage
+
 effect KamilAPI (cmd|command) error %text% [to %-message%]:
 	trigger:
 		delay the effect
 		send "%expr-1%" to channel with id event.getChannel().getId() with {bot::name}
 		
-		set {_lol} to event.getMessage()
-		set {_lol} to expr-2
+		if expr-2 is not set:
+			set {_lol} to Updessage.convert(event.getMessage())
+			set {_lol} to {_lol}.getMessage()
+		else:
+			set {_lol} to expr-2
 
 		KamilAPI add emote "red" to {_lol}

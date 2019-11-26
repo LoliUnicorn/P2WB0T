@@ -1,0 +1,20 @@
+function checkUnban():
+	execute "SELECT id,karany,end FROM akcje WHERE aktywna='Tak' AND typ='Tempban'" in {bot::sql} and store result in {_r::*}
+	set {_g} to guild with id {bot::guild}
+	set {_bot} to getUser({bot::id})
+
+	loop {_r::karany::*}:
+
+		set {_karany} to getUser({_r::karany::%loop-index%})
+		{_karany} is set
+
+		set {_end} to unix date ("%{_r::end::%loop-index%}%" parsed as number) as date
+		set {_id} to {_r::id::%loop-index%}
+
+		if now > {_end}:
+			unban {_karany} from {_g} with {bot::name}
+			modLog({_karany}.getId(), {_bot}.getId(), "Unban", "Czas minął (ID: %{_r::id::%loop-index%}%)", getMcNick({_karany}.getId()))
+			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
+
+every 2 minute:
+	checkUnban()

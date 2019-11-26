@@ -19,7 +19,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_warny::id::1} is not set:
 			KamilAPI cmd error "Tego użytkownika nie ma w bazie danych!" to event-message
 
-		loop "unwarn", "warn", "ban", "kick", "mute", "tempmute":
+		loop "unwarn", "warn", "ban", "kick", "mute", "tempmute", "unban", "tempban":
 			set {_liczba::%loop-value%} to 0
 		loop {_warny::typ::*}:
 			add 1 to {_liczba::%loop-value%}
@@ -44,6 +44,7 @@ discord command {@cmd} [<text>] [<text>]:
 				add split field named "Kicki:" with value "%{_liczba::kick}%" to embed
 				add split field named "Muty:" with value "%{_liczba::mute}%" to embed
 				add split field named "Tempmuty:" with value "%{_liczba::tempmute}%" to embed
+				add split field named "Tempbany:" with value "%{_liczba::tempban}% (Unbany: %{_liczba::unban}%)" to embed
 
 				set the thumbnail of embed to "%avatar of {v::%event-user.getId()%::history::user}%"
 			reply with last created embed
