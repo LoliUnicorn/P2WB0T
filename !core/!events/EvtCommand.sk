@@ -4,7 +4,7 @@ on vixio command:
 	if {command::%{_cmd}%::kategoria} is "Muzyka":
 		if getPoziom(event-user.getId()) < 1:
 			cancel event
-			KamilAPI cmd error "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji."
+			KamilAPI cmd error "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji." to event-message
 	if {command::%{_cmd}%::cooldown} is set:
 		{command::%{_cmd}%::cooldown} != 0 seconds
 		isOwner(event-user.getId()) is false
@@ -26,4 +26,4 @@ on vixio command:
 		
 	if getPoziom(event-user.getId()) < {command::%{_cmd}%::poziom}:
 		cancel event
-		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%getPoziom(event-user.getId())%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!"
+		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%getPoziom(event-user.getId())%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!" to event-message

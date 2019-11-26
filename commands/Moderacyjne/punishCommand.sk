@@ -72,8 +72,8 @@ discord command {@cmd} [<text>] [<text>]:
 				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
 			
 			KamilAPI bypass event-member at {_member} with event-message
-			# if {_member} is event-member:
-			# 	KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie!" to event-message
+			if {_member} is event-member:
+				KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie." to event-message
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
@@ -133,5 +133,5 @@ on guild message receive:
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
-	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user
+	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel
 	delete {v::%event-user.getId()%::pun::*}

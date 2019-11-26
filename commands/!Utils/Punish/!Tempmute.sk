@@ -27,10 +27,11 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 			stop
 			
 		set {_time} to expr-3
-		replace all "d" with " day" in {_time}
-		replace all "h" with " hour" in {_time}
-		replace all "m" with " minute" in {_time}
-		replace all "s" with " second" in {_time}
+		if ("%{_time}%" parsed as timespan) is not set:
+			replace all "d" with " day" in {_time}
+			replace all "h" with " hour" in {_time}
+			replace all "m" with " minute" in {_time}
+			replace all "s" with " second" in {_time}
 		set {_time} to {_time} parsed as timespan
 		set {_now} to now
 

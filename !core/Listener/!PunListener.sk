@@ -46,7 +46,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		set {_adm} to expr-3
 		if expr-4 is not set:
 			set {_adm} to event.getUser()
-			set {_channel} to event.getChannel()
+			set {_channel} to event.getTextChannel()
 		else:
 			set {_channel} to expr-4
 
@@ -64,7 +64,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		wait 30 tick
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
 
-		if {_adm}.getId() != {bot::id}:
+		log("xd: %{_adm}.getId()% is not %{bot::id}%, %{_channel}%")
+		if {_adm}.getId() is not {bot::id}:
 			send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
 		# else:
 		# 	send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
@@ -99,4 +100,4 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
 		else:
-			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już warnów **%{_warny}%** `/` **%{_info::2}%**, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
