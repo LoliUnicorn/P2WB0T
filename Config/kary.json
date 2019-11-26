@@ -8,43 +8,163 @@
 				"time": "1h"
 			}],
 			"tier_2": [{
-				"maxWarns": 5,
+				"maxWarns": 6,
 				"type": "Tempmute",
-				"time": "1d"
+				"time": "3h"
 			}],
 			"tier_3": [{
-				"maxWarns": 8,
+				"maxWarns": 9,
 				"type": "Tempban",
 				"time": "1d"
 			}],
 			"tier_4": [{
-				"maxWarns": 10,
+				"maxWarns": 13,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_5": [{
+				"maxWarns": 16,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_6": [{
+				"maxWarns": 20,
+				"type": "Tempban",
+				"time": "7d"
+			}]
+		}],
+
+		"2": [{
+			"name": "Treści pornograficzne, rasistowskie",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1d"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "5d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
 				"type": "Tempban",
 				"time": "5d"
 			}]
 		}],
 
-		"2": [{
-			"name": "Wulgarny status",
+		"3": [{
+			"name": "Flood/Spam/Caps lock",
 			"tier_1": [{
-				"maxWarns": 1,
-				"type": "Kick",
-				"time": "-"
-			}],
-			"tier_2": [{
 				"maxWarns": 2,
-				"type": "Tempban",
+				"type": "Tempmute",
 				"time": "1h"
 			}],
+			"tier_2": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "3h"
+			}],
 			"tier_3": [{
-				"maxWarns": 3,
-				"type": "Tempban",
+				"maxWarns": 6,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_4": [{
+				"maxWarns": 8,
+				"type": "Tempmute",
+				"time": "10h"
+			}],
+			"tier_5": [{
+				"maxWarns": 10,
+				"type": "Tempmute",
 				"time": "1d"
 			}]
 		}],
 
-		"3": [{
-			"name": "Obraza adm",
+		"4": [{
+			"name": "Masspingi",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "3h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "10h"
+			}],
+			"tier_5": [{
+				"maxWarns": 5,
+				"type": "Tempmute",
+				"time": "1d"
+			}],
+			"tier_6": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_7": [{
+				"maxWarns": 7,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+
+		"5": [{
+			"name": "Reklama stron,serwisów,serwerów",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1d"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+
+		"6": [{
+			"name": "Rozpowszechnianie danych osobowych",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+
+		"7": [{
+			"name": "Działanie na szkodę sieci serwerów P2W",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+
+		"8": [{
+			"name": "Podszywanie się pod graczy lub członków ekipy",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Tempban",
@@ -58,8 +178,273 @@
 			"tier_3": [{
 				"maxWarns": 3,
 				"type": "Tempban",
+				"time": "14d"
+			}]
+		}],
+
+		"9": [{
+			"name": "Proszenie o przywileje, bonusy lub rangi",
+			"tier_1": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "2d"
+			}],
+			"tier_3": [{
+				"maxWarns": 5,
+				"type": "Tempmute",
+				"time": "3d"
+			}]
+		}],
+
+		"10": [{
+			"name": "Wulgarny i/lub nieodpowiedni nickname",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+
+		"11": [{
+			"name": "Wulgarny i/lub nieodpowiedni awatar, status",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "5d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "10d"
+			}],
+			"tier_5": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "14d"
+			}]
+		}],
+
+		"12": [{
+			"name": "Celowe wykorzystywanie błędów Discorda",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "7d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "14d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "20d"
+			}],
+			"tier_5": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "30d"
+			}]
+		}],
+
+		"13": [{
+			"name": "Rozsyłanie scamlinków",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "14d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "30d"
+			}]
+		}],
+
+		"14": [{
+			"name": "Niestosowanie się do wytycznych kanału #filmy",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "1d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "2d"
+			}],
+			"tier_5": [{
+				"maxWarns": 5,
+				"type": "Tempmute",
+				"time": "3d"
+			}]
+		}],
+
+		"15": [{
+			"name": "Niestosowanie się do wytycznych kanałów tematycznych",
+			"tier_1": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_3": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_4": [{
+				"maxWarns": 7,
+				"type": "Tempban",
+				"time": "5d"
+			}],
+			"tier_5": [{
+				"maxWarns": 8,
+				"type": "Tempban",
 				"time": "7d"
 			}]
+		}],
+
+		"16": [{
+			"name": "Brak kultury na publicznych lub prywatnych* kanałach głosowych",
+			"tier_1": [{
+				"maxWarns": 2,
+				"type": "Kick",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_3": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "2d"
+			}],
+			"tier_4": [{
+				"maxWarns": 7,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+
+		"17": [{
+			"name": "Celowe utrudnianie rozmowy",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "2d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+
+		"18": [{
+			"name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "2d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_5": [{
+				"maxWarns": 5,
+				"type": "Tempban",
+				"time": "7d"
+			}]
+		}],
+
+		"19": [{
+			"name": "Wulgarna nazwa kanału głosowego",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "2d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "3d"
+			}]
 		}]
+
 	}
 }

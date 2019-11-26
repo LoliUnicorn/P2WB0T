@@ -5,4 +5,4 @@ on guild message receive:
 	if {_beka} contains "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124":
 		reply with ":octagonal_sign: %getMention(event-user.getId())% reklamowanie się jest zabronione :octagonal_sign:"
 		delete event-message
-	#TODO Daj tutaj jakąś karę
+	#TODO Dodaj puna o reklamie

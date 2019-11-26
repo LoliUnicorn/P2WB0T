@@ -3,7 +3,7 @@ options:
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
-	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::cooldown} to 10 seconds
 
 	set {command::{@cmd}::opis} to "Wyświetla informacje na temat forum."
 	set {command::{@cmd}::kategoria} to "System"
@@ -26,12 +26,12 @@ discord command {@cmd} [<text>]:
 
 		set {_m} to a message builder
 		loop {_xd::*}:
-			append line "%loop-value%%nl%-----------------------------"
+			append line "%loop-value%%nl%—————————————"
 		create embed:
 			set the title of embed to title with text "Kategorie z forum"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the footer of embed to footer with text "Forum" and icon "%avatar of event-bot%"
+			set the footer of embed to footer with text "Forum" and icon "https://derpmc.pl/assets/images/DerpMC/header_logo.png"
 		
 			set the description of embed to "%{_m}%"
 		
