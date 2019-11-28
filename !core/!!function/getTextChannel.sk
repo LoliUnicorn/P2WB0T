@@ -1,0 +1,13 @@
+function getTextChannel(c: text) :: channel:
+	set {_g} to guild with id {bot::guild}
+
+	set {_c::1} to channel with id "%{_c}%"
+	set {_c::2} to channel with name {_c} in {_g}
+	replace all "<" and "##" and ">" with "" in {_c}
+	set {_c::3} to channel with id "%{_c}%"
+
+	loop {_c::*}:
+		if loop-value is set:
+			if loop-value is not "null":
+				if "%loop-value.getType()%" is "TEXT":
+					return loop-value

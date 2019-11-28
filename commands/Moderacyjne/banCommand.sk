@@ -18,10 +18,10 @@ discord command {@cmd} [<text>] [<text>]:
 		if (getUser(arg-1)).getId() = event-user.getId():
 			KamilAPI cmd error "Nie możesz podejmować akcji na samym sobie!" to event-message
 		if (getUser(arg-1)).getId() = event-bot.getId():
-			KamilAPI cmd error "Nie możesz wywalić bota lol" to event-message
+			KamilAPI cmd error "Nie możesz zbanować bota lol" to event-message
 
 		set {_member} to getUser(arg-1) in event-guild
-		if {_member} is not set:
+		if getUser(arg-1) is not set:
 			KamilAPI cmd error "Zła osoba!" to event-message
 
 		set {_powod} to getPowod(arg-2)

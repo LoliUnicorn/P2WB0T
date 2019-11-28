@@ -1,0 +1,3 @@
+function getGuildConfig(msg: text) :: text:
+	set {_inp} to yml value "%{_msg}%" from file "plugins/Bot/guildConfig.yml"
+	return "%{_inp}%"

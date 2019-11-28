@@ -2,13 +2,24 @@ import:
 	java.time.OffsetDateTime
 	me.iblitzkriegi.vixio.util.UpdatingMessage
 
+function createEmbed(footer: text, field: texts, value: texts) :: embed:
+	create embed:
+		set the colour of the embed to red
+		set the timestamp of embed to now
+		set the footer of embed to footer with text {_footer}
+
+		loop size of {_field::*} times:
+			add field named {_field::%loop-value%} with value {_value::%loop-value%} to embed
+	return last created embed
+
 on vixio command:
-  "%event-discordcommand%" is not "eval" 
-  set {kek::%event-user.getId()%} to "[%now%] %getName(event-user.getId())%[%event-user.getId()%] uzyl komendy %event-discordcommand%(%event.getArguments()%) na serwerze %event-guild%[%event-guild.getId()%]"
-  replace all "@" with "`@`" in {kek::%event-user.getId()%}
-  send "%{kek::%event-user.getId()%}%" to channel with id getConfig("Config.logiKomend") with event-bot
-  send "%{kek::%event-user.getId()%}%" to console
-  delete {kek::%event-user.getId()%}
+	"%event-discordcommand%" is not "eval"
+	event.isCancelled() is false
+	set {kek::%event-user.getId()%} to "[%now%] %getName(event-user.getId())%[%event-user.getId()%] uzyl komendy %event-discordcommand%(%event.getArguments()%) na serwerze %event-guild%[%event-guild.getId()%]"
+	replace all "@" with "`@`" in {kek::%event-user.getId()%}
+	send "%{kek::%event-user.getId()%}%" to channel with id getConfig("Config.logiKomend") with event-bot
+	send "%{kek::%event-user.getId()%}%" to console
+	delete {kek::%event-user.getId()%}
 
 on member join guild:
 	wait 50 tick
@@ -26,16 +37,6 @@ on member join guild:
 		set the thumbnail of embed to "%avatar of event-user%"
 	send last created embed to channel with id {_ch} with {bot::name}
 # TODO: wyrzucenia z serwera, zbanowania typa, unbana typa
-
-function createEmbed(footer: text, field: texts, value: texts) :: embed:
-	create embed:
-		set the colour of the embed to red
-		set the timestamp of embed to now
-		set the footer of embed to footer with text {_footer}
-
-		loop size of {_field::*} times:
-			add field named {_field::%loop-value%} with value {_value::%loop-value%} to embed
-	return last created embed
 
 on message delete:
 	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)

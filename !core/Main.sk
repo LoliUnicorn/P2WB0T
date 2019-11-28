@@ -50,6 +50,37 @@ on script load:
 
 		log("Stworzono config! Skonfiguruj plugins/Bot/config.example.yml do swoich potrzec i przeladuj jeszcze raz skrypt!")
 		stop
+	
+	if file "plugins/Bot/guildConfig.yml" doesn't exist:
+		log("Nie ma configu serwera!")
+		set {_f} to "plugins/Bot/guildConfig.yml"
+		create file {_f}
+		
+		set {_gc::1::name} to "Komendy są włączone"
+		set {_gc::1::type} to "value"
+		set {_gc::1::value} to "true"
+		set {_gc::1::valueType} to "boolean"
+
+		set {_gc::2::name} to "Kanaly, na ktorych nie dzialaja komendy"
+		set {_gc::2::type} to "list"
+		set {_gc::2::valueType} to "TextChannel"
+		set {_gc::2::value} to "kanal1,kanal2,kanal3"
+
+		loop (size of {_gc::*}) times:
+			set {_inx} to loop-value
+			loop {_gc::%{_inx}%::*}:
+				if loop-index is not "value":
+					set yml value "Config.%{_inx}%.%loop-index%" from file {_f} to loop-value-2
+				else:
+					if {_gc::%{_inx}%::type} is "value":
+						set yml value "Config.%{_inx}%.%loop-index%" from file {_f} to loop-value-2
+					if {_gc::%{_inx}%::type} is "list":
+						set {_v} to "%loop-value-2%"
+						set {_values::*} to {_v} split at ","
+						loop {_values::*}:
+							add "%loop-value-3%" to yml list "Config.%{_inx}%.%loop-index-1%" from file "plugins/Bot/guildConfig.yml"
+
+		log("Stworzono config serwera! Skonfiguruj plugins/Bot/guildConfig.yml do swoich potrzec.")
 
 	set {bot::name} to getConfig("Bot.name")
 	set {bot::id} to getConfig("Bot.id")

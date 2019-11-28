@@ -1,5 +1,17 @@
 on vixio command:
 	send typing in event-channel
+	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
+
+	loop {_l::*}:
+		if loop-value is event-channel.getId():
+			cancel event
+			KamilAPI cmd error "Komendy na tym kanale zostały. Można to zmienić w `%{bot::prefix}%config`" to event-message
+
+	if getGuildConfig("Config.1.value") is "false":
+		if getPoziom(event-user.getId()) < 1:
+			cancel event
+			KamilAPI cmd error "Komendy zostały wyłączone. Można to zmienić w `%{bot::prefix}%config`" to event-message
+
 	set {_cmd} to "%event-discordcommand%"
 	if {command::%{_cmd}%::kategoria} is "Muzyka":
 		if getPoziom(event-user.getId()) < 1:
