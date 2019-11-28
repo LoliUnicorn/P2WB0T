@@ -32,7 +32,8 @@ on script load:
 		set yml value "Config.modlogi" from file {_f} to "!id kanalu"
 		set yml value "Config.guild" from file {_f} to "!id serwera"
 		set yml value "Config.muterole" from file {_f} to "!ID roli, ktora bedzie nadawana jak osoba dostnie muta"
-		set yml value "Config.logiSerwera" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
+		set yml value "Config.logiSerwera" from file {_f} to "!ID kanalu z logami serwera"
+		set yml value "Config.logiWiadomosci" from file {_f} to "!ID kanaly z logami wiadomosci"
 
 		set yml value "Config.pomocnik" from file {_f} to "!ID roli, ktora bedzie miala poziom 1"
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"

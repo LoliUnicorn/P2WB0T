@@ -1,6 +1,10 @@
+import:
+	java.time.OffsetDateTime
+	me.iblitzkriegi.vixio.util.UpdatingMessage
+
 on vixio command:
   "%event-discordcommand%" is not "eval" 
-  set {kek::%event-user.getId()%} to "[%now%] %getName(event-user.getId())%[%event-user.getId()%] użył komendy %event-discordcommand%(%event.getArguments()%) na serwerze %event-guild%[%event-guild.getId()%]"
+  set {kek::%event-user.getId()%} to "[%now%] %getName(event-user.getId())%[%event-user.getId()%] uzyl komendy %event-discordcommand%(%event.getArguments()%) na serwerze %event-guild%[%event-guild.getId()%]"
   replace all "@" with "`@`" in {kek::%event-user.getId()%}
   send "%{kek::%event-user.getId()%}%" to channel with id getConfig("Config.logiKomend") with event-bot
   send "%{kek::%event-user.getId()%}%" to console
@@ -8,7 +12,7 @@ on vixio command:
 
 on member join guild:
 	wait 50 tick
-	set {_ch} to getConfig("Config.logi")
+	set {_ch} to getConfig("Config.logiSerwera")
 	create embed:
 		set the colour of the embed to color of getColor(event-member)
 		set the timestamp of embed to now
@@ -21,3 +25,43 @@ on member join guild:
 
 		set the thumbnail of embed to "%avatar of event-user%"
 	send last created embed to channel with id {_ch} with {bot::name}
+# TODO: wyrzucenia z serwera, zbanowania typa, unbana typa
+
+function createEmbed(footer: text, field: texts, value: texts) :: embed:
+	create embed:
+		set the colour of the embed to red
+		set the timestamp of embed to now
+		set the footer of embed to footer with text {_footer}
+
+		loop size of {_field::*} times:
+			add field named {_field::%loop-value%} with value {_value::%loop-value%} to embed
+	return last created embed
+
+on message delete:
+	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)
+
+	set {_g} to event-guild
+	loop ...{_g}.retrieveAuditLogs().cache(false):
+		set {_v} to loop-value
+		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
+			# TODO: Dodaj ifa "if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1):" jak juz bedzie vps
+			
+			set {_name} to getFullName((author of event-message).getId())
+			if {_name} contains "<none>":
+				set {_name} to "Nie udało się uzyskać."
+
+			set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
+			set {_sender} to getFullName({_v}.getUser().getId())
+
+			if ...{_m}.getMessage().getEmbeds() is not set:
+				set {_tresc} to "%{_m}%"
+			else:
+				set {_tresc} to "Zawiera embed. Patrz poniżej."
+
+			set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "(Prawdopodobnie) Usunięte przez", "Kanał", "Treść wiadomości"), ({_name}, {_sender}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
+			send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+
+			if ...{_m}.getMessage().getEmbeds() is set:
+				send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+			stop
+		

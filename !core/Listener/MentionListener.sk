@@ -1,4 +1,4 @@
 on guild message receive:
-	if "%event-message%" is "<@617012279967481856>":
-		reply with "Mój prefix to `%{bot::prefix}%`. Wszystkie komendy znajdziesz pod `%{bot::prefix}%help`"
+	if "%event-message%" is "<@%{bot::id}%>":
+		reply with "Mój prefix to `%{bot::prefix}%`. Wszystkie komendy znajdziesz pod `%{bot::prefix}%help`. Zamist prefixu możesz użyć oznaczenia bota."
 		KamilAPI add emote "green" to event-message

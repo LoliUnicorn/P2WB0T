@@ -118,9 +118,7 @@ discord command {@cmd} [<text>] [<text>]:
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-					log("%{_lul}% = %{_m::%{_lul}%}.length()%")
 					if {_m::%{_lul}%}.length() >= 900:
-						log("zmieniamy fielda")
 						add 1 to {_lul}
 						set {_m::%{_lul}%} to a message builder
 				loop {_m::*}:
@@ -128,15 +126,7 @@ discord command {@cmd} [<text>] [<text>]:
 						add field named "Wybierz kare..." with value "%loop-value%" to embed
 						set {_one} to true
 					else:
-						add field named "Wybierz kare..." with value "%loop-value%" to embed
-					# if {_m::%{_lul}%}.length() >= 900:
-					# 	if {_field} is true:
-					# 		set {_field} to false
-					# 		add field named "Wybierz kare..." with value "%{_m::%{_lul}%}%" to embed
-					# 	else:
-					# 		add field named "test" with value "%{_m::%{_lul}%}%" to embed
-					# 		add 1 to {_lul}
-					# 		set {_m::%{_lul}%} to a message builder
+						add field named "" with value "%loop-value%" to embed
 				
 			edit {_msg} to show last created embed
 			edit {_msg} to show " "

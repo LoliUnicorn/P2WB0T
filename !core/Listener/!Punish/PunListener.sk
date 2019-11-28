@@ -23,7 +23,7 @@ function checkTier(index: text) :: number:
 	return {_num}
 
 function checkReset(u: text):
-	execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+	execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}%' AND aktywna='Tak' AND type='Warn'" in {bot::sql} and store result in {_r::*}
 	loop {_r::powod::*}:
 		add 1 to {_warny::powod::%loop-value%}
 	loop {pun::list::*}:

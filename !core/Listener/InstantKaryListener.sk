@@ -9,8 +9,10 @@ function instantKaryCheck(u: text):
 	execute "SELECT typ,adm,end FROM akcje WHERE nick='%unsafe {_nick}%' AND aktywna='Tak'" in {bot::sql} and store result in {_o::*}
 	if {_o::typ::1} is "Ban":
 		KamilAPI ban {_user} with reason "Ten nick (**%{_nick}%**) ma perm bana!" by getUser({_o::adm::1})
+		stop
 	if {_o::typ::1} is "Mute":
 		KamilAPI mute {_user} with reason "Ten nick (**%{_nick}%**) ma perm muta!" by getUser({_o::adm::1})
+		stop
 
 	set {_end} to unix date ("%{_o::end::1}%" parsed as number) as date
 	set {_jeszcze} to difference between now and {_end}

@@ -1,4 +1,3 @@
-
 function getRegex(t: text) :: text:
 	set {_test} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "[URL]" in {_t}
 	set {_xd} to regex replace all pattern "@" with "`<ping>`" in {_test}

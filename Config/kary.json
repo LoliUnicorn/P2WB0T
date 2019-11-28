@@ -164,7 +164,7 @@
 		}],
 
 		"8": [{
-			"name": "Podszywanie się pod graczy lub czlonkow ekipy",
+			"name": "Podszywanie sie pod graczy lub czlonkow ekipy",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Tempban",
@@ -288,7 +288,7 @@
 		}],
 
 		"14": [{
-			"name": "Niestosowanie się do wytycznych kanalu #filmy",
+			"name": "Niestosowanie sie do wytycznych kanalu #filmy",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Tempmute",
@@ -317,7 +317,7 @@
 		}],
 
 		"15": [{
-			"name": "Niestosowanie się do wytycznych kanalow tematycznych",
+			"name": "Niestosowanie sie do wytycznych kanalow tematycznych",
 			"tier_1": [{
 				"maxWarns": 2,
 				"type": "Tempmute",
@@ -445,6 +445,5 @@
 				"time": "3d"
 			}]
 		}]
-
 	}
 }
