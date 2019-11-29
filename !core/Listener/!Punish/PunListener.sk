@@ -64,7 +64,6 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		wait 30 tick
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
 
-		log("xd: %{_adm}.getId()% is not %{bot::id}%, %{_channel}%")
 		if {_adm}.getId() is not {bot::id}:
 			send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
 		# else:

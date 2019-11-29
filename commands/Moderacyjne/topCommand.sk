@@ -1,0 +1,96 @@
+options:
+	cmd: top
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wyświetla topke administracji."
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "topka <ilość dni wstecz> np. topka 5d"
+
+import:
+	java.lang.System
+	java.time.ZoneId	
+	java.util.TimeZone
+	java.text.SimpleDateFormat
+	java.util.Date as XD
+
+	ch.njol.skript.Skript	
+	ch.njol.skript.SkriptConfig	
+	ch.njol.yggdrasil.YggdrasilSerializable	
+
+function translateTyp(t: text) :: text:
+	replace all "warn" with "Warny" in {_t}
+	replace all "kick" with "Kicki" in {_t}
+	replace all "tempban" with "Tempbany" in {_t}
+	replace all "tempmute" with "Tempmuty" in {_t}
+	replace all "ban" with "Bany" in {_t}
+	replace all "unmute" with "Unmuty" in {_t}
+	replace all "mute" with "Muty" in {_t}
+	return {_t}
+
+discord command {@cmd} [<text>]:
+	aliases: topka
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+
+		set {_dni} to arg-1
+
+		set {_timespan} to arg-1
+		replace all "d" with " days" in {_timespan}
+		set {_timespan} to {_timespan} parsed as timespan
+		set {_now} to now
+		remove {_timespan} from {_now}
+
+		replace all "d" with "" in {_dni}
+		set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
+		set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
+		set {_title} to "Aktywność z ostatni%{_kochamPolski}% %{_dni}% %{_title}%"
+
+		reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+		execute "SELECT typ,adm,now FROM akcje" in {bot::sql} and store result in {_r::*}
+		loop {_r::adm::*}:
+
+			set {_n} to "%{_r::now::%loop-index%}%"
+			set {_typ} to "%{_r::typ::%loop-index%}%"
+			set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
+			set {_test} to date from unix {_test}.getTime()
+
+			if {_test} > {_now}:
+				add 1 to {_ilosc::%loop-value%}
+				add 1 to {_typ::%loop-value%::%{_typ}%}
+		
+		set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
+		
+		set {_lul} to 1 
+		set {_m::%{_lul}%} to a message builder
+
+		loop {_top::*}:
+			set {_l::*} to loop-value split at ";"
+			set {_user} to getMention({_l::1})
+			set {_akcji} to {_l::2}
+			append line "%loop-index%. %{_user}% - %{_akcji}% akcji"
+			loop {_typ::%{_l::1}%::*}:
+				append line "   %translateTyp(loop-index-2)%: **%loop-value-2%**"
+			if {_m::%{_lul}%}.length() >= 850:
+				add 1 to {_lul}
+				set {_m::%{_lul}%} to a message builder
+
+		create embed:
+			set the title of embed to title with text {_title}
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Top"
+			
+			loop {_m::*}:
+				if loop-index is "1":
+					add split field named "Topka:" with value "%loop-value%" to embed
+				else:
+					add split field named "" with value "%loop-value%" to embed
+
+		edit {_msg} to show last created embed
+		edit {_msg} to show " "

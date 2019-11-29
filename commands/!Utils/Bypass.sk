@@ -1,4 +1,4 @@
-effect KamilAPI [check] bypass %member% at %member% with %message%:
+effect KamilAPI [check] bypass %member% at %member% with %message% [no stop code %-boolean%]:
 	trigger:
 		delay the effect
 		set {_sender} to expr-1
@@ -19,3 +19,20 @@ effect KamilAPI [check] bypass %member% at %member% with %message%:
 		if getPoziom({_sender}.getUser().getId()) < getPoziom({_karany}.getUser().getId()):
 			KamilAPI cmd error "Nie możesz wykonywać akcji na osobie z wyższą rangą!" to expr-3
 		continue
+
+function bypass(sender: member, karany: member) :: boolean:
+	set {_r::1::*} to roles of {_sender}
+	set {_r::2::*} to roles of {_karany}
+
+	if isOwner({_sender}.getUser().getId()):
+		return true
+
+	if {_karany}.getUser().getId() is {bot::id}:
+		return false
+
+	if discord position of {_r::1::1} < discord position of {_r::2::1}:
+		return false
+
+	if getPoziom({_sender}.getUser().getId()) < getPoziom({_karany}.getUser().getId()):
+		return false
+	return true

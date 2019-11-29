@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Tymczasowo wycisza użytkownika"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "tempmute (member) (czas) [powód]"
+	set {command::{@cmd}::uzycie} to "tempmute <member> <czas> [powód]"
 
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
