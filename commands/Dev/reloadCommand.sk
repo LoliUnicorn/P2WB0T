@@ -22,7 +22,7 @@ function getCoreReloadEmbed(m: member, typ: number=0) :: embed:
 	
 	if {_typ} is 1:
 		append line "%{_g}% Szukanie modułu."
-		append line "%{_r}% Reload modułu `!core`"
+		append line "%{_l}% Reload modułu `!core`"
 		append line "%{_r}% Zakończenie."
 
 	if {_typ} is 2:

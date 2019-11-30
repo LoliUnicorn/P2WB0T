@@ -14,10 +14,10 @@ effect KamilAPI [check] bypass %member% at %member% with %message% [no stop code
 			KamilAPI cmd error "Nie możesz wykonać akcji na bocie :("
 
 		if discord position of {_r::1::1} < discord position of {_r::2::1}:
-			KamilAPI cmd error "Nie możesz wykonywać akcji na osobie z wyższą rangą!" to expr-3
+			KamilAPI cmd error "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!" to expr-3
 
-		if getPoziom({_sender}.getUser().getId()) < getPoziom({_karany}.getUser().getId()):
-			KamilAPI cmd error "Nie możesz wykonywać akcji na osobie z wyższą rangą!" to expr-3
+		if getPoziom({_sender}.getUser().getId()) <= getPoziom({_karany}.getUser().getId()):
+			KamilAPI cmd error "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!" to expr-3
 		continue
 
 function bypass(sender: member, karany: member) :: boolean:

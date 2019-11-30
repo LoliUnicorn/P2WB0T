@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Daje multi warna"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "mwarn <osoba1,osoba2,[. . .]> <Powód>"
+	set {command::{@cmd}::uzycie} to "mwarn <osoba1,osoba2,[. . .]> p:<Powód>"
 
 discord command {@cmd} [<text>]:
 	aliases: multiwarn
@@ -29,7 +29,7 @@ discord command {@cmd} [<text>]:
 					set {_jest::%{_id}%} to {_u}
 		
 		if {_jest::*} is not set:
-			KamilAPI cmd error "Nie znaleziono osób do ukarania. Najprawdopodobniej nie możesz podajmować na nich akcji, lub źle wpisałeś komendę. Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
+			KamilAPI cmd error "Nie znaleziono osób do ukarania. Najprawdopodobniej nie możesz podejmować na nich akcji, lub źle wpisałeś komendę. Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
 
 		loop {pun::list::*}:
 			set {_inx} to loop-index

@@ -64,6 +64,11 @@ discord command {@cmd} [<text>]:
 				add 1 to {_ilosc::%loop-value%}
 				add 1 to {_typ::%loop-value%::%{_typ}%}
 		
+		if size of {_ilosc::*} is 0:
+			edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
+			KamilAPI add emote "red" to event-message
+			stop
+		
 		set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
 		
 		set {_lul} to 1 
@@ -94,3 +99,4 @@ discord command {@cmd} [<text>]:
 
 		edit {_msg} to show last created embed
 		edit {_msg} to show " "
+		KamilAPI add emote "green" to event-message

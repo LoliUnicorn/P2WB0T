@@ -5,17 +5,9 @@ function setCustomStatus():
 
 	while true:
 		wait a tick
-		{bot::status} is true
+		if {bot::status} is not true:
+			stop
 		delete {_s::*}
 		set {_s::*} to "Prefix: %{bot::prefix}%", "%day%/%month%/%year%", "%{bot::prefix}%help", "DerpMC.pl", "Feerko.pl", "RoiZy.pl", "p2w.pl"
 		mark "%{bot::name}%" as playing "%(random element of {_s::*})%"
 		wait 25 seconds
-
-function loadStatus():
-	delete {bot::status}
-	setCustomStatus()
-
-every 5 minutes:
-	set {_b} to "%{bot::name}%" parsed as bot
-	if game of getUser({_b}.getId()) is not set:
-		loadStatus()

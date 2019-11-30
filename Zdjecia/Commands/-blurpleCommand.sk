@@ -1,0 +1,49 @@
+options:
+	cmd: blurple
+
+on script load:
+	set {command::{@cmd}::poziom} to 10
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Daje zdjecie jako blurple"
+	set {command::{@cmd}::kategoria} to "Zdjęcia"
+	set {command::{@cmd}::uzycie} to "blurple [osoba]"
+
+import:
+	java.awt.image.BufferedImage
+	java.io.ByteArrayInputStream
+	java.io.ByteArrayOutputStream
+	javax.imageio.ImageIO
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		IA connect to api
+		if {_ia::valid} is false:
+			KamilAPI cmd error "Serwer z zdjęciami nie odpowiada!" to event-message
+
+		reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+		set {_t} to getConfig("Image.tokenOwner")
+		set {_link} to getConfig("Image.ip")
+		set {_u} to event-user
+		set {_u} to getUser(arg-1)
+
+		send a "GET" request to "%{_link}%/api/image/blurple?avatarURL=%avatar of {_u}%" with the headers "authorization: %{_t}%"
+		wait 5 tick
+		map json last response's body to {_r::*}
+		
+		if "%{_r::success}%" is not "true":
+			edit {_msg} to show "Wystąpił błąd! %{_r::error::description}% (%{_r::error::code}%)"
+			KamilAPI add emote "red" to event-message
+			stop
+		loop {_r::image::data::*}:
+			add 1 to {_inx}
+			set {_xd::%{_inx}%} to "%loop-value%" parsed as number
+
+		set {_os} to new ByteArrayOutputStream()
+		ImageIO.write((98, 101, 107, 97), "png", {_os})
+		set {_is} to new ByteArrayInputStream({_os}.toByteArray())
+
+		edit {_msg} to show "Skończyłem"
+		event.getChannel().sendFile({_is}, "blurple.png").queue()

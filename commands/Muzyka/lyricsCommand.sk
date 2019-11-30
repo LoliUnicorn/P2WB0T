@@ -15,7 +15,7 @@ discord command {@cmd} [<text>]:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message
 		reply with "%getConfigEmote(""loading"")% Wczytywanie..." and store it in {_msg}
-		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=utf-8"
+		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=UTF-8"
 		map json last response's body to {_r::*}
 
 		if {_r::error} is "Sorry i couldn't find that song's lyrics":

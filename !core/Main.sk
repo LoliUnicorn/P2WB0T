@@ -39,6 +39,10 @@ on script load:
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
 		set yml value "Config.adm" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
 
+		set yml value "Image.token" from file {_f} to "!token do api"
+		set yml value "Image.port" from file {_f} to "!port serwera"
+		set yml value "Image.ip" from file {_f} to "!ip do serwera"
+
 		set yml value "Config.logiKomend" from file {_f} to "!Logi kanału do logow"
 
 		set yml value "emote.green" from file {_f} to "!id emotki green"
@@ -124,4 +128,6 @@ on script load:
 		log("&aPomyslnie zalogowano bota! Milego korzystania :D")
 	set {_bot} to "%{bot::name}%" parsed as bot
 	set {bot::helpmention} to "%mention tag of {_bot}% "
-	loadStatus()
+	
+	delete {bot::status}
+	setCustomStatus()

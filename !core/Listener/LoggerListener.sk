@@ -36,7 +36,6 @@ on member join guild:
 
 		set the thumbnail of embed to "%avatar of event-user%"
 	send last created embed to channel with id {_ch} with {bot::name}
-# TODO: wyrzucenia z serwera, zbanowania typa, unbana typa
 
 on message delete:
 	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)

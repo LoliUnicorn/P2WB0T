@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Unbanuje użytkownika"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "Unban <user> [powód]"
+	set {command::{@cmd}::uzycie} to "unban <user> [powód]"
 
 discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 

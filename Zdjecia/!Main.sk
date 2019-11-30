@@ -1,0 +1,21 @@
+effect (ImageAPI|IA) connect to api:
+	trigger:
+		delay the effect
+		set {_link} to getConfig("Image.ip")
+		set {_t} to getConfig("Image.tokenOwner")
+		send a "GET" request to "%{_link}%/api/token/checkToken" with the headers "authorization: %{_t}%"
+		map json last response's body to {_r::*}
+		if {_r::response::valid}:
+			KamilAPI set variable {_ia::valid} to true in event
+		else:
+			KamilAPI set variable {_ia::valid} to false in event
+		continue
+
+on script load:
+	log("&eLaduje serwer API...")
+	
+	IA connect to api
+	if {_ia::valid}:
+		log("&aPomyslnie polaczono sie z serwerem!")
+	else:
+		log("&cWystapil blad podczas laczenia sie z serwerem!")

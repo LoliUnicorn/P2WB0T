@@ -72,7 +72,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set the title of embed to title with text {_name}
 					set the colour of the embed to color of getColor(event-member)
 					set the timestamp of embed to now
-					set the footer of embed to footer with text "%arg-3%" and icon "%avatar of event-bot%"
+					set the footer of embed to footer with text "%arg-2%" and icon "%avatar of event-bot%"
 
 					loop (size of {_warny::id::*}) times:
 						add 1 to {_beka}
@@ -94,7 +94,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set the author info of the embed to author named {_name} with no url and icon "%avatar of {v::%event-user.getId()%::history::user}%"
 			else:
 				set {_m} to a message builder
-				append line "Liczba kar typu `%arg-3%`: %{_liczba::%arg-3%}%"
+				append line "Liczba kar typu `%arg-2%`: %{_liczba::%arg-2%}%"
 				append line "Więcej info pod komendą %{bot::prefix}%karainfo (ID kary)%nl%"
 				append line "Administrator | Powód | Czas kiedy nadano. | ID%nl%%nl%"
 				create embed:

@@ -7,22 +7,22 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Ustawia cooldown na kanał"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "cooldown (kanal) (<sekundy>/reset)"
+	set {command::{@cmd}::uzycie} to "cooldown (<sekundy>/reset) [kanał]"
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: cd,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_c} to getTextChannel(arg-1)
-		set {_int} to arg-2 parsed as number
+		set {_c} to getTextChannel(arg-2)
+		set {_int} to arg-1 parsed as number
 
 		if {_c} is not set:
-			KamilAPI cmd error "Zły kanał! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
-		if arg-2 is not "reset" or "off":
+			set {_c} to event-channel
+		if arg-1 is not "reset" or "off":
 			if {_int} is not set:
 				KamilAPI cmd error "Zły kanał! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		
-		if arg-2 is "reset" or "off":
+		if arg-1 is "reset" or "off":
 			{_c}.getManager().setSlowmode(0).complete()
 			reply with "Zresetowano cooldown na kanale <##%{_c}.getId()%>"
 			KamilAPI add emote "green" to event-message

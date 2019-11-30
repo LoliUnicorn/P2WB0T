@@ -24,10 +24,6 @@ on script load:
 	wait 500 tick
 	kurwaNieDzialaShip()
 
-on vixio command:
-	"%event-discordcommand%" is "ship"
-	kurwaNieDzialaShip()
-
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
@@ -61,12 +57,9 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 					if {_bol} is "+":
 						add ({_liczba} parsed as number) to {_wynik}
-						log("add %{_liczba}% to %{_wynik}%")
-						
+
 					else if {_bol} is "-":
-						remove ({_liczba} parsed as number) from {_wynik}
-						log("remove %{_liczba}% to %{_wynik}%")
-						
+						remove ({_liczba} parsed as number) from {_wynik}	
 	
 		if arg-3 is set:
 			if isOwner(event-user.getId()) is true:
