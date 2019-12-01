@@ -1,0 +1,39 @@
+{
+  "name": "fratikb0t-api",
+  "version": "1.1.0",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "node_modules/eslint/bin/eslint.js --max-warnings 0 .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "node installer.js",
+    "docs": "apidoc -o docs -e node_modules/"
+  },
+  "author": "fratik",
+  "license": "MIT",
+  "dependencies": {
+    "buffer-image-size": "^0.6.4",
+    "canvas": "Automattic/node-canvas#92b192447e9b9ae98da0f801e4e34afdd1dc1ef8",
+    "canvas-constructor": "^3.1.0",
+    "color-thief": "^2.2.3",
+    "fs-nextra": "^0.4.7",
+    "inquirer": "^5.2.0",
+    "jimp": "^0.6.4",
+    "restify": "^7.2.1",
+    "snekfetch": "^4.0.4"
+  },
+  "apidoc": {
+    "name": "FratikB0T API",
+    "sampleUrl": "https://api.fratikbot.pl/",
+    "url": "https://api.fratikbot.pl/"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.0"
+  },
+  "repository": "git+ssh://git@github.com/fratik/fratikb0t-api.git",
+  "bugs": {
+    "url": "https://github.com/fratik/fratikb0t-api/issues"
+  },
+  "homepage": "https://github.com/fratik/fratikb0t-api#README",
+  "description": "",
+  "private": true
+}

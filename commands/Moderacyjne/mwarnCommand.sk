@@ -45,7 +45,7 @@ discord command {@cmd} [<text>]:
 		reply with "%getConfigEmote(""loading"")% Trwa karanie ludzi 0`/`%size of {_jest::*}%. W tym nieudanych: 0" and store it in {_msg}
 		set {_errorow} to 0
 		loop {_jest::*}:
-			wait 10 tick
+			wait 25 tick
 			KamilAPI add pun to loop-value with reason {_powod} by event-user
 			add 1 to {_juzJest}
 			if {_error} is set:

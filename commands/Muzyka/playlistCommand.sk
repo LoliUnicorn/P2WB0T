@@ -3,7 +3,7 @@ options:
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
-	set {command::{@cmd}::cooldown} to 0 seconds
+	set {command::{@cmd}::cooldown} to 2 seconds
 
 	set {command::{@cmd}::opis} to "Zarządzanie playlistami"
 	set {command::{@cmd}::kategoria} to "Muzyka"
@@ -26,8 +26,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		delete {v::%event-user.getId()%::playlist::*}
-		if arg-1 is not set:
-			KamilAPI cmd error "Nie masz żandych playlist do wyświetlenia! Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
+		if arg-1 is not "list" or "add" or "delete" or "remove" or "load":
+			KamilAPI cmd error "Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
 		if arg-1 is "list":
 			if arg-2 is not set:
 				execute "SELECT name FROM playlisty WHERE user='%unsafe event-user.getId()%'" in {bot::sql} and store result in {_r::*}
@@ -37,7 +37,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					add loop-value to {_p::*}
 
 				if {_r::name::*} is not set:
-					KamilAPI cmd error "Nie masz żandych playlist do wyświetlenia! Użyj: `%{bot::prefix}%playlist create <nazwa playlisty>`" to event-message
+					KamilAPI cmd error "Nie masz żandych playlist do wyświetlenia! Użyj: `%{bot::prefix}%playlist add <nazwa playlisty> <nazwa utworu>``" to event-message
 				else:
 					reply with "Twoje playlisty: `%{_p::*}%`. Użyj `%{bot::prefix}%playlist list <nazwa playlisty>`"
 					KamilAPI add emote "green" to event-message
@@ -62,8 +62,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					append line "[%{_numer}%. %{_name}%](%{_link}%)"
 					if {_m::%{_lul}%}.length() >= 950:
 						add 1 to {_lul}
-						set {_m::%{_lul}%} to a message builder
-						
+						set {_m::%{_lul}%} to a message builder	
 
 				create embed:
 					set the title of embed to title with text "Piosenki z playlisty `%arg-2%`"

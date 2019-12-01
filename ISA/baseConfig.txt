@@ -1,0 +1,8 @@
+{
+  "tokens": {
+    "owner": {{ownerToken}},
+    "rest": [{{resttokens}}]
+  },
+  "port": {{port}},
+  "ip": {{ip}}
+}

@@ -3,19 +3,24 @@ options:
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
-	set {command::{@cmd}::cooldown} to 3 seconds
+	set {command::{@cmd}::cooldown} to 5 seconds
 	set {command::{@cmd}::opis} to "Wysyła tekst piosenki."
 	set {command::{@cmd}::kategoria} to "Muzyka"
-	set {command::{@cmd}::uzycie} to "{@cmd} <tytuł piosenki>"
+	set {command::{@cmd}::uzycie} to "{@cmd} [tytuł piosenki]"
 
 discord command {@cmd} [<text>]:
-	aliases: tekst,
+	aliases: tekst, l
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message
+			set {_track} to "%track {bot::name} is playing in event-guild%"
+			if {_track} is "<none>":
+				KamilAPI command error "Użyj: %{bot::prefix}%lyrics (tytuł piosenki)" to event-message
+		else:
+			set {_track} to arg-1
+
 		reply with "%getConfigEmote(""loading"")% Wczytywanie..." and store it in {_msg}
-		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe arg-1%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=UTF-8"
+		send a "GET" request to "https://some-random-api.ml/lyrics?title=%http safe {_track}%" with the headers "User-Agent: Mozilla/5.0 (X11; Windows x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36", and "Content-Type: text/html; charset=UTF-8"
 		map json last response's body to {_r::*}
 
 		if {_r::error} is "Sorry i couldn't find that song's lyrics":
@@ -25,8 +30,17 @@ discord command {@cmd} [<text>]:
 			deleteMessage({_msg})
 			KamilAPI command error "API zwróciło nieoczekiwany błąd! `%{_r::error}%`" to event-message
 
+		replace all "[Tekst i adnotacje na Rap Genius Polska]" with "" in {_r::lyrics}
 		loop 25 times:
-			set {_wyswietlany} to first 1000 characters of {_r::lyrics}
+			set {_int} to 900
+
+			loop 20 times:
+				set {_wyswietlany} to first {_int} characters of {_r::lyrics}
+				if last character of {_wyswietlany} is " ":
+					stop loop
+				else:
+					add 1 to {_int}
+
 			set {_replace} to {_wyswietlany}
 			replace all "\n" with "%nl%" in {_wyswietlany}
 			add {_wyswietlany} to {_field::*}

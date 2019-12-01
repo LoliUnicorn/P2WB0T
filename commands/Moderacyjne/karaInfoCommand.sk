@@ -16,7 +16,7 @@ discord command {@cmd} [<text>]:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%karainfo (ID kary)" to event-message
 		execute "SELECT * FROM akcje WHERE id=%unsafe arg-1%" in {bot::sql} and store result in {_kara::*}
 		if {_kara::id::*} is not set:
-			KamilAPI cmd error "Nie ma kary o takim ID!"
+			KamilAPI cmd error "Nie ma kary o takim ID!" to event-message
 		create embed:
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
