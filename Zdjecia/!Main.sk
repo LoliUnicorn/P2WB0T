@@ -11,6 +11,14 @@ effect (ImageAPI|IA) connect to api:
 			KamilAPI set variable {_ia::valid} to false in event
 		continue
 
+function convertTo(n: number, base: number) :: string:
+	set {_pattern} to "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	while {_n} = 0:
+		add {_pattern}.charAt({_n} / {_base}) to {_return::*}
+		remove
+
+	return {_return}
+
 on script load:
 	log("&eLaduje serwer API...")
 	

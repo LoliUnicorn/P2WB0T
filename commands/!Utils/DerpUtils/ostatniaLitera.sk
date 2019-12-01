@@ -1,0 +1,18 @@
+on guild message receive:
+	if event-channel.getName() is "ostatnia-litera":
+		grab last 2 messages in event-channel
+		set {_s::*} to grabbed messages
+		if size of {_s::*} = 1:
+			stop
+		set {_s} to {_s::2}
+	
+		if {_s}.getMessage().getAuthor().getId() is event-user.getId():
+			deleteMessage(event-message)
+			stop
+
+		set {_lastLitera} to last character of "%{_s::2}%"
+		set {_jegoLitera} to first character of "%{_s::1}%"
+
+		if {_lastLitera} != {_jegoLitera}:
+			deleteMessage(event-message)
+			stop

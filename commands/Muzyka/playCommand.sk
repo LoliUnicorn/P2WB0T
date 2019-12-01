@@ -100,7 +100,7 @@ on guild message received:
 		else:
 			if event-bot is playing:
 				reply with "<@%event-user.getId()%>, dodaje **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`** do kolejki!"
-			# else: ## Efekt wykonywany w !Uitl/events.sk
+			# else: ## Efekt wykonywany w !Utils/events.sk
 			# 	reply with "<@%event-user.getId()%>, puszczam **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`**"
 
 			#play {v::%event-user.getId()%::play::piosenka::%{_msg}%}

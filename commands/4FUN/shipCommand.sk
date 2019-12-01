@@ -106,4 +106,4 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 		upload "%{_s}%" with message ":hearts: `%{_xd::1}%` + `%{_xd::2}%` :two_hearts:%nl%Miłość na **%{_wynik}%%%**! %{_kom}%" to event-channel with event-bot
 		KamilAPI add emote "green" to event-message
-		delete file "zdjecia/ship/%event-user.getId()%.png"
+		#delete file "zdjecia/ship/%event-user.getId()%.png"
