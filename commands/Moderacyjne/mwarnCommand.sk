@@ -31,9 +31,11 @@ discord command {@cmd} [<text>]:
 		if {_jest::*} is not set:
 			KamilAPI cmd error "Nie znaleziono osób do ukarania. Najprawdopodobniej nie możesz podejmować na nich akcji, lub źle wpisałeś komendę. Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
 
-		loop {pun::list::*}:
+		set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+		map json {_xd} to {_pun::*}
+		loop {_pun::list::*}:
 			set {_inx} to loop-index
-			if {pun::list::%{_inx}%::1::name} is {_powod}:
+			if {_pun::list::%{_inx}%::1::name} is {_powod}:
 				set {_tak} to true
 				stop loop
 		if {_tak} is not set:

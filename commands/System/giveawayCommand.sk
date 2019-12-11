@@ -142,7 +142,6 @@ on guild message receive:
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 
-		log("INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')")
 		execute "INSERT INTO `konkurs` (`id`,`nagroda`,`kanal`,`messageId`,`sender`,`now`,`koniec`,`aktywna`) VALUES('%unsafe {_id}%','%unsafe {_nagroda}%','%unsafe {_kanal}%','%unsafe {_messageId}%','%unsafe {_sender}%','%unsafe {_now}%','%unsafe {_koniec}%','Tak')" in {bot::sql}
 		delete {v::%event-user.getId()%::giveaway::*}
 		updateKonkurs()

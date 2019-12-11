@@ -44,7 +44,7 @@ on message delete:
 	loop ...{_g}.retrieveAuditLogs().cache(false):
 		set {_v} to loop-value
 		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
-			# TODO: Dodaj ifa "if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1):" jak juz bedzie vps
+			# FIXME: Dodaj ifa "if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1):" jak juz bedzie vps
 			
 			set {_name} to getFullName((author of event-message).getId())
 			if {_name} contains "<none>":
@@ -64,4 +64,3 @@ on message delete:
 			if ...{_m}.getMessage().getEmbeds() is set:
 				send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
 			stop
-		

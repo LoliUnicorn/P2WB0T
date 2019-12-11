@@ -101,7 +101,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set the title of embed to title with text {_name}
 					set the colour of the embed to color of getColor(event-member)
 					set the timestamp of embed to now
-					set the footer of embed to footer with text "%arg-3%" and icon "%avatar of event-bot%"
+					set the footer of embed to footer with text "%arg-2%" and icon "%avatar of event-bot%"
 
 					loop (size of {_warny::id::*}) times:
 						add 1 to {_beka}

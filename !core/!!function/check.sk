@@ -1,0 +1,18 @@
+expression:
+	patterns:
+		check %object% = %object% : %object% ? %object%
+	return type: object
+	get:
+		if expr-1 is expr-2:
+			return expr-3
+		return expr-4
+
+expression:
+	patterns:
+		check %object% != %object% : %object% ? %object%
+	return type: object
+	get:
+		if expr-1 is not expr-2:
+			return expr-3
+		return expr-4
+

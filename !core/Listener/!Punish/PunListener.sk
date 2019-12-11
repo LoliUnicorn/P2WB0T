@@ -1,12 +1,14 @@
 function getMaxWarnsByName(t: text, warns: number) :: text:
-	loop {pun::list::*}:
+	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	map json {_xd} to {_pun::*}
+	loop {_pun::list::*}:
 		set {_inx} to loop-index
-		set {_name} to {pun::list::%{_inx}%::1::name}
+		set {_name} to {_pun::list::%{_inx}%::1::name}
 
 		if {_name} contains {_t}:
 			set {_tierow} to checkTier({_inx})
 			loop {_tierow} times:
-				set {_maxWarns} to {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
+				set {_maxWarns} to {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
 				
 				if {_maxWarns} = {_warns}:
 					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
@@ -15,8 +17,10 @@ function getMaxWarnsByName(t: text, warns: number) :: text:
 					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
 
 function checkTier(index: text) :: number:
+	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	map json {_xd} to {_pun::*}
 	loop 20 times:
-		if {pun::list::%{_index}%::1::tier_%loop-value%} is set:
+		if {_pun::list::%{_index}%::1::tier_%loop-value%} is set:
 			add 1 to {_num}
 		else:
 			stop loop
@@ -24,14 +28,16 @@ function checkTier(index: text) :: number:
 
 function checkReset(u: text):
 	execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}%' AND aktywna='Tak' AND type='Warn'" in {bot::sql} and store result in {_r::*}
+	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	map json {_xd} to {_pun::*}
 	loop {_r::powod::*}:
 		add 1 to {_warny::powod::%loop-value%}
-	loop {pun::list::*}:
+	loop {_pun::list::*}:
 		set {_inx} to loop-index
-		set {_n} to {pun::list::%{_inx}%::1::name}
+		set {_n} to {_pun::list::%{_inx}%::1::name}
 
 		set {_maxTierow} to checkTier({_inx})
-		set {_warnyZaMaxTier} to {pun::list::%{_inx}%::1::tier_%{_maxTierow}%::1::maxWarns}
+		set {_warnyZaMaxTier} to {_pun::list::%{_inx}%::1::tier_%{_maxTierow}%::1::maxWarns}
 		set {_jegoWarny} to {_warny::powod::%{_n}%}
 		if "%{_warnyZaMaxTier}%" = "%{_jegoWarny}%":
 			log("Resetuje warny %getName({_u})%, poniewaz osiagnal on max tierow, (%{_n}%)")
@@ -74,12 +80,14 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		checkReset({_u}.getUser().getId())
 
+		set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+		map json {_xd} to {_pun::*}
 		if {_warny} = ({_info::2} parsed as number):
-			loop {pun::list::*}:
+			loop {_pun::list::*}:
 				set {_inx} to loop-index
-				if {pun::list::%{_inx}%::1::name} contains expr-2:
-					set {_type} to {pun::list::%{_inx}%::1::tier_%{_info::1}%::1::type}
-					set {_time} to {pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
+				if {_pun::list::%{_inx}%::1::name} contains expr-2:
+					set {_type} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::type}
+					set {_time} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
 					set {_reason} to "Osiągnięto maksymalną ilość warnów."
 					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
 					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}

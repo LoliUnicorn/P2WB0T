@@ -13,19 +13,21 @@ discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
-		delete {v::%event-user.getId()%::pun::*}	
-		if {pun::*} is not set:
+		delete {v::%event-user.getId()%::pun::*}
+		set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+		map json {_xd} to {_pun::*}
+		if {_pun::*} is not set:
 			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`"
 
-		loop {pun::list::*}:
+		loop {_pun::list::*}:
 			add 1 to {_n}
 		set {_XD} to rzeczownik({_n}, "ób", "oby", "obów")
 
 		if arg-1 is "info":
-			loop {pun::list::*}:
+			loop {_pun::list::*}:
 				set {_inx} to loop-index
-				if {pun::list::%{_inx}%::1::name} contains arg-2:
-					set {_xd::name} to {pun::list::%{_inx}%::1::name}
+				if {_pun::list::%{_inx}%::1::name} contains arg-2:
+					set {_xd::name} to {_pun::list::%{_inx}%::1::name}
 					set {_xd::tierow} to checkTier({_inx})
 
 					# length()
@@ -33,25 +35,25 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_xd::builder} to a message builder
 					append line "```vbs%nl%Tier | Warny |   Kara   | Czas"
 					loop {_xd::tierow} times:
-						set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%   "
-						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns} >= 10:
-							set {_jeb} to "   %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%  "
+						set {_jeb} to "   %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%   "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns} >= 10:
+							set {_jeb} to "   %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%  "
 							
-						set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
-						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempban":
-							set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
-						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempmute":
-							set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}% "
-						if {pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Kick":
-							set {_type} to " %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%     "
+						set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempban":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempmute":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}% "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Kick":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%     "
 
-						append line "##%loop-value-2%   |%{_jeb}%|%{_type}%| %{pun::list::%{_inx}%::1::tier_%loop-value-2%::1::time}%"
+						append line "##%loop-value-2%   |%{_jeb}%|%{_type}%| %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::time}%"
 					append line "```"
 
 			if {_xd::name} is not set:
 				set {_k} to a message builder
-				loop {pun::list::*}:
-					append line "%loop-index%. %{pun::list::% loop-index%::1::name}%"
+				loop {_pun::list::*}:
+					append line "%loop-index%. %{_pun::list::% loop-index%::1::name}%"
 				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%Sposoby na ukaranie: ```%nl%%{_k}%%nl%```" to event-message
 
 			set {_des} to a message builder
@@ -84,9 +86,9 @@ discord command {@cmd} [<text>] [<text>]:
 			loop {_r::powod::*}:
 				add 1 to {_warny::powod::%loop-value%}
 			
-			loop {pun::list::*}:
+			loop {_pun::list::*}:
 				set {_inx} to loop-index
-				set {_n} to {pun::list::%{_inx}%::1::name}
+				set {_n} to {_pun::list::%{_inx}%::1::name}
 				set {_warns::%{_n}%} to 0
 				loop {_r::powod::*}:
 					if {_n} contains loop-value-2:
@@ -105,9 +107,9 @@ discord command {@cmd} [<text>] [<text>]:
 				append line "0. Anuluj operacje."
 				set {_field} to true
 
-				loop {pun::list::*}:
+				loop {_pun::list::*}:
 					set {_inx} to loop-index
-					set {_n} to {pun::list::%{_inx}%::1::name}
+					set {_n} to {_pun::list::%{_inx}%::1::name}
 
 					set {_jegoWarny} to 0
 					set {_jegoWarny} to {_warny::powod::%{_n}%}

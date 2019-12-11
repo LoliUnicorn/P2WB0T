@@ -1,5 +1,0 @@
-on script load:
-	wait 500 tick
-	delete {pun::*}
-	send a request to "https://raw.githubusercontent.com/KAMIL0024/0024B0T/master/Config/kary.json"
-	map json body of last http response to {pun::*}
