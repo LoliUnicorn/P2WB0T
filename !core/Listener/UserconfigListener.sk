@@ -1,0 +1,34 @@
+effect KamilAPI (config|ustawienia|conf) set %string% from %text/user/member% to %string%:
+	trigger:
+		delay the effect
+		set {_emote} to expr-1
+		set {_user} to expr-2
+		set {_zmieniamy} to expr-3
+
+		if {_user} is instance of User:
+			set {_u} to getUser({_user}.getId())
+		if {_user} is instance of Member:
+			set {_u} to getUser({_user}.getUser().getId())
+		if {_user} is instance of Text:
+			set {_u} to getUser({_user})
+
+		if {_u} or {_emote} is not set:
+			continue
+		if {_emote} is not "red" or "green":
+			continue
+
+		set {_green} to check {_emote} = "green" : {_zmieniamy} ? getConfigEmote("green")
+		set {_red} to check {_emote} = "red" : {_zmieniamy} ? getConfigEmote("red")
+
+		setCache({_u}.getId(), "green", {_green})
+		setCache({_u}.getId(), "red", {_red})
+
+		execute "SELECT id FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store the result in {_r::*}
+		if {_r::id::1} is not set:
+			execute "INSERT INTO config (id,green,red) VALUES ('%unsafe {_u}.getId()%', '%unsafe {_green}%', '%unsafe {_red}%')" in {bot::sql}
+		else:
+			if {_emote} is "red":
+				execute "UPDATE config SET red='%unsafe {_red}%' WHERE id='%unsafe {_u}.getId()%'" in {bot::sql}
+			else:
+				execute "UPDATE config SET green='%unsafe {_green}%' WHERE id='%unsafe {_u}.getId()%'" in {bot::sql}
+		continue

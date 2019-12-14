@@ -27,10 +27,10 @@ discord command {@cmd} [<text>]:
 			add field named ":inbox_tray: INPUT" with value "```js%nl%%{_arg}%%nl%```" to embed
 			if {_error::*} is set:
 				add field named ":skull: ERROR" with value "```js%nl%%{_opis}%%nl%```" to embed
-				KamilAPI add emote "red" to event-message
+				KamilAPI add emote "red" to event-message of event-user
 				set the colour of the embed to red
 			else:
 				add field named ":outbox_tray: OUTPUT" with value "```js%nl%Wygenerowano!%nl%```" to embed
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 				set the colour of the embed to green
 			send the last created embed to event-channel with event-bot
