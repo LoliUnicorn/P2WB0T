@@ -26,7 +26,7 @@ effect KamilAPI add emote %text% to %message% [of %-text/user/member%]:
 			else:
 				{_message}.getMessage().addReaction({_final}.getEmote()).complete()
 
-			wait 50 tick
+			wait 80 tick
 			loop ...{_message}.getMessage().getReactions():
 				add 1 to {_xd}
 

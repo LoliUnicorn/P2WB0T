@@ -16,7 +16,7 @@ discord command {@cmd} [<text>]:
 		if arg-1 is not set:
 			KamilAPI command error "Użyj: %{bot::prefix}%mcpremium (nick)"
 		set {_pl} to arg-1 parsed as offlineplayer
-		set {_p} to "%uuid of {_pl}%"
+		set {_p} to uuid of {_pl}
 		replace all "-" with "" in {_p}
 		send a request to "https://api.mojang.com/user/profiles/%{_p}%/names"
 		map json body of last http response to {_r::*}

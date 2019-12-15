@@ -72,7 +72,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					KamilAPI add emote "red" to event-message of event-user
 					stop
 
-			set yml value "Config.%{_id}%.value" from file "plugins/Bot/guildConfig.yml" to "%arg-3%"
+			set yml value "Config.%{_id}%.value" from file "plugins/Bot/guildConfig.yml" to arg-3
 			edit {_msg} to show "Pomyślnie zmieniono wartość `%{_name}%` na `%arg-3%`"
 			KamilAPI add emote "green" to event-message of event-user
 		

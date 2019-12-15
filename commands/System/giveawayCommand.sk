@@ -138,7 +138,7 @@ on guild message receive:
 		set {_nagroda} to {v::%event-user.getId()%::giveaway::nagroda}
 
 		set {_xd} to "%now%"
-		set {_now} to "%unsafe {_xd}%"
+		set {_now} to unsafe {_xd}
 
 		set {_koniec} to "%{v::%event-user.getId()%::giveaway::koniec}%"
 

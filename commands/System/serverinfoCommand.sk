@@ -43,7 +43,7 @@ discord command {@cmd} [<text>]:
 			set {_v::n} to 1
 			loop size of {_info::*} times:
 				loop {_info::%loop-value%::*}:
-					set {_msg} to "%loop-index%"
+					set {_msg} to loop-index
 					add 1 to {_v::n}
 					if {_v::n} >= 2:
 						add split field named {_msg} with value loop-value-2 to embed

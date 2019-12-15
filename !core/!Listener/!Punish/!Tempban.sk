@@ -35,7 +35,8 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 
 		set {_nick} to getMcNick({_u}.getId())
 		ban {_u} from {_g} with reason {_powod} with {bot::name}
-		set {_v} to "%last vixio error%"
+		set {_kurw} to last vixio error
+		set {_v} to "%{_kurw}%"
 		if {_v} = "<none>":
 			modLog({_u}.getId(), {_adm}.getId(), "Tempban", {_powod}, {_nick}, "%{_time}%")
 		else:

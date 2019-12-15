@@ -82,7 +82,7 @@ on guild message received:
 			{_t::%loop-value%} is not set
 			if {v::%event-user.getId()%::play::piosenka::%loop-value%} is set:
 				set {_t::%loop-value%} to true
-				play("%url of {v::%event-user.getId()%::play::piosenka::%loop-value%}%")
+				play(url of {v::%event-user.getId()%::play::piosenka::%loop-value%})
 				#play {v::%event-user.getId()%::play::piosenka::%loop-value%}
 		reply with "<@%event-user.getId()%>, dodaje **%size of {_t::*}%** utworów do kolejki!"
 		playError(event-user.getId())
@@ -104,7 +104,7 @@ on guild message received:
 			# 	reply with "<@%event-user.getId()%>, puszczam **`%{v::%event-user.getId()%::play::piosenka::%{_msg}%}%`**"
 
 			#play {v::%event-user.getId()%::play::piosenka::%{_msg}%}
-			play("%url of {v::%event-user.getId()%::play::piosenka::%{_msg}%}%")
+			play(url of {v::%event-user.getId()%::play::piosenka::%{_msg}%})
 			
 			KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg} of event-user
 			playError(event-user.getId())

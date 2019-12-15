@@ -26,7 +26,7 @@ discord command {@cmd} [<text>]:
 			set the author info of the embed to author named getName(event-user.getId()) with no url and icon "%avatar of event-user%"
 			add field named "Karany:" with value "%getMention({_kara::karany::*})% (%getName({_kara::karany::*})%)" to embed
 			add field named "Nick w mc:" with value "%{_kara::nick::*}%" to embed
-			add field named "Administrator:" with value "%getMention({_kara::adm::*})%" to embed
+			add field named "Administrator:" with value getMention({_kara::adm::*}) to embed
 			add field named "Typ:" with value "%{_kara::typ::*}%" to embed
 			add field named "Powód:" with value "%{_kara::powod::*}%" to embed
 			add field named "Czas nadania:" with value "%{_kara::now::*}%" to embed

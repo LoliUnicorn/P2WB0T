@@ -34,7 +34,7 @@ effect KamilAPI (config|ustawienia|conf) set %string% from %text/user/member% to
 			setCache({_u}.getId(), "deleteMessage", {_zmieniamy})
 		continue
 
-effect KamilAPI (config|ustawienia|conf) check config for %user%:
+effect KamilAPI (config|ustawienia|conf) check for %user%:
 	trigger:
 		set {_v} to expr-1
 		if getCache({_v}.getId(), "green") is not set:

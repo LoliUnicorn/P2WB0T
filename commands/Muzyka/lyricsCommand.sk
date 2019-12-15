@@ -42,7 +42,7 @@ discord command {@cmd} [<text>]:
 					add 1 to {_int}
 
 			set {_replace} to {_wyswietlany}
-			replace all "\n" with "%nl%" in {_wyswietlany}
+			replace all "\n" with nl in {_wyswietlany}
 			add {_wyswietlany} to {_field::*}
 			replace all {_replace} with "" in {_r::lyrics}
 			if {_r::lyrics}.length() = 0:

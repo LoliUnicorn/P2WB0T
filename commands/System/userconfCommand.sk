@@ -45,13 +45,13 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			if {_v} is not set:
 				KamilAPI cmd error "Użyj: %{bot::prefix}%userconf set <numer z listy> <nowa wartość>" to event-message
 
-			if {_conf::%{_klucz}%::value} is "red" or "green":
+			if {_conf::%{_klucz}%::value} is "red" or "green": # check na emotka red/green
 				KamilAPI conf set {_conf::%{_klucz}%::value} from event-user to {_v}
 
-			if {_conf::%{_klucz}%::value} is "deleteMessage":
+			if {_conf::%{_klucz}%::value} is "deleteMessage": # check na deleteMessage
 				if {_v} parsed as boolean is not set:
 					KamilAPI cmd error "Wartość musi być false/true!" to event-message
-
-			KamilAPI conf set "deleteMessage" from event-user to {_v}
+				KamilAPI conf set "deleteMessage" from event-user to {_v}
+				
 			reply with "Pomyślnie zmieniono **%{_conf::%{_klucz}%::name}%** na **%{_v}%**"
 			KamilAPI add emote "green" to event-message of event-user
