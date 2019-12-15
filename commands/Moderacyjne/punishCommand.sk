@@ -67,7 +67,7 @@ discord command {@cmd} [<text>] [<text>]:
 				add field named "%{_xd::name}%" with value "%{_xd::builder}%" to embed
 
 			reply with last created embed
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 
 		else:
 
@@ -132,7 +132,9 @@ discord command {@cmd} [<text>] [<text>]:
 				
 			edit {_msg} to show last created embed
 			edit {_msg} to show " "
-			KamilAPI add emote "green" to event-message
+			set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+			KamilAPI add emote "green" to event-message of event-user
+			KamilAPI check delete event-message from event-user
 
 on guild message receive:
 	{v::%event-user.getId()%::pun::*} is set
@@ -140,7 +142,7 @@ on guild message receive:
 	if {_msg} contains {bot::prefix}:
 		delete {v::%event-user.getId()%::pun::*}
 		stop
-	deleteMessage({_msg}, 0)
+	deleteMessage(event-message)
 	if {_msg} is "0":
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Anuluje operacje!"
@@ -150,4 +152,5 @@ on guild message receive:
 		reply with "Zły numer! Anuluje operacje."
 		stop
 	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel
+	deleteMessage({v::%event-user.getId()%::pun::botmsg})
 	delete {v::%event-user.getId()%::pun::*}

@@ -71,10 +71,15 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
 
 		if {_adm}.getId() is not {bot::id}:
-			send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-		# else:
-		# 	send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-
+			if getCache({_adm}.getId(), "deleteMessage") is not set:
+				set {_beka} to true
+			if getCache({_adm}.getId(), "deleteMessage") is "false":
+				set {_beka} to true
+			if {_beka} is not set:
+				send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+			else:
+				send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+		
 		set {_warny} to size of {_r::adm::*}
 		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
 

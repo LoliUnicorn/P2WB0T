@@ -71,7 +71,7 @@ discord command {@cmd} [<text>]:
 						add field named {_msg} with value loop-value-2 to embed
 
 		reply with the last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
 
 on script load:
 	if {v::komendy} is not set:

@@ -40,7 +40,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					KamilAPI cmd error "Nie masz żandych playlist do wyświetlenia! Użyj: `%{bot::prefix}%playlist add <nazwa playlisty> <nazwa utworu>``" to event-message
 				else:
 					reply with "Twoje playlisty: `%{_p::*}%`. Użyj `%{bot::prefix}%playlist list <nazwa playlisty>`"
-					KamilAPI add emote "green" to event-message
+					KamilAPI add emote "green" to event-message of event-user
 			else:
 				execute "SELECT link,title FROM playlisty WHERE user='%unsafe event-user.getId()%' AND name='%unsafe arg-2%'" in {bot::sql} and store result in {_r::*}
 				if {_r::link::*} is not set:
@@ -75,7 +75,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 						add field named "" with value "%loop-value%" to embed
 		
 				reply with last created embed
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 
 		if arg-1 is "add":
 			if arg-2 is not set:
@@ -87,7 +87,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				search youtube for arg-3 and store the results in {_r::*}
 				if {_r::*} is not set:
 					edit {v::%event-user.getId()%::playlist::botmsg} to show "Nie znaleziono żadnych piosenek xD"
-					KamilAPI add emote "red" to event-message
+					KamilAPI add emote "red" to event-message of event-user
 					delete {v::%event-user.getId()%::playlist::*}
 					stop
 				set {_m} to a message builder
@@ -104,14 +104,14 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				append line "```"
 				set {v::%event-user.getId()%::playlist::playlista} to arg-2
 				edit {v::%event-user.getId()%::playlist::botmsg} to show {_m}
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 		
 		if arg-1 is "delete":
 			if arg-2 is not set:
 				KamilAPI cmd error "Napisz nazwę playlisty którą chcesz usunąć! Użyj: `%{bot::prefix}%playlist delete <nazwa playlisty>`" to event-message
 			execute "DELETE FROM playlisty WHERE user='%unsafe event-user.getId()%' AND name='%unsafe arg-2%'" in {bot::sql}
 			reply with "Usunięto playliste `%arg-2%`!"
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 		
 		if arg-1 is "remove":
 			if arg-2 is not set:
@@ -120,7 +120,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				KamilAPI cmd error "Napisz nazwę utworu któego chcesz usunąć! Użyj: `%{bot::prefix}%playlist remove <playlista> <nazwa utworu>`" to event-message
 			execute "DELETE FROM playlisty WHERE user='%unsafe event-user.getId()%' AND name='%unsafe arg-2%' AND title='%unsafe arg-3%'" in {bot::sql}
 			reply with "Usunięto utwór `%arg-3%`!"
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 		
 		if arg-1 is "load":
 			if arg-2 is not set:

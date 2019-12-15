@@ -36,4 +36,4 @@ discord command {@cmd} [<text>]:
 			set the description of embed to "%{_m}%"
 		
 		reply with last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

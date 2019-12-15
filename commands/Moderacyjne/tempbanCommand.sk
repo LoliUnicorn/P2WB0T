@@ -36,3 +36,4 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`"
 		else:
 			reply with "Tymczasowo zbanowano użytkownika **%getName({_m}.getId())%** z powodem **%getRegex({_p})%** na czas **%arg-2%**"
+			KamilAPI check delete event-message from event-user

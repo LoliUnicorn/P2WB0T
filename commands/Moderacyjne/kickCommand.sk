@@ -36,4 +36,5 @@ discord command {@cmd} [<text>] [<text>]:
 
 		modLog({_member}.getUser().getId(), event-user.getId(), "Kick", {_powod}, {_nick})
 		reply with "Pomyślnie wyrzucono **%getName(arg-1)%** z powodem %getRegex({_powod})%"
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
+		KamilAPI check delete event-message from event-user

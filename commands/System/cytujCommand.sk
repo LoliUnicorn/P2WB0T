@@ -57,4 +57,4 @@ discord command {@cmd} [<text>] [<text>]:
 			edit {_beka} to show "**%getName(event-user.getId())%**: %getRegex(arg-2)%"
 		if ...{_m}.getMessage().getEmbeds() is set:
 			reply with embed of {_m}
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

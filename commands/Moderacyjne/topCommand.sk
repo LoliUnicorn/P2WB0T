@@ -66,7 +66,7 @@ discord command {@cmd} [<text>]:
 		
 		if size of {_ilosc::*} is 0:
 			edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
-			KamilAPI add emote "red" to event-message
+			KamilAPI add emote "red" to event-message of event-user
 			stop
 		
 		set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
@@ -99,4 +99,4 @@ discord command {@cmd} [<text>]:
 
 		edit {_msg} to show last created embed
 		edit {_msg} to show " "
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

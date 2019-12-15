@@ -19,6 +19,6 @@ discord command {@cmd} [<text>]:
 			make event-bot leave vc
 			stop track {bot::name} is playing in event-guild
 			reset queue of event-bot in event-guild
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 		else:
 			KamilAPI command error "Musisz być na tym samym kanale co bot! (`%getBVC()%`)" to event-message

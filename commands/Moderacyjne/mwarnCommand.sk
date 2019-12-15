@@ -41,6 +41,7 @@ discord command {@cmd} [<text>]:
 		if {_tak} is not set:
 			KamilAPI cmd error "Nie ma takiego powodu jak `%{_powod}%` L" to event-message
 
+		KamilAPI check delete event-message from event-user
 		set {_m} to a message builder
 		append line "Ludzie którzy będą zbanowani z powodem %{_powod}%:"
 
@@ -57,5 +58,5 @@ discord command {@cmd} [<text>]:
 			edit {_msg} to show "%getConfigEmote(""loading"")% Trwa karanie ludzi %{_juzJest}%`/`%size of {_jest::*}%. W tym nieudanych: %{_errorow}%"
 			if {_juzJest} is size of {_jest::*}:
 				edit {_msg} to show "%getConfigEmote(""green"")% Pomyślnie ukarano %{_juzJest}% (`%{_jest::*}%`) ludzi. Nieudanych prób: %{_errorow}%"
-		KamilAPI add emote "green" to event-message
-				
+		KamilAPI add emote "green" to event-message of event-user
+		

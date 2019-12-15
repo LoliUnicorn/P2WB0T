@@ -66,4 +66,4 @@ discord command {@cmd} [<text>]:
 				add field named "%{_XD}%" with value "%loop-value%" to embed
 				set {_XD} to ""
 		reply with last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

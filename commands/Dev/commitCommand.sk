@@ -58,7 +58,7 @@ discord command {@cmd} [<text>]:
 
 			edit {v::update::botmsg} to show last created embed
 			edit {v::update::botmsg} to show " "
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			delete {v::update::botmsg}
 			wait 15 tick
 			delete file "plugins\Skript\scripts\0024B0T\log.api"
@@ -90,5 +90,5 @@ discord command {@cmd} [<text>]:
 			edit {v::update::botmsg} to show last created embed
 			edit {v::update::botmsg} to show " "
 			delete {v::update::botmsg}
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			delete file "plugins\Skript\scripts\0024B0T\pull.api"

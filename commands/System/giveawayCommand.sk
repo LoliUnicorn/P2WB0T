@@ -18,7 +18,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is not "stworz" or "usun":
 			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 		if arg-1 is "stworz":
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			delete {v::%event-user.getId()%::giveaway::*}
 			reply with "Napisz nazwę kanału, na którym ma się pojawić konkurs..." and store it in {v::%event-user.getId()%::giveaway::botmsg}
 			set {v::%event-user.getId()%::giveaway::typ} to "channel"
@@ -27,7 +27,7 @@ discord command {@cmd} [<text>] [<text>]:
 				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
 			reply with "Zatrzymuje konkurs z ID ##%arg-2%"
 			execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe arg-2%'" in {bot::sql}
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 
 function konkursDeleteMessage(u: text):
 	deleteMessage({v::%{_u}%::giveaway::botmsg})

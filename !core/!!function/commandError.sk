@@ -12,4 +12,4 @@ effect KamilAPI (cmd|command) error %text% [to %-message%]:
 		else:
 			set {_lol} to expr-2
 
-		KamilAPI add emote "red" to {_lol}
+		KamilAPI add emote "red" to {_lol} of event.getUser()

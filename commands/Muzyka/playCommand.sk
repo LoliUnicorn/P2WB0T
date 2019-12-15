@@ -106,7 +106,7 @@ on guild message received:
 			#play {v::%event-user.getId()%::play::piosenka::%{_msg}%}
 			play("%url of {v::%event-user.getId()%::play::piosenka::%{_msg}%}%")
 			
-			KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}
+			KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg} of event-user
 			playError(event-user.getId())
 	delete event-message
 	set {v::play::kanal} to event-channel

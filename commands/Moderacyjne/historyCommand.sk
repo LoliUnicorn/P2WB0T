@@ -123,4 +123,4 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set the author info of the embed to author named {_name} with no url and icon "%avatar of {v::%event-user.getId()%::history::user}%"
 			reply with last created embed
 		delete {v::%event-user.getId()%::history::user}
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

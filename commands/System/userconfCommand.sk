@@ -1,0 +1,57 @@
+options:
+	cmd: userconf
+
+on script load:
+	set {command::{@cmd}::poziom} to 1
+	set {command::{@cmd}::cooldown} to 5 seconds
+
+	set {command::{@cmd}::opis} to "Ustawienia użytkownika"
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "userconf (list|set) [W przypadku opcji `set`: <numer w configu> <wartość>]"
+
+discord command {@cmd} [<text>] [<text>] [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_conf::1::name} to "Emotka green"
+		set {_conf::1::value} to "green"
+
+		set {_conf::2::name} to "Emotka red"
+		set {_conf::2::value} to "red"
+
+		set {_conf::3::name} to "Usuwanie wiadomość przy nadawaniu kary"
+		set {_conf::3::value} to "deleteMessage"
+
+		if arg-1 is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+		 
+		execute "SELECT * FROM config WHERE id='%unsafe event-user.getId()%'" in {bot::sql} and store result in {_r::*}
+
+		if arg-1 is "list":
+			set {_m} to a message builder
+			append line "```asciidoc"
+			append line "== Wpisz ""%{bot::prefix}%userconf set <liczba która jest na początku linijki> <nowa wartość>"", aby zmienić wartość ==%nl%"
+			loop size of {_conf::*} times:
+				set {_n} to loop-value
+				append line "%{_n}%. %{_conf::%{_n}%::name}% :: %{_r::%{_conf::%{_n}%::value}%::1}%"
+			append line "```"
+			reply with {_m}
+			KamilAPI add emote "green" to event-message of event-user
+
+		if arg-1 is "set":
+			set {_klucz} to arg-2
+			set {_v} to arg-3
+			if {_conf::%{_klucz}%::name} is not set:
+				KamilAPI cmd error "Użyj: %{bot::prefix}%userconf set <numer z listy> <nowa wartość>" to event-message
+			if {_v} is not set:
+				KamilAPI cmd error "Użyj: %{bot::prefix}%userconf set <numer z listy> <nowa wartość>" to event-message
+
+			if {_conf::%{_klucz}%::value} is "red" or "green":
+				KamilAPI conf set {_conf::%{_klucz}%::value} from event-user to {_v}
+
+			if {_conf::%{_klucz}%::value} is "deleteMessage":
+				if {_v} parsed as boolean is not set:
+					KamilAPI cmd error "Wartość musi być false/true!" to event-message
+
+			KamilAPI conf set "deleteMessage" from event-user to {_v}
+			reply with "Pomyślnie zmieniono **%{_conf::%{_klucz}%::name}%** na **%{_v}%**"
+			KamilAPI add emote "green" to event-message of event-user

@@ -49,4 +49,4 @@ discord command {@cmd} [<text>]:
 			wait a tick
 			play("%url of loop-value%")
 			#play loop-value
-		KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg}
+		KamilAPI add emote "green" to {v::%event-user.getId()%::play::usermsg} of event-user

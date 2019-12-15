@@ -25,10 +25,10 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is "reset" or "off":
 			{_c}.getManager().setSlowmode(0).complete()
 			reply with "Zresetowano cooldown na kanale <##%{_c}.getId()%>"
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			stop
 
 		{_c}.getManager().setSlowmode({_int}).complete()
 
 		reply with "Ustawiono cooldown kanale <##%{_c}.getId()%>!"
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

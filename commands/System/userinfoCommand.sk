@@ -80,6 +80,7 @@ discord command {@cmd} [<text>]:
 		if "%{_mem}%" != "<none>":
 			loop ...{_mem}.getPermissions():
 				add loop-value to {_ma::*}
+		set {_p} to ""
 		set {_p} to translatedPermission("%{_ma::*}%")
 		set {_procent} to getProcent(size of {_ma::*})
 
@@ -101,4 +102,4 @@ discord command {@cmd} [<text>]:
 			add field named "Permisje" with value "%size of {_ma::*}%/%size of all enum values of permission-1% (%{_procent}%)%nl%%{_p}%" to embed
 
 		reply with last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

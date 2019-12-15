@@ -2,6 +2,8 @@ on vixio command:
 	send typing in event-channel
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
+	if getPoziom(event-user.getId()) >= 1:
+		KamilAPI config check config for event-user
 
 	loop {_l::*}:
 		if loop-value is event-channel.getId():

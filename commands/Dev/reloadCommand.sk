@@ -83,7 +83,7 @@ discord command {@cmd} [<text>] [<text>]:
 			wait 10 tick
 			coreAkcja(event-member, 3)
 			delete {reload::botmsg}
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 		if arg-1 is "commands":
 			if arg-2 is not set:
 				set {_module} to "all"
@@ -115,4 +115,4 @@ discord command {@cmd} [<text>] [<text>]:
 				commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_g}% Szukam komendy%nl%%{_load}% Reload komend (%{_kurwa}%/%size of {_cmd::*}%)%nl%%{_r}% Kończe.")
 
 			commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_g}% Szukam komend%nl%%{_g}% Reload komend (%{_kurwa}%/%size of {_cmd::*}%)%nl%%{_g}% Kończe.")
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user

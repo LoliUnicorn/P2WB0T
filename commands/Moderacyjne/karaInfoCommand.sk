@@ -36,4 +36,4 @@ discord command {@cmd} [<text>]:
 
 			set the thumbnail of embed to "%avatar of getUser({_kara::karany::*})%"
 		reply with last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

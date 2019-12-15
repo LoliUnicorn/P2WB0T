@@ -43,4 +43,4 @@ discord command {@cmd} [<text>]:
 			set the thumbnail of embed to "https://minotar.net/helm/%{_pl}%/2048"
 			set the image of embed to "https://minotar.net/armor/body/%{_pl}%/124.png"
 		reply with the last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user

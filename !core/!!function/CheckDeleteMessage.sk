@@ -1,0 +1,9 @@
+effect KamilAPI check delete %message% from %user%:
+	trigger:
+		set {_u} to expr-2
+		if getCache({_u}.getId(), "deleteMessage") is not set:
+			execute "SELECT deleteMessage FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store result in {_r::*}
+			setCache({_u}.getId(), "deleteMessage", {_r::deleteMessage::1})
+ 
+		if getCache({_u}.getId(), "deleteMessage") is "true":
+			deleteMessage(expr-1)

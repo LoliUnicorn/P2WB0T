@@ -45,7 +45,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					
 			append line "```"
 			reply with {_m}
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			stop
 
 		set {_l::*} to configuration section "Config" get of "plugins/Bot/guildConfig.yml"
@@ -69,12 +69,12 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			if {_valueType} is "boolean":
 				if arg-3 is not "false" or "true":
 					edit {_msg} to show "Wartość musi być Booleanem! (false/true)"
-					KamilAPI add emote "red" to event-message
+					KamilAPI add emote "red" to event-message of event-user
 					stop
 
 			set yml value "Config.%{_id}%.value" from file "plugins/Bot/guildConfig.yml" to "%arg-3%"
 			edit {_msg} to show "Pomyślnie zmieniono wartość `%{_name}%` na `%arg-3%`"
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 		
 		if {_arg} is "add":
 			set {_id} to arg-2
@@ -89,16 +89,16 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set {_c} to getTextChannel({_value})
 				if {_c} is not set:
 					edit {_msg} to show "Wartość musi być kanałem tekstowym!"
-					KamilAPI add emote "red" to event-message
+					KamilAPI add emote "red" to event-message of event-user
 					stop
 				if {_xd::*} contains {_c}.getId():
 					edit {_msg} to show "Wartość jest już na liscie!"
-					KamilAPI add emote "red" to event-message
+					KamilAPI add emote "red" to event-message of event-user
 					stop	
 
 				add "%{_c}.getId()%" to yml list "Config.%{_id}%.value" from file "plugins/Bot/guildConfig.yml"
 				edit {_msg} to show "Dodano wartość dla `%{_name}%` z wartością `%{_c}.getId()%`"
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 
 		if {_arg} is "remove":
 			set {_id} to arg-2
@@ -111,7 +111,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			if {_xd::*} contains {_value}.getId():
 				remove "%{_value}.getId()%" from yml list "Config.%{_id}%.value" from file "plugins/Bot/guildConfig.yml"
 				edit {_msg} to show "Usunięto wartość z listy!"
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 			else:
 				edit {_msg} to show "Tej wartości nie ma na liście!"
-				KamilAPI add emote "red" to event-message			
+				KamilAPI add emote "red" to event-message of event-user	

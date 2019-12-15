@@ -46,7 +46,7 @@ discord command {@cmd} [<text>] [<number>]:
 					KamilAPI command error "Nic nie gram!" to event-message
 
 			delete {v::%event-user.getId()%::queue::*}
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			set {_q} to queue(event-member, 0)
 			reply with {_q} and store it in {_msg}
 			set {_r::*} to queue of event-bot in event-guild
@@ -60,7 +60,7 @@ discord command {@cmd} [<text>] [<number>]:
 		if arg-1 is "reset":
 			if queue of event-bot in event-guild is set:
 				reset queue of event-bot in event-guild
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 				reply with "Usunięto wszystkie utwory w kolejki."
 			else:
 				KamilAPI command error "Kolejka jest pusta" to event-message
@@ -72,7 +72,7 @@ discord command {@cmd} [<text>] [<number>]:
 				KamilAPI command error "Użyj: %{bot::prefix}%quene (reset|remove) (numer piosenki)" to event-message
 			set {_q::*} to queue of event-bot in event-guild
 			if arg-2 is between 1 and size of {_q::*}:
-				KamilAPI add emote "green" to event-message
+				KamilAPI add emote "green" to event-message of event-user
 				reply with "Usuwam **`%{_q::%arg-2%}%`** z kolejki"
 				reset queue of event-bot in event-guild
 				loop {_q::*}:

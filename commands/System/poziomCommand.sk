@@ -15,5 +15,5 @@ discord command {@cmd} [<text>]:
 		set {_u} to getUser(arg-1)
 		set {_p} to getPoziom({_u}.getId())
 		reply with "Poziom użytkownika **%getName({_u}.getId())%** wynosi %{_p}% (%getPoziomSlowny({_p})%)"
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
 		

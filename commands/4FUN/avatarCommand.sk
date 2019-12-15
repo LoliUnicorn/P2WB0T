@@ -22,5 +22,5 @@ discord command {@cmd} [<text>]:
 			set the footer of embed to a footer with text "Avatar" and icon "%avatar of event-bot%"
 			set the timestamp of embed to now
 		reply with the last created embed
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
 		

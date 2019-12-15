@@ -31,3 +31,4 @@ discord command {@cmd} [<text>] [<text>]:
 		else:
 			reply with "Pomyślnie dano unbana dla **%getName({_u}.getId())%** z powodem **%{_p}%**"
 			modLog({_u}.getId(), event-user.getId(), "Unban", {_p}, getMcNick({_u}.getId()))
+			KamilAPI check delete event-message from event-user

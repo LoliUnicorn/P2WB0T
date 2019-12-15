@@ -32,4 +32,5 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Nie udało się wyciszyć użytkownika! (`%{_error}%`)" to event-message
 
 		reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%**"
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
+		KamilAPI check delete event-message from event-user

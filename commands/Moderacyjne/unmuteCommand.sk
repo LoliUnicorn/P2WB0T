@@ -22,10 +22,11 @@ discord command {@cmd} [<text>] [<text>]:
 
 		if {_r::id::*} is not set:
 			edit {_msg} to show "Taka osoba nie ma muta!"
-			KamilAPI add emote "red" to event-message
+			KamilAPI add emote "red" to event-message of event-user
 			stop
 
 		event-guild.removeRoleFromMember({_m}, {_r}).complete()
 		modLog({_m}.getUser().getId(), event-user.getId(), "Unmute", getPowod(arg-2), getMcNick({_m}.getUser().getId()))
 		edit {_msg} to show "Pomyślnie odciszono **%getName({_m}.getUser().getId())%** z powodem **%getPowod(arg-2)%**"
+		KamilAPI check delete event-message from event-user
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_m}.getUser().getId()%' AND aktywna='Tak' AND (Typ='Tempmute' OR Typ='Mute')" in {bot::sql}

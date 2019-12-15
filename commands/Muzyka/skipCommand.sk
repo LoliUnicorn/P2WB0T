@@ -43,13 +43,13 @@ discord command {@cmd} [<text>]:
 			if size of {skip::%{_url}%::*} = {_user}:
 				set {_p} to true
 		if {_p} is true:
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message of event-user
 			reply with "Pomijam **`%track event-bot is playing in event-guild%`**"
 			skip track event-bot is playing in event-guild
 			stop
 
 		reply with "Pominąć utwór? (`%size of {skip::%{_url}%::*}%`**/**`%{_user}%`)"
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
 
 on track end:
 	delete {skip::*}

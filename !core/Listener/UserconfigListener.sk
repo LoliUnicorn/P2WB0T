@@ -12,23 +12,36 @@ effect KamilAPI (config|ustawienia|conf) set %string% from %text/user/member% to
 		if {_user} is instance of Text:
 			set {_u} to getUser({_user})
 
-		if {_u} or {_emote} is not set:
-			continue
-		if {_emote} is not "red" or "green":
-			continue
+		if expr-1 is "red" or "green":
+			if {_u} or {_emote} is not set:
+				continue
 
-		set {_green} to check {_emote} = "green" : {_zmieniamy} ? getConfigEmote("green")
-		set {_red} to check {_emote} = "red" : {_zmieniamy} ? getConfigEmote("red")
+			set {_green} to check {_emote} = "green" : {_zmieniamy} ? getConfigEmote("green")
+			set {_red} to check {_emote} = "red" : {_zmieniamy} ? getConfigEmote("red")
 
-		setCache({_u}.getId(), "green", {_green})
-		setCache({_u}.getId(), "red", {_red})
+			if {_emote} is "green":
+				setCache({_u}.getId(), "green", {_green})
+			else:
+				setCache({_u}.getId(), "red", {_red})
 
-		execute "SELECT id FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store the result in {_r::*}
-		if {_r::id::1} is not set:
-			execute "INSERT INTO config (id,green,red) VALUES ('%unsafe {_u}.getId()%', '%unsafe {_green}%', '%unsafe {_red}%')" in {bot::sql}
-		else:
+			execute "SELECT id FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store the result in {_r::*}
 			if {_emote} is "red":
 				execute "UPDATE config SET red='%unsafe {_red}%' WHERE id='%unsafe {_u}.getId()%'" in {bot::sql}
 			else:
 				execute "UPDATE config SET green='%unsafe {_green}%' WHERE id='%unsafe {_u}.getId()%'" in {bot::sql}
+		if expr-1 is "deleteMessage":
+			execute "UPDATE config SET deleteMessage='%unsafe {_zmieniamy}%' WHERE id='%unsafe {_u}.getId()%'" in {bot::sql}
+			setCache({_u}.getId(), "deleteMessage", {_zmieniamy})
 		continue
+
+effect KamilAPI (config|ustawienia|conf) check config for %user%:
+	trigger:
+		set {_v} to expr-1
+		if getCache({_v}.getId(), "green") is not set:
+			execute "SELECT id FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store the result in {_r::*}
+
+			set {_green} to getConfigEmote("green")
+			set {_red} to getConfigEmote("red")
+
+			if {_r::1} is not set:
+				execute "INSERT INTO config (id,green,red) VALUES ('%unsafe {_u}.getId()%', '%unsafe {_green}%', '%unsafe {_red}%')" in {bot::sql}

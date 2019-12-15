@@ -22,4 +22,4 @@ discord command {@cmd} [<text>]:
 		wait 10 tick
 		edit {_m} to show "Moja odpowiedź to: %getRegex({_rand})%"
 
-		KamilAPI add emote "green" to event-message
+		KamilAPI add emote "green" to event-message of event-user
