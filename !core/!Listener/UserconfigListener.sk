@@ -38,10 +38,11 @@ effect KamilAPI (config|ustawienia|conf) check for %user%:
 	trigger:
 		set {_v} to expr-1
 		if getCache({_v}.getId(), "green") is not set:
-			execute "SELECT id FROM config WHERE id='%unsafe {_u}.getId()%'" in {bot::sql} and store the result in {_r::*}
+			execute "SELECT id FROM config WHERE id='%unsafe {_v}.getId()%'" in {bot::sql} and store the result in {_r::*}
+			if {_r::id::1} is not set:
 
-			set {_green} to getConfigEmote("green")
-			set {_red} to getConfigEmote("red")
+				set {_green} to getConfigEmote("green")
+				set {_red} to getConfigEmote("red")
 
-			if {_r::1} is not set:
-				execute "INSERT INTO config (id,green,red) VALUES ('%unsafe {_u}.getId()%', '%unsafe {_green}%', '%unsafe {_red}%')" in {bot::sql}
+				if {_r::1} is not set:
+					execute "INSERT INTO config (id,green,red) VALUES ('%unsafe expr-1.getId()%', '%unsafe {_green}%', '%unsafe {_red}%')" in {bot::sql}

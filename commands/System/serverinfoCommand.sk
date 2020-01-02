@@ -30,9 +30,6 @@ discord command {@cmd} [<text>]:
 		set {_e} to "%event.getGuild().getTimeCreated().toInstant().toEpochMilli()%"
 		set {_siema} to unix date ("%{_e}%" parsed as number) as date
 		set {_info::5::Utworzono} to "%{_siema}%"
-		
-		execute "SELECT adm FROM akcje" in {bot::sql} and store result in {_r::*}
-		set {_info::6::Nadanych kar} to "%size of {_r::adm::*}%"
 
 		create embed:
 			set the footer of embed to footer with text "Botinfo"

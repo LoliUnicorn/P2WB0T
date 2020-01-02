@@ -3,11 +3,14 @@ on vixio command:
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
 	if getPoziom(event-user.getId()) >= 1:
+		{v::%event-user.getId()%::checkConfig} is not set
+		set {v::%event-user.getId()%::checkConfig} to true
 		KamilAPI config check for event-user
+		delete {v::%event-user.getId()%::checkConfig}
 
 	loop {_l::*}:
 		if loop-value is event-channel.getId():
-			if {_cmd} is "clear":
+			if {_cmd} is "clear" or "forum":
 				if getPoziom(event-user.getId()) >= {command::%{_cmd}%::poziom}:
 					stop loop
 
