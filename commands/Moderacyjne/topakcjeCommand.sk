@@ -28,8 +28,7 @@ discord command {@cmd} [<text>]:
 			add 1 to {_beka}
 			set {_l::*} to loop-value split at ";"
 			set {_user} to getMention({_l::1})
-			set {_akcji} to {_l::2}
-			append line "%loop-index%. %{_user}% (%getName({_l::1})%) - %{_akcji}% akcji"
+			append line "%loop-index%. %{_user}% (%getName({_l::1})%) - %{_xd::%{_l::1}%}% akcji"
 			if {_m::%{_lul}%}.length() >= 900:
 				add 1 to {_lul}
 				set {_m::%{_lul}%} to a message builder
