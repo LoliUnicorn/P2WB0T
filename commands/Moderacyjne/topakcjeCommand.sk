@@ -1,0 +1,53 @@
+options:
+	cmd: topakcje
+
+on script load:
+	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Topka graczy z najwiekszą liczbą kar"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "topakcje"
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+		execute "SELECT karany FROM akcje" in {bot::sql} and store result in {_r::*}
+
+		loop {_r::karany::*}:
+			add 1 to {_xd::%loop-value%}
+
+		set {_top::*} to sorted {_xd::*} from highest to lowest with format "@index;@value"
+
+		set {_lul} to 1 
+		set {_m::%{_lul}%} to a message builder
+
+		loop {_top::*}:
+			add 1 to {_beka}
+			set {_l::*} to loop-value split at ";"
+			set {_user} to getMention({_l::1})
+			set {_akcji} to {_l::2}
+			append line "%loop-index%. %{_user}% (%getName({_l::1})%) - %{_akcji}% akcji"
+			if {_m::%{_lul}%}.length() >= 900:
+				add 1 to {_lul}
+				set {_m::%{_lul}%} to a message builder
+			if {_beka} is 10:
+				stop loop
+
+		create embed:
+			set the title of embed to title with text {_title}
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Top graczy"
+			
+			loop {_m::*}:
+				if loop-index is "1":
+					add split field named "Topka:" with value "%loop-value%" to embed
+				else:
+					add split field named "" with value "%loop-value%" to embed
+
+		edit {_msg} to show last created embed
+		edit {_msg} to show " "
+		KamilAPI add emote "green" to event-message of event-user

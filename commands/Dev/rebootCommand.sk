@@ -15,5 +15,4 @@ discord command {@cmd} [<text>]:
 		reply with "Reloguje bota..."
 		KamilAPI add emote "green" to event-message of event-user
 		logout event-bot
-		execute console command "sk reload 0024B0T/!core/"
-		# TODO: Dodać po prostu `stop server`
+		stop server
