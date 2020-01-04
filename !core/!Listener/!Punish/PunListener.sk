@@ -66,9 +66,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_u} is not set:
 			stop
 
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
-		wait 30 tick
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
 
 		if {_adm}.getId() is not {bot::id}:
 			if getCache({_adm}.getId(), "deleteMessage") is not set:
@@ -80,7 +79,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			else:
 				send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
 		
-		set {_warny} to size of {_r::adm::*}
+		set {_warny} to size of {_r::adm::*}+1
 		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
 
 		checkReset({_u}.getUser().getId())
