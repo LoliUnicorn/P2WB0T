@@ -5,8 +5,6 @@ import:
 every 1 minute:
 	delete {v::antydebil::*}
 
-#Flood/Spam/Caps lock
-
 # FIXME: punish
 on guild message received:
 	set {_id} to event-user.getId()
@@ -16,6 +14,7 @@ on guild message received:
 	loop ...{_m}.getMessage().getMentionedMembers():
 		add 1 to {_pingiNaWiadomosc}
 	if {_pingiNaWiadomosc} >= 5:
+		reply with "%getMention(event-user.getId())%, twoja wiadomość zawiera więcej niż **5** pingów! Dopisuję ostrzeżenie."
 		KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel
 		stop
 
@@ -32,6 +31,7 @@ on guild message received:
 			
 		set {_procent} to {_duze} / {_length} * 100
 		if {_procent} >= 70:
+			reply with "%getMention(event-user.getId())%, twoja wiadomość ma 70%% capslocka! Dopisuję ostrzeżenie."
 			KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel
 			stop
 
@@ -42,4 +42,5 @@ on guild message received:
 		if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::2}%}:
 			if {v::antydebil::%{_id}%::msg::%{_s::2}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
 				if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
+					reply with "%getMention(event-user.getId())%, napisałaś taką samą wiadomość 3 razy pod rząd."
 					KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel
