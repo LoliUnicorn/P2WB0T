@@ -20,6 +20,6 @@ discord command {@cmd} [<text>]:
 		set {_rand} to random element of {_s::*}
 		reply with "**Wybieram...** :thinking:" and store it in {_m}
 		wait 10 tick
-		edit {_m} to show "Moja odpowiedź to: %getRegex({_rand})%"
+		edit {_m} to show "Moja odpowiedź to: **%getRegex({_rand})%**"
 
 		KamilAPI add emote "green" to event-message of event-user

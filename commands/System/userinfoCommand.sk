@@ -40,6 +40,7 @@ function translatedPermission(t: text) :: text:
 	replace all "manage webhooks" with "Zarządzanie Webhookami" in {_t}
 	replace all "manage emotes" with "Zardządzanie emotkami" in {_t}
 	replace all "nickname change" with "Zmienianie nicku" in {_t}
+	replace all "nickname manage" with "Zmienianie innym nicku" in {_t}
 	replace all " and " with ", " in {_t}
 	replace all "," with "**`,`**" in {_t}
 	return {_t}
