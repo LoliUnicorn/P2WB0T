@@ -96,6 +96,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
 					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 					set {_bot} to getUser({bot::id})
+					wait 30 tick
 					if {_type} is "Kick":
 						set {_nick} to getMcNick({_u}.getUser().getId())
 						kick {_u} from {_g} with reason {_reason} with {bot::name}

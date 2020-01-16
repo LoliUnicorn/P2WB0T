@@ -2,7 +2,7 @@ on guild message receive:
 	getPoziom(event-user.getId()) = 0
 	set {_message} to "%event-message%"
 
-	set {_kek::*} to lines from file "plugins/Skript/scripts/0024B0T/Commands/!Utils/Przeklenstwa.api"
+	set {_kek::*} to lines from file "plugins/Skript/scripts/0024B0T/commands/!Utils/Przeklenstwa.api"
 	set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
 	set {_tak::*} to {_tak} split at " "
 	loop {_kek::*}:
