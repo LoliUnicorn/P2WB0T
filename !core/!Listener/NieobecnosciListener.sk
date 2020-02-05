@@ -17,7 +17,7 @@ function updateUrlopMessages():
 			set {_date::%{_num}%} to unix date ("%loop-value-2%" parsed as number) as date
 		delete {_num}
 		set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
-		
+
 		create embed:
 			set the colour of the embed to blue
 			
@@ -30,7 +30,7 @@ function updateUrlopMessages():
 			
 			set the thumbnail of embed to "%avatar of getUser({_user})%"
 
-		send last created embed to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}
+		edit {_msg} to show last created embed
 
 function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	loop {_start}.getTime(), {_end}.getTime():
