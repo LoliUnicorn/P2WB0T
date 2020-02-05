@@ -32,7 +32,7 @@ on guild message receive:
 		set {_e::powod} to {_f::2}
 
 		loop "start", "end", "powod":
-			if "%{_f::%loop-value%}%" is "<none>":
+			if "%{_e::%loop-value%}%" is "<none>":
 
 				if loop-value is "start":
 					set {_e} to "Data rozpoczęcia jest zła. Format to `dzień-miesiąc-rok` (05-02-2020)"
@@ -45,9 +45,11 @@ on guild message receive:
 				deleteMessage({_msg}, 10)
 				stop 
 
-		if {_f::start} > {_f::end}:
+		if {_e::start} > {_e::end}:
 			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
 			deleteMessage({_msg}, 10)
 		
+		log("%{_e::*}%")
+
 		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
 		deleteMessage(event-message)
