@@ -17,16 +17,19 @@ on guild message receive:
 		# 3 Data zakończenia
 
 		loop 3 times:
-			set {_f::%loop-value%} to last element of ({_s::%loop-value%} split at ":")
+			set {_x} to last element of ({_s::%loop-value%} split at ":")
+			replace all " " with "" in {_x}
+			set {_f::%loop-value%} to {_x}
+			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
 
 		log("%{_f::*}%, %{_s::*}%")
 
 		set {_format} to new SimpleDateFormat("dd-MM-yyyy")
 
-		set {_f::start} to {_format}.parse({_f::1})
-		set {_f::end} to {_format}.parse({_f::3})
+		set {_e::start} to {_format}.parse({_f::1})
+		set {_e::end} to {_format}.parse({_f::3})
 
-		set {_f::powod} to {_f::2}
+		set {_e::powod} to {_f::2}
 
 		loop "start", "end", "powod":
 			if "%{_f::%loop-value%}%" is "<none>":
@@ -46,5 +49,5 @@ on guild message receive:
 			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
 			deleteMessage({_msg}, 10)
 		
-		createNieobecnosc(event-user.getId(), {_f::powod}, {_f::start}, {_f::end})
+		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
 		deleteMessage(event-message)
