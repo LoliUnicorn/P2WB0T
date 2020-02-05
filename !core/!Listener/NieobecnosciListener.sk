@@ -17,6 +17,12 @@ function updateUrlopMessages():
 		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 		set {_powod} to {_r::powod::%{_inx}%}
 
+		if {_end} > now:
+			send "Twój urlop się zakończył, wracaj do pracy!" to getUser({_user}) with {bot::name}
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%loop-value%" in {bot::sql}
+			deleteMessage({_msg})
+			stop
+
 		set {_dif} to getTimespan("%difference between {_start} and {_end}%")
 
 		create embed:
@@ -82,12 +88,14 @@ on guild message receive:
 					reply with "Wpisałeś złą datę xD" and store it in {_msg}
 					deleteMessage({_msg}, 5)
 					stop
-				set {_mili} to "%{_d}.getTime()%"
-				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
-				updateUrlopMessages()
+
 				reply with "Przedłużam urlop!" and store it in {_msg}
 				deleteMessage({_msg}, 5)
 				deleteMessage(event-message)
+
+				set {_mili} to "%{_d}.getTime()%"
+				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
+				updateUrlopMessages()
 			else:
 				reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
 				deleteMessage({_msg}, 10)
@@ -160,4 +168,4 @@ on reaction add:
 			deleteMessage({_msg}, 5)
 			deleteMessage(event-message)
 
-			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot	execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
