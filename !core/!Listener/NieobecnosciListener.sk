@@ -1,0 +1,48 @@
+import:
+	java.text.SimpleDateFormat
+
+function createNieobecnosc(user: text, start: date, end: date):
+	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
+	send "Dodaje nieobecność dla **%getName({_user})%**, która startuje od %{_start}%, a kończy się na %{_end}% (%{_trans}%)" to channel with id getConfig("Config.nieobecnosci")
+
+on guild message receive:
+	if event.getChannel().getId() is getConfig("Config.nieobecnosci"):
+		set {_msg} to event-message
+		set {_Tmsg} to "%{_msg}%"
+		
+		set {_s::*} to {_Tmsg} split at nl
+		
+		# 1 Data rozpoczęcia
+		# 2 Powód
+		# 3 Data zakończenia
+
+		loop 3 times:
+			set {_f::%loop-value%} to last element of ({_s::%loop-value%} split at ":")
+
+		set {_format} to new SimpleDateFormat("dd-MM-yyyy");
+
+		set {_f::start} to {_format}.parse({_f::1})
+		set {_f::end} to {_format}.parse({_f::1})
+
+		set {_f::powod} to {_f::2}
+
+		loop "start", "end", "powod":
+			if "%{_f::%loop-value%}%" is "<none>":
+
+				if loop-value is "start":
+					set {_e} to "Data rozpoczęcia jest zła. Format to `dzień-miesiąc-rok` (05-02-2020)"
+				if loop-value is "end":
+					set {_e} to "Data zakończenia jest zła"
+				if loop-value is "powod":
+					set {_e} to "powód jakimś cudem jest pusty xd"
+
+				reply with "%getMention(event-user.getId())%, %{_e}%" and store it in {_msg}
+				deleteMessage({_msg}, 10)
+				stop 
+
+		if {_f::start} > {_f::end}:
+			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
+			deleteMessage({_msg}, 10)
+		
+		createNieobecnosc(event-user.getId(), {_f::powod}, {_f::start}, {_f::end})
+		deleteMessage(event-message)

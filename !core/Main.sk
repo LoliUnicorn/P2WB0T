@@ -34,7 +34,7 @@ on script load:
 		set yml value "Config.muterole" from file {_f} to "!ID roli, ktora bedzie nadawana jak osoba dostnie muta"
 		set yml value "Config.logiSerwera" from file {_f} to "!ID kanalu z logami serwera"
 		set yml value "Config.logiWiadomosci" from file {_f} to "!ID kanaly z logami wiadomosci"
-		set yml value "Config.geniusToken" from file {_f} to "!Token do genius api"
+		set yml value "Config.nieobecnosci" from file {_f} to "!Token kanalu do nieobecnosci"
 
 		set yml value "Config.pomocnik" from file {_f} to "!ID roli, ktora bedzie miala poziom 1"
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
