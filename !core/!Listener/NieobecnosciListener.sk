@@ -4,12 +4,12 @@ import:
 function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
 
-	loop {_start}, {_end}:
-		set {_v} to loop-value
+	loop {_start}.getTime(), {_end}.getTime():
+		set {_loop::mil} to loop-value
 		add 1 to {_num}
 
-		set {_loop::mil} to {_v}.getTime()
 		set {_date::%{_num}%} to unix date ("%{_loop::mil}%" parsed as number) as date
+		delete {_loop::*} # Usuwanie zmiennych tymczasowych, nice
 	
 	set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
 
