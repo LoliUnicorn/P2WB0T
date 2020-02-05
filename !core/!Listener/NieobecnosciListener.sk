@@ -17,7 +17,7 @@ function updateUrlopMessages():
 		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 		set {_powod} to {_r::powod::%{_inx}%}
 
-		if now {_end}:
+		if now >= {_end}:
 			send "Twój urlop się zakończył, wracaj do pracy!" to getUser({_user}) with {bot::name}
 			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%loop-value%" in {bot::sql}
 			deleteMessage({_msg})
