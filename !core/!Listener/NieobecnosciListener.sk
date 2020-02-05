@@ -3,7 +3,11 @@ import:
 
 function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
-	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% (%{_trans}%)" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
+
+	set {_mil::*} to {_start}.getTime(), {_end}.getTime()
+	log("%{_mil::*}%")
+
+	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% ()" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
@@ -22,7 +26,6 @@ on guild message receive:
 			set {_f::%loop-value%} to {_x}
 			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
 
-		log("%{_f::*}%, %{_s::*}%")
 
 		set {_format} to new SimpleDateFormat("dd-MM-yyyy")
 
@@ -41,15 +44,14 @@ on guild message receive:
 				if loop-value is "powod":
 					set {_e} to "powód jakimś cudem jest pusty xd"
 
-				reply with "%getMention(event-user.getId())%, %{_e}%" and store it in {_msg}
+				reply with "%getMention(event-user.getId())%, %{_e}% (skopiuj swoją wiadomość, zostanie ona usunięta za 10 sek.)" and store it in {_msg}
+				deleteMessage(event-message, 15)
 				deleteMessage({_msg}, 10)
 				stop 
 
 		if {_e::start} > {_e::end}:
 			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
 			deleteMessage({_msg}, 10)
-		
-		log("%{_e::*}%")
 
 		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
 		deleteMessage(event-message)
