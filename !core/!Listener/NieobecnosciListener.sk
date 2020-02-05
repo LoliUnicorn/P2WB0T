@@ -1,7 +1,7 @@
 import:
 	java.text.SimpleDateFormat
 
-function createNieobecnosc(user: text, powod: text, start: date, end: date):
+function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
 	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% (%{_trans}%)" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
 
