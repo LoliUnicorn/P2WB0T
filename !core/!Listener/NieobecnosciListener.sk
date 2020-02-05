@@ -42,7 +42,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
 
-		execute "SELECT id FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store it in {_r::*}
+		execute "SELECT id FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store result in {_r::*}
 		if {_r::id::1} is set:
 			reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
 			deleteMessage({_msg}, 10)
