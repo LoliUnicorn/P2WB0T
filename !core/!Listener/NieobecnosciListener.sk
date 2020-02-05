@@ -4,10 +4,16 @@ import:
 function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
 
-	set {_mil::*} to {_start}.getTime(), {_end}.getTime()
-	log("%{_mil::*}%")
+	loop {_start}, {_end}:
+		set {_v} to loop-value
+		add 1 to {_num}
 
-	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% ()" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
+		set {_loop::mil} to {_v}.getTime()
+		set {_date::%{_num}%} to unix date ("%{_loop::mil}%" parsed as number) as date
+	
+	set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
+
+	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% (Trwa ona %{_dif}%)" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
