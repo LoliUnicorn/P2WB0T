@@ -64,7 +64,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 
 	set {_t::msgId} to {_msg}.getID()
 
-	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna,powod) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::msgId}%, 'true', %{_t::powod}%)" in {bot::sql}
+	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna,powod) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::end}%, 'true', %{_t::powod}%)" in {bot::sql}
 	log("%last sql error%")
 
 on guild message receive:
