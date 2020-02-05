@@ -8,17 +8,15 @@ function updateUrlopMessages():
 		set {_inx} to loop-index
 		retrieve message with id "%loop-value%" from channel with id getConfig("Config.nieobecnosci")
 		set {_msg} to last retrieved message
-		
-		set {_user} to {_r::user::%{_inx}%}
-		set {_start} to {_r::start::%{_inx}%}
-		set {_end} to {_r::end::%{_inx}%}
+
+		set {_user} to {_r::id::%{_inx}%}
+		set {_start} to unix date ("%{_r::start::%{_inx}%}%" parsed as number) as date
+		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 		set {_powod} to {_r::powod::%{_inx}%}
 
-		loop "%{_r::end::%{_inx}%}%", "%{_r::start::%{_inx}%}%":
-			add 1 to {_num}
-			set {_date::%{_num}%} to unix date ("%loop-value-2%" parsed as number) as date
-		delete {_num}
-		set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
+		log("%{_user}%, %{_start}%, %{_end}%, %{_powod}%")
+
+		set {_dif} to getTimespan("%difference between {_start} and {_end}%")
 
 		create embed:
 			set the colour of the embed to blue
