@@ -168,4 +168,4 @@ on reaction add:
 			deleteMessage({_msg}, 5)
 			deleteMessage(event-message)
 
-			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot	execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
