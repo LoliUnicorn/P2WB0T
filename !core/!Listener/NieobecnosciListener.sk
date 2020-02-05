@@ -4,7 +4,7 @@ import:
 function updateUrlopMessages():
 	execute "SELECT * FROM nieobecnosci WHERE aktywna='true'" in {bot::sql} and store result in {_r::*}
 
-	loop {_r::msgId}:
+	loop {_r::msgId::*}:
 		set {_inx} to loop-index
 		retrieve message with id "%loop-value%" from channel with id getConfig("Config.nieobecnosci")
 		set {_msg} to last retrieved message
