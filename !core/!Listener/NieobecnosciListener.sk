@@ -69,7 +69,6 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
-
 		execute "SELECT id FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store result in {_r::*}
 		if {_r::id::1} is set:
 			reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
@@ -122,3 +121,24 @@ on guild message receive:
 
 		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
 		deleteMessage(event-message)
+
+on reaction add:
+	if event-channel.getId() is getConfig("Config.nieobecnosci"):
+		remove event-emote added by event-user from event-message
+		set {_e} to event-emote.getID()
+
+		if {_e} is getConfig("emote.red"):
+			execute "SELECT id FROM nieobecnosci WHERE msgId=%event-message.getID()%" in {bot::sql} and store it in {_r::*}
+
+			set {_user} to getUser({_r::id::1})
+
+			if {_user}.getId() != event-user.getId():
+				if getPoziom({_user}.getId()) < 2:
+					reply with "%getMention(event-user.getId())%, anulować urlop może tylko Administrator lub osoba, która ten urlop brała." and store it in {_msg}
+					deleteMessage({_msg})
+					stop
+
+			reply with "Anuluje urlop **%getName({_user}.getId())%**." and store it in {_msg}
+			deleteMessage({_msg}, 5)
+
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
