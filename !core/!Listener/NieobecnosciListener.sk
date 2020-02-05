@@ -1,6 +1,9 @@
 import:
 	java.text.SimpleDateFormat
 
+every 15 minutes:
+	updateUrlopMessages()
+
 function updateUrlopMessages():
 	execute "SELECT * FROM nieobecnosci WHERE aktywna='true'" in {bot::sql} and store result in {_r::*}
 
@@ -13,8 +16,6 @@ function updateUrlopMessages():
 		set {_start} to unix date ("%{_r::start::%{_inx}%}%" parsed as number) as date
 		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 		set {_powod} to {_r::powod::%{_inx}%}
-
-		log("%{_user}%, %{_start}%, %{_end}%, %{_powod}%")
 
 		set {_dif} to getTimespan("%difference between {_start} and {_end}%")
 
@@ -69,11 +70,26 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
-		execute "SELECT id FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store result in {_r::*}
-		if {_r::id::1} is set:
-			reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
-			deleteMessage({_msg}, 10)
-			deleteMessage(event-message, 10)
+		execute "SELECT msgId FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store result in {_r::*}
+		if {_r::msgId::1} is set:
+			set {_tmsg} to "%event-message%"
+			if {_tmsg} contains "Przedłużam:":
+				set {_date} to last element of ({_tmsg} split at ":")
+				replace all " " with "" in {_date}
+				set {_format} to new SimpleDateFormat("dd-MM-yyyy")
+				set {_d} to {_format}.parse({_date})
+				if {_d} is not set:
+					reply with "Wpisałeś złą datę xD" and store it in {_msg}
+					deleteMessage({_msg}, 5)
+					stop
+				set {_mili} to "%{_d}.getTime()%"
+				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
+				updateUrlopMessages()
+
+			else:
+				reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
+				deleteMessage({_msg}, 10)
+				deleteMessage(event-message, 10)
 			stop
 
 		set {_msg} to event-message
@@ -140,5 +156,6 @@ on reaction add:
 
 			reply with "Anuluje urlop **%getName({_user}.getId())%**." and store it in {_msg}
 			deleteMessage({_msg}, 5)
+			deleteMessage(event-message)
 
 			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
