@@ -12,7 +12,7 @@ function updateUrlopMessages():
 		loop "user", "start", "end", "powod":
 			set {_%loop-value-2%} to {_r::%loop-value-2%::%{_inx}%}
 
-		loop {_end}, {_start}:
+		loop "%{_end}%", "%{_start}%":
 			add 1 to {_num}
 			set {_date::%{_num}%} to unix date ("%loop-value-2%" parsed as number) as date
 		delete {_num}
