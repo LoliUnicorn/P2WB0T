@@ -85,7 +85,9 @@ on guild message receive:
 				set {_mili} to "%{_d}.getTime()%"
 				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
 				updateUrlopMessages()
-
+				reply with "Przedłużam urlop!" and store it in {_msg}
+				deleteMessage({_msg}, 5)
+				deleteMessage(event-message)
 			else:
 				reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
 				deleteMessage({_msg}, 10)
@@ -107,7 +109,6 @@ on guild message receive:
 				replace all " " with "" in {_x}
 			set {_f::%loop-value%} to {_x}
 			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
-
 
 		set {_format} to new SimpleDateFormat("dd-MM-yyyy")
 
@@ -139,6 +140,7 @@ on guild message receive:
 		deleteMessage(event-message)
 
 on reaction add:
+	event-user.isBot() is false
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
 		remove event-emote added by event-user from event-message
 		set {_e} to event-emote.getID()
