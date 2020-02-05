@@ -19,10 +19,12 @@ on guild message receive:
 		loop 3 times:
 			set {_f::%loop-value%} to last element of ({_s::%loop-value%} split at ":")
 
+		log("%{_f::*}%, %{_s::*}%")
+
 		set {_format} to new SimpleDateFormat("dd-MM-yyyy")
 
 		set {_f::start} to {_format}.parse({_f::1})
-		set {_f::end} to {_format}.parse({_f::1})
+		set {_f::end} to {_format}.parse({_f::3})
 
 		set {_f::powod} to {_f::2}
 
