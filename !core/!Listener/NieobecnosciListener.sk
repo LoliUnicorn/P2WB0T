@@ -1,9 +1,10 @@
 import:
 	java.text.SimpleDateFormat
 
-function createNieobecnosc(user: text, powod: object, start: object, end: object):
-	set {_trans} to getTimespan("%difference between {_start} and {_end}%")
+#function updateUrlopMessages():
 
+
+function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	loop {_start}.getTime(), {_end}.getTime():
 		set {_loop::mil} to loop-value
 		add 1 to {_num}
@@ -13,7 +14,28 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 	
 	set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
 
-	send "Dodaje nieobecność dla **%getName({_user})%**, z powodem %{_powod}% która startuje od %{_start}%, a kończy się na %{_end}% (Trwa ona %{_dif}%)" to channel with id getConfig("Config.nieobecnosci") with {bot::name}
+	# Zamieniamy wszystko na texta
+	
+	set {_t::start} to "%{_start}.getTime()%"
+	set {_t::end} to "%{_end}.getTime()%"
+	set {_t::powod} to "%{_powod}%"
+
+	create embed send to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}:
+		set the colour of the embed to blue
+		
+		set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
+		
+		add split field named "Powód:" with value "%{_t::powod}%" to embed
+		add split field named "Czas rozpoczęcia:" with value "%{_date::1}%" to embed
+		add split field named "Czas zakończenia:" with value "%{_date::2}%" to embed
+		add split field named "Pozostało czasu:" with value {_dif} to embed
+		
+		set the thumbnail of embed to "%avatar of getUser({_user})%"
+
+	set {_t::msgId} to {_msg}.getId()
+
+	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::msgId}%, 'true')" in {bot::sql}
+	log("%last sql error%")
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
