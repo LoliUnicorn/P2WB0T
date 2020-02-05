@@ -86,6 +86,7 @@ on guild message receive:
 				set {_d} to {_format}.parse({_date})
 				if {_d} is not set:
 					reply with "Wpisałeś złą datę xD" and store it in {_msg}
+					deleteMessage(event-message)
 					deleteMessage({_msg}, 5)
 					stop
 
@@ -140,9 +141,11 @@ on guild message receive:
 				deleteMessage({_msg}, 10)
 				stop 
 
-		if {_e::start} > {_e::end}:
+		if unix date {_e::start}.getTime() as date > unix date {_e::end}.getTime() as date:
 			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
+			deleteMessage(event-message, 10)
 			deleteMessage({_msg}, 10)
+			stop
 
 		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
 		deleteMessage(event-message)
