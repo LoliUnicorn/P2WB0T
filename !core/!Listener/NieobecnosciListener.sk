@@ -36,7 +36,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 
 	set {_t::msgId} to {_msg}.getID()
 
-	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::msgId}%, 'true')" in {bot::sql}
+	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna,powod) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::msgId}%, 'true', %{_t::powod}%)" in {bot::sql}
 	log("%last sql error%")
 
 on guild message receive:
@@ -52,7 +52,8 @@ on guild message receive:
 
 		loop 3 times:
 			set {_x} to last element of ({_s::%loop-value%} split at ":")
-			replace all " " with "" in {_x}
+			if loop-value != 2:
+				replace all " " with "" in {_x}
 			set {_f::%loop-value%} to {_x}
 			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
 
