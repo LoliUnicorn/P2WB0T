@@ -128,7 +128,7 @@ on reaction add:
 		set {_e} to event-emote.getID()
 
 		if {_e} is getConfig("emote.red"):
-			execute "SELECT id FROM nieobecnosci WHERE msgId=%event-message.getID()%" in {bot::sql} and store it in {_r::*}
+			execute "SELECT id FROM nieobecnosci WHERE msgId=%event-message.getID()%" in {bot::sql} and store result in {_r::*}
 
 			set {_user} to getUser({_r::id::1})
 
