@@ -61,11 +61,11 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 		set the thumbnail of embed to "%avatar of getUser({_user})%"
 
 	send last created embed to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}
+	KamilAPI add emote "red" to {_msg}
 
 	set {_t::msgId} to {_msg}.getID()
 
 	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna,powod) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::end}%, 'true', %{_t::powod}%)" in {bot::sql}
-	log("%last sql error%")
 
 on guild message receive:
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):

@@ -20,15 +20,15 @@ effect KamilAPI add emote %text% to %message% [of %-text/user/member%]:
 					setCache({_u}.getId(), "red", {_r::red::1})
 
 				set {_final} to emote getCache({_u}.getId(), expr-1)
-		if getPoziom({_u}.getId()) >= 1:
-			if {_final}.getEmote() is not set:
-				{_message}.getMessage().addReaction({_final}.getName()).complete()
-			else:
-				{_message}.getMessage().addReaction({_final}.getEmote()).complete()
 
-			wait 80 tick
-			loop ...{_message}.getMessage().getReactions():
-				add 1 to {_xd}
+				if {_final}.getEmote() is not set:
+					{_message}.getMessage().addReaction({_final}.getName()).complete()
+				else:
+					{_message}.getMessage().addReaction({_final}.getEmote()).complete()
+
+				wait 80 tick
+				loop ...{_message}.getMessage().getReactions():
+					add 1 to {_xd}
 
 		if {_xd} is not set:
 			loop emotes of {_g}:
