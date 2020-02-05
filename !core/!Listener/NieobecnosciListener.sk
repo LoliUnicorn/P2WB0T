@@ -25,16 +25,16 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 		
 		set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
 		
-		add split field named "Powód:" with value "%{_t::powod}%" to embed
-		add split field named "Czas rozpoczęcia:" with value "%{_date::1}%" to embed
-		add split field named "Czas zakończenia:" with value "%{_date::2}%" to embed
-		add split field named "Pozostało czasu:" with value {_dif} to embed
+		add field named "Powód:" with value "%{_t::powod}%" to embed
+		add field named "Czas rozpoczęcia:" with value "%{_date::1}%" to embed
+		add field named "Czas zakończenia:" with value "%{_date::2}%" to embed
+		add field named "Pozostało czasu:" with value {_dif} to embed
 		
 		set the thumbnail of embed to "%avatar of getUser({_user})%"
 
 	send last created embed to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}
 
-	set {_t::msgId} to {_msg}.getId()
+	set {_t::msgId} to {_msg}.getID()
 
 	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::msgId}%, 'true')" in {bot::sql}
 	log("%last sql error%")
