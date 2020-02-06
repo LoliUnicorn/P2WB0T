@@ -141,7 +141,7 @@ on guild message receive:
 				deleteMessage({_msg}, 10)
 				stop 
 
-		if unix date {_e::start}.getTime() as date > unix date {_e::end}.getTime() as date:
+		if unix date {_e::start}.getTime() as date >= unix date {_e::end}.getTime() as date:
 			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
 			deleteMessage(event-message, 10)
 			deleteMessage({_msg}, 10)

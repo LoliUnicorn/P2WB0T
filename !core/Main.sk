@@ -19,39 +19,36 @@ on script load:
 		set {_f} to "plugins/Bot/config.example.yml"
 		create file {_f}
 
-		set yml value "Mysql.link" from file {_f} to "!mysql://host:port/"
+		set yml value "Mysql.link" from file {_f} to "!mysql://localhost:3306/ (ofc usun wszedzie te ""!"")"
 		set yml value "Mysql.database" from file {_f} to "!Nazwa database (bazy danych)"
 		set yml value "Mysql.user" from file {_f} to "!Nazwa uzytkownika"
 		set yml value "Mysql.pass" from file {_f} to "!Haslo (jezeli nie ma wpisz ""<none>"")"
 
-		set yml value "Bot.token" from file {_f} to "!token Bota (ofc usun wszedzie te ""!"")"
-		set yml value "Bot.id" from file {_f} to "!id Bota"
-		set yml value "Bot.name" from file {_f} to "!nazwa Bota"
-		set yml value "Bot.prefix" from file {_f} to "!prefix Bota"
+		set yml value "Bot.token" from file {_f} to "!Token Bota"
+		set yml value "Bot.id" from file {_f} to "!ID Bota"
+		set yml value "Bot.name" from file {_f} to "!Nazwa Bota"
+		set yml value "Bot.prefix" from file {_f} to "!Prefix Bota"
 
-		set yml value "Config.modlogi" from file {_f} to "!id kanalu"
-		set yml value "Config.guild" from file {_f} to "!id serwera"
+		set yml value "Config.guild" from file {_f} to "!ID glownego serwera"
+		set yml value "Config.modlogi" from file {_f} to "!ID kanalu do mod-logow"
+
 		set yml value "Config.muterole" from file {_f} to "!ID roli, ktora bedzie nadawana jak osoba dostnie muta"
-		set yml value "Config.logiSerwera" from file {_f} to "!ID kanalu z logami serwera"
-		set yml value "Config.logiWiadomosci" from file {_f} to "!ID kanaly z logami wiadomosci"
-		set yml value "Config.nieobecnosci" from file {_f} to "!Token kanalu do nieobecnosci"
+		set yml value "Config.nieobecnosci" from file {_f} to "!ID kanalu do nieobecnosci"
 
 		set yml value "Config.pomocnik" from file {_f} to "!ID roli, ktora bedzie miala poziom 1"
 		set yml value "Config.mod" from file {_f} to "!ID roli, ktora bedzie miala poziom 2"
 		set yml value "Config.adm" from file {_f} to "!ID roli, ktora bedzie miala poziom 3"
 
-		set yml value "Image.token" from file {_f} to "!token do api"
-		set yml value "Image.port" from file {_f} to "!port serwera"
-		set yml value "Image.ip" from file {_f} to "!ip do serwera"
+		set yml value "Config.logiKomend" from file {_f} to "!ID kanalu do logow komend"
+		set yml value "Config.logiSerwera" from file {_f} to "!ID kanalu z logami serwera"
+		set yml value "Config.logiWiadomosci" from file {_f} to "!ID kanaly z logami wiadomosci"
 
-		set yml value "Config.logiKomend" from file {_f} to "!Logi kanału do logow"
+		set yml value "emote.green" from file {_f} to "!ID emotki green"
+		set yml value "emote.red" from file {_f} to "!ID emotki red"
+		set yml value "emote.loading" from file {_f} to "!ID emotki red"
 
-		set yml value "emote.green" from file {_f} to "!id emotki green"
-		set yml value "emote.red" from file {_f} to "!id emotki red"
-		set yml value "emote.loading" from file {_f} to "!id emotki red"
-
-		loop 3 times:
-			add "!id ownera%loop-value% (owner ma wszystkie permy)" to yml list "Config.owners" from file "plugins/Bot/config.example.yml"
+		loop 2 times:
+			add "!ID ownera%loop-value% (owner ma wszystkie permy)" to yml list "Config.owners" from file "plugins/Bot/config.example.yml"
 
 		log("Stworzono config! Skonfiguruj plugins/Bot/config.example.yml do swoich potrzec i przeladuj jeszcze raz skrypt!")
 		stop
@@ -111,7 +108,6 @@ on script load:
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`playlisty` (`user` TEXT NOT NULL , `name` TEXT NOT NULL, `link` TEXT NOT NULL , `title` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`konkurs` ( `id` TEXT NOT NULL , `nagroda` TEXT NOT NULL , `kanal` TEXT NOT NULL, `messageId` TEXT NOT NULL , `sender` TEXT NOT NULL, `now` TEXT NOT NULL , `koniec` TEXT NOT NULL , `aktywna` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`config` ( `id` TEXT NOT NULL , `green` TEXT NOT NULL , `red` TEXT NOT NULL , `deleteMessage` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
-
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`nieobecnosci` ( `id` TEXT NOT NULL , `msgId` TEXT NOT NULL , `start` TEXT NOT NULL , `end` TEXT NOT NULL , `aktywna` TEXT NOT NULL, `powod` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 
 	set {_er} to last sql error
@@ -126,10 +122,9 @@ on script load:
 	login to "%{bot::token}%" with the name "%{bot::name}%"
 	delete {bot::token}
 	set {_e} to last vixio error
-	if {_e} is set:
-		log("&cNie udalo sie zalogowac Bota! &r%{_e}%")
-	else:
-		log("&aPomyslnie zalogowano bota! Milego korzystania :D")
+
+	set {_xd} to check "%{_e}%" = "<none>" : log("&cNie udalo sie zalogowac Bota! &r%{_e}%") ? log("&aPomyslnie zalogowano bota! Milego korzystania :D")
+
 	set {_bot} to "%{bot::name}%" parsed as bot
 	set {bot::helpmention} to "%mention tag of {_bot}% "
 	

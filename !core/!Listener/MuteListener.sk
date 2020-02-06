@@ -3,7 +3,6 @@ function checkRepairMute():
 	set {_g} to guild with id {bot::guild}
 	deny {_r} permissions (message add reaction, message write, voice connect, voice speak) in channels of {_g} with {bot::name}
 
-
 function checkUnmute():
 	execute "SELECT id,karany,end FROM akcje WHERE aktywna='Tak' AND typ='Tempmute'" in {bot::sql} and store result in {_r::*}
 	set {_r} to role with id getConfig("Config.muterole")
