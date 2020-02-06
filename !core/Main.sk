@@ -123,7 +123,7 @@ on script load:
 	delete {bot::token}
 	set {_e} to last vixio error
 
-	set {_msg} to check "%{_e}%" = "<none>" : "Nie udalo sie zalogowac Bota! &r%{_e}%" ? "&aPomyslnie zalogowano bota! Milego korzystania :D"
+	set {_msg} to check "%{_e}%" = "<none>" : "&aPomyslnie zalogowano bota! Milego korzystania :D" ? "Nie udalo sie zalogowac Bota! &r%{_e}%"
 	log({_msg})
 
 	set {_bot} to "%{bot::name}%" parsed as bot
