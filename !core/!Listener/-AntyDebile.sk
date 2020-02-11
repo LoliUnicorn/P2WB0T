@@ -11,7 +11,7 @@ on guild message received:
 	add "%event-message%" to {v::antydebil::%{_id}%::msg::*}
 	set {_msg} to "%event-message%"
 	getPoziom(event-user.getId()) = 0
-
+	
 	set {_msg} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_msg}
 	
 	loop ...event-message.getMessage().getMentionedMembers():
