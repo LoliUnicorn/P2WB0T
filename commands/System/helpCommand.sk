@@ -75,7 +75,10 @@ discord command {@cmd} [<text>]:
 			loop {_k::*}:
 				loop {_cmd::*}:
 					if {command::%loop-value-2%::kategoria} is loop-value-1:
-						append line "%{bot::prefix}%%{command::%loop-value-2%::uzycie}%"
+						if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
+							append line "%{bot::prefix}%%{command::%loop-value-2%::uzycie}%"
+				if "%{_m}%" is "null":
+					set {_m} to ""
 				add field named "%loop-value%:" with value "%{_m}%" to embed
 				delete {_m}
 				set {_m} to a message builder
