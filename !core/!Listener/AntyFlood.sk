@@ -29,13 +29,11 @@ on guild message received:
 		KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel #FIXME: pun
 		stop
 
-	add {_msg} to {v::cache::msg::%{_g}%::%event-user.getId()%::*}
-	if size of {v::cache::msg::%{_g}%::%event-user.getId()%::*} >= 4:
-		set {_lastMsg} to {v::config::%{_g}%::sameMessage::1} parsed as number
-
-		set {_size} to size of {v::cache::msg::%{_g}%::%event-user.getId()%::*}
-		loop {_lastMsg} times:
-			add {v::cache::msg::%{_g}%::%event-user.getId()%::%{_size}%} to {_msgs::*}
+	add {_msg} to {v::cache::msg::%event-user.getId()%::*}
+	if size of {v::cache::msg::%event-user.getId()%::*} >= 4:
+		set {_size} to size of {v::cache::msg::%event-user.getId()%::*}
+		loop 4 times:
+			add {v::cache::msg::%event-user.getId()%::%{_size}%} to {_msgs::*}
 			remove 1 from {_size}
 
 		set {_size} to size of {_msgs::*}
