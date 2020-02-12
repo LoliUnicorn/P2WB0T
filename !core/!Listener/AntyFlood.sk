@@ -23,11 +23,11 @@ on guild message received:
 	set {_msg} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_msg}
 	set {_msg} to regex replace all pattern "<@[!&]?([0-9]{17,18})>" with "" in {_msg}
 
-	loop ...event-message.getMessage().getMentionedMembers():
-		add 1 to {_pingiNaWiadomosc}
-	if {_pingiNaWiadomosc} >= 5:
-		KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel #FIXME: pun
-		stop
+	# loop ...event-message.getMessage().getMentionedMembers(): # Raczej na derpa to nie potrzebne
+	# 	add 1 to {_pingiNaWiadomosc}
+	# if {_pingiNaWiadomosc} >= 5:
+	# 	KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel #FIXME: pun
+	# 	stop
 
 	add {_msg} to {v::cache::msg::%event-user.getId()%::*}
 	if size of {v::cache::msg::%event-user.getId()%::*} >= 4:
@@ -54,6 +54,5 @@ on guild message received:
 
 		set {_int} to size of {_levenshtein::*}
 		set {_srednia} to {_suma}/{_int}
-		if {_srednia} <= 1.5:
-			#KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel #FIXME: pun
-		reply with "Srednia: %{_srednia}% (%{_suma}%/%{_int}%)%nl%Levenshtein: %{_levenshtein::*}%"
+		if {_srednia} <= 1.7:
+			KamilAPI add punish to event-user with reason "Flood/Spam/Caps lock" by getUser({bot::id}) in channel event-channel #FIXME: pun
