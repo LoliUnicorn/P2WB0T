@@ -35,7 +35,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 		set {_xD} to getTimespan("%{_time}%")
 		if {_error} is set:
-			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`"
+			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`" to event-message
 		else:
 			reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%** na czas **%arg-2%**"
 			KamilAPI check delete event-message from event-user

@@ -2,7 +2,7 @@ options:
 	cmd: lyrics
 
 on script load:
-	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::poziom} to 1
 	set {command::{@cmd}::cooldown} to 5 seconds
 	set {command::{@cmd}::opis} to "Wysyła tekst piosenki."
 	set {command::{@cmd}::kategoria} to "Muzyka"

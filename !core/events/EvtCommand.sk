@@ -10,7 +10,7 @@ on vixio command:
 
 	loop {_l::*}:
 		if loop-value is event-channel.getId():
-			if {_cmd} is "clear" or "forum":
+			if {_cmd} is "clear" or "forum" or "punish":
 				if getPoziom(event-user.getId()) >= 1:
 					stop loop
 

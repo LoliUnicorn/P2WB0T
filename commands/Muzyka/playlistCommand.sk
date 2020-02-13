@@ -2,7 +2,7 @@ options:
 	cmd: playlist
 
 on script load:
-	set {command::{@cmd}::poziom} to 0
+	set {command::{@cmd}::poziom} to 1
 	set {command::{@cmd}::cooldown} to 2 seconds
 
 	set {command::{@cmd}::opis} to "Zarządzanie playlistami"

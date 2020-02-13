@@ -29,7 +29,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_check} to checkNumber({_arg})
 
 				if {_check} is set:
-					KamilAPI cmd error {_check}
+					KamilAPI cmd error {_check} to event-message
 
 				delete event-message
 				wait 5 tick
@@ -47,14 +47,14 @@ discord command {@cmd} [<text>] [<text>]:
 				stop
 		set {_u} to getUser(arg-1)
 		if {_u} is not set:
-			KamilAPI cmd error "Nieprawidłowy użytkownik. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			KamilAPI cmd error "Nieprawidłowy użytkownik. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
 		set {_a} to arg-2 parsed as number
 		if {_a} is not set:
-			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			KamilAPI cmd error "Nieprawidłowa liczba. Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		set {_check} to checkNumber({_a})
 		if {_check} is set:
-			KamilAPI cmd error {_check}
+			KamilAPI cmd error {_check} to event-message
 
 		reply with "Usuwam **%{_a}%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
 		grab last 1000 messages in event-channel

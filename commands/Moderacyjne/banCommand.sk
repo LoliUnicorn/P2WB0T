@@ -30,7 +30,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 		KamilAPI ban getUser(arg-1) with reason {_powod} with event-user
 		if {_error} is set:
-			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`"
+			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`" to event-message
 		reply with "Pomyślnie zbanowano **%getName(arg-1)%** z powodem %getRegex({_powod})%"
 		KamilAPI add emote "green" to event-message of event-user
 		KamilAPI check delete event-message from event-user

@@ -14,9 +14,9 @@ discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
-			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		if arg-1 is not "stworz" or "usun":
-			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		if arg-1 is "stworz":
 			KamilAPI add emote "green" to event-message of event-user
 			delete {v::%event-user.getId()%::giveaway::*}
@@ -24,7 +24,7 @@ discord command {@cmd} [<text>] [<text>]:
 			set {v::%event-user.getId()%::giveaway::typ} to "channel"
 		if arg-1 is "usun":
 			if arg-2 is not set:
-				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%"
+				KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 			reply with "Zatrzymuje konkurs z ID ##%arg-2%"
 			execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe arg-2%'" in {bot::sql}
 			KamilAPI add emote "green" to event-message of event-user
