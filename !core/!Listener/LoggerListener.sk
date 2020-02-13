@@ -54,8 +54,8 @@ on message delete:
 
 			set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
 
-			log("%{_v}.getTimeCreated()%%nl%%OffsetDateTime.now().minusMinutes(1)%%nl%%OffsetDateTime.now()%")
 			if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
+				log("Autor id %{_m}.getMessage().getAuthor().getIdLong()%=%{_v}.getTargetIdLong()%")
 				if {_m}.getMessage().getAuthor().getIdLong() is {_v}.getTargetIdLong():
 					set {_sender} to getFullName({_v}.getUser().getId())
 			
