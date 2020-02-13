@@ -4,6 +4,18 @@ import:
 every 15 minutes:
 	updateUrlopMessages()
 
+function nieobecnosciLog(powod: string, autor: id, info: string=""):
+	create embed:
+		set the colour of the embed to color of cyan
+		set the timestamp of embed to now
+		set the footer of embed to footer with text {_powod} and no icon
+	
+		add field named "Autor:" with value getName({_autor}) to embed
+		if {_info} != "":
+			add field named "Co się stało?!" with value {_info} to embed 
+	
+	send last created embed to channel with id getConfig("Config.nieobecnosciLogi") with {bot::name}
+
 function updateUrlopMessages():
 	execute "SELECT * FROM nieobecnosci WHERE aktywna='true'" in {bot::sql} and store result in {_r::*}
 
@@ -18,6 +30,7 @@ function updateUrlopMessages():
 		set {_powod} to {_r::powod::%{_inx}%}
 
 		if now >= {_end}:
+			nieobecnosciLog("Koniec urlopu", {_user}, "Urlop, który został złożony %{_start}% się skończył.")
 			send "Twój urlop się zakończył, wracaj do pracy!" to getUser({_user}) with {bot::name}
 			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%loop-value%" in {bot::sql}
 			deleteMessage({_msg})
@@ -67,6 +80,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 		
 		set the thumbnail of embed to "%avatar of getUser({_user})%"
 
+	nieobecnosciLog("Zadeklarowanie urlopu", {_user}, "Urlop został zgłoszony o `%{_date::1}%`, a kończy się o `%{_date::2}%`")
 	send last created embed to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}
 	KamilAPI add emote "red" to {_msg}
 
@@ -82,7 +96,7 @@ on guild message receive:
 			if {_tmsg} contains "Przedłużam:":
 				set {_date} to last element of ({_tmsg} split at ":")
 				replace all " " with "" in {_date}
-				set {_format} to new SimpleDateFormat("dd-MM-yyyy")
+				set {_format} to new SimpleDateFormat("dd.MM.yyyy")
 				set {_d} to {_format}.parse({_date})
 				if {_d} is not set:
 					reply with "Wpisałeś złą datę xD" and store it in {_msg}
@@ -93,6 +107,8 @@ on guild message receive:
 				reply with "Przedłużam urlop!" and store it in {_msg}
 				deleteMessage({_msg}, 5)
 				deleteMessage(event-message)
+
+				nieobecnosciLog("Zadeklarowanie urlopu", event-user.getId(), "Urlop został przedłużony na datę `%{_d}%`.")
 
 				set {_mili} to "%{_d}.getTime()%"
 				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
@@ -119,7 +135,7 @@ on guild message receive:
 			set {_f::%loop-value%} to {_x}
 			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
 
-		set {_format} to new SimpleDateFormat("dd-MM-yyyy")
+		set {_format} to new SimpleDateFormat("dd.MM.yyyy")
 
 		set {_e::start} to {_format}.parse({_f::1})
 		set {_e::end} to {_format}.parse({_f::3})
@@ -130,7 +146,7 @@ on guild message receive:
 			if "%{_e::%loop-value%}%" is "<none>":
 
 				if loop-value is "start":
-					set {_e} to "Data rozpoczęcia jest zła. Format to `dzień-miesiąc-rok` (05-02-2020)"
+					set {_e} to "Data rozpoczęcia jest zła. Format to `dzień-miesiąc-rok` (05.02.2020)"
 				if loop-value is "end":
 					set {_e} to "Data zakończenia jest zła"
 				if loop-value is "powod":
@@ -167,6 +183,7 @@ on reaction add:
 					deleteMessage({_msg})
 					stop
 
+			nieobecnosciLog("Anulowanie urlopu", {_user}.getId(), "Urlop został anulowany przez %getName(event-user.getId())%")
 			reply with "Anuluje urlop **%getName({_user}.getId())%**." and store it in {_msg}
 			deleteMessage({_msg}, 5)
 			deleteMessage(event-message)
