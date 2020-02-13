@@ -181,7 +181,7 @@ on reaction add:
 					deleteMessage({_msg})
 					stop
 
-			nieobecnosciLog("Anulowanie urlopu", {_user}.getId(), "Urlop został anulowany przez %getName(event-user.getId())%")
+			nieobecnosciLog("Anulowanie urlopu", {_user}.getId(), "Urlop został anulowany przez %getFullName(event-user.getId())%")
 			reply with "Anuluje urlop **%getName({_user}.getId())%**." and store it in {_msg}
 			deleteMessage({_msg}, 5)
 			deleteMessage(event-message)

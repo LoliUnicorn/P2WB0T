@@ -40,6 +40,7 @@ on member join guild:
 on message delete:
 	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)
 	{_m} is set
+	wait 20 tick
 
 	set {_g} to event-guild
 
