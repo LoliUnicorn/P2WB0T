@@ -106,7 +106,7 @@ on guild message receive:
 				deleteMessage({_msg}, 5)
 				deleteMessage(event-message)
 
-				nieobecnosciLog("Zadeklarowanie urlopu", event-user.getId(), "Urlop został przedłużony na datę `%{_d}%`.")
+				nieobecnosciLog("Zadeklarowanie urlopu", event-user.getId(), "Urlop został przedłużony na datę `%unix date {_d}.getTime() as date%`.")
 
 				set {_mili} to "%{_d}.getTime()%"
 				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
