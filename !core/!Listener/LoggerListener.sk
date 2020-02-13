@@ -48,11 +48,11 @@ on message delete:
 	if {_name} contains "<none>":
 		set {_name} to "Nie udało się uzyskać."
 
+	set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
+
 	loop ...{_g}.retrieveAuditLogs().cache(false):
 		set {_v} to loop-value
 		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
-
-			set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
 
 			if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
 				log("%{_m}.getMessage().getAuthor().getIdLong()% is %{_v}.getTargetIdLong()%")
