@@ -5,7 +5,7 @@ every 15 minutes:
 	updateUrlopMessages()
 
 function nieobecnosciLog(powod: string, autor: string, info: string=""):
-	create embed:
+	create embed and send it to channel with id getConfig("Config.nieobecnosciLogi") with {bot::name}:
 		set the colour of the embed to cyan
 		set the timestamp of embed to now
 		set the footer of embed to footer with text {_powod} and no icon
@@ -13,8 +13,6 @@ function nieobecnosciLog(powod: string, autor: string, info: string=""):
 		add field named "Autor:" with value getName({_autor}) to embed
 		if {_info} != "":
 			add field named "Co się stało?!" with value {_info} to embed 
-	
-	send last created embed to channel with id getConfig("Config.nieobecnosciLogi") with {bot::name}
 
 function updateUrlopMessages():
 	execute "SELECT * FROM nieobecnosci WHERE aktywna='true'" in {bot::sql} and store result in {_r::*}
