@@ -55,16 +55,9 @@ on message delete:
 		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
 
 			if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
-				log("%{_m}.getMessage().getAuthor().getIdLong()% is %{_v}.getTargetIdLong()%")
 				if "%{_m}.getMessage().getAuthor().getIdLong()%" is "%{_v}.getTargetIdLong()%":
-					log("true")
-					log("%{_v}.getUser().getId()%")
-					set {_sender} to "%{_v}.getUser().getId()% kurwaaaaa"
-					log("prawie sender: %{_sender}%")
-				else:
-					Log("false")
-	
-	log("sender: %{_sender}%")
+					set {_sender} to getFullName("%{_v}.getUser().getId()%")
+
 	if ...{_m}.getMessage().getEmbeds() is not set:
 		set {_tresc} to "%{_m}%"
 	else:
