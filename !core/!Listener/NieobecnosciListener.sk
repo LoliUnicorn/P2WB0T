@@ -6,7 +6,7 @@ every 15 minutes:
 
 function nieobecnosciLog(powod: string, autor: string, info: string=""):
 	create embed:
-		set the colour of the embed to color of cyan
+		set the colour of the embed to cyan
 		set the timestamp of embed to now
 		set the footer of embed to footer with text {_powod} and no icon
 	
