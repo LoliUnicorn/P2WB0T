@@ -34,7 +34,7 @@ function updateUrlopMessages():
 			deleteMessage({_msg})
 			stop
 
-		set {_dif} to getTimespan("%difference between {_start} and {_end}%")
+		set {_dif} to getTimespan("%difference between now and {_end}%")
 
 		create embed:
 			set the colour of the embed to blue
@@ -58,7 +58,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 		set {_date::%{_num}%} to unix date ("%{_loop::mil}%" parsed as number) as date
 		delete {_loop::*} # Usuwanie zmiennych tymczasowych, nice
 	
-	set {_dif} to getTimespan("%difference between now and {_date::2}%")
+	set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
 
 	# Zamieniamy wszystko na texta
 	

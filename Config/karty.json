@@ -1,0 +1,282 @@
+{
+	"list": {
+		"1": [{
+			"name": "Wulgarne zachowanie",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "2h"
+			}],
+			"tier_3": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "3h"
+			}],
+			"tier_4": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_5": [{
+				"maxWarns": 8,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+		"2": [{
+			"name": "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "1d"
+			}]
+		}],
+		"3": [{
+			"name": "Oznaczanie grup administracyjnych lub członków ekipy bez powodu, spam oznaczeniami utrudniający funkcjonowanie innym użytkownikom serwisu",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "1d"
+			}],
+			"tier_4": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "5d"
+			}]
+		}],
+		"4": [{
+			"name": "Wulgaryzmy kierowane do czlonkow administracji",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "3h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_3": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "6h"
+			}],
+			"tier_4": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "3d"
+			}],
+			"tier_5": [{
+				"maxWarns": 8,
+				"type": "Tempban",
+				"time": "5d"
+			}]
+		}],
+		"5": [{
+			"name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szeroko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem.",
+			"tier_1": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "3h"
+			}],
+			"tier_2": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_3": [{
+				"maxWarns": 5,
+				"type": "Tempmute",
+				"time": "7h"
+			}],
+			"tier_4": [{
+				"maxWarns": 7,
+				"type": "Tempmute",
+				"time": "10h"
+			}]
+		}],
+		"6": [{
+			"name": "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "3d"
+			}]
+		}],
+		"7": [{
+			"name": "Rozpowszechnianie danych osobowych, adresów zamieszkania i innych wrażliwych informacji",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+		"8": [{
+			"name": "Działanie na szkodę sieci serwerów P2W.pl",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+		"9": [{
+			"name": "Podszywanie się pod graczy lub członków ekipy P2W",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+		"10": [{
+			"name": "Proszenie o przywileje, bonusy lub rangi",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "2h"
+			}]
+		}],
+		"11": [{
+			"name": "Wulgarny i/lub nieodpowiedni nickname (z połączonego konta Minecraft)",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+		"12": [{
+			"name": "Wulgarny, nieodpowiedni lub reklamujący serwery gry Minecraft/strony powiązane z tą tematyką awatar, status, aktualnie włączona gra na Discord",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "1h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
+				"time": "2h"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "3h"
+			}]
+		}],
+		"13": [{
+			"name": "Celowe wykorzystywanie błędów aplikacji Discord lub luk w uprawnieniach serwerowych",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3h"
+			}],
+			"tier_2": [{
+				"maxWarns": 4,
+				"type": "Ban",
+				"time": "-"
+			}]
+		}],
+		"14": [{
+			"name": "Rozsyłanie scamlinków na kanałach tekstowych",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3d"
+			}]
+		}],
+		"15": [{
+			"name": "Niestosowanie się do wytycznych kanału #filmy",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1d"
+			}]
+		}],
+		"16": [{
+			"name": "Pisanie obraźliwych lub nieetycznych skrótów (w zależności od sytuacji i kontekstu)",
+			"tier_1": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_3": [{
+				"maxWarns": 4,
+				"type": "Tempmute",
+				"time": "5h"
+			}]
+		}],
+		"17": [{
+			"name": "Brak kultury na publicznych lub prywatnych kanałach głosowych",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3h"
+			}]
+		}],
+		"18": [{
+			"name": "Celowe utrudnianie rozmowy na publicznych lub prywatnych kanałach głosowych, wliczając w to puszczanie muzyki, bindów lub dmuchanie w mikrofon",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3h"
+			}]
+		}],
+		"19": [{
+			"name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "5h"
+			}]
+		}],
+		"20": [{
+			"name": "Wulgarna lub nieodpowiednia nazwa kanału głosowego",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3h"
+			}]
+		}],
+		"21": [{
+			"name": "Używanie modulatorów głosu i programów podobnych",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempban",
+				"time": "3h"
+			}]
+		}]
+	}
+}
