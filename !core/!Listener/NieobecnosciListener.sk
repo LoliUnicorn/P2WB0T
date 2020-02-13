@@ -4,7 +4,7 @@ import:
 every 15 minutes:
 	updateUrlopMessages()
 
-function nieobecnosciLog(powod: string, autor: id, info: string=""):
+function nieobecnosciLog(powod: string, autor: string, info: string=""):
 	create embed:
 		set the colour of the embed to color of cyan
 		set the timestamp of embed to now
