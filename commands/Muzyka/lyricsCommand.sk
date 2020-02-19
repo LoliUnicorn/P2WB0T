@@ -52,7 +52,7 @@ discord command {@cmd} [<text>]:
 			set the colour of the embed to color of getColor(event-member)
 			set the image of embed to "%{_r::thumbnail::genius}%"
 
-			add split field named "Author:" with value "%{_r::author}%" to embed
+			add split field named "Autor:" with value "%{_r::author}%" to embed
 			add split field named "Nazwa:" with value "[%{_r::title}%](%{_r::links::genius}%)" to embed
 
 		edit {_msg} to show last created embed
