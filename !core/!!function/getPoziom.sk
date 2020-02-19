@@ -23,5 +23,7 @@ function getPoziom(m: text) :: number:
 			return 2
 		if {_id} is {_roles::adm}:
 			return 3
+		if {_id} is "569559333722128385": #FIXME: Później dać do configu
+			return 1:
 
 	return 0
