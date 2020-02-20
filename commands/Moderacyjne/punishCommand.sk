@@ -95,34 +95,36 @@ discord command {@cmd} [<text>] [<text>]:
 						add 1 to {_warns::%{_n}%}
 
 			set {v::%event-user%::pun::karany} to {_member}
+
+			set {_lul} to 1
+			set {_m::%{_lul}%} to a message builder
+			append line "0. Anuluj operacje."
+			set {_field} to true
+
+			loop {_pun::list::*}:
+				set {_inx} to loop-index
+				set {_n} to {_pun::list::%{_inx}%::1::name}
+
+				set {_jegoWarny} to 0
+				set {_jegoWarny} to {_warny::powod::%{_n}%}
+				set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
+
+				if "%{_jegoWarny}%" = "%{_tier::2}%":
+					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
+				set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+
+				append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+				if {_m::%{_lul}%}.length() >= 900:
+					add 1 to {_lul}
+					set {_m::%{_lul}%} to a message builder
+
 			create embed:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
 				set the thumbnail of embed to "%avatar of {_member}%"
 
 				set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
-			
-				set {_lul} to 1
-				set {_m::%{_lul}%} to a message builder
-				append line "0. Anuluj operacje."
-				set {_field} to true
 
-				loop {_pun::list::*}:
-					set {_inx} to loop-index
-					set {_n} to {_pun::list::%{_inx}%::1::name}
-
-					set {_jegoWarny} to 0
-					set {_jegoWarny} to {_warny::powod::%{_n}%}
-					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
-
-					if "%{_jegoWarny}%" = "%{_tier::2}%":
-						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
-					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
-
-					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-					if {_m::%{_lul}%}.length() >= 900:
-						add 1 to {_lul}
-						set {_m::%{_lul}%} to a message builder
 				loop {_m::*}:
 					if {_one} is not set:
 						add field named "Wybierz kare..." with value "%loop-value%" to embed
@@ -140,14 +142,17 @@ on guild message receive:
 	{v::%event-user.getId()%::pun::*} is set
 	set {_msg} to "%event-message%"
 	if {_msg} contains {bot::prefix}:
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		stop
 	deleteMessage(event-message)
 	if {_msg} is "0":
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Anuluje operacje!"
 		stop
 	if {v::%event-user.getId()%::pun::%{_msg}%} is not set:
+	deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
