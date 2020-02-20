@@ -21,7 +21,7 @@ discord command {@cmd} [<text>]:
 
 		if arg-1 is "info":
 			reply with "%{_l}% Ładuje..." and store it in {v::update::botmsg}
-
+			run script at "plugins\Skript\scripts\0024B0T\commit.sh"
 			while true:
 				wait a tick
 				set {_commit::*} to lines from file "plugins\Skript\scripts\0024B0T\log.api"
@@ -65,7 +65,7 @@ discord command {@cmd} [<text>]:
 
 		if arg-1 is "pull":
 			reply with "%{_l}% Aktualizuje pliki..." and store it in {v::update::botmsg}
-			run script at "plugins\Skript\scripts\0024B0T\pull.bat"
+			run script at "plugins\Skript\scripts\0024B0T\pull.sh"
 			while true:
 				wait a tick
 				set {_pull::*} to lines from file "plugins\Skript\scripts\0024B0T\pull.api"

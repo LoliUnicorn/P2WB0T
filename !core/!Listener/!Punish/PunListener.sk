@@ -121,7 +121,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
 					if {_type} is "Tempmute" or "Mute":
 						{_muteerror} is set
-						send "Ten użytkownik jest już wyciszony!" to {_u}.getUser() with {bot::name}
+						send "Ten użytkownik jest już wyciszony!" to channel with id {_channel}.getId() with {bot::name}
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
