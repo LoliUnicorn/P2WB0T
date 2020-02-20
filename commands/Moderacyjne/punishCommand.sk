@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Taki se pun"
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info) [typ kary]"
+	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info) [typ kary|numer z listy]"
 
 discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
@@ -96,48 +96,75 @@ discord command {@cmd} [<text>] [<text>]:
 
 			set {v::%event-user%::pun::karany} to {_member}
 
-			set {_lul} to 1
-			set {_m::%{_lul}%} to a message builder
-			append line "0. Anuluj operacje."
-			set {_field} to true
+			if arg-2 is not set:
+				set {_lul} to 1
+				set {_m::%{_lul}%} to a message builder
+				append line "0. Anuluj operacje."
+				set {_field} to true
 
-			loop {_pun::list::*}:
-				set {_inx} to loop-index
-				set {_n} to {_pun::list::%{_inx}%::1::name}
+				loop {_pun::list::*}:
+					set {_inx} to loop-index
+					set {_n} to {_pun::list::%{_inx}%::1::name}
 
-				set {_jegoWarny} to 0
-				set {_jegoWarny} to {_warny::powod::%{_n}%}
-				set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
+					set {_jegoWarny} to 0
+					set {_jegoWarny} to {_warny::powod::%{_n}%}
+					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
 
-				if "%{_jegoWarny}%" = "%{_tier::2}%":
-					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
-				set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+					if "%{_jegoWarny}%" = "%{_tier::2}%":
+						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
+					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
-				append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-				append line "——————————————————————————"
-				if {_m::%{_lul}%}.length() >= 850:
-					add 1 to {_lul}
-					set {_m::%{_lul}%} to a message builder
+					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+					append line "—"
+					if {_m::%{_lul}%}.length() >= 850:
+						add 1 to {_lul}
+						set {_m::%{_lul}%} to a message builder
 
-			create embed:
-				set the colour of the embed to color of getColor(event-member)
-				set the timestamp of embed to now
-				set the thumbnail of embed to "%avatar of {_member}%"
+				create embed:
+					set the colour of the embed to color of getColor(event-member)
+					set the timestamp of embed to now
+					set the thumbnail of embed to "%avatar of {_member}%"
 
-				set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
+					set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
 
-				loop {_m::*}:
-					if {_one} is not set:
-						add field named "Wybierz kare..." with value "%loop-value%" to embed
-						set {_one} to true
-					else:
-						add field named "" with value "%loop-value%" to embed
-				
-			edit {_msg} to show last created embed
-			edit {_msg} to show " "
-			set {v::%event-user.getId()%::pun::botmsg} to {_msg}
-			KamilAPI add emote "green" to event-message of event-user
-			KamilAPI check delete event-message from event-user
+					loop {_m::*}:
+						if {_one} is not set:
+							add field named "Wybierz kare..." with value "%loop-value%" to embed
+							set {_one} to true
+						else:
+							add field named "" with value "%loop-value%" to embed
+					
+				edit {_msg} to show last created embed
+				edit {_msg} to show " "
+				set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+				KamilAPI add emote "green" to event-message of event-user
+				KamilAPI check delete event-message from event-user
+		
+			else:
+				set {_num} to arg-2 parsed as number
+				if {_num} is not set:
+					KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+
+				loop {_pun::list::*}:
+					set {_inx} to loop-index parsed as number
+					if {_inx} is set:
+						set {_name} to {_pun::list::%{_inx}%::1::name}
+						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
+						KamilAPI add emote "green" to {_msg}
+						KamilAPI add emote "green" to {_msg}
+						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+						set {v::%event-user.getId()%::pun::powod} to {_name}
+						stop
+				KamilAPI cmd error "Nie ma takiego numeru!" to event-message
+
+on reaction add:
+	if {v::%event-user.getId()%::pun::botmsg} is event-message:
+		set {_e} to event-emote.getID()
+		if {_e} is getConfig("red"):
+			deleteMessage(event-message)
+		else:
+			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel
+		delete {v::%event-user.getId()%::pun::*}
 
 on guild message receive:
 	{v::%event-user.getId()%::pun::*} is set
@@ -146,14 +173,14 @@ on guild message receive:
 		deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		stop
-	deleteMessage(event-message)
+		deleteMessage(event-message)
 	if {_msg} is "0":
 		deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Anuluje operacje!"
 		stop
 	if {v::%event-user.getId()%::pun::%{_msg}%} is not set:
-	deleteMessage({v::%event-user.getId()%::pun::botmsg})
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
