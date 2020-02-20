@@ -1,0 +1,21 @@
+options:
+	cmd: randomQueue
+
+on script load:
+	set {command::{@cmd}::poziom} to 1
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Daje randomową kolejke"
+	set {command::{@cmd}::kategoria} to "Muzyka"
+	set {command::{@cmd}::uzycie} to "randomQueue"
+
+discord command {@cmd} [<text>]:
+	aliases: rq, randomq
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		if getBVC() is not set:
+			KamilAPI command error "Bot nie jest na żadnym kanale!" to event-message
+		if getBVC() is getMVC(event-user):
+			shuffle the queue of event-bot in event-guild
+		else:
+			KamilAPI command error "Musisz być na tym samym kanale co bot! (`%getBVC()%`)" to event-message
