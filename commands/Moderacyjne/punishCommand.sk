@@ -151,7 +151,7 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_name} to {_pun::list::%{_inx}%::1::name}
 						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
 						KamilAPI add emote "green" to {_msg}
-						KamilAPI add emote "green" to {_msg}
+						KamilAPI add emote "red" to {_msg}
 						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
 						set {v::%event-user.getId()%::pun::powod} to {_name}
 						stop
@@ -160,13 +160,14 @@ discord command {@cmd} [<text>] [<text>]:
 on reaction add:
 	if {v::%event-user.getId()%::pun::botmsg} is event-message:
 		set {_e} to event-emote.getID()
-		if {_e} is getConfig("red"):
+		if {_e} is getConfig("emote.red"):
 			deleteMessage(event-message)
-		else:
+		if {_e} is getConfig("emote.green"):
 			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel
 		delete {v::%event-user.getId()%::pun::*}
 
 on guild message receive:
+	{v::%event-user.getId()%::pun::powod} is not set
 	{v::%event-user.getId()%::pun::*} is set
 	set {_msg} to "%event-message%"
 	if {_msg} contains {bot::prefix}:
