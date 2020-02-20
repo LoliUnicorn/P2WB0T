@@ -102,16 +102,26 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						if last vixio error is not set:
 							modLog({_u}.getUser().getId(), {_bot}.getId(), "Kick", {_reason}, {_nick})
 
+					set {_r} to role with id getConfig("Config.muterole")
+					loop ...{_u}.getRoles():
+						set {_v} to loop-value
+						if {_v}.getId() is {_r}.getId():
+							set {_muteerror} to true
 					if {_type} is "Ban":
 						KamilAPI ban {_u} with reason {_reason} by {_bot}
 					if {_type} is "Tempmute":
-						KamilAPI tempmute {_u} with reason {_reason} in time {_time} by {_bot}
+						if {_muteerror} is not set:
+							KamilAPI tempmute {_u} with reason {_reason} in time {_time} by {_bot}
 					if {_type} is "Tempban":
 						KamilAPI tempban {_u} with reason {_reason} in time {_time} by {_bot}
 					if {_type} is "Mute":
-						KamilAPI mute {_u} with reason {_reason} by {_bot}
+						if {_muteerror} is set:
+							KamilAPI mute {_u} with reason {_reason} by {_bot}
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
+					if {_type} is "Tempmute" or "Mute":
+						{_muteerror} is set
+						send "Ten użytkownik jest już wyciszony!" to {_u}.getUser() with {bot::name}
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
