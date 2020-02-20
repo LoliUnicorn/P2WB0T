@@ -8,7 +8,6 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Muzyka"
 	set {command::{@cmd}::uzycie} to "skip [-[-]force]"
 
-
 discord command {@cmd} [<text>]:
 	aliases: pomin,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
@@ -20,7 +19,7 @@ discord command {@cmd} [<text>]:
 		if getBVC() != getMVC(event-user):
 			KamilAPI command error "Musisz być na tym samym kanale co bot!" to event-message
 
-		if arg-1 is "--force" or "-force":
+		if arg-1 is "--force" or "-force" or "-f":
 			if getPoziom(event-user.getId()) > 0:
 				set {_p} to true
 		if {_p} is not set:

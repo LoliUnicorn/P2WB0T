@@ -41,7 +41,8 @@ discord command {@cmd} [<text>]:
 		append line "PROTIP:"
 		append line "Chcesz wybrać kilka piosenek?"
 		append line "Napisz np. ""1, 4, 2, 10""%nl%"
-		
+	
+		append line "0. Anuluj operacje."	
 		loop 10 times:
 			{_r::%loop-number%} is set
 			append line "%loop-number%. %{_r::%loop-number%}% :: %authors of {_r::%loop-number%}%"
@@ -64,6 +65,7 @@ on guild message received:
 	if {_msg} is "0":
 		reply with "Anuluje operacje."
 		playError(event-user.getId())
+		delete {v::%event-user.getId()%::play::*}
 		stop
 	if getMVC(event-user) is not set:
 		KamilAPI command error "Musisz być połączony z kanałem głosowym!" to event-message
@@ -112,3 +114,4 @@ on guild message received:
 	set {v::play::kanal} to event-channel
 	if getBVC() is not set:
 		join getMVC(event-user)
+	playError(event-user.getId())
