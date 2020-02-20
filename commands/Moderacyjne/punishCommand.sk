@@ -114,7 +114,8 @@ discord command {@cmd} [<text>] [<text>]:
 				set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
 				append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-				if {_m::%{_lul}%}.length() >= 900:
+				append line "——————————————————————————"
+				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
 
