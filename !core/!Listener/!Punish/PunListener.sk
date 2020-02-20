@@ -104,7 +104,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 					set {_r} to role with id getConfig("Config.muterole")
 					loop ...{_u}.getRoles():
-						set {_v} to loop-value
+						set {_v} to loop-value-2
 						if {_v}.getId() is {_r}.getId():
 							set {_muteerror} to true
 					if {_type} is "Ban":
