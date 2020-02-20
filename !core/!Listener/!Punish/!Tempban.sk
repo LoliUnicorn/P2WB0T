@@ -1,5 +1,6 @@
 effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user%:
 	trigger:
+		delay the effect
 		set {_g} to guild with id {bot::guild}
 		set {_user} to expr-1
 		set {_powod} to getPowod(expr-2)
@@ -14,9 +15,11 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 		
 		if {_u} is not set:
 			KamilAPI set variable {_error} to "Użytkownik wynosi `null`?" in event
+			continue
 			stop
 		if {_adm} is not set:
 			KamilAPI set variable {_error} to "Administrator wynosi `null`?" in event
+			continue
 			stop
 			
 		set {_time} to expr-3
@@ -32,6 +35,8 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 
 		if {_now} is now:
 			KamilAPI set variable {_error} to "Podano nieprawidłowy czas!" in event
+			continue
+			stop
 
 		set {_nick} to getMcNick({_u}.getId())
 		ban {_u} from {_g} with reason {_powod} with {bot::name}
@@ -41,3 +46,4 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 			modLog({_u}.getId(), {_adm}.getId(), "Tempban", {_powod}, {_nick}, "%{_time}%")
 		else:
 			KamilAPI set variable {_error} to {_v} in event
+		continue

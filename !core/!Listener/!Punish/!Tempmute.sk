@@ -1,5 +1,6 @@
 effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user%:
 	trigger:
+		delay the effect
 		checkRepairMute()
 		set {_g} to guild with id {bot::guild}
 		set {_r} to role with id getConfig("Config.muterole")
@@ -10,6 +11,7 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 		set {_r} to role with id getConfig("Config.muterole")
 		if {_r} is not set:
 			KamilAPI set variable {_error} to "`Config.muterole` jest źle ustawione! Popraw to!!!" in event
+			continue
 			stop
 
 		if {_user} is instance of User:
@@ -21,15 +23,18 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 		
 		if {_u} is not set:
 			KamilAPI set variable {_error} to "Użytkownik wynosi `null`?" in event
+			continue
 			stop
 		if {_adm} is not set:
 			KamilAPI set variable {_error} to "Administrator wynosi `null`?" in event
+			continue
 			stop
 
 		loop ...{_u}.getRoles():
 			set {_v} to loop-value
 			if {_v}.getId() is {_r}.getId():
 				KamilAPI set variable {_error} to "Ten użytkownik jest już wyciszony" in event
+				continue
 				stop
 			
 		set {_time} to expr-3
@@ -45,6 +50,8 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 
 		if {_now} is now:
 			KamilAPI set variable {_error} to "Podano nieprawidłowy czas!" in event
+			continue
+			stop
 
 		add {_r} to roles of {_u} with {bot::name}
 		set {_kurw} to last vixio error
@@ -53,3 +60,4 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%")
 		else:
 			KamilAPI set variable {_error} to {_v} in event
+		continue

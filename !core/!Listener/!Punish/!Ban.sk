@@ -1,5 +1,6 @@
 effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user%:
 	trigger:
+		delay the effect
 		set {_g} to guild with id {bot::guild}
 		set {_powod} to getPowod(expr-2)
 		set {_adm} to expr-3
@@ -14,6 +15,7 @@ effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user%:
 		
 		if {_u} is not set:
 			KamilAPI set variable {_error} to "Zły użytkownik?" in event
+			continue
 			stop
 
 		set {_nick} to getMcNick({_u}.getId())
@@ -24,3 +26,4 @@ effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user%:
 			modLog({_u}.getId(), {_adm}.getId(), "Ban", {_powod}, {_nick})
 		else:
 			KamilAPI set variable {_error} to {_v} in event
+		continue

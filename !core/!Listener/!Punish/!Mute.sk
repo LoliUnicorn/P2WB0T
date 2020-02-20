@@ -1,5 +1,6 @@
 effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user%:
 	trigger:
+		delay the effect
 		checkRepairMute()
 		set {_r} to role with id getConfig("Config.muterole")	
 		set {_g} to guild with id {bot::guild}
@@ -9,7 +10,9 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user%:
 
 		if {_r} is not set:
 			KamilAPI set variable {_error} to "`Config.muterole` jest źle ustawione! Popraw to!!!" in event
+			continue
 			stop
+
 		if {_user} is instance of User:
 			set {_u} to getUser({_user}.getId()) in {_g}
 		if {_user} is instance of Member:
@@ -18,6 +21,7 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user%:
 			set {_u} to getUser({_user}) in {_g}
 		
 		if {_u} is not set:
+			continue
 			stop
 	
 		add {_r} to roles of {_u} with {bot::name}
@@ -27,3 +31,4 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user%:
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Mute", {_powod}, getMcNick({_u}.getUser().getId()))
 		else:
 			KamilAPI set variable {_error} to {_v} in event
+		continue
