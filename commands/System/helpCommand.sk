@@ -68,20 +68,28 @@ discord command {@cmd} [<text>]:
 			set the footer of embed to footer with text "Help"
 			set the timestamp of embed to now
 			set the title of embed to title with text "%size of {_cmd::*}% komend."
-			set the description of embed to "(1|2) - Argumenty do wyboru%nl%<arg> - Argument wymagany%nl%[arg] - Argument niewymagany"
+			set the description of embed to "Możesz użyć %{bot::prefix}%help <komenda>"
 			set the colour of the embed to color of getColor(event-member)
 
-			set {_m} to a message builder
+			# set {_m} to a message builder
+			# loop {_k::*}:
+			# 	loop {_cmd::*}:
+			# 		if {command::%loop-value-2%::kategoria} is loop-value-1:
+			# 			if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
+			# 				append line "%{bot::prefix}%%{command::%loop-value-2%::uzycie}%"
+			# 	if "%{_m}%" is "null":
+			# 		set {_m} to ""
+			# 	add field named "%loop-value%:" with value "%{_m}%" to embed
+			# 	delete {_m}
+			# 	set {_m} to a message builder
+			
 			loop {_k::*}:
 				loop {_cmd::*}:
 					if {command::%loop-value-2%::kategoria} is loop-value-1:
 						if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
-							append line "%{bot::prefix}%%{command::%loop-value-2%::uzycie}%"
-				if "%{_m}%" is "null":
-					set {_m} to ""
-				add field named "%loop-value%:" with value "%{_m}%" to embed
-				delete {_m}
-				set {_m} to a message builder
+							add "%loop-value-2%" to {_komendy::%loop-value-1%::*}
+				if {_komendy::%loop-value-1%::*} is set:
+					add field named "%loop-value%:" with value getList({_komendy::%loop-value-1%::*}) to embed
 
 		reply with the last created embed
 		KamilAPI add emote "green" to event-message of event-user

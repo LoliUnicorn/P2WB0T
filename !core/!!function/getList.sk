@@ -1,0 +1,6 @@
+function list(s: texts, przecinek: text="") :: string:
+	set {_oof} to "%{_s::*}%"
+	replace all " and " with ", " in {_oof}
+	if {_przecinek} != "":
+		replace all "," with {_przecinek} in {_oof}
+	return {_oof}
