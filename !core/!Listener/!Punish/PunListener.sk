@@ -105,6 +105,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						KamilAPI ban {_u} with reason {_reason} by {_bot}
 					if {_type} is "Tempmute":
 						KamilAPI tempmute {_u} with reason {_reason} in time {_time} by {_bot}
+					if {_type} is "Tempban":
+						KamilAPI tempban {_u} with reason {_reason} in time {_time} by {_bot}
 					if {_type} is "Mute":
 						KamilAPI mute {_u} with reason {_reason} by {_bot}
 					if {_error} is set:
