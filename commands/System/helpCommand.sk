@@ -82,14 +82,15 @@ discord command {@cmd} [<text>]:
 			# 	add field named "%loop-value%:" with value "%{_m}%" to embed
 			# 	delete {_m}
 			# 	set {_m} to a message builder
-			
+
 			loop {_k::*}:
 				loop {_cmd::*}:
 					if {command::%loop-value-2%::kategoria} is loop-value-1:
 						if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
-							add "%loop-value-2%" to {_komendy::%loop-value-1%::*}
-				if {_komendy::%loop-value-1%::*} is set:
-					add field named "%loop-value%:" with value getList({_komendy::%loop-value-1%::*}) to embed
+							add "%loop-value-2%" to {_komendy::*}
+				
+				add field named "%loop-value%:" with value "%getList({_komendy::*})%" to embed
+				delete {_komendy::*}
 
 		reply with the last created embed
 		KamilAPI add emote "green" to event-message of event-user
