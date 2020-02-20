@@ -88,6 +88,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			loop {_pun::list::*}:
 				set {_inx} to loop-index
 				if {_pun::list::%{_inx}%::1::name} contains expr-2:
+					set {_maKare} to true
 					set {_type} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::type}
 					set {_time} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
 					set {_reason} to "%expr-2% (osiągnięto maksymalną ilość warnów)"
@@ -111,19 +112,17 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						KamilAPI mute {_u} with reason {_reason} by {_bot}
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
-				else: #nowe
-					modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
-
-					if {_adm}.getId() is not {bot::id}:
-						if getCache({_adm}.getId(), "deleteMessage") is not set:
-							set {_beka} to true
-						if getCache({_adm}.getId(), "deleteMessage") is "false":
-							set {_beka} to true
-						if {_beka} is not set:
-							send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-						else:
-							send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-					checkReset({_u}.getUser().getId())
-					# nowe
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+			modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
+
+			if {_adm}.getId() is not {bot::id}:
+				if getCache({_adm}.getId(), "deleteMessage") is not set:
+					set {_beka} to true
+				if getCache({_adm}.getId(), "deleteMessage") is "false":
+					set {_beka} to true
+				if {_beka} is not set:
+					send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+				else:
+					send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+			checkReset({_u}.getUser().getId())
