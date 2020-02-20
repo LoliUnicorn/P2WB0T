@@ -40,7 +40,6 @@ function checkReset(u: text):
 		set {_warnyZaMaxTier} to {_pun::list::%{_inx}%::1::tier_%{_maxTierow}%::1::maxWarns}
 		set {_jegoWarny} to {_warny::powod::%{_n}%}
 		if "%{_warnyZaMaxTier}%" = "%{_jegoWarny}%":
-			log("Resetuje warny %getName({_u})%, poniewaz osiagnal on max tierow, (%{_n}%)")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE aktywna='Tak' AND karany='%unsafe {_u}%' AND powod='%unsafe {_n}%'" in {bot::sql}
 
 effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%]:
@@ -51,7 +50,6 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		set {_adm} to getUser({bot::id})
 		set {_adm} to expr-3
 		if expr-4 is not set:
-			set {_adm} to event.getUser()
 			set {_channel} to event.getTextChannel()
 		else:
 			set {_channel} to expr-4
@@ -95,7 +93,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					set {_reason} to "Osiągnięto maksymalną ilość warnów."
 					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
 					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
-					set {_bot} to getUser({bot::id})
+					set {_bot} to {_adm}
 					wait 30 tick
 					if {_type} is "Kick":
 						set {_nick} to getMcNick({_u}.getUser().getId())
@@ -112,4 +110,4 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
 		else:
-			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%Administrator: -%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}

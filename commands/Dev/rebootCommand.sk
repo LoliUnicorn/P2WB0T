@@ -12,7 +12,7 @@ on script load:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		reply with "Reloguje bota..."
+		reply with "Restartuje serwer..."
 		KamilAPI add emote "green" to event-message of event-user
 		logout event-bot
 		stop server
