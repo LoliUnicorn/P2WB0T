@@ -65,18 +65,18 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			stop
 
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
+		# modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
 
-		if {_adm}.getId() is not {bot::id}:
-			if getCache({_adm}.getId(), "deleteMessage") is not set:
-				set {_beka} to true
-			if getCache({_adm}.getId(), "deleteMessage") is "false":
-				set {_beka} to true
-			if {_beka} is not set:
-				send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-			else:
-				send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
-		
+		# if {_adm}.getId() is not {bot::id}:
+		# 	if getCache({_adm}.getId(), "deleteMessage") is not set:
+		# 		set {_beka} to true
+		# 	if getCache({_adm}.getId(), "deleteMessage") is "false":
+		# 		set {_beka} to true
+		# 	if {_beka} is not set:
+		# 		send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+		# 	else:
+		# 		send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+
 		set {_warny} to size of {_r::adm::*}+1
 		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
 
@@ -90,7 +90,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 				if {_pun::list::%{_inx}%::1::name} contains expr-2:
 					set {_type} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::type}
 					set {_time} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
-					set {_reason} to "Osiągnięto maksymalną ilość warnów."
+					set {_reason} to "%expr-2% (osiągnięto maksymalną ilość warnów)"
 					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
 					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 					set {_bot} to {_adm}
@@ -111,5 +111,19 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						KamilAPI mute {_u} with reason {_reason} by {_bot}
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
+				else: #nowe
+					modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
+
+					if {_adm}.getId() is not {bot::id}:
+						if getCache({_adm}.getId(), "deleteMessage") is not set:
+							set {_beka} to true
+						if getCache({_adm}.getId(), "deleteMessage") is "false":
+							set {_beka} to true
+						if {_beka} is not set:
+							send "%getMention({_adm}.getId())% Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+						else:
+							send "Pomyślnie nadomo warna dla **%getName({_u}.getUser().getId())%** z powodem **%expr-2%**" to channel with id {_channel}.getId() with {bot::name}
+					checkReset({_u}.getUser().getId())
+					# nowe
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
