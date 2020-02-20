@@ -25,6 +25,12 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 		if {_adm} is not set:
 			KamilAPI set variable {_error} to "Administrator wynosi `null`?" in event
 			stop
+
+		loop ...{_u}.getRoles():
+			set {_v} to loop-value
+			if {_v}.getId() is {_r}.getId():
+				KamilAPI set variable {_error} to "Ten użytkownik jest już wyciszony" in event
+				stop
 			
 		set {_time} to expr-3
 		if ("%{_time}%" parsed as timespan) is not set:
