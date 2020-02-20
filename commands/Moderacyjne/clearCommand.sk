@@ -35,15 +35,11 @@ discord command {@cmd} [<text>] [<text>]:
 				wait 5 tick
 				grab last {_arg} messages in event-channel
 
-				loop grabbed messages:
-					deleteMessage(loop-message, 0)
-					remove 1 from {_arg}
+				purge the grabbed messages with event-bot
 
-				if {_arg} is 0:
-					reply with "Pomyślnie usunięto **%arg-1%** wiadomości." and store it in {_msg}
-				else:
-					reply with "Nie udało się usunąć niektórych wiadomości. Najprawdopodobniej ich data jest większa niż **2 tygodnie**, lub nie ma ich na kanale." and store it in {_msg}
-				deleteMessage({_msg}, 8)
+				reply with "Pomyślnie usunięto **%arg-1%** wiadomości." and store it in {_msg}
+				
+				deleteMessage({_msg}, 5)
 				stop
 		set {_u} to getUser(arg-1)
 		if {_u} is not set:
@@ -61,9 +57,10 @@ discord command {@cmd} [<text>] [<text>]:
 		loop grabbed messages:
 			set {_l} to loop-value
 			if {_l}.getMessage().getAuthor().getId() is {_u}.getId():
-				deleteMessage(loop-message)
+				add {_l} to {_msgs::*}
 				add 1 to {_juz}
 				if {_juz} = {_a}:
 					stop loop
+		purge {_msgs::*} with event-bot
 		edit {_msg} to show "Usunięto **%{_a}%** wiadomości użytkownika **%getName(arg-1)%**"
 		deleteMessage({_msg}, 8)
