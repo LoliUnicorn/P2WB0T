@@ -1,4 +1,4 @@
-function list(s: texts, przecinek: text="") :: string:
+function getList(s: texts, przecinek: text="") :: string:
 	set {_oof} to "%{_s::*}%"
 	replace all " and " with ", " in {_oof}
 	if {_przecinek} != "":

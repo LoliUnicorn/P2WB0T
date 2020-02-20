@@ -88,8 +88,8 @@ discord command {@cmd} [<text>]:
 					if {command::%loop-value-2%::kategoria} is loop-value-1:
 						if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
 							add "%loop-value-2%" to {_komendy::*}
-				
-				add field named "%loop-value%:" with value "%getList({_komendy::*})%" to embed
+				if {_komendy::*} is set:
+					add field named "%loop-value%:" with value "%getList({_komendy::*}, ""`,` "")%" to embed
 				delete {_komendy::*}
 
 		reply with the last created embed
