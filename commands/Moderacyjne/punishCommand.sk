@@ -141,13 +141,14 @@ discord command {@cmd} [<text>] [<text>]:
 				KamilAPI check delete event-message from event-user
 		
 			else:
+				deleteMessage({_msg})
 				set {_num} to arg-2 parsed as number
 				if {_num} is not set:
 					KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
 				loop {_pun::list::*}:
 					set {_inx} to loop-index parsed as number
-					if {_inx} is set:
+					if {_inx} is {_num}:
 						set {_name} to {_pun::list::%{_inx}%::1::name}
 						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
 						KamilAPI add emote "green" to {_msg}
