@@ -144,6 +144,7 @@ discord command {@cmd} [<text>] [<text>]:
 				deleteMessage({_msg})
 				set {_num} to arg-2 parsed as number
 				if {_num} is not set:
+					delete {v::%event-user.getId()%::pun::*}
 					KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
 				loop {_pun::list::*}:
@@ -156,6 +157,7 @@ discord command {@cmd} [<text>] [<text>]:
 						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
 						set {v::%event-user.getId()%::pun::powod} to {_name}
 						stop
+				delete {v::%event-user.getId()%::pun::*}
 				KamilAPI cmd error "Nie ma takiego numeru!" to event-message
 
 on reaction add:
