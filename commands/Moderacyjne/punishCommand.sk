@@ -163,7 +163,7 @@ on reaction add:
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
 			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel
-			deleteMessage(event-message)
+		deleteMessage(event-message)
 		delete {v::%event-user.getId()%::pun::*}
 
 on guild message receive:
