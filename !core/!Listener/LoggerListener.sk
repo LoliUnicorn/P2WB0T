@@ -51,7 +51,9 @@ on message delete:
 	set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
 
 	sync:
+		log("g = %{_g}%")
 		loop ...{_g}.retrieveAuditLogs():
+			log("cos tam")
 			set {_v} to loop-value
 			if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
 
