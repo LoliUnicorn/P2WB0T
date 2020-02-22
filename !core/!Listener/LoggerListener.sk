@@ -57,6 +57,9 @@ on message delete:
 			if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
 				if "%{_m}.getMessage().getAuthor().getIdLong()%" is "%{_v}.getTargetIdLong()%":
 					set {_sender} to getFullName("%{_v}.getUser().getId()%")
+		add 1 to {_int}
+		if {_int} > 3:
+			stop loop
   
 	if ...{_m}.getMessage().getEmbeds() is not set:
 		set {_tresc} to "%{_m}%"

@@ -22,6 +22,7 @@ function checkUnmute():
 			{_g}.removeRoleFromMember({_karany}, {_r}).complete()
 			modLog({_karany}.getUser().getId(), {_bot}.getId(), "Unmute", "Czas minął (ID: %{_r::id::%loop-index%}%)", getMcNick({_karany}.getUser().getId()))
 			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
+			wait 40 tick
 
 every 2 minute:
 	checkUnmute()
