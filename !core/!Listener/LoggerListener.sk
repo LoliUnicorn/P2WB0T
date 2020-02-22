@@ -38,44 +38,38 @@ on member join guild:
 	send last created embed to channel with id {_ch} with {bot::name}
 
 on message delete:
+	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)
+	{_m} is set
+	wait 20 tick
+
+	set {_g} to event-guild
+
+	set {_name} to getFullName((author of event-message).getId())
+	if {_name} contains "<none>":
+		set {_name} to "Nie udało się uzyskać."
+
+	set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
+
 	sync:
-		set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)
-		{_m} is set
-		wait 20 tick
-
-		set {_g} to event-guild
-
-		set {_name} to getFullName((author of event-message).getId())
-		if {_name} contains "<none>":
-			set {_name} to "Nie udało się uzyskać."
-
-		set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
-
-		log("loopuje audit logi")
-		log("g = %{_g}%")
 		loop ...{_g}.retrieveAuditLogs().cache(false):
-			log("cos tam")
 			set {_v} to loop-value
 			if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
 
-				log("cos sie tam usuwa")
-
 				if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
-
-					log("czas sie zgadza")
-
 					if "%{_m}.getMessage().getAuthor().getIdLong()%" is "%{_v}.getTargetIdLong()%":
-						log("author sie zgadza, usuwaczem jest %{_v}.getUser().getId()%")
 						set {_sender} to getFullName("%{_v}.getUser().getId()%")
-					log("koncze sprawdzac kto usuwal")
-			
+			add 1 to {_int}
+			if {_int} > 3:
+				stop loop
+		
 		if ...{_m}.getMessage().getEmbeds() is not set:
 			set {_tresc} to "%{_m}%"
 		else:
 			set {_tresc} to "Zawiera embed. Patrz poniżej."
-		log("wysylam, %{_name}%, %{_sender}%, %{_tresc}%")
+
 		set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "Usunięte przez", "Kanał", "Treść wiadomości"), ({_name}, {_sender}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
 		send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
 
 		if ...{_m}.getMessage().getEmbeds() is set:
 			send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+		log("koniec")
