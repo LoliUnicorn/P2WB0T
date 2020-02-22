@@ -50,26 +50,22 @@ on message delete:
 
 	set {_sender} to "Najprawdopodobniej autor wiadomości, lub jakiś bot."
 
-	sync:
-		loop ...{_g}.retrieveAuditLogs().cache(false):
-			set {_v} to loop-value
-			if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
+	loop ...{_g}.retrieveAuditLogs().cache(false):
+		set {_v} to loop-value
+		if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
 
-				if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
-					if "%{_m}.getMessage().getAuthor().getIdLong()%" is "%{_v}.getTargetIdLong()%":
-						set {_sender} to getFullName("%{_v}.getUser().getId()%")
-			add 1 to {_int}
-			if {_int} > 3:
-				stop loop
+			if {_v}.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1)):
+				if "%{_m}.getMessage().getAuthor().getIdLong()%" is "%{_v}.getTargetIdLong()%":
+					set {_sender} to getFullName("%{_v}.getUser().getId()%")
+		stop loop
 		
-		if ...{_m}.getMessage().getEmbeds() is not set:
-			set {_tresc} to "%{_m}%"
-		else:
-			set {_tresc} to "Zawiera embed. Patrz poniżej."
+	if ...{_m}.getMessage().getEmbeds() is not set:
+		set {_tresc} to "%{_m}%"
+	else:
+		set {_tresc} to "Zawiera embed. Patrz poniżej."
 
-		set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "Usunięte przez", "Kanał", "Treść wiadomości"), ({_name}, {_sender}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
-		send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+	set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "Usunięte przez", "Kanał", "Treść wiadomości"), ({_name}, {_sender}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
+	send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
 
-		if ...{_m}.getMessage().getEmbeds() is set:
-			send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
-		log("koniec")
+	if ...{_m}.getMessage().getEmbeds() is set:
+		send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
