@@ -20,8 +20,8 @@ function getRemindEmbed(page: number, user: text) :: embed:
 		set the timestamp of embed to now
 		set the footer of embed to footer with text "(%{_page}%/%size of {v::remind::%{_user}%::*}%)"
 
-		add split field named "Powód" with value {v::remind::%{_user}%::%{_page}%::powod} to embed
-		add split field named "Czas" with value {v::remind::%{_user}%::%{_page}%::end} to embed
+		add field named "Powód" with value {v::remind::%{_user}%::%{_page}%::powod} to embed
+		add field named "Czas" with value {v::remind::%{_user}%::%{_page}%::end} to embed
 	return last created embed
 
 
@@ -47,7 +47,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set {v::remind::%event-user.getId()%::%{_int}%::powod} to {_r::powod::%{_inx}%}
 				set {_end} to unix date ("%{_r::end::%loop-index%}%" parsed as number) as date
 
-				set {_t} to getTimespan("%difference between now and {_now}%")
+				set {_t} to getTimespan("%difference between now and {_end}%")
 				set {v::remind::%event-user.getId()%::%{_int}%::end} to "%{_end}% (%{_t}%)"
 
 			create embed:
@@ -56,8 +56,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set the timestamp of embed to now
 				set the footer of embed to footer with text "(1/%size of {_r::id::*}%)"
 			
-				add split field named "Powód" with value {v::remind::%event-user.getId()%::1::powod} to embed
-				add split field named "Czas" with value {v::remind::%event-user.getId()%::1::end} to embed
+				add field named "Powód" with value {v::remind::%event-user.getId()%::1::powod} to embed
+				add field named "Czas" with value {v::remind::%event-user.getId()%::1::end} to embed
 			reply with last created embed and store it in {_msg}
 			set {v::remind::%event-user.getId()%::botmsg} to {_msg}
 			set {v::remind::%event-user.getId()%::strona} to 1
