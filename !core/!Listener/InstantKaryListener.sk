@@ -1,20 +1,20 @@
 function instantKaryId(user: user):
-	execute "SELECT typ FROM akcje WHERE karany='%unsafe {_user}.getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+	execute "SELECT typ,adm FROM akcje WHERE karany='%unsafe {_user}.getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 	if {_r::typ::1} is "Ban":
-		KamilAPI ban {_user} with reason "Ten nick (**%{_nick}%**) ma perm bana!" by getUser({_o::adm::1})
+		KamilAPI ban {_user} with reason "Ta osoba ma perm bana!" by getUser({_r::adm::1})
 		stop
 	if {_r::typ::1} is "Mute":
-		KamilAPI mute {_user} with reason "Ten nick (**%{_nick}%**) ma perm muta!" by getUser({_o::adm::1})
+		KamilAPI mute {_user} with reason "TTa osoba ma perm muta!" by getUser({_r::adm::1})
 		stop
 
 	set {_end} to unix date ("%{_o::end::1}%" parsed as number) as date
 	set {_jeszcze} to difference between now and {_end}
 
 	if {_r::typ::1} is "Tempban":
-		KamilAPI tempban {_user} with reason "Ten nick (**%{_nick}%**) ma tempbana!" in time "%{_jeszcze}%" by getUser({_o::adm::1})
+		KamilAPI tempban {_user} with reason "Ta osoba ma tempbana!" in time "%{_jeszcze}%" by getUser({_o::adm::1})
 		stop
 	if {_r::typ::1} is "Tempmute":
-		KamilAPI tempmute {_user} with reason "Ten nick (**%{_nick}%**) ma tempmuta!" in time "%{_jeszcze}%" by getUser({_o::adm::1})
+		KamilAPI tempmute {_user} with reason "Ta osoba ma tempmuta!" in time "%{_jeszcze}%" by getUser({_o::adm::1})
 		stop
 
 function instantKaryCheck(u: text):
