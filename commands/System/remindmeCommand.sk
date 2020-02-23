@@ -54,7 +54,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set the title of embed to title with text "Lista przypomien"
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
-				set the footer of embed to footer with text "(1/%size of {_r::id::*}%)" and icon no icon
+				set the footer of embed to footer with text "(1/%size of {_r::id::*}%)"
 			
 				add split field named "Powód" with value {v::remind::%event-user.getId()%::1::powod} to embed
 				add split field named "Czas" with value {v::remind::%event-user.getId()%::1::end} to embed
@@ -143,6 +143,6 @@ on reaction add:
 		stop
 
 	if {_strona} is between 0 and size of {v::remind::%event-user.getId()%::*}:
-		set {_e} to getRemindEmbed({_strona}, event-user)
+		set {_e} to getRemindEmbed({_strona}, event-user.getId())
 		edit {v::remind::%event-user.getId()%::botmsg} to show {_q}
 		set {v::remind::%event-user.getId()%::strona} to {_strona}
