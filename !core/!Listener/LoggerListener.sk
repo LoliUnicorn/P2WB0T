@@ -31,7 +31,7 @@ on member join guild:
 	
 		set the description of embed to "Dołączył na serwer: %now%"
 	
-		add field named "Nick:" with value "%getFullName(event-user.getId())%" to embed
+		add field named "Nick:" with value getFullName(event-user.getId()) to embed
 		add field named "ID:" with value "%event-user.getId()%" to embed
 
 		set the thumbnail of embed to "%avatar of event-user%"
