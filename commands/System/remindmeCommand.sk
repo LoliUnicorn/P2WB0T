@@ -18,14 +18,13 @@ function getRemindEmbed(page: number, user: text) :: embed:
 		set the title of embed to title with text "Lista przypomien"
 		set the colour of the embed to cyan
 		set the timestamp of embed to now
-		set the footer of embed to footer with text "(%{_page}%/%size of {v::remind::%{_user}%::*}%)"
+		set the footer of embed to footer with text "(%{_page}%/%{v::remind::%{_user}%::size}%)"
 
-		add field named "Powód" with value {v::remind::%{_user}%::%{_page}%::powod} to embed
+		add field named "Treść" with value {v::remind::%{_user}%::%{_page}%::powod} to embed
 		add field named "Czas" with value {v::remind::%{_user}%::%{_page}%::end} to embed
 		add field named "ID (do usunięcia)" with value {v::remind::%{_user}%::%{_page}%::id} to embed
 
 	return last created embed
-
 
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: remind
@@ -53,18 +52,12 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set {_t} to getTimespan("%difference between now and {_end}%")
 				set {v::remind::%event-user.getId()%::%{_int}%::end} to "%{_end}% (%{_t}%)"
 
-			create embed:
-				set the colour of the embed to color of getColor(event-member)
-				set the timestamp of embed to now
-				set the footer of embed to footer with text "(1/%size of {_r::id::*}%)"
-			
-				add field named "Powód" with value {v::remind::%event-user.getId()%::1::powod} to embed
-				add field named "Czas" with value {v::remind::%event-user.getId()%::1::end} to embed
-				add field named "ID (do usunięcia)" with value {v::remind::%event-user.getId()%::1::id} to embed
+			set {_e} to getRemindEmbed(1, event-user.getId())
 
-			reply with last created embed and store it in {_msg}
+			reply with {_e} and store it in {_msg}
 			set {v::remind::%event-user.getId()%::botmsg} to {_msg}
 			set {v::remind::%event-user.getId()%::strona} to 1
+			set {v::remind::%event-user.getId()%::size} to size of {_r::id::*}
 			loop "⏮", "◀", "⏹", "▶", "⏭":
 				add reaction "%loop-value%" to random message out of {_msg} with {bot::name}
 			KamilAPI add emote "green" to event-message of event-user
@@ -135,7 +128,7 @@ on reaction add:
 	if {_e} is "⏮":
 		set {_strona} to 1
 	if {_e} is "⏭":
-		set {_strona} to size of {v::remind::%event-user.getId()%::*}
+		set {_strona} to {v::remind::%event-user.getId()%::size}
 
 	if {_e} is "◀":
 		set {_strona} to {v::remind::%event-user.getId()%::strona} - 1
@@ -147,7 +140,7 @@ on reaction add:
 		KamilAPI clear reaction from event-message
 		stop
 
-	if {_strona} is between 0 and size of {v::remind::%event-user.getId()%::*}:
+	if {_strona} is between 0 and {v::remind::%event-user.getId()%::size}:
 		set {_e} to getRemindEmbed({_strona}, event-user.getId())
 		edit {v::remind::%event-user.getId()%::botmsg} to show {_e}
 		set {v::remind::%event-user.getId()%::strona} to {_strona}
