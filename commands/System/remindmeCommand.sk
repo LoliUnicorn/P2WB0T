@@ -9,10 +9,6 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "remindme (list|delete|add) [id przypomnienia/czas] [co mam przypomieć]"
 
-
-every 5 minutes:
-	checkReminder()
-
 function getRemindEmbed(page: number, user: text) :: embed:
 	create embed:
 		set the title of embed to title with text "Lista przypomien"
@@ -97,7 +93,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set {_id} to ("%loop-value%" parsed as number)+1
 			if {_id} is not set:
 				set {_id} to 0
-				
+
 			set {_text} to "%{_id}%"
 			replace all ".0" with "" in {_text}
 			set {_id} to {_text} parsed as number
@@ -124,10 +120,12 @@ function checkReminder():
 		if {_end} < now:
 			set {_user} to getUser({_id})
 
-			send "Hej, chciałym Ci o czymś przypomieć: %nl%`%{_powod}%`" to user with id {_user}.getId() with {bot::name}
+			send "Hej, chciałbym Ci o czymś przypomieć: %nl%`%{_powod}%`" to user with id {_user}.getId() with {bot::name}
 
 			execute "delete from remind where id=%unsafe {_id}% AND remindid=%unsafe {_remindid}%" in {bot::sql}
 
+every 5 minutes:
+	checkReminder()
 
 on reaction add:
 	{v::remind::%event-user.getId()%::botmsg} is event-message

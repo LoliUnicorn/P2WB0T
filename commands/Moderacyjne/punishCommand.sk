@@ -171,6 +171,7 @@ on reaction add:
 on guild message receive:
 	{v::%event-user.getId()%::pun::powod} is not set
 	{v::%event-user.getId()%::pun::*} is set
+	deleteMessage(event-message)
 	set {_msg} to "%event-message%"
 	if {_msg} contains {bot::prefix}:
 		deleteMessage({v::%event-user.getId()%::pun::botmsg})
