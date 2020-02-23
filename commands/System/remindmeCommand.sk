@@ -94,7 +94,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			
 			execute "SELECT remindid FROM remind" in {bot::sql} and store result in {_id::*}
 			loop {_id::remindid::*}:
-				set {_size} to "%loop-value%" parsed as number
+				set {_id} to "%loop-value%" parsed as number
+				log("setuje na %loop-value% (%{_id}%)")
 			if {_id} is not set:
 				set {_id} to 0
 
