@@ -52,12 +52,14 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				set {_t} to getTimespan("%difference between now and {_end}%")
 				set {v::remind::%event-user.getId()%::%{_int}%::end} to "%{_end}% (%{_t}%)"
 
+			set {v::remind::%event-user.getId()%::size} to size of {_r::id::*}
+			set {v::remind::%event-user.getId()%::strona} to 1
+			
 			set {_e} to getRemindEmbed(1, event-user.getId())
 
 			reply with {_e} and store it in {_msg}
 			set {v::remind::%event-user.getId()%::botmsg} to {_msg}
-			set {v::remind::%event-user.getId()%::strona} to 1
-			set {v::remind::%event-user.getId()%::size} to size of {_r::id::*}
+
 			loop "⏮", "◀", "⏹", "▶", "⏭":
 				add reaction "%loop-value%" to random message out of {_msg} with {bot::name}
 			KamilAPI add emote "green" to event-message of event-user
