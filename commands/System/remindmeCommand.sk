@@ -93,8 +93,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				KamilAPI cmd error "Nie podano powodu" to event-message
 			
 			execute "SELECT remindid FROM remind" in {bot::sql} and store result in {_id::*}
-			set {_size} to size of {_id::remindid::*}
-			set {_id} to {_id::remindid::%{_size}%}
+			loop {_id::remindid::*}:
+				set {_size} to "%loop-value%" parsed as number
 			if {_id} is not set:
 				set {_id} to 0
 
