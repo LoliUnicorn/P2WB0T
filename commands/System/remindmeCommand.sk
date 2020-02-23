@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "remindme (list|delete|add) [id przypomnienia/czas] [co mam przypomieć]"
 
-discord command {@cmd} [<text>] [<text>]:
+discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: remind
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
@@ -35,7 +35,7 @@ discord command {@cmd} [<text>] [<text>]:
 			stop
 
 		if arg-1 is "add":
-			set {_time} to expr-2
+			set {_time} to arg-2
 			set {_powod} to arg-3
 			replace all "d" with " day" in {_time}
 			replace all "h" with " hour" in {_time}

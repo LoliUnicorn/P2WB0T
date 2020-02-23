@@ -1,4 +1,4 @@
-function instantKaryId(user: user)
+function instantKaryId(user: user):
 	execute "SELECT typ FROM akcje WHERE karany='%unsafe {_user}.getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 	if {_r::typ::1} is "Ban":
 		KamilAPI ban {_user} with reason "Ten nick (**%{_nick}%**) ma perm bana!" by getUser({_o::adm::1})
