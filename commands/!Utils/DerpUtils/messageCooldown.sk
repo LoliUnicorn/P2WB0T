@@ -1,5 +1,5 @@
 # on guild message receive:
-# 	if event-channel.getName() is "obrazki":
+# 	if event-channel.getName() is "652262420470956042":
 # 		if attachments of event-message is not set:
 # 			set {_w} to difference between {v::obrazki::%event-user.getId()%::cooldown} and now
 # 			if {_w} is set:
