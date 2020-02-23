@@ -167,7 +167,6 @@ on guild message receive:
 on reaction add:
 	event-user.isBot() is false
 	if event-channel.getId() is getConfig("Config.nieobecnosci"):
-		remove event-emote added by event-user from event-message
 		set {_e} to event-emote.getID()
 
 		if {_e} is getConfig("emote.red"):
@@ -176,7 +175,7 @@ on reaction add:
 			set {_user} to getUser({_r::id::1})
 
 			if {_user}.getId() != event-user.getId():
-				if getPoziom({_user}.getId()) < 2:
+				if getPoziom(event-user.getId()) < 2:
 					reply with "%getMention(event-user.getId())%, anulować urlop może tylko Administrator lub osoba, która ten urlop brała." and store it in {_msg}
 					deleteMessage({_msg})
 					stop

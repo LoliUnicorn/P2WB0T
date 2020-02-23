@@ -9,11 +9,14 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "ping"
 
+import
+	java.time.temporal.ChronoUnit
+
 discord command {@cmd} [<text>]:
 	aliases: pingbota,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
-		set {_now} to system millis
 		reply with ":ping_pong: Ping..." and store it in {_msg}
-		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem: `%difference between {_now} and system millis%ms`. Opóźnienie w stosunku z Gatewayem: `%event.getMessage().getJDA().getGatewayPing()%ms`"
+		set {_ping} to event-message.getTimeCreated().until({_msg}, ChronoUnit.MILLIS!)
+		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem: `%{_ping}%ms`. Opóźnienie w stosunku z Gatewayem: `%event.getMessage().getJDA().getGatewayPing()%ms`"
 		KamilAPI add emote "green" to event-message of event-user

@@ -18,6 +18,6 @@ discord command {@cmd} [<text>]:
 		if getBVC() is getMVC(event-user):
 			shuffle the queue of event-bot in event-guild
 			reply with "Mieszam kolejkę"
-			KamilAPI add emote "green" to event-message
+			KamilAPI add emote "green" to event-message with event-user
 		else:
 			KamilAPI command error "Musisz być na tym samym kanale co bot! (`%getBVC()%`)" to event-message
