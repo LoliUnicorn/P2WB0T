@@ -17,6 +17,6 @@ discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		reply with ":ping_pong: Ping..." and store it in {_msg}
-		set {_ping} to event-message.getTimeCreated().until({_msg}.getTimeCreated(), ChronoUnit.MILLIS!)
+		set {_ping} to event-message.getMessage().getTimeCreated().until({_msg}.getMessage().getTimeCreated(), ChronoUnit.MILLIS!)
 		edit {_msg} to show "Pong! Opóźnienie między wysłaniem wiadomości, a jej edytowaniem: `%{_ping}%ms`. Opóźnienie w stosunku z Gatewayem: `%event.getMessage().getJDA().getGatewayPing()%ms`"
 		KamilAPI add emote "green" to event-message of event-user
