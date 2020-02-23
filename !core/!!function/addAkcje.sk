@@ -1,5 +1,5 @@
 function addAkcje(karany: text, adm: text, typ: text, powod: text, nick: text, id: number, czas: text="null", end: text="null"):
-	set {_id} to {_id}+1
+	set {_id} to "%{_id}+1%"
 	set {_now} to "%now%"
 	if {_czas} is "null":
 		execute "INSERT INTO `akcje` (id,karany,nick,adm,typ,powod,now,aktywna) VALUES('%unsafe {_id}%', '%unsafe {_karany}%', '%unsafe {_nick}%' , '%unsafe {_adm}%', '%unsafe {_typ}%', '%unsafe getPowod({_powod})%', '%unsafe {_now}%', 'Tak')" in {bot::sql}
