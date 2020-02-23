@@ -95,6 +95,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			execute "SELECT remindid FROM remind" in {bot::sql} and store result in {_id::*}
 			set {_size} to size of {_id::remindid::*}
 			set {_id} to {_id::remindid::%{_size}%}
+			if {_id} is not set:
+				set {_id} to 0
 
 			set {_czas} to getTimespan("%difference between now and {_now}%")
 			set {_end} to "%convert date {_now} to unix date%"
