@@ -5,7 +5,7 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 		set {_user} to expr-1
 		set {_powod} to getPowod(expr-2)
 		set {_adm} to expr-4
-
+		
 		if {_user} is instance of User:
 			set {_u} to getUser({_user}.getId())
 		if {_user} is instance of Member:

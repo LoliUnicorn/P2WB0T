@@ -1,5 +1,6 @@
 on guild message receive:
-	getPoziom(event-user.getId()) = 0
+	# getPoziom(event-user.getId()) = 0
+	event-user.getId() = "343467373417857025"
 	set {_message} to "%event-message%"
 
 	set {_kek::*} to lines from file "plugins/Skript/scripts/0024B0T/commands/!Utils/Przeklenstwa.api"
