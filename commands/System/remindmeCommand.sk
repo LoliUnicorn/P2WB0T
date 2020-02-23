@@ -49,7 +49,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 				set {_t} to getTimespan("%difference between now and {_end}%")
 				set {v::remind::%event-user.getId()%::%{_int}%::end} to "%{_end}% (%{_t}%)"
-				add 1 to {v::remind::%event-user.getId()%::size}
 
 			create embed:
 				set the title of embed to title with text "Lista przypomien"
@@ -130,9 +129,9 @@ on reaction add:
 	remove event-emote added by event-user from event-message
 
 	if {_e} is "⏮":
-		set {_strona} to 0
+		set {_strona} to 1
 	if {_e} is "⏭":
-		set {_strona} to {v::remind::%event-user.getId()%::size}
+		set {_strona} to size of {v::remind::%event-user.getId()%::*}
 
 	if {_e} is "◀":
 		set {_strona} to {v::remind::%event-user.getId()%::strona} - 1
@@ -144,7 +143,7 @@ on reaction add:
 		KamilAPI clear reaction from event-message
 		stop
 
-	if {_strona} is between 0 and {v::remind::%event-user.getId()%::size}:
+	if {_strona} is between 0 and size of {v::remind::%event-user.getId()%::*}:
 		set {_e} to getRemindEmbed({_strona}, event-user.getId())
 		edit {v::remind::%event-user.getId()%::botmsg} to show {_e}
 		set {v::remind::%event-user.getId()%::strona} to {_strona}
