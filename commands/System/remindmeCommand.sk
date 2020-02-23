@@ -95,14 +95,12 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			execute "SELECT remindid FROM remind" in {bot::sql} and store result in {_id::*}
 			loop {_id::remindid::*}:
 				set {_id} to ("%loop-value%" parsed as number)+1
-				log("setuje na %loop-value% (%{_id}%)")
 			if {_id} is not set:
 				set {_id} to 0
-
-			if "%{_id}%" contains ".":
-				set {_text} to "%{_id}%"
-				replace all ".0" with "" in {_text}
-				set {_id} to {_text} parsed as number
+				
+			set {_text} to "%{_id}%"
+			replace all ".0" with "" in {_text}
+			set {_id} to {_text} parsed as number
 
 			set {_czas} to getTimespan("%difference between now and {_now}%")
 			set {_end} to "%convert date {_now} to unix date%"
