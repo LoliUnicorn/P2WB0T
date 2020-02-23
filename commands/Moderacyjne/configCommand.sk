@@ -34,9 +34,18 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					replace all "[" and "]" with "" in {_value}
 					set {_v::*} to {_value} split at ","
 					loop {_v::*}:
-						set {_kanal} to channel with id "%loop-value-2%"
+						set {_lul} to channel with id "%loop-value-2%"
 						if {_kanal} is set:
-							add "##%discord name of {_kanal}%" to {_kurwa::*}
+							add "##%discord name of {_lul}%" to {_kurwa::*}
+
+set {_l::*} to configuration section "Config" get of "plugins/Bot/guildConfig.yml"
+if getGuildConfig("Config.%loop-value%.type") is "list":
+	replace all "[" and "]" with "" in {_value}
+	set {_v::*} to {_value} split at ","
+	loop {_v::*}:
+		set {_lul} to channel with id "%loop-value-2%"
+		if {_kanal} is set:
+			add "##%discord name of {_lul}%" to {_x::*}
 
 				if {_kurwa::*} is not set:
 					append line "%loop-index%. %{_name}% :: %{_value}%"

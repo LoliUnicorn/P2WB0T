@@ -1,14 +1,14 @@
 function getPoziomSlowny(n: number) :: text:
 	if {_n} is 0:
-		return "Użytkownik serwera."
+		return "Użytkownik serwera"
 	if {_n} is 1:
-		return "Pomocnik."
+		return "Pomocnik"
 	if {_n} is 2:
-		return "Moderator."
+		return "Moderator"
 	if {_n} is 3:
-		return "Administrator."
+		return "Administrator"
 	if {_n} is 5:
-		return "Właściciel serwera."
+		return "Właściciel serwera"
 	if {_n} is 10:
-		return "Deweloper bota."
-	return "Poziom nieznzny! Zgłoś to do administracji."
+		return "Deweloper bota"
+	return "Poziom nieznany! Zgłoś to do administracji."
