@@ -9,10 +9,27 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "remindme (list|delete|add) [id przypomnienia/czas] [co mam przypomieć]"
 
+
+every 5 minutes:
+	checkReminder()
+
+function getRemindEmbed(page: number, user: text) :: embed:
+	create embed:
+		set the title of embed to title with text "Lista przypomien"
+		set the colour of the embed to cyan
+		set the timestamp of embed to now
+		set the footer of embed to footer with text "(%{_page}%/%size of {v::remind::%{_user}%::*}%)" and icon no icon
+			
+		add split field named "Powód" with value {v::remind::%{_user}%::%{_page}%::powod} to embed
+		add split field named "Czas" with value {v::remind::%{_user}%::%{_page}%::end}
+	return last created embed
+
+
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: remind
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
+		delete {v::remind::%event-user.getId()%::*}
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
@@ -21,7 +38,29 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			if {_r::id::1} is not set:
 				KamilAPI cmd error "Nie masz żadnych przypomień" to event-message
 			
-			reply with "lista, %size of {_r::id::*}%"
+			set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
+
+			loop {_r::id::*}:
+				add 1 to {_int}
+				set {_inx} to loop-index
+
+				set {v::remind::%event-user.getId()%::%{_int}%::powod} to {_r::powod::%{_inx}%}
+				set {_end} to unix date ("%{_r::end::%loop-index%}%" parsed as number) as date
+				set {v::remind::%event-user.getId()%::%{_int}%::end} to "%{_end}% (%getTimespan(""%difference between now and {_now}%"")%)"
+
+			create embed:
+				set the title of embed to title with text "Lista przypomien"
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "(1/%size of {_r::id::*}%)" and icon no icon
+			
+				add split field named "Powód" with value {v::remind::%event-user.getId()%::1::powod} to embed
+				add split field named "Czas" with value {v::remind::%event-user.getId()%::1::end}
+			reply with last created embed and store it in {_msg}
+			set {v::remind::%event-user.getId()%::botmsg} to {_msg}
+			set {v::remind::%event-user.getId()%::strona} to 1
+			loop "⏮", "◀", "⏹", "▶", "⏭":
+				add reaction "%loop-value%" to random message out of {_msg} with {bot::name}
 			stop
 
 		if arg-1 is "delete" or "remove":
@@ -31,7 +70,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 			execute "delete from remind where id=%unsafe event-user.getId()% AND remindid=%unsafe arg-2%" in {bot::sql}
 			reply with "Usuwam Twoje przypomnienie o ID `%arg-2%`!"
-			KamilAPI add emote "green" to event-message with event-user
+			KamilAPI add emote "green" to event-message of event-user
 			stop
 
 		if arg-1 is "add":
@@ -80,5 +119,28 @@ function checkReminder():
 
 			execute "delete from remind where id=%unsafe {_id}% AND remindid=%unsafe {_remindid}%" in {bot::sql}
 
-every 5 minutes:
-	checkReminder()
+
+on reaction add:
+	{v::remind::%event-user.getId()%::botmsg} is event-message
+	set {_e} to "%event-emote%"
+	remove event-emote added by event-user from event-message
+
+	if {_e} is "⏮":
+		set {_strona} to 0
+	if {_e} is "⏭":
+		set {_strona} to size of {v::remind::%event-user.getId()%::*}
+
+	if {_e} is "◀":
+		set {_strona} to {v::remind::%event-user.getId()%::strona} - 1
+	if {_e} is "▶":
+		set {_strona} to {v::remind::%event-user.getId()%::strona} + 1
+
+	if {_e} is "⏹":
+		delete {v::remind::%event-user.getId()%::*}
+		KamilAPI clear reaction from event-message
+		stop
+
+	if {_strona} is between 0 and size of {v::remind::%event-user.getId()%::*}:
+		set {_e} to getRemindEmbed({_strona}, event-user)
+		edit {v::remind::%event-user.getId()%::botmsg} to show {_q}
+		set {v::remind::%event-user.getId()%::strona} to {_strona}
