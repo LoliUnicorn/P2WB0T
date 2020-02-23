@@ -51,7 +51,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			if {_powod} is not set:
 				KamilAPI cmd error "Nie podano powodu" to event-message
 			
-			execute "SELECT remindid FROM remind" and store result in {_id::*}
+			execute "SELECT remindid FROM remind" in {bot::sql} and store result in {_id::*}
 			set {_id} to "%size of {_id::id::*}%"
 
 			set {_czas} to getTimespan("%difference between now and {_now}%")
@@ -60,7 +60,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			execute "INSERT INTO `remind` (id,remindid,end,powod) VALUES(%unsafe event-user.getId()%, %{_id}%, %{_end}%, %{_powod}%)" in {bot::sql}
 			
 			reply with "Dodaje przypomienie! Szykuj pw za **%{_czas}%**!"
-			KamilAPI add emote "green" to event-message with event-user
+			KamilAPI add emote "green" to event-message of event-user
 
 function checkReminder():
 	execute "SELECT * FROM remind" in {bot::sql} and store result in {_r::*}
@@ -76,7 +76,7 @@ function checkReminder():
 		if {_end} < now:
 			set {_user} to getUser({_id})
 
-			send "Hej, chciałym Ci o czymś przypomieć: %nl%`%{_powod}%`" to user {_user} with {bot::name}
+			send "Hej, chciałym Ci o czymś przypomieć: %nl%`%{_powod}%`" to user with id {_user}.getId() with {bot::name}
 
 			execute "delete from remind where id=%unsafe {_id}% AND remindid=%unsafe {_remindid}%" in {bot::sql}
 
