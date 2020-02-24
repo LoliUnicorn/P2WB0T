@@ -28,7 +28,7 @@ discord command {@cmd} [<text>] [<text>]:
 			set the author info of the embed to author named "Ogłoszenie" with no url and icon "%avatar of event-user%"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the footer of embed to footer with text "Utworzone przez %getName(event-user)%"
+			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
 		
 			set the description of embed to "%{_msg}%"
 		
