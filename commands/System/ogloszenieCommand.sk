@@ -45,7 +45,7 @@ discord command {@cmd} [<text>] [<text>]:
 on reaction add:
 	if {v::%event-user.getId()%::ogloszenie::botmsg} is event-message:
 		set {_e} to event-emote.getID()
-		send {v::%event-user.getId%::ogloszenie::embed} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
+		send {v::%event-user.getId()%::ogloszenie::embed} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
 		if {_e} is getConfig("emote.green"):
 			edit {_msg} to show "@eveyrone"
 
