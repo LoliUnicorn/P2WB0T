@@ -33,7 +33,7 @@ discord command {@cmd} [<text>] [<text>]:
 		
 			set the description of embed to "%{_msg}%"
 
-		send last createb embed to channel with id {_kanal}.getId()
+		send last created embed to channel with id {_kanal}.getId() with {bot::name}
 
 		KamilAPI add emote "green" to event-message of event-user
 
