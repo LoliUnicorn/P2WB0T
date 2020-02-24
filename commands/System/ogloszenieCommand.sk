@@ -26,6 +26,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 		create embed:
 			set the title of embed to title with text "🎉 Ogłoszenie 🎉"
+			set the author info of the embed to author named "%getName(event-user.getId())%" with no url and icon "%avatar of event-user%"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
 		
