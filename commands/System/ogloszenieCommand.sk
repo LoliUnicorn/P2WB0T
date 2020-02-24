@@ -25,8 +25,15 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_msg} is not set:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
-		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
-		set {v::%event-user.getId()%::ogloszenie::msg} to {_msg}
+		create embed:
+			set the author info of the embed to author named ":mega: Ogłoszenie" with no url and icon "%avatar of event-user%"
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
+		
+			set the description of embed to "%{_msg}%"
+
+		send last createb embed to channel with id {_kanal}.getId()
 
 		KamilAPI add emote "green" to event-message of event-user
 
@@ -34,23 +41,12 @@ discord command {@cmd} [<text>] [<text>]:
 		KamilAPI add emote "green" to {_msg}
 		KamilAPI add emote "red" to {_msg}
 		set {v::%event-user.getId()%::ogloszenie::botmsg} to {_msg}
+		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
 
 on reaction add:
 	if {v::%event-user.getId()%::ogloszenie::botmsg} is event-message:
 		set {_e} to event-emote.getID()
 
-		create embed:
-			set the author info of the embed to author named ":mega: Ogłoszenie" with no url and icon "%avatar of event-user%"
-			set the colour of the embed to color of getColor(event-member)
-			set the timestamp of embed to now
-			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
-		
-			set the description of embed to "%{v::%event-user.getId()%::ogloszenie::msg}%"
-
-		send last created embed to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
 		if {_e} is getConfig("emote.green"):
-			edit {_msg} to show "@everyone"
-
-		deleteMessage(event-message)
-		delete {v::%event-user.getId()%::ogloszenie::*}
-		reply with "Wysłano ogłoszenie!"
+			send "@everyone" to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name}
+		delete  {v::%event-user.getId()%::ogloszenie::*}
