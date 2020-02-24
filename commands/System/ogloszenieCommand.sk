@@ -26,6 +26,7 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
 		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
+		set {v::%event-user.getId()%::ogloszenie::msg} to {_msg}
 
 		KamilAPI add emote "green" to event-message of event-user
 
@@ -44,10 +45,9 @@ on reaction add:
 			set the timestamp of embed to now
 			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
 		
-			set the description of embed to "%{_msg}%"
+			set the description of embed to "%{v::%event-user.getId()%::ogloszenie::msg}%"
 
 		send last created embed to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
-		log("%{v::%event-user.getId()%::ogloszenie::kanal}%")
 		if {_e} is getConfig("emote.green"):
 			edit {_msg} to show "@everyone"
 
