@@ -25,15 +25,6 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_msg} is not set:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
-		create embed:
-			set the author info of the embed to author named ":mega: Ogłoszenie" with no url and icon "%avatar of event-user%"
-			set the colour of the embed to color of getColor(event-member)
-			set the timestamp of embed to now
-			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
-		
-			set the description of embed to "%{_msg}%"
-
-		set {v::%event-user.getId()%::ogloszenie::embed} to last create embed
 		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
 
 		KamilAPI add emote "green" to event-message of event-user
@@ -46,11 +37,20 @@ discord command {@cmd} [<text>] [<text>]:
 on reaction add:
 	if {v::%event-user.getId()%::ogloszenie::botmsg} is event-message:
 		set {_e} to event-emote.getID()
-		reply with {v::%event-user.getId()%::ogloszenie::embed}
-		reply with "%{v::%event-user.getId()%::ogloszenie::embed}%"
-		send {v::%event-user.getId()%::ogloszenie::embed} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
+
+		create embed:
+			set the author info of the embed to author named ":mega: Ogłoszenie" with no url and icon "%avatar of event-user%"
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
+		
+			set the description of embed to "%{_msg}%"
+
+		send last created embed to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
+		log("%{v::%event-user.getId()%::ogloszenie::kanal}%")
 		if {_e} is getConfig("emote.green"):
 			edit {_msg} to show "@everyone"
 
 		deleteMessage(event-message)
 		delete {v::%event-user.getId()%::ogloszenie::*}
+		reply with "Wysłano ogłoszenie!"
