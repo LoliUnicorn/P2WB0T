@@ -14,21 +14,24 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 	else:
 		set {_embed::karany} to "<@%{_karany}.getId()%>(%getName({_karany}.getId())%) [%{_nick}%]"
 
-	create embed:
-		set the colour of the embed to color of getColor({_kurwa})
-		set the timestamp of embed to now
-		set the footer of embed to footer with text "%{_typ}% | %{_karainfo}%" and icon "%avatar of {_b}%"
-	
-		add field named "Osoba karana:" with value {_embed::karany} to embed
-		add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
-		add field named "Powód:" with value getPowod({_powod}) to embed
-		if {_czas} != "null":
-			set {_now} to now
-			set {_xd} to {_czas} parsed as timespan
-			add {_xd} to {_now}
-			set {_end} to "%convert date {_now} to unix date%"
-			add field named "Mija o:" with value "%{_now}%" to embed
-	
-		set the thumbnail of embed to "%avatar of {_karany}%"
-	send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}
+	if {_powod} continas "-s":
+		replace all "-s" in "" in {_powod}
+	else:
+		create embed:
+			set the colour of the embed to color of getColor({_kurwa})
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "%{_typ}% | %{_karainfo}%" and icon "%avatar of {_b}%"
+		
+			add field named "Osoba karana:" with value {_embed::karany} to embed
+			add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
+			add field named "Powód:" with value getPowod({_powod}) to embed
+			if {_czas} != "null":
+				set {_now} to now
+				set {_xd} to {_czas} parsed as timespan
+				add {_xd} to {_now}
+				set {_end} to "%convert date {_now} to unix date%"
+				add field named "Mija o:" with value "%{_now}%" to embed
+		
+			set the thumbnail of embed to "%avatar of {_karany}%"
+		send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}
 	addAkcje({_karany}.getId(), {_adm}.getId(), {_typ}, {_powod}, {_nick}, {_karainfo} parsed as number ,{_czas}, {_end})
