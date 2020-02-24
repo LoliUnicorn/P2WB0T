@@ -13,6 +13,7 @@ discord command {@cmd} [<text>] [<text>]:
 	aliases: broadcast, br
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
+		delete {ogloszenie::%event-user.getId()%::*}
 		set {_kanal} to arg-1
 		set {_msg} to arg-2
 
@@ -45,6 +46,8 @@ discord command {@cmd} [<text>] [<text>]:
 on reaction add:
 	if {v::%event-user.getId()%::ogloszenie::botmsg} is event-message:
 		set {_e} to event-emote.getID()
+		reply with {v::%event-user.getId()%::ogloszenie::embed}
+		reply with "%{v::%event-user.getId()%::ogloszenie::embed}%"
 		send {v::%event-user.getId()%::ogloszenie::embed} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
 		if {_e} is getConfig("emote.green"):
 			edit {_msg} to show "@everyone"
