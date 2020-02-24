@@ -32,7 +32,7 @@ discord command {@cmd} [<text>] [<text>]:
 		
 			set the description of embed to "%{_msg}%"
 
-		set {v::%event-user.getId%::ogloszenie::embed} to last create embed
+		set {v::%event-user.getId()%::ogloszenie::embed} to last create embed
 		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
 
 		KamilAPI add emote "green" to event-message of event-user
@@ -47,7 +47,7 @@ on reaction add:
 		set {_e} to event-emote.getID()
 		send {v::%event-user.getId()%::ogloszenie::embed} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name} and store it in {_msg}
 		if {_e} is getConfig("emote.green"):
-			edit {_msg} to show "@eveyrone"
+			edit {_msg} to show "@everyone"
 
 		deleteMessage(event-message)
 		delete {v::%event-user.getId()%::ogloszenie::*}
