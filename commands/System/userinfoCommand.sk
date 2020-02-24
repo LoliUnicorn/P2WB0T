@@ -21,7 +21,7 @@ function translatedPermission(t: text) :: text:
 	replace all "message history" with "Historia kanału" in {_t}
 	replace all "message ext emoji" with "Używanie zewnętrznych emotek" in {_t}
 	replace all "voice connect" with "Połączenie głosowe" in {_t}
-	replace all "voice speak" with "Mównienie" in {_t}
+	replace all "voice speak" with "Mówienie" in {_t}
 	replace all "kick members" with "Wyrzucanie ludzi" in {_t}
 	replace all "ban members" with "Banowanie ludzi" in {_t}
 	replace all "administrator" with "Administrator" in {_t}
@@ -32,13 +32,13 @@ function translatedPermission(t: text) :: text:
 	replace all "message manage" with "Zarządzanie wiadomościami" in {_t}
 	replace all "message mention everyone" with "Oznaczanie everyone/here" in {_t}
 	replace all "voice mute others" with "Wyciszanie innych" in {_t}
-	replace all "voice deaf others" with "Wyłącznia dzwięku innym" in {_t}
+	replace all "voice deaf others" with "Wyłączanie dzwięku innym" in {_t}
 	replace all "voice move others" with "Przenoszenie ludzi" in {_t}
 	replace all "voice use vad" with "Używanie aktywności głosowej" in {_t}
 	replace all "manage roles" with "Zarządzanie rolami" in {_t}
 	replace all "manage permissions" with "Zarządzanie permisjami" in {_t}
 	replace all "manage webhooks" with "Zarządzanie Webhookami" in {_t}
-	replace all "manage emotes" with "Zardządzanie emotkami" in {_t}
+	replace all "manage emotes" with "Zarządzanie emotkami" in {_t}
 	replace all "nickname change" with "Zmienianie nicku" in {_t}
 	replace all "nickname manage" with "Zmienianie innym nicku" in {_t}
 	replace all " and " with ", " in {_t}

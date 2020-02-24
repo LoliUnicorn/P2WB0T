@@ -14,8 +14,8 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 	else:
 		set {_embed::karany} to "<@%{_karany}.getId()%>(%getName({_karany}.getId())%) [%{_nick}%]"
 
-	if {_powod} continas "-s":
-		replace all "-s" in "" in {_powod}
+	if {_powod} contains "-s":
+		replace all "-s" with "" in {_powod}
 	else:
 		create embed:
 			set the colour of the embed to color of getColor({_kurwa})
@@ -34,4 +34,5 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 		
 			set the thumbnail of embed to "%avatar of {_karany}%"
 		send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}
+		
 	addAkcje({_karany}.getId(), {_adm}.getId(), {_typ}, {_powod}, {_nick}, {_karainfo} parsed as number ,{_czas}, {_end})

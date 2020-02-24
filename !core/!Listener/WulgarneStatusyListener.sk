@@ -1,6 +1,6 @@
 function checkStatusy():
 	set {_g} to guild with id {bot::guild}
-	set {_kek::*} to lines from file "plugins/Skript/scripts/0024B0T/Commands/!Utils/Przeklenstwa.api"
+	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/Commands/!Utils/Przeklenstwa.api"
 
 	# TODO: Dodaj checka na reklame + trzeba to przetestować
 	loop ...{_g}.getMembers():

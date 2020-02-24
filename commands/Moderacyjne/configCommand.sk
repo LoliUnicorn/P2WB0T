@@ -38,25 +38,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 						if {_kanal} is set:
 							add "##%discord name of {_lul}%" to {_kurwa::*}
 
-set {_l::*} to configuration section "Config" get of "plugins/Bot/guildConfig.yml"
-if getGuildConfig("Config.%loop-value%.type") is "list":
-	replace all "[" and "]" with "" in {_value}
-	set {_v::*} to {_value} split at ","
-	loop {_v::*}:
-		set {_lul} to channel with id "%loop-value-2%"
-		if {_kanal} is set:
-			add "##%discord name of {_lul}%" to {_x::*}
-
-				if {_kurwa::*} is not set:
-					append line "%loop-index%. %{_name}% :: %{_value}%"
-				else:
-					append line "%loop-index%. %{_name}% :: %{_kurwa::*}%"
-					
-			append line "```"
-			reply with {_m}
-			KamilAPI add emote "green" to event-message of event-user
-			stop
-
 		set {_l::*} to configuration section "Config" get of "plugins/Bot/guildConfig.yml"
 		set {_id} to arg-2
 		loop {_l::*}:

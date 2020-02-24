@@ -1,5 +1,5 @@
 function getMaxWarnsByName(t: text, warns: number) :: text:
-	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 	map json {_xd} to {_pun::*}
 	loop {_pun::list::*}:
 		set {_inx} to loop-index
@@ -17,7 +17,7 @@ function getMaxWarnsByName(t: text, warns: number) :: text:
 					return "%loop-value-2%|%{_maxWarns}%"# tier|warny
 
 function checkTier(index: text) :: number:
-	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 	map json {_xd} to {_pun::*}
 	loop 20 times:
 		if {_pun::list::%{_index}%::1::tier_%loop-value%} is set:
@@ -27,8 +27,8 @@ function checkTier(index: text) :: number:
 	return {_num}
 
 function checkReset(u: text):
-	execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}%' AND aktywna='Tak' AND type='Pun'" in {bot::sql} and store result in {_r::*}
-	set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+	execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
+	set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 	map json {_xd} to {_pun::*}
 	loop {_r::powod::*}:
 		add 1 to {_warny::powod::%loop-value%}
@@ -40,7 +40,7 @@ function checkReset(u: text):
 		set {_warnyZaMaxTier} to {_pun::list::%{_inx}%::1::tier_%{_maxTierow}%::1::maxWarns}
 		set {_jegoWarny} to {_warny::powod::%{_n}%}
 		if "%{_warnyZaMaxTier}%" = "%{_jegoWarny}%":
-			execute "UPDATE akcje SET aktywna='Nie' WHERE aktywna='Tak' AND karany='%unsafe {_u}%' AND powod='%unsafe {_n}%'" in {bot::sql}
+			execute "UPDATE akcje SET aktywna='Nie' WHERE aktywna='Tak' AND karany='%unsafe {_u}%' AND powod='%unsafe {_n}%' AND typ='Pun'" in {bot::sql}
 
 effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%]:
 	trigger:
@@ -64,7 +64,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_u} is not set:
 			stop
 
-		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%'" in {bot::sql} and store result in {_r::*}
+		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 		# modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
 
 		# if {_adm}.getId() is not {bot::id}:
@@ -82,7 +82,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		checkReset({_u}.getUser().getId())
 
-		set {_xd} to getJSON("plugins/Skript/scripts/0024B0T/Config/kary.json")
+		set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 		map json {_xd} to {_pun::*}
 		if {_warny} = ({_info::2} parsed as number):
 			loop {_pun::list::*}:
@@ -107,6 +107,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 						set {_v} to loop-value-2
 						if {_v}.getId() is {_r}.getId():
 							set {_muteerror} to true
+							stop loop
 					if {_type} is "Tempmute" or "Mute":
 						{_muteerror} is set
 						send "Ten użytkownik jest już wyciszony!" to channel with id {_channel}.getId() with {bot::name}
@@ -122,7 +123,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
 					else:
-						modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun -s", expr-2, getMcNick({_u}.getUser().getId()))
+						modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%expr-2% -s", getMcNick({_u}.getUser().getId()))
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", expr-2, getMcNick({_u}.getUser().getId()))
