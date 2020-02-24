@@ -46,6 +46,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set the description of embed to "%{_m}%"
 			else:
 				set the description of embed to "Pusta wiadomość. Zawiera embed patrz poniżej."
+			add split field named "Kolega prosi o linka?" with value "[KLIK](%{_m}.getMessage().getJumpUrl()%)" to embed
 			set the author info of the embed to author named getName({_user}.getId()) with no url and icon "%avatar of {_user}%"
 			set the colour of the embed to color of getColor(event-member)
 			set the footer of embed to footer with text "Wykonane przez: %getName(event-user.getId())%" and icon "%avatar of event-user%"
