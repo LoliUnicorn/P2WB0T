@@ -6,7 +6,7 @@ on guild message receive:
 
 	set {_message} to "%event-message%"
 
-	set {_kek::*} to lines from file "plugins/Skript/scripts/0024B0T/commands/!Utils/Przeklenstwa.api"
+	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
 	set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
 	set {_tak} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_tak}
 	

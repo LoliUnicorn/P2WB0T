@@ -78,7 +78,7 @@
 # 			coreAkcja(event-member)
 # 			edit {reload::botmsg} to show " "
 # 			coreAkcja(event-member, 1)
-# 			execute console command "sk reload 0024B0T/!Core/"
+# 			execute console command "sk reload P2WB0T/!Core/"
 # 			coreAkcja(event-member, 2)
 # 			wait 10 tick
 # 			coreAkcja(event-member, 3)
@@ -88,7 +88,7 @@
 # 			if arg-2 is not set:
 # 				set {_module} to "all"
 # 			else:
-# 				loop files in dir "plugins/Skript/scripts/0024B0T/Commands/":
+# 				loop files in dir "plugins/Skript/scripts/P2WB0T/Commands/":
 # 					set {_l} to loop-value
 # 					set {_l} to last element of ({_l} split at "\")
 # 					set {_modules::%{_l}%} to true
@@ -102,7 +102,7 @@
 # 				commandAkcja(event-member, "%{_r}% Szukam modułu (Nie znaleziono takiego modułu!)%nl%%{_r}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.", true)
 # 				stop
 # 			commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_load}% Szukam komendy%nl%%{_r}% Reload komend (?/?)%nl%%{_r}% Kończe.")
-# 			loop files in dir "plugins/Skript/scripts/0024B0T/Commands/%arg-2%/":
+# 			loop files in dir "plugins/Skript/scripts/P2WB0T/Commands/%arg-2%/":
 # 				set {_l} to loop-value
 # 				set {_l} to last element of ({_l} split at "\")
 # 				add {_l} to {_cmd::*}
@@ -110,7 +110,7 @@
 
 # 			set {_kurwa} to 0
 # 			loop {_cmd::*}:
-# 				execute console command "sk reload 0024B0T/Commands/%arg-2%/%loop-value%"
+# 				execute console command "sk reload P2WB0T/Commands/%arg-2%/%loop-value%"
 # 				add 1 to {_kurwa}
 # 				commandAkcja(event-member, "%{_g}% Szukam modułu%nl%%{_g}% Szukam komendy%nl%%{_load}% Reload komend (%{_kurwa}%/%size of {_cmd::*}%)%nl%%{_r}% Kończe.")
 

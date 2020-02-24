@@ -32,7 +32,7 @@ discord command {@cmd} [<text>]:
 		set {_info::5::Utworzono} to "%{_siema}%"
 
 		create embed:
-			set the footer of embed to footer with text "Botinfo"
+			set the footer of embed to footer with text "Serwerinfo"
 			set the timestamp of embed to now
 			set the colour of the embed to color of getColor(event-member)
 			set the thumbnail of embed to "%event.getGuild().getIconUrl()%"
