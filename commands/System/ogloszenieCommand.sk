@@ -49,4 +49,5 @@ on reaction add:
 
 		if {_e} is getConfig("emote.green"):
 			send "@everyone" to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name}
-		delete  {v::%event-user.getId()%::ogloszenie::*}
+		delete {v::%event-user.getId()%::ogloszenie::*}
+		deleteMessage(event-message)
