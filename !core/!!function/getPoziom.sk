@@ -8,22 +8,18 @@ function getPoziom(m: text) :: number:
 	if isOwner({_user}.getId()) is true:
 		return 10
 
-	if discord owner of {_g} is ({_user} in {_g}):
-		return 5
-		
-	set {_roles::pomocnik} to getConfig("Config.pomocnik")
-	set {_roles::mod} to getConfig("Config.mod")
-	set {_roles::adm} to getConfig("Config.adm")
-	
-	loop ...({_user} in {_g}).getRoles():
-		set {_id} to loop-value.getId()
-		if {_id} is {_roles::pomocnik}:
-			return 1
-		if {_id} is {_roles::mod}:
-			return 2
-		if {_id} is {_roles::adm}:
-			return 3
-		if {_id} is "569559333722128385": #FIXME: Później dać do configu
-			return 1
+	set {_perm::*} to 7,6,5,4,3,2,1
+	set {_roles::7} to role with id "561102835715145728"
+	set {_roles::6} to role with id "535438130304516097"
+	set {_roles::5} to role with id "425670457568657408"
+	set {_roles::4} to role with id "569559333722128385"
+	set {_roles::3} to role with id "1234"
+	set {_roles::2} to role with id "425675065846136835"
+	set {_roles::1} to role with id "425670412471500800"
+
+	loop size of {_roles::*} times:
+		set {_v} to loop-value
+		if ({_user} in {_g}) has role {_roles::%{_v}%}:
+			return {_perm::%{_v}%}
 
 	return 0
