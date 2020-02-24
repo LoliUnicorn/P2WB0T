@@ -1,8 +1,14 @@
 on vixio command:
 	send typing in event-channel
+	
+	set {_poziom} to 0
+	set {_poziom} to getPoziom(event-user.getId())
+	if {_poziom} is not set:
+		KamilAPI cmd error "Z jakiegoś powodu twój poziom uprawnień wynosi `null`!" to event-message
+
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
-	if getPoziom(event-user.getId()) >= 1:
+	if {_poziom} >= 1:
 		{v::%event-user.getId()%::checkConfig} is not set
 		set {v::%event-user.getId()%::checkConfig} to true
 		KamilAPI config check for event-user
@@ -11,7 +17,7 @@ on vixio command:
 	loop {_l::*}:
 		if loop-value is event-channel.getId():
 			if {_cmd} is "clear" or "forum" or "punish":
-				if getPoziom(event-user.getId()) >= 1:
+				if {_poziom} >= 1:
 					stop loop
 
 			cancel event
@@ -21,12 +27,12 @@ on vixio command:
 			stop
 
 	if getGuildConfig("Config.1.value") is "false":
-		if getPoziom(event-user.getId()) < 1:
+		if {_poziom} < 1:
 			cancel event
 			KamilAPI cmd error "Komendy zostały wyłączone. Można to zmienić w `%{bot::prefix}%config`" to event-message
 
 	if {command::%{_cmd}%::kategoria} is "Muzyka":
-		if getPoziom(event-user.getId()) < 1:
+		if {_poziom} < 1:
 			cancel event
 			KamilAPI cmd error "Sorka, komendy z kategorii `Muzyka` są dostępne tylko dla administracji." to event-message
 	if {command::%{_cmd}%::cooldown} is set:
@@ -48,6 +54,6 @@ on vixio command:
 		cancel event
 		KamilAPI cmd error "W tej komendzie poziom (`{command::%{_cmd}%::poziom}`) wynosi `null`. Poproś administratora o zmiane!" to event-message
 		
-	if getPoziom(event-user.getId()) < {command::%{_cmd}%::poziom}:
+	if {_poziom} < {command::%{_cmd}%::poziom}:
 		cancel event
-		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%getPoziom(event-user.getId())%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!" to event-message
+		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%{_poziom}%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!" to event-message

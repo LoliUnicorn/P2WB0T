@@ -25,11 +25,12 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
 		create embed:
-			set the title of embed to title with text "🎉 Ogłoszenie 🎉"
-			set the author info of the embed to author named "%getName(event-user.getId())%" with no url and icon "%avatar of event-user%"
+			set the author info of the embed to author named "Ogłoszenie"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
+			set the footer of embed to footer with text "Utworzone przez %getName(event-user)%"
 		
 			set the description of embed to "%{_msg}%"
+
 		send last created embed to channel with id {_kanal}.getId() with {bot::name}
 		KamilAPI add emote "green" to event-message of event-user
