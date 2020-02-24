@@ -123,6 +123,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					if {_error} is set:
 						send "Podczas nadawania kary wystąpił błąd! `%{_error}%`" to {_u}.getUser() with {bot::name}
 					else:
+						wait 20 tick
 						modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%expr-2% -s", getMcNick({_u}.getUser().getId()))
 		else:
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Masz już **%{_warny}%** `/` **%{_info::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}

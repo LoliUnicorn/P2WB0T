@@ -1,7 +1,8 @@
 on guild message receive:
 	getPoziom(event-user.getId()) = 0
 	
-	event-channel.getId() != "503294063064121374"
+	event-channel.getId() != "503294063064121374" or "426864003562864641"
+	event-user.isBot() is false
 
 	set {_message} to "%event-message%"
 

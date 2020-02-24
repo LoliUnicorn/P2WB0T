@@ -1,0 +1,34 @@
+options:
+	cmd: ogloszenie
+
+on script load:
+	set {command::{@cmd}::poziom} to 6
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wysyła ogłoszenie"
+	set {command::{@cmd}::kategoria} to "System"
+	set {command::{@cmd}::uzycie} to "ogloszenie <kanał> <treść>"
+
+discord command {@cmd} [<text>] [<text>]:
+	aliases: broadcast, br
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_kanal} to arg-1
+		set {_msg} to arg-2
+
+		replace all "<", "##", ">" with "" in {_kanal}
+		set {_kanal} to channel with id "%{_kanal}%"
+
+		if {_kanal} is not set:
+			KamilAPI cmd error "Zły kanał!" to event-message
+		if {_msg} is not set:
+			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
+
+		create embed:
+			set the title of embed to title with text "🎉 Ogłoszenie 🎉"
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+		
+			set the description of embed to "%{_msg}%"
+		send last created embed to channel with id {_kanal}.getId() with {bot::name}
+		KamilAPI add emote "green" to event-message of event-user
