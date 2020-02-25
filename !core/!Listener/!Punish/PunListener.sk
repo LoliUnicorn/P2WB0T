@@ -64,7 +64,6 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_u} is not set:
 			stop
 
-		log("SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%expr-2%' AND typ='Pun'")
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%expr-2%' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 		# modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
 
@@ -80,10 +79,6 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		set {_warny} to size of {_r::adm::*}+1
 		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
-		log("jego warny za `%expr-2%` `%{_warny}%` | `%{_info::*}%`")
-
-		if {_u}.getUser().getId() is "496033341217177601":
-			stop
 
 		checkReset({_u}.getUser().getId())
 
@@ -98,7 +93,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					set {_time} to {_pun::list::%{_inx}%::1::tier_%{_info::1}%::1::time}
 					set {_reason} to "%expr-2%"
 					send "Gracz **%getName({_u}.getUser().getId())%** dostaje kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**" to channel with id {_channel}.getId() with {bot::name}
-					send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%expr-2%**.%nl%Dostajesz kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+					send "Hey :wave:%nl%Właśnie dostałeś(-aś) kare **%{_type}%** na czas **%{_time}%** z powodem: **%{_reason}%**  %nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 					set {_bot} to {_adm}
 					wait 30 tick
 					if {_type} is "Kick":
