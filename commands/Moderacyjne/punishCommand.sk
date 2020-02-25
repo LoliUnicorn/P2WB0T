@@ -19,10 +19,6 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_pun::*} is not set:
 			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`" to event-message
 
-		loop {_pun::list::*}:
-			add 1 to {_n}
-		set {_XD} to rzeczownik({_n}, "ób", "oby", "obów")
-
 		if arg-1 is "info":
 			loop {_pun::list::*}:
 				set {_inx} to loop-index
@@ -84,7 +80,8 @@ discord command {@cmd} [<text>] [<text>]:
 			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 
 			loop {_r::powod::*}:
-				add 1 to {_warny::powod::%loop-index%}
+				add 1 to {_warny::powod::%loop-value%}
+				log("Ma %{_warny::powod::%loop-value%}% warnów za %loop-value%")
 
 			set {v::%event-user%::pun::karany} to {_member}
 
@@ -105,6 +102,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 					if "%{_jegoWarny}%" = "%{_tier::2}%":
 						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
+
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
 					log("Ma %{_jegoWarny}% za %{_n}% (%{_warny::powod::%{_inx}%}%)")
