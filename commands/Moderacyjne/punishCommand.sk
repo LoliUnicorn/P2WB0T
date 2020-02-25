@@ -79,10 +79,6 @@ discord command {@cmd} [<text>] [<text>]:
 
 			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 
-			loop {_r::powod::*}:
-				add 1 to {_warny::powod::%loop-value%}
-				log("Ma %{_warny::powod::%loop-value%}% warnów za %loop-value%")
-
 			set {v::%event-user%::pun::karany} to {_member}
 
 			if arg-2 is not set:
@@ -97,7 +93,10 @@ discord command {@cmd} [<text>] [<text>]:
 
 					set {_jegoWarny} to 0
 
-					set {_jegoWarny} to {_warny::powod::%{_inx}%}
+					loop {_r::powod::*}:
+						if loop-value-2 is {_n}:
+							add 1 to {_jegoWarny}
+
 					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
 
 					if "%{_jegoWarny}%" = "%{_tier::2}%":
