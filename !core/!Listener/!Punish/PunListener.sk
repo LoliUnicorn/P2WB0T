@@ -64,7 +64,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_u} is not set:
 			stop
 
-		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%unsafe expr-2%' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
+		log("SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%expr-2%' AND typ='Pun'")
+		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND aktywna='Tak' AND powod='%expr-2%' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 		# modLog({_u}.getUser().getId(), {_adm}.getId(), "Warn", expr-2, getMcNick({_u}.getUser().getId()))
 
 		# if {_adm}.getId() is not {bot::id}:
