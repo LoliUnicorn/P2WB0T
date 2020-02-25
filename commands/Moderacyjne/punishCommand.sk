@@ -114,6 +114,10 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
+					log("Ma %{_jegoWarny}% za %{_n}%")
+					log("%{_tier::*}%")
+					log("%nl%")
+
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 					append line "—"
 					if {_m::%{_lul}%}.length() >= 850:
