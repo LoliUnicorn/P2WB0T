@@ -6,6 +6,7 @@ on vixio command:
 	if {_poziom} is not set:
 		KamilAPI cmd error "Z jakiegoś powodu twój poziom uprawnień wynosi `null`!" to event-message
 	if event-guild is not set:
+		cancel event
 		KamilAPI cmd error "Komendy na pw nie działają :(" to event-message
 
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
