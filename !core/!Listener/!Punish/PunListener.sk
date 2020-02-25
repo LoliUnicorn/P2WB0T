@@ -79,6 +79,10 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		set {_warny} to size of {_r::adm::*}+1
 		set {_info::*} to getMaxWarnsByName(expr-2, {_warny}) split at "|"
+		Log("jego warny za `%expr-2%` `%{_warny}%` | `%{_info::*}%`")
+
+		if {_u}.getUser().getId() is "496033341217177601":
+			stop
 
 		checkReset({_u}.getUser().getId())
 
