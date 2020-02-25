@@ -107,14 +107,15 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_n} to {_pun::list::%{_inx}%::1::name}
 
 					set {_jegoWarny} to 0
-					set {_jegoWarny} to {_warny::powod::%{_n}.toLowerCase()%}
+
+					set {_jegoWarny} to {_warny::powod::%{_n}%}
 					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
 
 					if "%{_jegoWarny}%" = "%{_tier::2}%":
 						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
-					log("Ma %{_jegoWarny}% za %{_n}%")
+					log("Ma %{_jegoWarny}% za %{_n}% (%{_warny::powod::%{_n}%}%)")
 					log("%{_tier::*}%")
 
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
