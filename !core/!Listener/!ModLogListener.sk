@@ -15,7 +15,7 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 		set {_embed::karany} to "<@%{_karany}.getId()%>(%getName({_karany}.getId())%) [%{_nick}%]"
 
 	if {_powod} contains "-s":
-		replace all "-s" with "" in {_powod}
+		replace all " -s" with "" in {_powod}
 	else:
 		create embed:
 			set the colour of the embed to color of getColor({_kurwa})
