@@ -94,7 +94,9 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_jegoWarny} to 0
 
 					loop {_r::powod::*}:
+						log("%loop-value-2% is %{_n}%")
 						if loop-value-2 is {_n}:
+							log("true")
 							add 1 to {_jegoWarny}
 
 					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
@@ -104,8 +106,8 @@ discord command {@cmd} [<text>] [<text>]:
 
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
-					log("Ma %{_jegoWarny}% za %{_n}% (%{_warny::powod::%{_inx}%}%)")
-					log("%{_tier::*}%")
+					# log("Ma %{_jegoWarny}% za %{_n}% (%{_warny::powod::%{_inx}%}%)")
+					# log("%{_tier::*}%")
 
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 					append line "—"
