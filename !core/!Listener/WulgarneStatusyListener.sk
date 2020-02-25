@@ -28,3 +28,7 @@ function checkStatusy():
 
 # every 5 minutes:
 # 	checkStatusy()
+
+function checkStatus(u: user):
+	set {_game} to game of {_u}
+	

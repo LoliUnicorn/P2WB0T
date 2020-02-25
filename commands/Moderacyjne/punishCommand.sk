@@ -81,7 +81,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 
 			loop {_r::powod::*}:
 				add 1 to {_warny::powod::%loop-value%}
