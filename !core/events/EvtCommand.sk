@@ -4,10 +4,10 @@ on vixio command:
 	set {_poziom} to 0
 	set {_poziom} to getPoziom(event-user.getId())
 	if {_poziom} is not set:
+		cancel event
 		KamilAPI cmd error "Z jakiegoś powodu twój poziom uprawnień wynosi `null`!" to event-message
 	if event-guild is not set:
 		cancel event
-		KamilAPI cmd error "Komendy na pw nie działają :(" to event-message
 
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
