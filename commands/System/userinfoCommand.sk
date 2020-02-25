@@ -83,7 +83,7 @@ discord command {@cmd} [<text>]:
 
 		set {_p} to translatedPermission("%{_ma::*}%")
 		if "%{_p}%" is "<none>":
-			set {_p} to "Nie ma żadncyh xD"
+			set {_p} to "Nie ma żadnych xD"
 
 		set {_procent} to getProcent(size of {_ma::*})
 
