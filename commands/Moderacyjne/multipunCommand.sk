@@ -1,0 +1,94 @@
+options:
+	cmd: multipun
+
+on script load:
+	set {command::{@cmd}::poziom} to 3
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Daje puna dla wielu osób"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "pun <osoba1, osoba2, osoba3, ...>"
+
+discord command {@cmd} [<text>]:
+	aliases: mwarn, mpun
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_arg1} to arg-1
+		replace all " " with "" in {_arg1}
+		set {_arg::*} to {_arg1} split at ","
+
+		loop {_arg::*}:
+			loop-value != ""
+			if (getUser(loop-value) in event-guild) is set:
+				set {_u} to getUser(loop-value) in event-guild
+				set {_id} to {_u}.getId()
+				{_id} != event-user.getId()
+				{_jest::%{_id}%} is not set
+				if bypass(event-member, {_u}):
+					set {_jest::%{_id}%} to {_u}
+		
+		if {_jest::*} is not set:
+			KamilAPI cmd error "Nie znaleziono osób do ukarania. Najprawdopodobniej nie możesz podejmować na nich akcji, lub źle wpisałeś komendę. Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
+
+		set {_m::%{_lul}%} to a message builder
+		append line "0. Anuluj operacje."
+		set {_field} to true
+
+		map json getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json") to {_mpun::*}
+		loop {_mpun::list::*}:
+			set {_inx} to loop-index
+			set {_n} to {_mpun::list::%{_inx}%::1::name}
+			set {v::%event-user.getId()%::mwran::k::%{_inx}%} to {_n}
+
+			append line "%{_inx}%. %{_n}%"
+			append line "—"
+			if {_m::%{_lul}%}.length() >= 850:
+				add 1 to {_lul}
+				set {_m::%{_lul}%} to a message builder
+
+		create embed:
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the thumbnail of embed to "%avatar of {_member}%"
+
+			set the description of embed to "Chcesz ukarać **%size of {_jest::*}%** osób."
+
+			loop {_m::*}:
+				if {_one} is not set:
+					add field named "Wybierz kare..." with value "%loop-value%" to embed
+					set {_one} to true
+				else:
+					add field named "" with value "%loop-value%" to embed
+
+		reply with last created embed
+		set {v::%event-user.getId()%::mpun::jest::*} to {_jest::*}
+
+		KamilAPI add emote "green" to event-message of event-user
+
+on guild message receive:
+	{v::%event-user.getId()%::mpun::powod} is not set
+	{v::%event-user.getId()%::mpun::*} is set
+	deleteMessage(event-message)
+	set {_msg} to "%event-message%"
+	if {_msg} contains {bot::prefix}:
+		deleteMessage({v::%event-user.getId()%::mpun::botmsg})
+		delete {v::%event-user.getId()%::mpun::*}
+		stop
+		deleteMessage(event-message)
+	if {_msg} is "0":
+		deleteMessage({v::%event-user.getId()%::mpun::botmsg})
+		delete {v::%event-user.getId()%::mpun::*}
+		reply with "Anuluje operacje!"
+		stop
+	if {v::%event-user.getId()%::mwran::k::%{_msg}%} is not set:
+		deleteMessage({v::%event-user.getId()%::mpun::botmsg})
+		delete {v::%event-user.getId()%::mpun::*}
+		reply with "Zły numer! Anuluje operacje."
+		stop
+	deleteMessage({v::%event-user.getId()%::mpun::botmsg})
+
+	set {_jest} to {v::%event-user.getId()%::mpun::jest::*}
+	loop {_jest}:
+		KamilAPI add punish to loop-value with reason {v::%event-user.getId()%::mwran::k::%{_msg}%} by event-user in channel event-channel
+
+	delete {v::%event-user.getId()%::mpun::*}
