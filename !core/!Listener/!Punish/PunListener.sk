@@ -108,6 +108,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			# 	KamilAPI tempban {_u} with reason {_reason} in time {_time} by {_bot}
 			# if {_type} is "Mute":
 			# 	KamilAPI mute {_u} with reason {_reason} by {_bot}
+			
 		else:
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
