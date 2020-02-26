@@ -22,3 +22,4 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			stop
 
 		send "%getConfigEmote(""load"")% ładuje karę..." to {_channel} with {bot::name}
+		log("kekw")
