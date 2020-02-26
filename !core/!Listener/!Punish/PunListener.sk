@@ -111,9 +111,10 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm}
 			if {_type} is "Mute":
 				KamilAPI mute {_u} with reason {_powod} by {_adm}
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_type}%** na czas **%{_time}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		else:
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
-
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc mniej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		wait 40 tick
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId())) # dodaje Puna
