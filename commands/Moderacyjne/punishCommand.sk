@@ -1,0 +1,195 @@
+options:
+	cmd: punish
+
+on script load:
+	set {command::{@cmd}::poziom} to 3
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Taki se pun"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "{@cmd} (<osoba>|info) [typ kary|numer z listy]"
+
+discord command {@cmd} [<text>] [<text>]:
+	aliases: pun,
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
+	trigger:
+		delete {v::%event-user.getId()%::pun::*}
+		set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
+		map json {_xd} to {_pun::*}
+		if {_pun::*} is not set:
+			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`" to event-message
+
+		loop {_pun::list::*}:
+			add 1 to {_n}
+		set {_XD} to rzeczownik({_n}, "ób", "oby", "obów")
+
+		if arg-1 is "info":
+			loop {_pun::list::*}:
+				set {_inx} to loop-index
+				if {_pun::list::%{_inx}%::1::name} contains arg-2:
+					set {_xd::name} to {_pun::list::%{_inx}%::1::name}
+					set {_xd::tierow} to checkTier({_inx})
+
+					# length()
+					set {_XDD} to 1
+					set {_xd::builder} to a message builder
+					append line "```vbs%nl%Tier | Warny |   Kara   | Czas"
+					loop {_xd::tierow} times:
+						set {_jeb} to "   %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%   "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns} >= 10:
+							set {_jeb} to "   %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}%  "
+							
+						set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempban":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%  "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Tempmute":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}% "
+						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Kick":
+							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%     "
+
+						append line "##%loop-value-2%   |%{_jeb}%|%{_type}%| %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::time}%"
+					append line "```"
+
+			if {_xd::name} is not set:
+				set {_k} to a message builder
+				loop {_pun::list::*}:
+					append line "%loop-index%. %{_pun::list::% loop-index%::1::name}%"
+				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%Sposoby na ukaranie: ```%nl%%{_k}%%nl%```" to event-message
+
+			set {_des} to a message builder
+			create embed:
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Info o punie" and no icon
+			
+				set the description of embed to "Ilość tierów związanych z **`%{_xd::name}%`**: %{_xd::tierow}%"
+
+				add field named "%{_xd::name}%" with value "%{_xd::builder}%" to embed
+
+			reply with last created embed
+			KamilAPI add emote "green" to event-message of event-user
+
+		else:
+
+			set {_member} to getUser(arg-1) in event-guild
+			if {_member} is not set:
+				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
+			
+			KamilAPI bypass event-member at {_member} with event-message
+			if {_member} is event-member:
+				KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie." to event-message
+
+			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
+
+			loop {_r::powod::*}:
+				add 1 to {_warny::powod::%loop-value%}
+			
+			loop {_pun::list::*}:
+				set {_inx} to loop-index
+				set {_n} to {_pun::list::%{_inx}%::1::name}
+				set {_warns::%{_n}%} to 0
+				loop {_r::powod::*}:
+					if {_n} contains loop-value-2:
+						add 1 to {_warns::%{_n}%}
+
+			set {v::%event-user%::pun::karany} to {_member}
+
+			if arg-2 is not set:
+				set {_lul} to 1
+				set {_m::%{_lul}%} to a message builder
+				append line "0. Anuluj operacje."
+				set {_field} to true
+
+				loop {_pun::list::*}:
+					set {_inx} to loop-index
+					set {_n} to {_pun::list::%{_inx}%::1::name}
+
+					set {_jegoWarny} to 0
+					set {_jegoWarny} to {_warny::powod::%{_n}%}
+					set {_tier::*} to getTier({_n}, {_jegoWarny}) split at "|"
+
+					if "%{_jegoWarny}%" = "%{_tier::2}%":
+						set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
+					if getTier({_n}, {_jegoWarny}) is not set:
+						set {_tier::*} to getTier({_n}, 1) split at "|"
+					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+
+					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+					append line "—"
+					if {_m::%{_lul}%}.length() >= 850:
+						add 1 to {_lul}
+						set {_m::%{_lul}%} to a message builder
+
+				create embed:
+					set the colour of the embed to color of getColor(event-member)
+					set the timestamp of embed to now
+					set the thumbnail of embed to "%avatar of {_member}%"
+
+					set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
+
+					loop {_m::*}:
+						if {_one} is not set:
+							add field named "Wybierz kare..." with value "%loop-value%" to embed
+							set {_one} to true
+						else:
+							add field named "" with value "%loop-value%" to embed
+					
+				edit {_msg} to show last created embed
+				edit {_msg} to show " "
+				set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+				KamilAPI add emote "green" to event-message of event-user
+				KamilAPI check delete event-message from event-user
+		
+			else:
+				deleteMessage({_msg})
+				set {_num} to arg-2 parsed as number
+				if {_num} is not set:
+					delete {v::%event-user.getId()%::pun::*}
+					KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+
+				loop {_pun::list::*}:
+					set {_inx} to loop-index parsed as number
+					if {_inx} is {_num}:
+						set {_name} to {_pun::list::%{_inx}%::1::name}
+						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
+						KamilAPI add emote "green" to {_msg}
+						KamilAPI add emote "red" to {_msg}
+						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+						set {v::%event-user.getId()%::pun::powod} to {_name}
+						stop
+				delete {v::%event-user.getId()%::pun::*}
+				KamilAPI cmd error "Nie ma takiego numeru!" to event-message
+
+on reaction add:
+	if {v::%event-user.getId()%::pun::botmsg} is event-message:
+		set {_e} to event-emote.getID()
+		if {_e} is getConfig("emote.green"):
+			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel
+		deleteMessage(event-message)
+		delete {v::%event-user.getId()%::pun::*}
+
+on guild message receive:
+	{v::%event-user.getId()%::pun::powod} is not set
+	{v::%event-user.getId()%::pun::*} is set
+	deleteMessage(event-message)
+	set {_msg} to "%event-message%"
+	if {_msg} contains {bot::prefix}:
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
+		delete {v::%event-user.getId()%::pun::*}
+		stop
+		deleteMessage(event-message)
+	if {_msg} is "0":
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
+		delete {v::%event-user.getId()%::pun::*}
+		reply with "Anuluje operacje!"
+		stop
+	if {v::%event-user.getId()%::pun::%{_msg}%} is not set:
+		deleteMessage({v::%event-user.getId()%::pun::botmsg})
+		delete {v::%event-user.getId()%::pun::*}
+		reply with "Zły numer! Anuluje operacje."
+		stop
+	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel
+	deleteMessage({v::%event-user.getId()%::pun::botmsg})
+	delete {v::%event-user.getId()%::pun::*}
