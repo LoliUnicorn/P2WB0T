@@ -1,13 +1,46 @@
 
+function getTier(kara: text, warny: number) :: text: # zwraca aktualny tier gracza i max warny
+	map json getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json") to {_pun::*}
+	loop {_pun::list::*}:
+		set {_inx} to loop-index
+		set {_name} to {_pun::list::%{_inx}%::1::name}
+
+		if {_name} is {_kara}:
+			set {_tierow} to checkTier({_inx})
+			loop {_tierow} times:
+				set {_maxWarns} to {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::maxWarns}
+
+				if {_warny} <= {_maxWarns}:
+					return "%loop-value-2%|%{_maxWarns}%"
+
+function checkTier(index: text) :: number: # zwraca ilość tierów po indexie
+	map json getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json") to {_pun::*}
+	loop 20 times:
+		if {_pun::list::%{_index}%::1::tier_%loop-value%} is set:
+			add 1 to {_num}
+		else:
+			stop loop
+	return {_num}
+
+effect KamilAPI check reset of %text% with reason %text% and warn[s] %number%:
+	trigger:
+		delay the effect
+		set {_u} to expr-1
+		set {_powod} to expr-2
+		set {_warny} to expr-3
+		if getTier({_powod}, {_warny}) is not set:
+			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}%' AND powod='%unsafe {_powod}%' AND typ='Pun'" in {bot::sql}
+		continue
+
 effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%]:
 	trigger:
 		set {_g} to guild with id {bot::guild}
 		set {_user} to expr-1
-
+		set {_powod} to expr-2
 		set {_adm} to getUser({bot::id})
 		set {_adm} to expr-3
 		if expr-4 is not set:
-			set {_channel} to event.getTextChannel()
+			set {_channel} to event.getChannel()
 		else:
 			set {_channel} to expr-4
 
@@ -17,9 +50,66 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_u} to getUser({_user}.getUser().getId()) in {_g}
 		if {_user} is instance of Text:
 			set {_u} to getUser({_user}) in {_g}
-		
+
+		send "%getConfigEmote(""loading"")% ładuje karę..." to {_channel} with {bot::name} and store it in {_msg}
+
 		if {_u} is not set:
+			edit {_msg} to show "Nie ma takiego użytkownika!"
+			stop
+		
+		if bypass(({_adm} in {_g}), {_u}) is false:
+			edit {_msg} to show "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!"
 			stop
 
-		send "%getConfigEmote(""load"")% ładuje karę..." to {_channel} with {bot::name}
-		log("kekw")
+		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND powod='%unsafe {_powod}%' AND typ='Pun' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
+
+		map json getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json") to {_pun::*}
+
+		loop {_pun::list::*}: # szukamy info o powodzie
+			set {_inx} to loop-index # bierzemy indexa
+			set {_name} to {_pun::list::%{_inx}%::1::name} # sprawdzmay name
+			set {_jegowarny} to 1 # jeżeli nie ma żadnej kary, to będzie jego 1 warn
+
+			loop {_r::powod::*}: # loopujemy wszystkie powody
+				if loop-value-2 is {_name}: # sprawdzamy czy loopowany powod sie zgadza
+					add 1 to {_jegoWarny} # dodajmey lilosc warnow
+				set {_saveWarn} to {_jegoWarny} # zapisujemy jego warny dla późniejszej opcji resetu
+			if {_name} is {_powod}: # znalazło prawidłowy powód
+				edit {_msg} to show "%getConfigEmote(""loading"")% Powód znaleziony..."
+				set {_jestPowod} to true # sprawdzamy czy jest taki powód
+
+				set {_tier::*} to getTier({_name}, {_jegoWarny}) split at "|" # sprawdzamy na jakim jest tierze
+				log("%{_tier::*}%, %getTier({_name}, {_jegoWarny})%")
+				if getTier({_name}, {_jegoWarny}) is not set: # to oznacza, że ma już limit, więc resetujemy
+					set {_tier::*} to getTier({_name}, 1) split at "|" # minimalny warn
+					log("poprawiony tier: %{_tier::*}%")
+					set {_jegoWarny} to 1 # setujemy jego warny do wartości podstawowej
+				stop loop
+
+		if {_jestPowod} is not true:
+			edit {_msg} to show "Nie ma takiego powodu!"
+			stop
+
+		KamilAPI check reset of {_u}.getUser().getId() with reason {_name} and warn {_saveWarn}
+
+		# sprawdzamy czy typ teraz ma karę
+		set {_tier::2} to {_tier::2} parsed as number
+
+		if {_jegoWarny} is {_tier::2}: # ma kare bo jego warny są równe warny na tier
+			set {_type} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::type}
+			set {_time} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::time}
+
+			edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
+			# if {_type} is "Ban":
+			# 	KamilAPI ban {_u} with reason {_reason} by {_bot}
+			# if {_type} is "Tempmute":
+			# 	KamilAPI tempmute {_u} with reason {_reason} in time {_time} by {_bot}
+			# if {_type} is "Tempban":
+			# 	KamilAPI tempban {_u} with reason {_reason} in time {_time} by {_bot}
+			# if {_type} is "Mute":
+			# 	KamilAPI mute {_u} with reason {_reason} by {_bot}
+		else:
+			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
+			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
+
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId())) # dodaje Puna
