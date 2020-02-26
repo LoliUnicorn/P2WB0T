@@ -60,7 +60,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if bypass(({_adm} in {_g}), {_u}) is false:
 			edit {_msg} to show "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!"
 			stop
-
+			
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND powod='%unsafe {_powod}%' AND typ='Pun' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 
 		map json getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json") to {_pun::*}
