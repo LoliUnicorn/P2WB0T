@@ -30,6 +30,7 @@ discord command {@cmd} [<text>]:
 		if {_jest::*} is not set:
 			KamilAPI cmd error "Nie znaleziono osób do ukarania. Najprawdopodobniej nie możesz podejmować na nich akcji, lub źle wpisałeś komendę. Użyj: `%{bot::prefix}%%{command::{@cmd}::uzycie}%`" to event-message
 
+		set {_lul} to 1
 		set {_m::%{_lul}%} to a message builder
 		append line "0. Anuluj operacje."
 		set {_field} to true
