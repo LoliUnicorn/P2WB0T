@@ -61,7 +61,7 @@ discord command {@cmd} [<text>]:
 				else:
 					add field named "" with value "%loop-value%" to embed
 
-		reply with last created embed
+		reply with last created embed and store it in {v::%event-user.getId()%::mpun::botmsg}
 		set {v::%event-user.getId()%::mpun::jest::*} to {_jest::*}
 
 		KamilAPI add emote "green" to event-message of event-user
