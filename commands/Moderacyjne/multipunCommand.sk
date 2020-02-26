@@ -89,6 +89,7 @@ on guild message receive:
 
 	set {_jest::*} to {v::%event-user.getId()%::mpun::jest::*}
 	loop {_jest::*}:
+		wait 50 tick
 		KamilAPI add punish to loop-value with reason {v::%event-user.getId()%::mwran::k::%{_msg}%} by event-user in channel event-channel
 
 	delete {v::%event-user.getId()%::mpun::*}
