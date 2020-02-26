@@ -87,8 +87,8 @@ on guild message receive:
 		stop
 	deleteMessage({v::%event-user.getId()%::mpun::botmsg})
 
-	set {_jest} to {v::%event-user.getId()%::mpun::jest::*}
-	loop {_jest}:
+	set {_jest::*} to {v::%event-user.getId()%::mpun::jest::*}
+	loop {_jest::*}:
 		KamilAPI add punish to loop-value with reason {v::%event-user.getId()%::mwran::k::%{_msg}%} by event-user in channel event-channel
 
 	delete {v::%event-user.getId()%::mpun::*}
