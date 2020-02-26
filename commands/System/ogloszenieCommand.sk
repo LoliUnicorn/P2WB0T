@@ -26,7 +26,11 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
 		create embed:
+<<<<<<< HEAD
 			set the author info of the embed to author named ":mega: Ogłoszenie" with no url and icon "%avatar of event-user%"
+=======
+			set the author info of the embed to author named "Ogłoszenie" with no url and icon "%avatar of event-user%"
+>>>>>>> beta
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
 			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"

@@ -111,7 +111,7 @@ on script load:
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`config` ( `id` TEXT NOT NULL , `green` TEXT NOT NULL , `red` TEXT NOT NULL , `deleteMessage` TEXT NULL DEFAULT NULL ) ENGINE = InnoDB" in {bot::sql}
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`nieobecnosci` ( `id` TEXT NOT NULL , `msgId` TEXT NOT NULL , `start` TEXT NOT NULL , `end` TEXT NOT NULL , `aktywna` TEXT NOT NULL, `powod` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
 	execute "CREATE TABLE IF NOT EXISTS %unsafe {_db::database}%.`remind` ( `id` TEXT NOT NULL , `remindid` TEXT NOT NULL, `end` TEXT NOT NULL, `powod` TEXT NOT NULL ) ENGINE = InnoDB" in {bot::sql}
- 
+
 	set {_er} to last sql error
 	if {_er} is set:
 		log("&cWystapil blad podczas logownia do bazy MySQL! &7(%{_er}%)")

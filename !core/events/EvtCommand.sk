@@ -51,12 +51,11 @@ on vixio command:
 			KamilAPI cmd error "Musisz poczekać **%{_czas}%** przed ponownym użyciem komendy!" to event-message
 		else:
 			set {v::%event-user.getId()%::%{_cmd}%::cmdcooldown} to now
-			stop
 
 	if {command::%{_cmd}%::poziom} is not set:
 		cancel event
 		KamilAPI cmd error "W tej komendzie poziom (`{command::%{_cmd}%::poziom}`) wynosi `null`. Poproś administratora o zmiane!" to event-message
-		
+	
 	if {_poziom} < {command::%{_cmd}%::poziom}:
 		cancel event
 		KamilAPI cmd error "Nie masz uprawnień do użycia tej komendy! Twój poziom uprawnień wynosi **%{_poziom}%**, a do komendy potrzeba **%{command::%{_cmd}%::poziom}%**!" to event-message
