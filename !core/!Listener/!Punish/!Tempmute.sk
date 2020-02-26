@@ -56,8 +56,6 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 		add {_r} to roles of {_u} with {bot::name}
 		set {_kurw} to last vixio error
 		set {_v} to "%{_kurw}%"
-		if {_v} = "<none>":
-			modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%")
-		else:
-			KamilAPI set variable {_error} to {_v} in event
+
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%")
 		continue

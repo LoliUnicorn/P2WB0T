@@ -51,15 +51,17 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_user} is instance of Text:
 			set {_u} to getUser({_user}) in {_g}
 
-		send "%getConfigEmote(""loading"")% ładuje karę..." to {_channel} with {bot::name} and store it in {_msg}
+		if {_channel} is set:
+			send "%getConfigEmote(""loading"")% ładuje karę..." to {_channel} with {bot::name} and store it in {_msg}
 
 		if {_u} is not set:
 			edit {_msg} to show "Nie ma takiego użytkownika!"
 			stop
 		
-		if bypass(({_adm} in {_g}), {_u}) is false:
-			edit {_msg} to show "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!"
-			stop
+		if {_adm}.isBot() is false:
+			if bypass(({_adm} in {_g}), {_u}) is false:
+				edit {_msg} to show "Nie możesz wykonywać akcji na osobie z wyższą lub równą rangą!"
+				stop
 			
 		execute "SELECT * FROM akcje WHERE karany='%unsafe {_u}.getUser().getId()%' AND powod='%unsafe {_powod}%' AND typ='Pun' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 
@@ -79,10 +81,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 				set {_jestPowod} to true # sprawdzamy czy jest taki powód
 
 				set {_tier::*} to getTier({_name}, {_jegoWarny}) split at "|" # sprawdzamy na jakim jest tierze
-				log("%{_tier::*}%, %getTier({_name}, {_jegoWarny})%")
 				if getTier({_name}, {_jegoWarny}) is not set: # to oznacza, że ma już limit, więc resetujemy
 					set {_tier::*} to getTier({_name}, 1) split at "|" # minimalny warn
-					log("poprawiony tier: %{_tier::*}%")
 					set {_jegoWarny} to 1 # setujemy jego warny do wartości podstawowej
 				stop loop
 
@@ -100,15 +100,17 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_time} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::time}
 
 			edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
-			# if {_type} is "Ban":
-			# 	KamilAPI ban {_u} with reason {_reason} by {_bot}
-			# if {_type} is "Tempmute":
-			# 	KamilAPI tempmute {_u} with reason {_reason} in time {_time} by {_bot}
-			# if {_type} is "Tempban":
-			# 	KamilAPI tempban {_u} with reason {_reason} in time {_time} by {_bot}
-			# if {_type} is "Mute":
-			# 	KamilAPI mute {_u} with reason {_reason} by {_bot}
-			
+			if {_type} is "Kick":
+				kick {_u} from {_g} due to {_powod} with {bot::name}
+				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()))
+			if {_type} is "Ban":
+				KamilAPI ban {_u} with reason {_powod} by {_adm}
+			if {_type} is "Tempmute":
+				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm}
+			if {_type} is "Tempban":
+				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm}
+			if {_type} is "Mute":
+				KamilAPI mute {_u} with reason {_powod} by {_adm}
 		else:
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"

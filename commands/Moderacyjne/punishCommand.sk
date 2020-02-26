@@ -19,6 +19,10 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_pun::*} is not set:
 			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%reload commands !Utils`" to event-message
 
+		loop {_pun::list::*}:
+			add 1 to {_n}
+		set {_XD} to rzeczownik({_n}, "ób", "oby", "obów")
+
 		if arg-1 is "info":
 			loop {_pun::list::*}:
 				set {_inx} to loop-index
@@ -79,6 +83,17 @@ discord command {@cmd} [<text>] [<text>]:
 
 			execute "SELECT * FROM akcje WHERE karany='%unsafe {_member}.getUser().getId()%' AND aktywna='Tak' AND typ='Pun'" in {bot::sql} and store result in {_r::*}
 
+			loop {_r::powod::*}:
+				add 1 to {_warny::powod::%loop-value%}
+			
+			loop {_pun::list::*}:
+				set {_inx} to loop-index
+				set {_n} to {_pun::list::%{_inx}%::1::name}
+				set {_warns::%{_n}%} to 0
+				loop {_r::powod::*}:
+					if {_n} contains loop-value-2:
+						add 1 to {_warns::%{_n}%}
+
 			set {v::%event-user%::pun::karany} to {_member}
 
 			if arg-2 is not set:
@@ -92,20 +107,14 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_n} to {_pun::list::%{_inx}%::1::name}
 
 					set {_jegoWarny} to 0
-
-					loop {_r::powod::*}:
-						if loop-value-2 contains {_n}:
-							add 1 to {_jegoWarny}
-
-					set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}) split at "|"
+					set {_jegoWarny} to {_warny::powod::%{_n}%}
+					set {_tier::*} to getTier({_n}, {_jegoWarny}) split at "|"
 
 					if "%{_jegoWarny}%" = "%{_tier::2}%":
-						set {_tier::*} to getMaxWarnsByName({_n}, {_jegoWarny}+1) split at "|"
-
+						set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
+					if getTier({_n}, {_jegoWarny}) is not set:
+						set {_tier::*} to getTier({_n}, 1) split at "|"
 					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
-
-					# log("Ma %{_jegoWarny}% za %{_n}% (%{_warny::powod::%{_inx}%}%)")
-					# log("%{_tier::*}%")
 
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 					append line "—"
