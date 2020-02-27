@@ -28,7 +28,7 @@ discord command {@cmd} [<text>] [<text>]:
 		
 		else:
 			set {_id} to arg-1 parsed as number
-			if {_id} is not set:
+			if {_id} is not 1set:
 				KamilAPI cmd error "Złe ID wiadomości!" to event-message
 
 		if {_ch} is not set:
