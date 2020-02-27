@@ -29,7 +29,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_e} is set:
 			KamilAPI cmd error "Wystąpił błąd podczas nadawiania unbana. `%{_e}%`" to event-message
 		else:
-			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_m}.getUser().getId()%' AND aktywna='Tak' AND (Typ='Tempban' OR Typ='Ban')" in {bot::sql}
+			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getId()%' AND aktywna='Tak' AND (Typ='Tempban' OR Typ='Ban')" in {bot::sql}
 			reply with "Pomyślnie dano unbana dla **%getName({_u}.getId())%** z powodem **%{_p}%**"
 			modLog({_u}.getId(), event-user.getId(), "Unban", {_p}, getMcNick({_u}.getId()))
 			KamilAPI check delete event-message from event-user
