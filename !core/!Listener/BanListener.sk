@@ -7,15 +7,12 @@ function checkUnban():
 		set {_inx} to loop-index
 
 		set {_karany} to getUser({_r::karany::%{_inx}%})
-		log("Spradzam unbana dla %{_karany}% ({_r::karany::%{_inx}%}) [%{_inx}%]")
 		{_karany} is set
       
 		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 		set {_id} to {_r::id::%{_inx}%}
-		log("Jego id to %{_id}%, a end %{_end}%")
 
 		if now > {_end}:
-			log("daje unbana dla %{_karany}% from %{_g}%")
 			unban {_karany} from {_g} with {bot::name}
 			modLog({_karany}.getId(), {_bot}.getId(), "Unban", "Czas minął (ID: %{_r::id::%{_inx}%}%)", "-")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
