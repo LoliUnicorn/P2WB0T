@@ -1,4 +1,4 @@
-funtion checkFlood(msg: text) :: number:
+function checkFlood(msg: text) :: number:
 	replace all " " with "" in {_msg}
 	set {_s::*} to {_msg} split at ""
 	loop {_s::*}:
