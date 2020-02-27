@@ -12,11 +12,11 @@ function checkFlood(msg: text) :: number:
 
 		if {_terazLitera} is {_nastepnaLitera}:
 			add 1 to {_flood}
-			if {_flood} > 6:
+			if {_flood} >= 6:
 				return {_flood}-1
 		else:
 			delete {_flood}
-
+	return 0
 
 on guild message receive:
 	set {_message} to "%event-message%"
@@ -55,5 +55,5 @@ on guild message receive:
 	
 	getPoziom(event-user.getId()) >= 4
 	set {_int} to checkFlood({_message})
-	if {_int} > 5:
-		reply with "Wykryto flood (%{_int}% powtarzających się znaków)"
+	if {_int} >= 5:
+		reply with "Wykryto flood (ponad %{_int}% powtarzających się znaków)"
