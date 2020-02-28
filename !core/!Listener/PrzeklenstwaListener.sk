@@ -55,6 +55,7 @@ on guild message receive:
 	
 		set {_int} to checkFlood({_message})
 		if {_int} >= 4:
+			deleteMessage(event-message)
 			reply with "%getMention(event-user.getId())% ładnie to tak floodować? Dopisuje ostrzeżenie!"
 			KamilAPI add pun to event-user with reason "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" by getUser({bot::id}) # FIXME: punish
 			stop
