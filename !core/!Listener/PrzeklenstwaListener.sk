@@ -12,8 +12,8 @@ function checkFlood(msg: text) :: number:
 
 		if {_terazLitera} is {_nastepnaLitera}:
 			add 1 to {_flood}
-			if {_flood} >= 5:
-				return {_flood}-1
+			if {_flood} >= 4:
+				return {_flood}
 		else:
 			delete {_flood}
 	return 0
