@@ -53,7 +53,8 @@ on guild message receive:
 					KamilAPI add pun to event-user with reason "Wulgarne zachowanie" by getUser({bot::id}) # FIXME: punish
 					stop
 	
-	getPoziom(event-user.getId()) >= 4
-	set {_int} to checkFlood({_message})
-	if {_int} >= 4:
-		reply with "Wykryto flood (ponad %{_int}% powtarzających się znaków)"
+		set {_int} to checkFlood({_message})
+		if {_int} >= 4:
+			reply with "%getMention(event-user.getId())% ładnie to tak floodować? Dopisuje ostrzeżenie!"
+			KamilAPI add pun to event-user with reason "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" by getUser({bot::id}) # FIXME: punish
+			stop

@@ -1,21 +1,20 @@
 on guild message receive:
-	if event-channel.getId() is "682957433878085642":
+	if event-channel.getId() is "652927860943880224":
 		grab last 2 messages in event-channel
 		set {_s::*} to grabbed messages
 		if size of {_s::*} is 1:
-			log("za maly size")
 			stop
-		
+
 		set {_jegoWiadomosc} to {_s::1}
 		set {_lastWiadomosc} to {_s::2}
 
 		if {_lastWiadomosc}.getMessage().getAuthor().getId() is event-user.getId():
-			log("ta sama osoba")
 			deleteMessage(event-message)
 			stop
 
 		if ("%{_jegoWiadomosc}%" parsed as number)-1 is not ("%{_lastWiadomosc}%" parsed as number):
-			log("zly numer")
 			deleteMessage(event-message)
 			stop
 		
+		set {_int} to ("%{_jegoWiadomosc}%" parsed as number)+1
+		set topic of event-channel to "Ostatnia zarejestrowana osoba: %getMention(event-user.getId())%%nl%Następna wiadomość powinna mieć treść: %{_int}%" with event-bot
