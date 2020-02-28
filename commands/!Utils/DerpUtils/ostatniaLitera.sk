@@ -14,7 +14,7 @@ on guild message receive:
 			deleteMessage(event-message)
 			stop
 
-		if ({_jegoWiadomosc} parsed as number) is ({_lastWiadomosc} parsed as number)+1:
+		if ("%{_jegoWiadomosc}%" parsed as number) is ("%{_lastWiadomosc}%" parsed as number)+1:
 			log("zly numer")
 			deleteMessage(event-message)
 			stop

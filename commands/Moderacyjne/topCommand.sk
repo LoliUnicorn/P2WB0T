@@ -25,7 +25,7 @@ function translateTyp(t: text) :: text:
 	replace all "kick" with "Kicki" in {_t}
 
 	if {_typ} is "unban":
-		replace all "unban" with "Unbany"
+		replace all "unban" with "Unbany" in {_t}
 	if {_typ} is "ban":
 		replace all "ban" with "Bany" in {_t}
 
