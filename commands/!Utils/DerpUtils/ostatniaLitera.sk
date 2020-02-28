@@ -2,20 +2,20 @@ on guild message receive:
 	if event-channel.getId() is "682957433878085642":
 		grab last 2 messages in event-channel
 		set {_s::*} to grabbed messages
-		if size of {_s::*} = 1:
+		if size of {_s::*} is 1:
+			log("za maly size")
 			stop
-		set {_s} to {_s::2}
-	
-		if event-user.isBot():
-			deleteMessage(event-message)
-			stop
-		if {_s}.getMessage().getAuthor().getId() is event-user.getId():
+		
+		set {_jegoWiadomosc} to {_s::1}
+		set {_lastWiadomosc} to {_s::2}
+
+		if {_lastWiadomosc}.getMessage().getAuthor().getId() is event-user.getId():
+			log("ta sama osoba")
 			deleteMessage(event-message)
 			stop
 
-		set {_lastLitera} to last character of "%{_s::2}%"
-		set {_jegoLitera} to first character of "%{_s::1}%"
-
-		if {_lastLitera} != {_jegoLitera}:
+		if ({_jegoWiadomosc} parsed as number) is ({_lastWiadomosc} parsed as number)+1:
+			log("zly numer")
 			deleteMessage(event-message)
 			stop
+		
