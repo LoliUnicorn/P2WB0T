@@ -21,12 +21,12 @@ function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: tex
 	set {_m} to a message builder
 	append line ":large_orange_diamond: STATUS SERWERÓW :large_orange_diamond:"
 	append line "Na tym kanale możecie sprawdzić status serwerów. Status jest aktualizowany ręcznie przez nas, więc tutaj możecie się dowiedzieć, czy jesteśmy świadomi sytuacji i jakie kroki już podejmujemy."
-
+	append line ""
 	append line "DerpMC.PL -> :%{_s::derp}%:"
 	append line "Feerko.PL -> :%{_s::feerko}%:"
 	append line "RoiZy.PL -> :%{_s::roizy}%:"
 	append line "Legenda:"
-
+	append line ""
 	append line ":white_check_mark: Serwer chodzi sprawnie, bądź nie wiemy o problemie"
 	append line ":warning: Występują problemy na serwerze, sprawdzamy przyczynę"
 	append line ":octagonal_sign: Awaria serwera"
@@ -81,6 +81,8 @@ discord command {@cmd} [<text>]:
 
 		loop {_ser::*}:
 			set {v::%event-user.getId()%::status::%loop-index%} to loop-value
+		
+		KamilAPI add emote "green" to event-message
 
 on reaction add:
 	if {v::%event-user.getId()%::status::reply} is event-message:
