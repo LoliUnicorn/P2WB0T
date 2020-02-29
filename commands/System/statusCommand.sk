@@ -10,14 +10,21 @@ on script load:
 	set {command::{@cmd}::uzycie} to "status <serwer1, serwer2, serwer3>"
 
 
-function getStatusMessage(derp: text=":white_check_mark:", feerko: text=":white_check_mark:", roizy: text=":white_check_mark:") :: text:
+function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: text:
+
+	loop "derp", "feerko", "roizy":
+		if {_s::%loop-value%} is not set:
+			set {_s::%loop-value%} to "white_check_mark"
+		if {_s::%loop-value%} is not "white_check_mark" or "warning" or "octagonal_sign" or "arrows_counterclockwise":
+			set {_s::%loop-value%} to "white_check_mark"
+
 	set {_m} to a message builder
 	append line ":large_orange_diamond: STATUS SERWERÓW :large_orange_diamond:"
 	append line "Na tym kanale możecie sprawdzić status serwerów. Status jest aktualizowany ręcznie przez nas, więc tutaj możecie się dowiedzieć, czy jesteśmy świadomi sytuacji i jakie kroki już podejmujemy."
 
-	append line "DerpMC.PL -> %{_derp}%"
-	append line "Feerko.PL -> %{_feerko}%"
-	append line "RoiZy.PL -> %{_roizy}%"
+	append line "DerpMC.PL -> %{_s::derp}%"
+	append line "Feerko.PL -> %{_s::feerko}%"
+	append line "RoiZy.PL -> %{_s::roizy}%"
 	append line "Legenda:"
 
 	append line ":white_check_mark: Serwer chodzi sprawnie, bądź nie wiemy o problemie"
