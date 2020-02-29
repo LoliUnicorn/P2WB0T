@@ -50,7 +50,7 @@ discord command {@cmd} [<text>]:
 				stop loop
 
 		if {_botmsg} is not set:
-			send getStatusMessage() to channel with id {_channel}.getId() with {bot::name} and store it in {_botmsg}
+			send getStatusMessage("", "", "") to channel with id {_channel}.getId() with {bot::name} and store it in {_botmsg}
 
 		if {_botmsg} is not set:
 			KamilAPI cmd error "botmsg==null" to event-message
