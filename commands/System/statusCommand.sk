@@ -14,7 +14,7 @@ function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: tex
 
 	loop "derp", "feerko", "roizy":
 		if {_s::%loop-value%} is not set:
-			set {_s::%loop-value%} to "white_check_mark"
+			set {_s::%loop-value%} to "white_check_mark:"
 		if {_s::%loop-value%} is not "white_check_mark" or "warning" or "octagonal_sign" or "arrows_counterclockwise":
 			set {_s::%loop-value%} to "white_check_mark"
 
@@ -22,9 +22,9 @@ function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: tex
 	append line ":large_orange_diamond: STATUS SERWERÓW :large_orange_diamond:"
 	append line "Na tym kanale możecie sprawdzić status serwerów. Status jest aktualizowany ręcznie przez nas, więc tutaj możecie się dowiedzieć, czy jesteśmy świadomi sytuacji i jakie kroki już podejmujemy."
 
-	append line "DerpMC.PL -> %{_s::derp}%"
-	append line "Feerko.PL -> %{_s::feerko}%"
-	append line "RoiZy.PL -> %{_s::roizy}%"
+	append line "DerpMC.PL -> :%{_s::derp}%:"
+	append line "Feerko.PL -> :%{_s::feerko}%:"
+	append line "RoiZy.PL -> :%{_s::roizy}%:"
 	append line "Legenda:"
 
 	append line ":white_check_mark: Serwer chodzi sprawnie, bądź nie wiemy o problemie"
@@ -83,14 +83,18 @@ discord command {@cmd} [<text>]:
 
 on reaction add:
 	if {v::%event-user.getId()%::status::reply} is event-message:
-		set {_status} to getStatusMessage({v::%event-user.getId()%::status::derp}, {v::%event-user.getId()%::status::feerko}, {v::%event-user.getId()%::status::roizy})
+		loop "derp", "feerko", "roizy":
+			if {v::%event-user.getId()%::status::%loop-value%} is set:
+				set {_status::%loop-value%} to discord name of event-emote
 
-		grab last 10 messages in event-channel
+		set {_status} to getStatusMessage({_status::derp}, {_status::roizy}, {_status::roizy})
+
+		grab last 10 messages in channel with id "683439039306661897"
 		set {_s::*} to grabbed messages
 		loop {_s::*}:
 			set {_v} to loop-value
 			if {_v}.getMessage().getAuthor().getId() is {bot::id}:
-				edit {_v} to show {_status}
+				edit {_v} to show "%{_status}%"
 				stop loop
 
 		edit event-message to show "Pomyślnie zaaktualizowano!"
