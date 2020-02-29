@@ -38,7 +38,7 @@ discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		delete {v::%event-user.getId()%::status::*}
-		set {_channel} to channel with id "683439039306661897"
+		set {_channel} to channel with id "647871607351672832"
 		if {_channel} is not set:
 			KamilAPI cmd error "channel==null" to event-message
 
@@ -90,7 +90,7 @@ on reaction add:
 
 		set {_status} to getStatusMessage({_status::derp}, {_status::feerko}, {_status::roizy})
 
-		grab last 10 messages in channel with id "683439039306661897"
+		grab last 10 messages in channel with id "647871607351672832"
 		set {_s::*} to grabbed messages
 		loop {_s::*}:
 			set {_v} to loop-value
