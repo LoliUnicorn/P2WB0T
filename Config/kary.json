@@ -1,7 +1,7 @@
 {
 	"list": {
 		"1": [{
-			"name": "Wulgarne zachowanie",
+			"name": "Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy w kierunku innego użytkownika",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Tempmute",
