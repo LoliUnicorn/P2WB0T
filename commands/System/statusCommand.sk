@@ -41,7 +41,7 @@ discord command {@cmd} [<text>]:
 		if {_channel} is not set:
 			KamilAPI cmd error "channel==null" to event-message
 
-		grab last 10 messages in event-channel
+		grab last 10 messages in {_channel}
 		set {_s::*} to grabbed messages
 		loop {_s::*}:
 			set {_v} to loop-value
