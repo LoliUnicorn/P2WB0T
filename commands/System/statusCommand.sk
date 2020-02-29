@@ -37,6 +37,7 @@ function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: tex
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
+		delete {v::%event-user.getId()%::status::*}
 		set {_channel} to channel with id "683439039306661897"
 		if {_channel} is not set:
 			KamilAPI cmd error "channel==null" to event-message
@@ -87,7 +88,7 @@ on reaction add:
 			if {v::%event-user.getId()%::status::%loop-value%} is set:
 				set {_status::%loop-value%} to discord name of event-emote
 
-		set {_status} to getStatusMessage({_status::derp}, {_status::roizy}, {_status::roizy})
+		set {_status} to getStatusMessage({_status::derp}, {_status::feerko}, {_status::roizy})
 
 		grab last 10 messages in channel with id "683439039306661897"
 		set {_s::*} to grabbed messages
