@@ -1,0 +1,52 @@
+options:
+	cmd: multi
+
+on script load:
+	set {command::{@cmd}::poziom} to 3
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wyświetla multikonta."
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "multi <user|player> <nick/user>"
+
+discord command {@cmd} [<text>]:
+	aliases: mk
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_arg::*} to arg-1, arg-2
+
+		if {_arg::1} is not "user" or "player":
+			 KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}% | np.%nl%`%{bot::prefix}%mk player %getMcNick(event-user.getId())%`%nl%`%{bot::prefix}%mk user @Oznaczenie`" to evnet-message
+
+		if {_arg::1} is "user"
+			set {_user} to getUser({_arg::2})
+			if {_user} is not set:
+				KamilAPI cmd error "Nie ma takiego użytkownika!" to event-message
+		else:
+			set {_nick} to {_arg::2}
+		
+		if {_user} is set:
+			execute "SELECT * FROM multi WHERE id='%unsafe {_user}.getId()%'" in {bot::sql} and store result in {_r::*}
+		else:
+			execute "SELECT * FROM multi WHERE nick='%unsafe {_nick}%'" in {bot::sql} and store result in {_r::*}
+
+		set {_m} to a message builder
+		loop {_r::id::*}:
+			add 1 to {_num}
+			set {_sql::id} to loop-value
+			set {_sql::nick} to {_r::nick::%loop-index%}
+			set {_sql::now} to {_r::now::%loop-index%}
+				
+			append line "%{_num}%. %getFullName({_sql::id})% - %{_sql::nick}% (%{_sql::now}%)"
+		
+		if "%{_m}%" is "null":
+			KamilAPI cmd error "Tego użytkownika nie ma w bazie danych!" to event-message
+		
+		create embed and reply with:
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Mulitkonta" and icon "%avatar of event-bot%"
+		
+			set the description of embed to "%{_m}%"
+
+		KamilAPI add emote "green" to event-message
