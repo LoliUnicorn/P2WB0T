@@ -39,22 +39,35 @@ function containsSwear(t: text) :: boolean:
 function checkStatus(u: member):
 	set {_game} to game of {_u}
 
-	if containsSwear({_game}):
-		log("Wykryto przeklenstwo w normalnej grze (%{_game}%)")
-		stop 
+	add "%{_game}%" to {_status::*}
+	loop ...{_m}.getActivities():
+		add "%{_v}.getState()%" to {_status::*}
+		add "%{_v}.getDetails()%" to {_status::*}
 
-	if {_game} is "Custom status":
-		log("shit, typ ma custom status")
-		loop ...{_u}.getActivities():
-			set {_v} to loop-value
-			set {_r} to {_v}.asRichPresence()
+	log("Jego statusy:")
+	loop {_status::*}:
+		log(loop-value)
+	log("==========")
 
-			set {_finalGame} to "%{_r}.getState()%"
-			stop loop
-		log("Final game custom statusu: %{_finalGame}%")
+	# if containsSwear({_game}):
+	# 	log("Wykryto przeklenstwo w normalnej grze (%{_game}%)")
+	# 	stop 
 
-		if containsSwear({_finalGame}):
-			log("Zawiera wulgaryzm!")
-		stop
+	# if {_game} is "Custom status":
+	# 	log("shit, typ ma custom status")
+	# 	loop ...{_u}.getActivities():
+	# 		set {_v} to loop-value
+	# 		set {_r} to {_v}.asRichPresence()
+
+	# 		set {_finalGame} to "%{_r}.getState()%"
+	# 		stop loop
+		
+	# 	if {_finalGame}
+
+	# 	log("Final game custom statusu: %{_finalGame}%")
+
+	# 	if containsSwear({_finalGame}):
+	# 		log("Zawiera wulgaryzm!")
+	# 	stop
 	
-	log("chyba ma rp")
+	# log("chyba ma rp")
