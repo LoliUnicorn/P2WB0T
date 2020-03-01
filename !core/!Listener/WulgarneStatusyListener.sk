@@ -87,7 +87,7 @@ function checkUnstatus(u: member):
 	loadRoles({_u})
 
 
-every 5 minutes:
+every 2 minutes:
 	set {_g} to guild with id {bot::guild}
 
 	loop ...{_g}.getMembers():
@@ -95,9 +95,9 @@ every 5 minutes:
 		if "%online status of {_v}%" != "offline":
 			checkStatus({_v})
 
-every 2 minutes:
+every 30 seconds:
 	set {_c} to channel with id "683720945835573269"
 
-	loop ...{_g}.getMembers():
+	loop ...{_c}.getMembers():
 		set {_v} to loop-value
 		checkUnstatus({_v})
