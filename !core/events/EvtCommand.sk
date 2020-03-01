@@ -6,6 +6,8 @@ on vixio command:
 	if {_poziom} is not set:
 		cancel event
 		KamilAPI cmd error "Z jakiegoś powodu twój poziom uprawnień wynosi `null`!" to event-message
+	if event-guild is not set:
+		cancel event
 
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
@@ -17,7 +19,7 @@ on vixio command:
 
 	loop {_l::*}:
 		if loop-value is event-channel.getId():
-			if {_cmd} is "clear" or "forum" or "punish":
+			if {_cmd} is "clear" or "forum" or "punish" or "cytuj":
 				if {_poziom} >= 1:
 					stop loop
 

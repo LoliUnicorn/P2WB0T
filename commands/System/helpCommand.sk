@@ -23,6 +23,7 @@ discord command {@cmd} [<text>]:
 				if "%loop-value-2%" is arg-1:
 					set {_cmdinfo} to loop-value-1
 					stop loop
+			
 
 		if {_cmdinfo} is set:
 			create embed:
@@ -33,7 +34,7 @@ discord command {@cmd} [<text>]:
 
 				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::uzycie}%"
 				set {_a::*} to aliases of {_cmdinfo}
-				if {_a::*} is not set:
+				if {_a::*} is "pingbota":
 					set {_s::2} to "Aliasy: Brak."
 				else:
 					set {_s::2} to "Aliasy: %{_a::*}%"

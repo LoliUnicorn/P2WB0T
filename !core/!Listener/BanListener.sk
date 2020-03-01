@@ -4,16 +4,17 @@ function checkUnban():
 	set {_bot} to getUser({bot::id})
 
 	loop {_r::karany::*}:
+		set {_inx} to loop-index
 
-		set {_karany} to getUser({_r::karany::%loop-index%})
+		set {_karany} to getUser({_r::karany::%{_inx}%})
 		{_karany} is set
-
-		set {_end} to unix date ("%{_r::end::%loop-index%}%" parsed as number) as date
-		set {_id} to {_r::id::%loop-index%}
+      
+		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
+		set {_id} to {_r::id::%{_inx}%}
 
 		if now > {_end}:
 			unban {_karany} from {_g} with {bot::name}
-			modLog({_karany}.getId(), {_bot}.getId(), "Unban", "Czas minął (ID: %{_r::id::%loop-index%}%)", getMcNick({_karany}.getId()))
+			modLog({_karany}.getId(), {_bot}.getId(), "Unban", "Czas minął (ID: %{_r::id::%{_inx}%}%)", "-")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
 
 every 2 minute:

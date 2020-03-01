@@ -57,5 +57,6 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 		set {_kurw} to last vixio error
 		set {_v} to "%{_kurw}%"
 
+		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getUser().getId()%' AND typ='Tempmute' AND aktywna='Tak'" in {bot::sql}
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%")
 		continue

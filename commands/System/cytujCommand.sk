@@ -46,6 +46,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set the description of embed to "%{_m}%"
 			else:
 				set the description of embed to "Pusta wiadomość. Zawiera embed patrz poniżej."
+			add split field named "Kolega prosi o linka?" with value "[KLIK](%{_m}.getMessage().getJumpUrl()%)" to embed
 			set the author info of the embed to author named getName({_user}.getId()) with no url and icon "%avatar of {_user}%"
 			set the colour of the embed to color of getColor(event-member)
 			set the footer of embed to footer with text "Wykonane przez: %getName(event-user.getId())%" and icon "%avatar of event-user%"
@@ -54,6 +55,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set the image of embed to attachment url of attachment of {_m}
 		reply with the last created embed and store it in {_beka}
 		if arg-2 is set:
+			deleteMessage(event-message)
 			edit {_beka} to show "**%getName(event-user.getId())%**: %getRegex(arg-2)%"
 		if ...{_m}.getMessage().getEmbeds() is set:
 			reply with embed of {_m}

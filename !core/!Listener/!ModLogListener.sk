@@ -30,6 +30,7 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 				set {_xd} to {_czas} parsed as timespan
 				add {_xd} to {_now}
 				set {_end} to "%convert date {_now} to unix date%"
+				add field named "Nadano na czas:" with value getTimespan("%{_xd}%") to embed
 				add field named "Mija o:" with value "%{_now}%" to embed
 		
 			set the thumbnail of embed to "%avatar of {_karany}%"

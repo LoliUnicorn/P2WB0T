@@ -1,6 +1,8 @@
 function getMcNick(u: text) :: text:
 	set {_g} to getGuild()
 	set {_member} to getUser({_u}) in {_g}
+	if {_member} is not set:
+		return "- (Nie mial zmienionego nicku)"
 	set {_nick} to discord nickname of {_member}
 	if {_nick} contains "[":
 		set {_nick} to last element of ({_nick} split at " ")
@@ -8,4 +10,4 @@ function getMcNick(u: text) :: text:
 	if {_nick} != discord name of {_member}:
 		return {_nick}
 	else:
-		return "- (Nie mial zmienionego nicku.)"
+		return "- (Nie mial zmienionego nicku)"

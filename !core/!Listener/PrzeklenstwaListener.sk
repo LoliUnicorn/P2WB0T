@@ -1,19 +1,61 @@
+function checkFlood(msg: text) :: number:
+	replace all " " with "" in {_msg}
+	set {_s::*} to {_msg} split at ""
+	loop {_s::*}:
+		set {_inx} to (loop-index parsed as number)+1
+
+		set {_terazLitera} to loop-value
+		set {_nastepnaLitera} to {_s::%{_inx}%}
+		
+		{_nastepnaLitera} is set
+		{_nastepnaLitera} or {_terazLitera} != ""
+
+		if {_terazLitera} is {_nastepnaLitera}:
+			add 1 to {_flood}
+			if {_flood} >= 4:
+				return {_flood}
+		else:
+			delete {_flood}
+	return 0
+
 on guild message receive:
-	getPoziom(event-user.getId()) = 0
-	
-	event-channel.getId() != "503294063064121374" or "426864003562864641"
-	event-user.isBot() is false
-
 	set {_message} to "%event-message%"
+		
+	set {_r::1::a} to "ą"
+	set {_r::2::c} to "ć"
+	set {_r::3::e} to "ę"
+	set {_r::4::l} to "ł"
+	set {_r::5::n} to "ń"
+	set {_r::6::o} to "ó"
+	set {_r::7::s} to "ś"
+	set {_r::8::z} to "ź"
+	set {_r::9::z} to "ż"
 
-	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
-	set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
-	set {_tak} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_tak}
+	loop size of {_r::*} times:
+		loop {_r::%loop-value%::*}:
+			replace all loop-value-2 with loop-index in {_message}
+
+	if getPoziom(event-user.getId()) = 0:
 	
-	set {_tak::*} to {_tak} split at " "
-	loop {_kek::*}:
-		loop {_tak::*}:
-			if loop-value-1 is loop-value-2:
-				reply with "%getMention(event-user.getId())% ładnie to tak przeklinać? Dopisuje ostrzeżenie!"
-				KamilAPI add pun to event-user with reason "Wulgarne zachowanie" by getUser({bot::id}) # FIXME: punish
-				stop
+		event-channel.getId() != "503294063064121374" or "426864003562864641"
+		event-user.isBot() is false
+
+		set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
+		set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
+		set {_tak} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_tak}
+		
+		set {_tak::*} to {_tak} split at " "
+		loop {_kek::*}:
+			loop {_tak::*}:
+				if loop-value-1 is loop-value-2:
+					deleteMessage(event-message)
+					reply with "%getMention(event-user.getId())% ładnie to tak przeklinać? Dopisuje ostrzeżenie!"
+					KamilAPI add pun to event-user with reason "Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy w kierunku innego użytkownika" by getUser({bot::id}) # FIXME: punish
+					stop
+	
+		# set {_int} to checkFlood({_tak})
+		# if {_int} >= 4:
+		# 	deleteMessage(event-message)
+		# 	reply with "%getMention(event-user.getId())% ładnie to tak floodować? Dopisuje ostrzeżenie!"
+		# 	KamilAPI add pun to event-user with reason "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" by getUser({bot::id}) # FIXME: punish
+		# 	stop

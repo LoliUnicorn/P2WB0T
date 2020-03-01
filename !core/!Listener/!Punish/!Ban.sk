@@ -20,10 +20,7 @@ effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user%:
 
 		set {_nick} to getMcNick({_u}.getId())
 		ban {_u} from {_g} with reason {_powod} with {bot::name}
-		set {_kurw} to last vixio error
-		set {_v} to "%{_kurw}%"
-		if {_v} = "<none>":
-			modLog({_u}.getId(), {_adm}.getId(), "Ban", {_powod}, {_nick})
-		else:
-			KamilAPI set variable {_error} to {_v} in event
+		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getId()%' AND typ='Ban' AND aktywna='Tak'" in {bot::sql}
+		modLog({_u}.getId(), {_adm}.getId(), "Ban", {_powod}, {_nick})
+
 		continue

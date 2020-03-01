@@ -23,11 +23,17 @@ import:
 function translateTyp(t: text) :: text:
 	replace all "warn" with "Warny" in {_t}
 	replace all "kick" with "Kicki" in {_t}
+
+	if {_typ} is "unban":
+		replace all "unban" with "Unbany" in {_t}
+	if {_typ} is "ban":
+		replace all "ban" with "Bany" in {_t}
+
 	replace all "tempban" with "Tempbany" in {_t}
 	replace all "tempmute" with "Tempmuty" in {_t}
-	replace all "ban" with "Bany" in {_t}
 	replace all "unmute" with "Unmuty" in {_t}
 	replace all "mute" with "Muty" in {_t}
+	replace all "pun" with "Puny" in {_t}
 	return {_t}
 
 discord command {@cmd} [<text>]:

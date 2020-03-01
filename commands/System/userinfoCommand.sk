@@ -67,7 +67,7 @@ discord command {@cmd} [<text>]:
 
 		set {_nick} to check "%{_mem}%" = "<none>" : "%getMention({_u}.getId())%(%getName({_u}.getId())%)" ? getFullName({_u}.getId())
 		set {_game} to check game of {_u} = "<none>" : "-" ? game of {_u}
-		set {_status} to translatedStatus("%online status of {_u}%")
+		set {_status} to check translatedStatus("%online status of {_u}%") = "<none>" : "Nie dało się uzyskać." ? translatedStatus("%online status of {_u}%")
 
 		set {_xd} to the discord join date of {_u}
 		set {_xd2} to getTimespan("%difference between now and {_xd}%")
@@ -77,12 +77,14 @@ discord command {@cmd} [<text>]:
 		set {_of2} to getTimespan("%difference between now and {_of}%")
 		set {_serverjoin} to check "%{_mem}%" = "<none>" : "Osoba nie jest na serwerze" ? "%{_of}% (`%{_of2}%` temu)"
 
-
 		if "%{_mem}%" != "<none>":
 			loop ...{_mem}.getPermissions():
 				add loop-value to {_ma::*}
-		set {_p} to ""
+
 		set {_p} to translatedPermission("%{_ma::*}%")
+		if "%{_p}%" is "<none>":
+			set {_p} to "Nie ma żadnych xD"
+
 		set {_procent} to getProcent(size of {_ma::*})
 
 		set {_poziom} to getPoziom({_u}.getId())

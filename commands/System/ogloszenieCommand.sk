@@ -13,6 +13,7 @@ discord command {@cmd} [<text>] [<text>]:
 	aliases: broadcast, br
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
+		delete {ogloszenie::%event-user.getId()%::*}
 		set {_kanal} to arg-1
 		set {_msg} to arg-2
 
@@ -25,12 +26,28 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI cmd error "Wiadomość nie może być pusta!" to event-message
 
 		create embed:
-			set the author info of the embed to author named "Ogłoszenie" with no url and icon "%avatar of event-user%"
+			set the author info of the embed to author named "📣 Ogłoszenie" with no url and icon "%avatar of event-user%"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the footer of embed to footer with text "Utworzone przez %getName(event-user)%"
+			set the footer of embed to footer with text "Utworzone przez %getName(event-user.getId())%"
 		
 			set the description of embed to "%{_msg}%"
       
 		send last created embed to channel with id {_kanal}.getId() with {bot::name}
+
 		KamilAPI add emote "green" to event-message of event-user
+
+		reply with "Pingować `@`everyone?" and store it in {_msg}
+		KamilAPI add emote "green" to {_msg}
+		KamilAPI add emote "red" to {_msg}
+		set {v::%event-user.getId()%::ogloszenie::botmsg} to {_msg}
+		set {v::%event-user.getId()%::ogloszenie::kanal} to {_kanal}.getId()
+
+on reaction add:
+	if {v::%event-user.getId()%::ogloszenie::botmsg} is event-message:
+		set {_e} to event-emote.getID()
+
+		if {_e} is getConfig("emote.green"):
+			send "@everyone" to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with {bot::name}
+		delete {v::%event-user.getId()%::ogloszenie::*}
+		deleteMessage(event-message)

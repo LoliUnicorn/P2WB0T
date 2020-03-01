@@ -79,8 +79,8 @@ on script load:
 	if {v::wiadomosci} is not set:
 		set {v::wiadomosci} to 0
 
-# on vixio command:
-# 	add 1 to {v::komendy}
+on vixio command:
+	add 1 to {v::komendy}
 
-# on guild message received:
-# 	add 1 to {v::wiadomosci}
+on guild message received:
+	add 1 to {v::wiadomosci}
