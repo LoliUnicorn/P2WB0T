@@ -37,7 +37,7 @@ discord command {@cmd} [<text>]:
 				if {_a::*} is "pingbota":
 					set {_s::2} to "Aliasy: Brak."
 				else:
-					set {_s::2} to "Aliasy: %getList(""%{_a::*}%"")%"
+					set {_s::2} to "Aliasy: %{_a::*}%"
 
 				set {_s::3} to "Opis: %{command::%{_cmdinfo}%::opis}%"
 				set {_s::4} to "Kategoria: %{command::%{_cmdinfo}%::kategoria}%"

@@ -55,6 +55,6 @@ function checkStatus(u: member):
 
 		if containsSwear({_finalGame}):
 			log("Zawiera wulgaryzm!")
-			stop
+		stop
 	
 	log("chyba ma rp")
