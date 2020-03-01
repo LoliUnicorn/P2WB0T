@@ -46,7 +46,7 @@ function checkStatus(u: member):
 	loop 10 times:
 		remove "<none>" from {_status::*}
 
-	log("Jego statusy:")
 	loop {_status::*}:
-		log(loop-value)
-	log("==========")
+		set {_v::1} to loop-value
+		if containsSwear({_v::1}):
+			log("Przy %loop-value% wykryto przeklenstwo!")
