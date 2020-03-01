@@ -15,12 +15,16 @@ function loadRoles(m: member):
 
 	set {_roles} to "%{_r::rola::*}%"
 	replace all " " with "" in {_roles}
+	log("roles; %{_roles}%")
 	
 	set {_r::*} to {_roles} split at ","
+	log("split: %{_r::*}%")
 	
-	remove role with id "683726062144061440" from roles of {_m} with {bot::name}
+	set {_r} to role with id "683726062144061440"
+	{_g}.removeRoleFromMember({_m}, {_r}).queue()
 	loop {_r::*}:
 		set {_rola} to role with id "%loop-value%"
+		log("loop: %loop-value% (%{_rola}%)")
 		add {_rola} to roles of {_m} with {bot::name}
 
 function containsSwear(t: text) :: boolean:
