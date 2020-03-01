@@ -45,7 +45,7 @@ function checkStatus(u: member):
 
 	if {_game} is "Custom status":
 		log("shit, typ ma custom status")
-		loop ...event-member.getActivities():
+		loop ...{_u}.getActivities():
 			set {_v} to loop-value
 			set {_r} to {_v}.asRichPresence()
 
