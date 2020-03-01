@@ -100,4 +100,5 @@ every 30 seconds:
 
 	loop ...{_c}.getMembers():
 		set {_v} to loop-value
-		checkUnstatus({_v})
+		if {_v} has role role with id "683726062144061440":
+			checkUnstatus({_v})
