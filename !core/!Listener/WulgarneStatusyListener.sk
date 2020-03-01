@@ -1,6 +1,6 @@
 function checkStatusy():
 	set {_g} to guild with id {bot::guild}
-	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/Commands/!Utils/Przeklenstwa.api"
+	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
 
 	# TODO: Dodaj checka na reklame + trzeba to przetestować
 	loop ...{_g}.getMembers():
@@ -29,6 +29,32 @@ function checkStatusy():
 # every 5 minutes:
 # 	checkStatusy()
 
-function checkStatus(u: user):
+function containsSwear(t: text) :: boolean:
+	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
+	loop {_kek::*}:
+		if loop-value is {_t}:
+			return true
+	return false
+
+function checkStatus(u: member):
 	set {_game} to game of {_u}
+
+	if containsSwear({_game}):
+		log("Wykryto przeklenstwo w normalnej grze (%{_game}%)")
+		stop 
+
+	if {_game} is "Custom status":
+		log("shit, typ ma custom status")
+		loop ...event-member.getActivities():
+			set {_v} to loop-value
+			set {_r} to {_v}.asRichPresence()
+
+			set {_finalGame} to "%{_r}.getState()%"
+			stop loop
+		log("Final game custom statusu: %{_finalGame}%")
+
+		if containsSwear({_finalGame}):
+			log("Zawiera wulgaryzm!")
+			stop
 	
+	log("chyba ma rp")
