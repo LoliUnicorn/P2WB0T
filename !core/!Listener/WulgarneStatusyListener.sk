@@ -1,33 +1,9 @@
-function checkStatusy():
-	set {_g} to guild with id {bot::guild}
-	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
-
-	# TODO: Dodaj checka na reklame + trzeba to przetestować
-	loop ...{_g}.getMembers():
+function removeRoles(m: member):
+	loop roles of {_m}:
 		set {_v} to loop-value
-		if {_v}.getUser().isBot() is false:
-			if online status of {_v} != offline:
-				getPoziom({_v}.getUser().getId()) < 1 # równouprawnienie nie istnieje
-				set {_game} to game of {_v}
-				if {_game} is "custom status":
-					loop ...{_m}.getActivities():
-						set {_v} to loop-value-2
-						loop {_kek::*}:
-							if "%{_v}.getState()%" is loop-value-3:
-								KamilAPI add pun to {_v}.getUser() with reason "Wulgarny status" by getUser({bot::id}) # FIXME: punish
-								wait 20 tick
-								stop loop
-				else:
-					loop {_kek::*}:
-						if {_game} is loop-value-2:
-							KamilAPI add pun to {_v}.getUser() with reason "Wulgarny status" by getUser({bot::id}) # FIXME: punish
-							wait 20 tick
-							stop loop
-
-				delete {_game}
-
-# every 5 minutes:
-# 	checkStatusy()
+		add "%{_v}.getId()%" to {_id::*}
+	set {_list} to getList("%{_id::*}%")
+	execute "INSERT INTO `roles` (id,rola) VALUES('%unsafe {_m}.getUser().getId()%', '%unsafe {_list}%')" in {bot::sql}
 
 function containsSwear(t: text) :: boolean:
 	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
