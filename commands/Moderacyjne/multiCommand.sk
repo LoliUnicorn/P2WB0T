@@ -33,14 +33,15 @@ discord command {@cmd} [<text>] [<text>]:
 			execute "SELECT * FROM multi WHERE nick='%unsafe {_nick}%'" in {bot::sql} and store result in {_r::*}
 
 		set {_m} to a message builder
+		append line "<numer>. <oznaczenie/nick z dc> - <nick z którego dołączył> [data]"
 		loop {_r::id::*}:
 			add 1 to {_num}
 			set {_sql::id} to loop-value
 			set {_sql::nick} to {_r::nick::%loop-index%}
 			set {_sql::now} to {_r::now::%loop-index%}
 			
-			set {_kekw} to "%getMention({_sql::id})% %getName({_sql::id})%"
-			append line "%{_num}%. %{_kekw}% - %{_sql::nick}% (%{_sql::now}%)"
+			set {_kekw} to "%getMention({_sql::id})% (%getName({_sql::id})%)"
+			append line "%{_num}%. %{_kekw}% - %{_sql::nick}% [%{_sql::now}%]"
 		
 		if "%{_m}%" is "null":
 			KamilAPI cmd error "Tego użytkownika nie ma w bazie danych!" to event-message
