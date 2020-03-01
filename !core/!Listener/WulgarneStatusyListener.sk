@@ -19,12 +19,12 @@ function loadRoles(m: member):
 	replace all " " with "" in {_roles}
 	set {_r::*} to {_roles} split at ","
 	
-	set {_r} to role with id "683726062144061440"
-	{_g}.removeRoleFromMember({_m}, {_r}).complete()
-
 	loop {_r::*}:
 		set {_rola} to role with id "%loop-value%"
 		{_g}.addRoleToMember({_m}, {_rola}).complete()
+
+	set {_r} to role with id "683726062144061440"
+	{_g}.removeRoleFromMember({_m}, {_r}).complete()
 
 function containsSwear(t: text) :: boolean:
 	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
