@@ -44,6 +44,9 @@ function checkStatus(u: member):
 		add "%{_v}.getState()%" to {_status::*}
 		add "%{_v}.getDetails()%" to {_status::*}
 
+	loop 10 times:
+		remove "<none>" from {_status::*}
+
 	log("Jego statusy:")
 	loop {_status::*}:
 		log(loop-value)
