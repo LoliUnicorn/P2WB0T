@@ -16,9 +16,9 @@ discord command {@cmd} [<text>]:
 		set {_arg::*} to arg-1, arg-2
 
 		if {_arg::1} is not "user" or "player":
-			 KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}% | np.%nl%`%{bot::prefix}%mk player %getMcNick(event-user.getId())%`%nl%`%{bot::prefix}%mk user @Oznaczenie`" to evnet-message
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}% | np.%nl%`%{bot::prefix}%mk player %getMcNick(event-user.getId())%`%nl%`%{bot::prefix}%mk user @Oznaczenie`" to evnet-message
 
-		if {_arg::1} is "user"
+		if {_arg::1} is "user":
 			set {_user} to getUser({_arg::2})
 			if {_user} is not set:
 				KamilAPI cmd error "Nie ma takiego użytkownika!" to event-message
