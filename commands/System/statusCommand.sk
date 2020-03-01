@@ -9,9 +9,7 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "status <serwer1, serwer2, serwer3>"
 
-
 function getStatusMessage(s::derp: text, s::feerko: text, s::roizy: text) :: text:
-
 	loop "derp", "feerko", "roizy":
 		if {_s::%loop-value%} is not set:
 			set {_s::%loop-value%} to "white_check_mark:"
