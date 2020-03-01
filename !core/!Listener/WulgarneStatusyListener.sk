@@ -37,10 +37,9 @@ function containsSwear(t: text) :: boolean:
 	return false
 
 function checkStatus(u: member):
-	set {_game} to game of {_u}
-
-	add "%{_game}%" to {_status::*}
+	add "%game of {_u}%" to {_status::*}
 	loop ...{_u}.getActivities():
+		set {_v} to loop-value
 		add "%{_v}.getState()%" to {_status::*}
 		add "%{_v}.getDetails()%" to {_status::*}
 
@@ -51,26 +50,3 @@ function checkStatus(u: member):
 	loop {_status::*}:
 		log(loop-value)
 	log("==========")
-
-	# if containsSwear({_game}):
-	# 	log("Wykryto przeklenstwo w normalnej grze (%{_game}%)")
-	# 	stop 
-
-	# if {_game} is "Custom status":
-	# 	log("shit, typ ma custom status")
-	# 	loop ...{_u}.getActivities():
-	# 		set {_v} to loop-value
-	# 		set {_r} to {_v}.asRichPresence()
-
-	# 		set {_finalGame} to "%{_r}.getState()%"
-	# 		stop loop
-		
-	# 	if {_finalGame}
-
-	# 	log("Final game custom statusu: %{_finalGame}%")
-
-	# 	if containsSwear({_finalGame}):
-	# 		log("Zawiera wulgaryzm!")
-	# 	stop
-	
-	# log("chyba ma rp")
