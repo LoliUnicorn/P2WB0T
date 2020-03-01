@@ -40,7 +40,7 @@ function checkStatus(u: member):
 	set {_game} to game of {_u}
 
 	add "%{_game}%" to {_status::*}
-	loop ...{_m}.getActivities():
+	loop ...{_u}.getActivities():
 		add "%{_v}.getState()%" to {_status::*}
 		add "%{_v}.getDetails()%" to {_status::*}
 
