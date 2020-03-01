@@ -13,21 +13,19 @@ function loadRoles(m: member):
 	execute "SELECT rola FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql} and store result in {_r::*}
 	execute "DELETE FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql}
 
+	set {_g} to guild with id {bot::guild}
+	
 	set {_roles} to "%{_r::rola::*}%"
 	replace all " " with "" in {_roles}
-	log("roles; %{_roles}%")
-	
 	set {_r::*} to {_roles} split at ","
-	log("split: %{_r::*}%")
 	
 	set {_r} to role with id "683726062144061440"
-
 	{_g}.removeRoleFromMember({_m}, {_r}).complete()
 
 	loop {_r::*}:
 		set {_rola} to role with id "%loop-value%"
-		log("loop: %loop-value% (%{_rola}%)")
-		add {_rola} to roles of {_m} with {bot::name}
+		log("loop: %loop-value% (%{_rola}%) <%{_m}%>")
+		{_g}.addRoleToMember({_m}, {_rola}).complete()
 
 function containsSwear(t: text) :: boolean:
 	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
