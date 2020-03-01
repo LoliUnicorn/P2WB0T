@@ -38,8 +38,9 @@ discord command {@cmd} [<text>] [<text>]:
 			set {_sql::id} to loop-value
 			set {_sql::nick} to {_r::nick::%loop-index%}
 			set {_sql::now} to {_r::now::%loop-index%}
-				
-			append line "%{_num}%. %getFullName({_sql::id})% - %{_sql::nick}% (%{_sql::now}%)"
+			
+			set {_kekw} to "%getMention({_sql::id})% %getName({_sql::id})%"
+			append line "%{_num}%. %{_kekw}% - %{_sql::nick}% (%{_sql::now}%)"
 		
 		if "%{_m}%" is "null":
 			KamilAPI cmd error "Tego użytkownika nie ma w bazie danych!" to event-message

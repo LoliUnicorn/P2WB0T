@@ -6,5 +6,5 @@ on member join guild:
 	if {_nick} contains "-":
 		set {_nick} to "%event-member.getUser()%"
 	set {_now} to "%now%"
-	execute "INSERT INTO `akcje` (id,nick,now) VALUES('%unsafe {_id}%', '%unsafe {_nick}%', '%unsafe {_now}%')" in {bot::sql}
-	log("INSERT INTO `akcje` (id,nick,now) VALUES('%unsafe {_id}%', '%unsafe {_nick}%', '%unsafe {_now}%')")
+	execute "INSERT INTO `multi` (id,nick,now) VALUES('%unsafe {_id}%', '%unsafe {_nick}%', '%unsafe {_now}%')" in {bot::sql}
+	log("INSERT INTO `multi` (id,nick,now) VALUES('%unsafe {_id}%', '%unsafe {_nick}%', '%unsafe {_now}%')")
