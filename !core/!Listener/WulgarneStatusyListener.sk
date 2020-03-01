@@ -2,7 +2,7 @@ function removeRoles(m: member):
 	set {_g} to guild with id {bot::guild}
 	loop roles of {_m}:
 		set {_v} to loop-value
-		{_g}.removeRoleFromMember({_m}, {_v}).queue()
+		{_g}.removeRoleFromMember({_m}, {_v}).complete()
 		add "%{_v}.getId()%" to {_id::*}
 	set {_list} to getList("%{_id::*}%")
 	execute "INSERT INTO `roles` (id,rola) VALUES('%unsafe {_m}.getUser().getId()%', '%unsafe {_list}%')" in {bot::sql}
@@ -21,7 +21,9 @@ function loadRoles(m: member):
 	log("split: %{_r::*}%")
 	
 	set {_r} to role with id "683726062144061440"
-	{_g}.removeRoleFromMember({_m}, {_r}).queue()
+
+	{_g}.removeRoleFromMember({_m}, {_r}).complete()
+
 	loop {_r::*}:
 		set {_rola} to role with id "%loop-value%"
 		log("loop: %loop-value% (%{_rola}%)")
