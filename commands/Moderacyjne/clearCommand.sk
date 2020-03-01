@@ -52,6 +52,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_check} is set:
 			KamilAPI cmd error {_check} to event-message
 
+		deleteMessage(event-message)
 		reply with "Usuwam **%{_a}%** wiadomości użytkownika %getName(arg-1)%." and store it in {_msg}
 		grab last 1000 messages in event-channel
 		loop grabbed messages:
