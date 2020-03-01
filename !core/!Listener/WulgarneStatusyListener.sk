@@ -2,7 +2,6 @@ function removeRoles(m: member):
 	set {_g} to guild with id {bot::guild}
 	loop roles of {_m}:
 		set {_v} to loop-value
-	==
 		{_g}.removeRoleFromMember({_m}, {_v}).queue()
 		add "%{_v}.getId()%" to {_id::*}
 	set {_list} to getList("%{_id::*}%")
