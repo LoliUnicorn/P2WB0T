@@ -14,7 +14,7 @@ function loadRoles(m: member):
 	execute "DELETE FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql}
 
 	set {_g} to guild with id {bot::guild}
-	
+
 	set {_roles} to "%{_r::rola::*}%"
 	replace all " " with "" in {_roles}
 	set {_r::*} to {_roles} split at ","
@@ -24,7 +24,6 @@ function loadRoles(m: member):
 
 	loop {_r::*}:
 		set {_rola} to role with id "%loop-value%"
-		log("loop: %loop-value% (%{_rola}%) <%{_m}%>")
 		{_g}.addRoleToMember({_m}, {_rola}).complete()
 
 function containsSwear(t: text) :: boolean:
@@ -66,3 +65,39 @@ function checkStatus(u: member):
 		if containsLink({_v::1}):
 			removeRoles({_u})
 			stop
+
+function checkUnstatus(u: member):
+	add "%game of {_u}%" to {_status::*}
+	loop ...{_u}.getActivities():
+		set {_v} to loop-value
+		add "%{_v}.getState()%" to {_status::*}
+		add "%{_v}.getDetails()%" to {_status::*}
+
+	loop 10 times:
+		remove "<none>" from {_status::*}
+
+	loop {_status::*}:
+		set {_v::1} to loop-value
+		if containsSwear({_v::1}):
+			stop
+
+		if containsLink({_v::1}):
+			stop
+	
+	loadRoles({_u})
+
+
+every 5 minutes:
+	set {_g} to guild with id {bot::guild}
+
+	loop ...{_g}.getMembers():
+		set {_v} to loop-value
+		if "%online status of {_v}%" != "offline":
+			checkStatus({_v})
+
+every 2 minutes:
+	set {_c} to channel with id "683720945835573269"
+
+	loop ...{_g}.getMembers():
+		set {_v} to loop-value
+		checkUnstatus({_v})
