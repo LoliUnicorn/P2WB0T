@@ -1,7 +1,9 @@
 function removeRoles(m: member):
+	set {_g} to guild with id {bot::guild}
 	loop roles of {_m}:
 		set {_v} to loop-value
-		remove role with id {_v}.getId() from roles of {_m} with {bot::name}
+	==
+		{_g}.removeRoleFromMember({_m}, {_v}).queue()
 		add "%{_v}.getId()%" to {_id::*}
 	set {_list} to getList("%{_id::*}%")
 	execute "INSERT INTO `roles` (id,rola) VALUES('%unsafe {_m}.getUser().getId()%', '%unsafe {_list}%')" in {bot::sql}
