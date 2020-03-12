@@ -1,0 +1,188 @@
+import:
+	java.text.SimpleDateFormat
+
+every 15 minutes:
+	updateUrlopMessages()
+
+function nieobecnosciLog(powod: string, autor: string, info: string=""):
+	create embed and send it to channel with id getConfig("Config.nieobecnosciLogi") with {bot::name}:
+		set the colour of the embed to cyan
+		set the timestamp of embed to now
+		set the footer of embed to footer with text {_powod} and no icon
+	
+		add field named "Autor urlopu:" with value getFullName({_autor}) to embed
+		if {_info} != "":
+			add field named "Co się stało?!" with value {_info} to embed 
+
+function updateUrlopMessages():
+	execute "SELECT * FROM nieobecnosci WHERE aktywna='true'" in {bot::sql} and store result in {_r::*}
+
+	loop {_r::msgId::*}:
+		set {_inx} to loop-index
+		retrieve message with id "%loop-value%" from channel with id getConfig("Config.nieobecnosci")
+		set {_msg} to last retrieved message
+
+		set {_user} to {_r::id::%{_inx}%}
+		set {_start} to unix date ("%{_r::start::%{_inx}%}%" parsed as number) as date
+		set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
+		set {_powod} to {_r::powod::%{_inx}%}
+
+		if now >= {_end}:
+			nieobecnosciLog("Koniec urlopu", {_user}, "Urlop, który został złożony %{_start}% się skończył.")
+			send "Twój urlop się zakończył, wracaj do pracy!" to getUser({_user}) with {bot::name}
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%loop-value%" in {bot::sql}
+			deleteMessage({_msg})
+			stop
+
+		set {_dif} to getTimespan("%difference between now and {_end}%")
+
+		create embed:
+			set the colour of the embed to blue
+			
+			set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
+			
+			add field named "Powód:" with value "%{_powod}%" to embed
+			add field named "Czas rozpoczęcia:" with value "%{_start}%" to embed
+			add field named "Czas zakończenia:" with value "%{_end}%" to embed
+			add field named "Pozostało czasu:" with value {_dif} to embed
+			
+			set the thumbnail of embed to "%avatar of getUser({_user})%"
+
+		edit {_msg} to show last created embed
+
+function createNieobecnosc(user: text, powod: object, start: object, end: object):
+	loop {_start}.getTime(), {_end}.getTime():
+		set {_loop::mil} to loop-value
+		add 1 to {_num}
+
+		set {_date::%{_num}%} to unix date ("%{_loop::mil}%" parsed as number) as date
+		delete {_loop::*} # Usuwanie zmiennych tymczasowych, nice
+	
+	set {_dif} to getTimespan("%difference between {_date::1} and {_date::2}%")
+
+	# Zamieniamy wszystko na texta
+	
+	set {_t::start} to "%{_start}.getTime()%"
+	set {_t::end} to "%{_end}.getTime()%"
+	set {_t::powod} to "%{_powod}%"
+
+	create embed:
+		set the colour of the embed to blue
+		
+		set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
+		
+		add field named "Powód:" with value "%{_t::powod}%" to embed
+		add field named "Czas rozpoczęcia:" with value "%{_date::1}%" to embed
+		add field named "Czas zakończenia:" with value "%{_date::2}%" to embed
+		add field named "Pozostało czasu:" with value {_dif} to embed
+		
+		set the thumbnail of embed to "%avatar of getUser({_user})%"
+
+	send last created embed to channel with id getConfig("Config.nieobecnosci") with {bot::name} and store it in {_msg}
+	KamilAPI add emote "red" to {_msg}
+	nieobecnosciLog("Zadeklarowanie urlopu", {_user}, "Urlop został zgłoszony o `%{_date::1}%`, a kończy się o `%{_date::2}%`")
+
+	set {_t::msgId} to {_msg}.getID()
+
+	execute "INSERT INTO `nieobecnosci` (id,msgId,start,end,aktywna,powod) VALUES(%{_user}%, %{_t::msgId}%, %{_t::start}%, %{_t::end}%, 'true', %{_t::powod}%)" in {bot::sql}
+
+on guild message receive:
+	if event-channel.getId() is getConfig("Config.nieobecnosci"):
+		execute "SELECT msgId FROM nieobecnosci WHERE id=%event-user.getId()% AND aktywna='true'" in {bot::sql} and store result in {_r::*}
+		if {_r::msgId::1} is set:
+			set {_tmsg} to "%event-message%"
+			if {_tmsg} contains "Przedłużam:":
+				set {_date} to last element of ({_tmsg} split at ":")
+				replace all " " with "" in {_date}
+				set {_format} to new SimpleDateFormat("dd.MM.yyyy")
+				set {_d} to {_format}.parse({_date})
+				if {_d} is not set:
+					reply with "Wpisałeś złą datę xD" and store it in {_msg}
+					deleteMessage(event-message)
+					deleteMessage({_msg}, 5)
+					stop
+
+				reply with "Przedłużam urlop!" and store it in {_msg}
+				deleteMessage({_msg}, 5)
+				deleteMessage(event-message)
+
+				nieobecnosciLog("Zadeklarowanie urlopu", event-user.getId(), "Urlop został przedłużony na datę `%unix date {_d}.getTime() as date%`.")
+
+				set {_mili} to "%{_d}.getTime()%"
+				execute "UPDATE nieobecnosci SET end=%{_mili}% WHERE msgId=%{_r::msgId::1}%" in {bot::sql}
+				updateUrlopMessages()
+			else:
+				reply with "Masz już urlop! Jeżeli chcesz przedłużyć napisz `Przedłużam: <nowa data>`" and store it in {_msg}
+				deleteMessage({_msg}, 10)
+				deleteMessage(event-message, 10)
+			stop
+
+		set {_msg} to event-message
+		set {_Tmsg} to "%{_msg}%"
+		
+		set {_s::*} to {_Tmsg} split at nl
+		
+		# 1 Data rozpoczęcia
+		# 2 Powód
+		# 3 Data zakończenia
+
+		loop 3 times:
+			set {_x} to last element of ({_s::%loop-value%} split at ":")
+			if loop-value != 2:
+				replace all " " with "" in {_x}
+			set {_f::%loop-value%} to {_x}
+			delete {_x} # Tak, czasami trzeba usunąć zmienne tymczasowe xD
+
+		set {_format} to new SimpleDateFormat("dd.MM.yyyy")
+
+		set {_e::start} to {_format}.parse({_f::1})
+		set {_e::end} to {_format}.parse({_f::3})
+
+		set {_e::powod} to {_f::2}
+
+		loop "start", "end", "powod":
+			if "%{_e::%loop-value%}%" is "<none>":
+
+				if loop-value is "start":
+					set {_e} to "Data rozpoczęcia jest zła. Format to `dzień-miesiąc-rok` (05.02.2020)"
+				if loop-value is "end":
+					set {_e} to "Data zakończenia jest zła"
+				if loop-value is "powod":
+					set {_e} to "powód jakimś cudem jest pusty xd"
+
+				reply with "%getMention(event-user.getId())%, %{_e}% (skopiuj swoją wiadomość, zostanie ona usunięta za 10 sek.)" and store it in {_msg}
+				deleteMessage(event-message, 15)
+				deleteMessage({_msg}, 10)
+				stop 
+
+		if unix date {_e::start}.getTime() as date >= unix date {_e::end}.getTime() as date:
+			reply with "%getMention(event-user.getId())%, czy mi się zdaje, że data zakończenia jest wcześniejsza od daty rozpoczęcia?" and store it in {_msg}
+			deleteMessage(event-message, 10)
+			deleteMessage({_msg}, 10)
+			stop
+
+		createNieobecnosc(event-user.getId(), {_e::powod}, {_e::start}, {_e::end})
+		deleteMessage(event-message)
+
+on reaction add:
+	event-user.isBot() is false
+	if event-channel.getId() is getConfig("Config.nieobecnosci"):
+		set {_e} to event-emote.getID()
+
+		if {_e} is getConfig("emote.red"):
+			execute "SELECT id FROM nieobecnosci WHERE msgId=%event-message.getID()%" in {bot::sql} and store result in {_r::*}
+
+			set {_user} to getUser({_r::id::1})
+
+			if {_user}.getId() != event-user.getId():
+				if getPoziom(event-user.getId()) < 2:
+					reply with "%getMention(event-user.getId())%, anulować urlop może tylko Administrator lub osoba, która ten urlop brała." and store it in {_msg}
+					deleteMessage({_msg})
+					stop
+
+			nieobecnosciLog("Anulowanie urlopu", {_user}.getId(), "Urlop został anulowany przez %getFullName(event-user.getId())%")
+			reply with "Anuluje urlop **%getName({_user}.getId())%**." and store it in {_msg}
+			deleteMessage({_msg}, 5)
+			deleteMessage(event-message)
+
+			execute "UPDATE nieobecnosci SET aktywna='false' WHERE msgId=%event-message.getID()%" in {bot::sql}
