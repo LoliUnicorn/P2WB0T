@@ -41,6 +41,7 @@ function updateUrlopMessages():
 			
 			set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
 			
+			add field named "Osoba zgłaszająca:" with value getFullName({_user}) to embed
 			add field named "Powód:" with value "%{_powod}%" to embed
 			add field named "Czas rozpoczęcia:" with value "%{_start}%" to embed
 			add field named "Czas zakończenia:" with value "%{_end}%" to embed
@@ -71,6 +72,7 @@ function createNieobecnosc(user: text, powod: object, start: object, end: object
 		
 		set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
 		
+		add field named "Osoba zgłaszająca:" with value getFullName({_user}) to embed
 		add field named "Powód:" with value "%{_t::powod}%" to embed
 		add field named "Czas rozpoczęcia:" with value "%{_date::1}%" to embed
 		add field named "Czas zakończenia:" with value "%{_date::2}%" to embed
