@@ -96,7 +96,7 @@ every 2 minutes:
 			checkStatus({_v})
 
 every 30 seconds:
-	set {_c} to channel with id "683720945835573269"
+	set {_c} to channel with id "690269411755819148"
 
 	loop ...{_c}.getMembers():
 		set {_v} to loop-value
