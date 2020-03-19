@@ -49,10 +49,10 @@ function containsLink(t: text) :: boolean:
 
 function checkStatus(u: member):
 	add "%game of {_u}%" to {_status::*}
-	loop ...{_u}.getActivities():
-		set {_v} to loop-value
-		add "%{_v}.getState()%" to {_status::*}
-		add "%{_v}.getDetails()%" to {_status::*}
+	#loop ...{_u}.getActivities():
+	#	set {_v} to loop-value
+	#	add "%{_v}.getState()%" to {_status::*}
+	#	add "%{_v}.getDetails()%" to {_status::*}
 
 	loop 10 times:
 		remove "<none>" from {_status::*}
