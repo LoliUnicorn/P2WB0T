@@ -93,7 +93,7 @@ every 2 minutes:
 
 	loop ...{_g}.getMembers():
 		set {_v} to loop-value
-		{_v}.isBot() is false
+		{_v}.getUser().isBot() is false
 		getPoziom({_v}.getUser().getId()) is 0
 		if "%online status of {_v}%" != "offline":
 			if {_v} has role role with id "690267173872074832":
