@@ -34,6 +34,7 @@ function containsSwear(t: text) :: boolean:
 	return false
 
 function containsLink(t: text) :: boolean:
+	return false
 	if {_t} contains "derp" or "feerko" or "roizy" or "hypixel" or "hajsmc": # za te rzeczy nie bedziemy karac
 		return false
 
@@ -93,6 +94,7 @@ every 2 minutes:
 	loop ...{_g}.getMembers():
 		set {_v} to loop-value
 		{_v}.isBot() is false
+		getPoziom({_v}.getUser().getId()) is 0
 		if "%online status of {_v}%" != "offline":
 			if {_v} has role role with id "690267173872074832":
 				set {_xd} to "xd"
