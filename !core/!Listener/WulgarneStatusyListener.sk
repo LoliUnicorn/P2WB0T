@@ -92,6 +92,7 @@ every 2 minutes:
 
 	loop ...{_g}.getMembers():
 		set {_v} to loop-value
+		{_v}.isBot() is false
 		if "%online status of {_v}%" != "offline":
 			if {_v} has role role with id "690267173872074832":
 				set {_xd} to "xd"
