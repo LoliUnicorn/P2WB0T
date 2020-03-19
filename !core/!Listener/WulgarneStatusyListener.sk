@@ -93,7 +93,10 @@ every 2 minutes:
 	loop ...{_g}.getMembers():
 		set {_v} to loop-value
 		if "%online status of {_v}%" != "offline":
-			checkStatus({_v})
+			if {_v} has role role with id "690267173872074832":
+				set {_xd} to "xd"
+			else:
+				checkStatus({_v})
 
 every 30 seconds:
 	set {_c} to channel with id "690269411755819148"
