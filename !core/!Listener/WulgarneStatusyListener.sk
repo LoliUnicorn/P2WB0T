@@ -7,7 +7,7 @@ function removeRoles(m: member):
 	set {_list} to getList("%{_id::*}%")
 	execute "INSERT INTO `roles` (id,rola) VALUES('%unsafe {_m}.getUser().getId()%', '%unsafe {_list}%')" in {bot::sql}
 
-	add role with id "683726062144061440" to roles of {_m} with {bot::name}
+	add role with id "690267173872074832" to roles of {_m} with {bot::name}
 
 function loadRoles(m: member):
 	execute "SELECT rola FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql} and store result in {_r::*}
@@ -23,7 +23,7 @@ function loadRoles(m: member):
 		set {_rola} to role with id "%loop-value%"
 		{_g}.addRoleToMember({_m}, {_rola}).complete()
 
-	set {_r} to role with id "683726062144061440"
+	set {_r} to role with id "690267173872074832"
 	{_g}.removeRoleFromMember({_m}, {_r}).complete()
 
 function containsSwear(t: text) :: boolean:
@@ -100,5 +100,5 @@ every 30 seconds:
 
 	loop ...{_c}.getMembers():
 		set {_v} to loop-value
-		if {_v} has role role with id "683726062144061440":
+		if {_v} has role role with id "690267173872074832":
 			checkUnstatus({_v})
