@@ -28,14 +28,17 @@ discord command {@cmd} [<text>]:
 
 		set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", {_arg})).redirectErrorStream(true).start();
 
-		{_process}.waitFor(5, TimeUnit.MINUTES!)
-		set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
+		{_process}.waitFor(2, TimeUnit.MINUTES!)
+
+		#set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
+		set {_reader} to new BufferedReader()
+
 		set {_builder} to ""
 
 		if {_reader}.ready():
 			loop 100 times:
 				set {_line} to {_reader}.readLine()
-				{_builder}.append(line).append(nl)
+				{_builder}.append({_line}).append("%nl%")
 
 				if {_line} is not set:
 					stop loop
@@ -45,10 +48,8 @@ discord command {@cmd} [<text>]:
 		{_process}.destroyForcibly()
 
 		set {_result} to {_builder}.toString()
-
 		if {_result}.length() > 1993:
 			set {_result} to {_result}.substring(0, 1993)
 
 		edit {_msg} to show "```%nl%%{_result}%%nl%```"
-
 		KamilAPI add emote "green" to event-message of event-user
