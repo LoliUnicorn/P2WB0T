@@ -1,0 +1,54 @@
+options:
+	cmd: shell
+
+on script load:
+	set {command::{@cmd}::poziom} to 10
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wykonuje kod w vps"
+	set {command::{@cmd}::kategoria} to "Deweloperskie"
+	set {command::{@cmd}::uzycie} to "{@cmd} <kod>"
+
+import:
+	java.io.BufferedReader
+	java.io.InputStreamReader
+	java.util.Arrays
+	java.util.Objects
+	java.util.concurrent.TimeUnit
+	java.lang.System
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_arg} to arg-1
+		replace all "```" with "" in {_arg}
+
+		reply with "%getConfigEmote(""loading"")% Wykonuję..." and store it in {_msg}
+
+		set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", {_arg})).redirectErrorStream(true).start();
+		{_process}.waitFor(5, TimeUnit.MINUTES!)
+		set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
+		set {_builder} to new StringBuilder()
+
+		if {_reader}.ready():
+			set {_line} to ""
+
+			loop 100 times:
+				set {_line} to reader.readLine()
+				{_builder}.append(line).append(nl)
+
+				if {_line} is not set:
+					stop loop
+
+				delete {_line}
+		
+		{_process}.destroyForcibly()
+
+		set {_result} to {_builder}.toString()
+
+		if {_result}.length() > 1993:
+			set {_result} to {_result}.substring(0, 1993)
+
+		edit {_msg} to show "```%nl%%{_result}%%nl%```"
+
+		KamilAPI add emote "green" to event-message of event-user
