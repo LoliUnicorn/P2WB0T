@@ -23,7 +23,6 @@ discord command {@cmd} [<text>]:
 				if "%loop-value-2%" is arg-1:
 					set {_cmdinfo} to loop-value-1
 					stop loop
-			
 
 		if {_cmdinfo} is set:
 			create embed:
@@ -35,6 +34,8 @@ discord command {@cmd} [<text>]:
 				set {_s::1} to "Użycie: %{bot::prefix}%%{command::%{_cmdinfo}%::uzycie}%"
 				set {_a::*} to aliases of {_cmdinfo}
 				if {_a::*} is "pingbota":
+					set {_s::2} to "Aliasy: Brak."
+				else if "%{_a::*}%" is "<none>":
 					set {_s::2} to "Aliasy: Brak."
 				else:
 					set {_s::2} to "Aliasy: %{_a::*}%"
@@ -89,6 +90,7 @@ discord command {@cmd} [<text>]:
 					if {command::%loop-value-2%::kategoria} is loop-value-1:
 						if {command::%loop-value-2%::poziom} <= getPoziom(event-user.getId()):
 							add "%loop-value-2%" to {_komendy::*}
+
 				if {_komendy::*} is set:
 					add field named "%loop-value%:" with value getList({_komendy::*}, "`,` ") to embed
 				delete {_komendy::*}

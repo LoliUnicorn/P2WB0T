@@ -27,13 +27,11 @@ discord command {@cmd} [<text>]:
 		reply with "%getConfigEmote(""loading"")% Wykonuję..." and store it in {_msg}
 
 		set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", {_arg})).redirectErrorStream(true).start()
-
 		{_process}.waitFor(2, TimeUnit.MINUTES!)
 
 		set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
 
 		set {_builder} to ""
-
 		if {_reader}.ready():
 			loop 100 times:
 				set {_line} to {_reader}.readLine()
