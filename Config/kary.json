@@ -13,17 +13,17 @@
 				"time": "2h"
 			}],
 			"tier_3": [{
-				"maxWarns": 4,
+				"maxWarns": 3,
 				"type": "Tempmute",
 				"time": "3h"
 			}],
 			"tier_4": [{
-				"maxWarns": 6,
+				"maxWarns": 4,
 				"type": "Tempban",
 				"time": "1d"
 			}],
 			"tier_5": [{
-				"maxWarns": 8,
+				"maxWarns": 5,
 				"type": "Tempban",
 				"time": "3d"
 			}]
@@ -123,22 +123,22 @@
 		"6": [{
 			"name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szeroko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem.",
 			"tier_1": [{
-				"maxWarns": 2,
+				"maxWarns": 1,
 				"type": "Tempmute",
 				"time": "3h"
 			}],
 			"tier_2": [{
-				"maxWarns": 3,
+				"maxWarns": 2,
 				"type": "Tempmute",
 				"time": "5h"
 			}],
 			"tier_3": [{
-				"maxWarns": 5,
+				"maxWarns": 3,
 				"type": "Tempmute",
 				"time": "7h"
 			}],
 			"tier_4": [{
-				"maxWarns": 7,
+				"maxWarns": 4,
 				"type": "Tempmute",
 				"time": "10h"
 			}]

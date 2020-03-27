@@ -1,33 +1,30 @@
-function checkStatusy():
+function removeRoles(m: member):
 	set {_g} to guild with id {bot::guild}
-	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
-
-	# TODO: Dodaj checka na reklame + trzeba to przetestować
-	loop ...{_g}.getMembers():
+	loop roles of {_m}:
 		set {_v} to loop-value
-		if {_v}.getUser().isBot() is false:
-			if online status of {_v} != offline:
-				getPoziom({_v}.getUser().getId()) < 1 # równouprawnienie nie istnieje
-				set {_game} to game of {_v}
-				if {_game} is "custom status":
-					loop ...{_m}.getActivities():
-						set {_v} to loop-value-2
-						loop {_kek::*}:
-							if "%{_v}.getState()%" is loop-value-3:
-								KamilAPI add pun to {_v}.getUser() with reason "Wulgarny status" by getUser({bot::id}) # FIXME: punish
-								wait 20 tick
-								stop loop
-				else:
-					loop {_kek::*}:
-						if {_game} is loop-value-2:
-							KamilAPI add pun to {_v}.getUser() with reason "Wulgarny status" by getUser({bot::id}) # FIXME: punish
-							wait 20 tick
-							stop loop
+		{_g}.removeRoleFromMember({_m}, {_v}).complete()
+		add "%{_v}.getId()%" to {_id::*}
+	set {_list} to getList("%{_id::*}%")
+	execute "INSERT INTO `roles` (id,rola) VALUES('%unsafe {_m}.getUser().getId()%', '%unsafe {_list}%')" in {bot::sql}
 
-				delete {_game}
+	add role with id "690267173872074832" to roles of {_m} with {bot::name}
 
-# every 5 minutes:
-# 	checkStatusy()
+function loadRoles(m: member):
+	execute "SELECT rola FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql} and store result in {_r::*}
+	execute "DELETE FROM roles WHERE id='%unsafe {_m}.getUser().getId()%'" in {bot::sql}
+
+	set {_g} to guild with id {bot::guild}
+
+	set {_roles} to "%{_r::rola::*}%"
+	replace all " " with "" in {_roles}
+	set {_r::*} to {_roles} split at ","
+	
+	loop {_r::*}:
+		set {_rola} to role with id "%loop-value%"
+		{_g}.addRoleToMember({_m}, {_rola}).complete()
+
+	set {_r} to role with id "690267173872074832"
+	{_g}.removeRoleFromMember({_m}, {_r}).complete()
 
 function containsSwear(t: text) :: boolean:
 	set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
@@ -37,6 +34,7 @@ function containsSwear(t: text) :: boolean:
 	return false
 
 function containsLink(t: text) :: boolean:
+	return false
 	if {_t} contains "derp" or "feerko" or "roizy" or "hypixel" or "hajsmc": # za te rzeczy nie bedziemy karac
 		return false
 
@@ -51,6 +49,26 @@ function containsLink(t: text) :: boolean:
 
 function checkStatus(u: member):
 	add "%game of {_u}%" to {_status::*}
+	#loop ...{_u}.getActivities():
+	#	set {_v} to loop-value
+	#	add "%{_v}.getState()%" to {_status::*}
+	#	add "%{_v}.getDetails()%" to {_status::*}
+
+	loop 10 times:
+		remove "<none>" from {_status::*}
+
+	loop {_status::*}:
+		set {_v::1} to loop-value
+		if containsSwear({_v::1}):
+			removeRoles({_u})
+			stop
+
+		if containsLink({_v::1}):
+			removeRoles({_u})
+			stop
+
+function checkUnstatus(u: member):
+	add "%game of {_u}%" to {_status::*}
 	loop ...{_u}.getActivities():
 		set {_v} to loop-value
 		add "%{_v}.getState()%" to {_status::*}
@@ -62,9 +80,31 @@ function checkStatus(u: member):
 	loop {_status::*}:
 		set {_v::1} to loop-value
 		if containsSwear({_v::1}):
-			log("Przy %loop-value% wykryto przeklenstwo!")
 			stop
-		
+
 		if containsLink({_v::1}):
-			log("Przy %loop-value% wykryto linka!")
 			stop
+	
+	loadRoles({_u})
+
+
+every 2 minutes:
+	set {_g} to guild with id {bot::guild}
+
+	loop ...{_g}.getMembers():
+		set {_v} to loop-value
+		{_v}.getUser().isBot() is false
+		getPoziom({_v}.getUser().getId()) is 0
+		if "%online status of {_v}%" != "offline":
+			if {_v} has role role with id "690267173872074832":
+				set {_xd} to "xd"
+			else:
+				checkStatus({_v})
+
+every 30 seconds:
+	set {_c} to channel with id "690269411755819148"
+
+	loop ...{_c}.getMembers():
+		set {_v} to loop-value
+		if {_v} has role role with id "690267173872074832":
+			checkUnstatus({_v})
