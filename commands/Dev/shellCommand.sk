@@ -16,6 +16,7 @@ import:
 	java.util.Objects
 	java.util.concurrent.TimeUnit
 	java.lang.System
+	java.lang.ProcessBuilder
 
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
@@ -26,15 +27,14 @@ discord command {@cmd} [<text>]:
 		reply with "%getConfigEmote(""loading"")% Wykonuję..." and store it in {_msg}
 
 		set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", {_arg})).redirectErrorStream(true).start();
+
 		{_process}.waitFor(5, TimeUnit.MINUTES!)
 		set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
-		set {_builder} to new StringBuilder()
+		set {_builder} to ""
 
 		if {_reader}.ready():
-			set {_line} to ""
-
 			loop 100 times:
-				set {_line} to reader.readLine()
+				set {_line} to {_reader}.readLine()
 				{_builder}.append(line).append(nl)
 
 				if {_line} is not set:
