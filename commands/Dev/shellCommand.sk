@@ -34,14 +34,18 @@ discord command {@cmd} [<text>]:
 
 		set {_builder} to ""
 
-		loop 100 times:
-			set {_line} to {_reader}.readLine()
-			{_builder}.append({_line}).append("%nl%")
+		if {_reader}.ready():
+			loop 100 times:
+				set {_line} to {_reader}.readLine()
+				if {_line} is not set:
+					stop loop
 
-			if {_line} is not set:
-				stop loop
+				if {_builder} is set:
+					set {_builder} to "%{_builder}%%{_line}%%nl%"
+				else:
+					set {_builder} to "%{_line}%%nl%"
 
-			delete {_line}
+				delete {_line}
 		
 		{_process}.destroyForcibly()
 
