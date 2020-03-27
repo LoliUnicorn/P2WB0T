@@ -7,7 +7,7 @@ function cache():
 	set {_manager} to {_bukkit}.getPluginManager()
 	set {_vixio} to {_manager}.getPlugin("Vixio")
 
-	{_manager}.disablePlugin​({_vixio})
+	{_manager}.disablePlugin({_vixio})
 	{_manager}.enablePlugin({_vixio})
 
 	System.gc()
