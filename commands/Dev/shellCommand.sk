@@ -21,8 +21,14 @@ import:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
+		if event-user.getId() != "343467373417857025":
+			KamilAPI cmd error "Komenda dostępna tylko dla Kamila" to event-message
+	
 		set {_arg} to arg-1
 		replace all "```" with "" in {_arg}
+
+		if {_arg} contains "rm" or "remove":
+			KamilAPI cmd error "Nie usuniesz nic, sorka" to event-message
 
 		reply with "%getConfigEmote(""loading"")% Wykonuję..." and store it in {_msg}
 

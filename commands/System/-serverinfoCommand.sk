@@ -1,0 +1,54 @@
+# options:
+# 	cmd: serverinfo
+
+# on script load:
+# 	set {command::{@cmd}::poziom} to 0
+# 	set {command::{@cmd}::cooldown} to 10 seconds
+
+# 	set {command::{@cmd}::opis} to "Informacje o serwerze"
+# 	set {command::{@cmd}::kategoria} to "System"
+# 	set {command::{@cmd}::uzycie} to "serverinfo"
+
+# discord command {@cmd} [<text>]:
+# 	aliases: serwerinfo
+# 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+# 	trigger:
+
+# 		set {_info::1::ID serwera} to "%event-guild.getId()%"
+# 		set {_info::2::Ludzi na serwerze} to "%size of discord members of event-guild%"
+
+# 		loop channels of event-guild:
+# 			set {_v} to loop-value
+# 			if "%{_v}.getType()%" is "TEXT":
+# 				add {_v} to {_tekst::*}
+# 			else:
+# 				add {_v} to {_voice::*}
+
+# 		set {_info::4::Kanalow} to "Tekstowych: %size of {_tekst::*}%%nl%Głosowych: %size of {_voice::*}%"
+# 		set {_info::3::Roli na serwerze} to "%size of roles of event-guild%"
+
+# 		set {_e} to "%event.getGuild().getTimeCreated().toInstant().toEpochMilli()%"
+# 		set {_siema} to unix date ("%{_e}%" parsed as number) as date
+# 		set {_info::5::Utworzono} to "%{_siema}%"
+
+# 		create embed:
+# 			set the footer of embed to footer with text "Serwerinfo"
+# 			set the timestamp of embed to now
+# 			set the colour of the embed to color of getColor(event-member)
+# 			set the thumbnail of embed to "%event.getGuild().getIconUrl()%"
+
+# 			set {_v::n} to 1
+# 			loop size of {_info::*} times:
+# 				loop {_info::%loop-value%::*}:
+# 					set {_msg} to loop-index
+# 					add 1 to {_v::n}
+# 					if {_v::n} >= 2:
+# 						add split field named {_msg} with value loop-value-2 to embed
+# 						add 1 to {_v::cos}
+# 						if {_v::cos} = 3:
+# 							delete {_v::*}
+# 					else:
+# 						add field named {_msg} with value loop-value-2 to embed
+
+# 		reply with the last created embed
+# 		KamilAPI add emote "green" to event-message of event-user
