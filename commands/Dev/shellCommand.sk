@@ -30,8 +30,7 @@ discord command {@cmd} [<text>]:
 
 		{_process}.waitFor(2, TimeUnit.MINUTES!)
 
-		#set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
-		set {_reader} to new BufferedReader()
+		set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
 
 		set {_builder} to ""
 
