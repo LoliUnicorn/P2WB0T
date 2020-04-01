@@ -1,18 +1,10 @@
 import:
 	java.lang.System
-	org.bukkit.Bukkit
 
 function cache():
-	set {_bukkit} to Bukkit.getServer()
-	set {_manager} to {_bukkit}.getPluginManager()
-	set {_vixio} to {_manager}.getPlugin("Vixio")
-
-	{_manager}.disablePlugin({_vixio})
-	{_manager}.enablePlugin({_vixio})
-
 	System.gc()
 
-	execute console command "sk reload P2WB0T/!Core/Main.sk"
+	execute console command "sk reload P2WB0T/!core/Main.sk"
 
 every 10 minutes:
 	cache()
