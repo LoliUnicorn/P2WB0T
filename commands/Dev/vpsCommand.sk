@@ -84,6 +84,7 @@ discord command {@cmd} [<text>]:
 		#KamilAPI send post with {_url} and param {_json} in event
 
 		send a "GET" request to "%{_url}%%{_json}%"
+		log("%{_url}%%{_json}%")
 		
 		reply with "%body of last http response%"
 
