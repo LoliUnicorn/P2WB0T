@@ -1,5 +1,5 @@
-effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [in %event%]:
-	trigger:
+effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [jpg %text%]:
+	trigger: 
 		delay the effect
 		checkRepairMute()
 		set {_r} to role with id getConfig("Config.muterole")	
@@ -7,7 +7,7 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [in 
 		set {_powod} to getPowod(expr-2)
 		set {_adm} to expr-3
 		set {_user} to expr-1
-		set {_event} to expr-4
+		set {_jpg} to expr-4
 
 		if {_r} is not set:
 			KamilAPI set variable {_error} to "`Config.muterole` jest źle ustawione! Popraw to!!!" in event
@@ -30,5 +30,5 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [in 
 		set {_v} to "%{_kurw}%"
 		
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getUser().getId()%' AND typ='Mute' AND aktywna='Tak'" in {bot::sql}
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Mute", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_event}.getMessage().getAttachments().get(0).getUrl()%")
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Mute", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
 		continue

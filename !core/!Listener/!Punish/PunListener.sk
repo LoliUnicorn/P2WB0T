@@ -90,7 +90,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_jestPowod} is not true:
 			edit {_msg} to show "Nie ma takiego powodu!"
 			stop
-
+ 
 		KamilAPI check reset of {_u}.getUser().getId() with reason {_name} and warn {_saveWarn}
 
 		if {_adm}.isBot() is false: # bierzemy jpg
@@ -111,11 +111,11 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 				kick {_u} from {_g} due to {_powod} with {bot::name}
 				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
 			if {_type} is "Ban":
-				KamilAPI ban {_u} with reason {_powod} by {_adm} in {_event}
+				KamilAPI ban {_u} with reason {_powod} by {_adm} jpg {_jpg}
 			if {_type} is "Tempmute":
-				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} in {_event}
+				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
 			if {_type} is "Tempban":
-				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm} in {_event}
+				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
 			if {_type} is "Mute":
 				KamilAPI mute {_u} with reason {_powod} by {_adm} in {_event}
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_type}%** na czas **%{_time}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
