@@ -79,11 +79,13 @@ discord command {@cmd} [<text>]:
 		set {_md5Sign} to getMd5({_btSign})
 		set {_temp} to "%{_timestamp}%%{_md5Sign}%"
 		set {_token} to getMd5({_temp})
-		set {_json} to "request_time=%{_timestamp}%&request_token=%{_token}%"
+		set {_json} to "&request_time=%{_timestamp}%&request_token=%{_token}%"
 
-		KamilAPI send post with {_url} and param {_json} in event
+		#KamilAPI send post with {_url} and param {_json} in event
+
+		send a request to "%{_url}%%{_json}%"
 		
-		reply with "%{_json}%"
+		reply with "%body of last http response%"
 
 		KamilAPI add emote "green" to event-message of event-user
 
