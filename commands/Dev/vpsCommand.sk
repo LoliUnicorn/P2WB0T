@@ -18,7 +18,7 @@ discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 
-		set {_url} to String.format("%%s/system?action=%%s", "https://kamil0024.me:2137", "GetSystemTotal")
+		set {_url} to "https://kamil0024.me:2137/system?action=GetSystemTotal"
 		log("url: %{_url}%")
 		set {_timestamp} to "%new Date().getTime()%"
 		set {_md5Sign} to Panel.getMd5("10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
