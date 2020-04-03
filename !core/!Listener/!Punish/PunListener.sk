@@ -118,4 +118,4 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc miej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		wait 40 tick
 		set {_jpg} to event.getMessage().getAttachments().get(0).getUrl()
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null" "%{_jpg}%") # dodaje Puna
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
