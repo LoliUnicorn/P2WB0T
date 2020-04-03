@@ -18,8 +18,8 @@ function aaPanel(url: string, action: string, token: string) :: string:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_json} to aaPanel("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
-		
+		set {_json} to Main.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
+
 		reply with "%{_json}%"
 
 		KamilAPI add emote "green" to event-message of event-user
