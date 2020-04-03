@@ -16,7 +16,7 @@ discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		set {_url} to "https://kamil0024.me:2137"
-		set {_akcja} to GetSystemTotal
+		set {_akcja} to "GetSystemTotal"
 		set {_token} to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
 
 		log(Panel.getJSON({_url}, {_akcja}, {_token}))
