@@ -3,7 +3,6 @@ import:
 
 function cache():
 	System.gc()
-
 	execute console command "sk reload P2WB0T/!core/Main.sk"
 
 every 10 minutes:
