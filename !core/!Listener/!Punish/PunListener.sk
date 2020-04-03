@@ -32,13 +32,14 @@ effect KamilAPI check reset of %text% with reason %text% and warn[s] %number%:
 			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}%' AND powod='%unsafe {_powod}%' AND typ='Pun'" in {bot::sql}
 		continue
 
-effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%] [and set message to %-message%]:
+effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%] [and set message to %-message% and event %event%]:
 	trigger:
 		set {_g} to guild with id {bot::guild}
 		set {_user} to expr-1
 		set {_powod} to expr-2
 		set {_adm} to getUser({bot::id})
 		set {_adm} to expr-3
+		set {_event} to expr-6
 		if expr-4 is not set:
 			set {_channel} to event.getChannel()
 		else:
@@ -110,13 +111,13 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 				kick {_u} from {_g} due to {_powod} with {bot::name}
 				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
 			if {_type} is "Ban":
-				KamilAPI ban {_u} with reason {_powod} by {_adm}
+				KamilAPI ban {_u} with reason {_powod} by {_adm} in {_event}
 			if {_type} is "Tempmute":
-				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm}
+				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} in {_event}
 			if {_type} is "Tempban":
-				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm}
+				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm} in {_event}
 			if {_type} is "Mute":
-				KamilAPI mute {_u} with reason {_powod} by {_adm}
+				KamilAPI mute {_u} with reason {_powod} by {_adm} in {_event}
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_type}%** na czas **%{_time}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		else:
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")

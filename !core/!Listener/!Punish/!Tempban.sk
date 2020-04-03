@@ -1,11 +1,12 @@
-effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user%:
+effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user% [in %event%]:
 	trigger:
 		delay the effect
 		set {_g} to guild with id {bot::guild}
 		set {_user} to expr-1
 		set {_powod} to getPowod(expr-2)
 		set {_adm} to expr-4
-		
+		set {_event} to expr-5
+
 		if {_user} is instance of User:
 			set {_u} to getUser({_user}.getId())
 		if {_user} is instance of Member:
@@ -42,5 +43,5 @@ effect KamilAPI tempban %user/member/text% with reason %text% in (duraction|time
 		ban {_u} from {_g} with reason {_powod} with {bot::name}
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getId()%' AND typ='Tempban' AND aktywna='Tak'" in {bot::sql}
 
-		modLog({_u}.getId(), {_adm}.getId(), "Tempban", {_powod}, {_nick}, "%{_time}%", "null", "%event.getMessage().getAttachments().get(0).getUrl()%")
+		modLog({_u}.getId(), {_adm}.getId(), "Tempban", {_powod}, {_nick}, "%{_time}%", "null", "%{_event}.getMessage().getAttachments().get(0).getUrl()%")
 		continue
