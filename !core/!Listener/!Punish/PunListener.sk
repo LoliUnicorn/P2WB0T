@@ -92,6 +92,12 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		KamilAPI check reset of {_u}.getUser().getId() with reason {_name} and warn {_saveWarn}
 
+		if {_adm}.isBot() is false: # bierzemy jpg
+			if expr-5 is not set:
+				set {_jpg} to event.getMessage().getAttachments().get(0).getUrl()
+			else:
+				set {_jpg} to expr-5.getMessage().getAttachments().get(0).getUrl()
+
 		# sprawdzamy czy typ teraz ma karę
 		set {_tier::2} to {_tier::2} parsed as number
 
@@ -102,7 +108,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
 			if {_type} is "Kick":
 				kick {_u} from {_g} due to {_powod} with {bot::name}
-				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()))
+				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
 			if {_type} is "Ban":
 				KamilAPI ban {_u} with reason {_powod} by {_adm}
 			if {_type} is "Tempmute":
@@ -117,13 +123,5 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc miej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		wait 40 tick
-
-		if {_adm}.isBot() is false:
-			if expr-5 is not set:
-				set {_jpg} to event.getMessage().getAttachments().get(0).getUrl()
-				log("1 %event.getMessage().getContentRaw()% (%{_jpg}%)")
-			else:
-				set {_jpg} to expr-5.getMessage().getAttachments().get(0).getUrl()
-				log("2 %expr-5% (%{_jpg}%)")
 
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna

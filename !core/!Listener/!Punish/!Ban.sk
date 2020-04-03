@@ -21,6 +21,6 @@ effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user%:
 		set {_nick} to getMcNick({_u}.getId())
 		ban {_u} from {_g} with reason {_powod} with {bot::name}
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getId()%' AND typ='Ban' AND aktywna='Tak'" in {bot::sql}
-		modLog({_u}.getId(), {_adm}.getId(), "Ban", {_powod}, {_nick})
+		modLog({_u}.getId(), {_adm}.getId(), "Ban", {_powod}, {_nick}, "null", "null", "%event.getMessage().getAttachments().get(0).getUrl()%")
 
 		continue

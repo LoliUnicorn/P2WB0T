@@ -29,5 +29,5 @@ effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user%:
 		set {_v} to "%{_kurw}%"
 		
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getUser().getId()%' AND typ='Mute' AND aktywna='Tak'" in {bot::sql}
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Mute", {_powod}, getMcNick({_u}.getUser().getId()))
+		modLog({_u}.getUser().getId(), {_adm}.getId(), "Mute", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%event.getMessage().getAttachments().get(0).getUrl()%")
 		continue
