@@ -33,6 +33,7 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 				add field named "Nadano na czas:" with value getTimespan("%{_xd}%") to embed
 				add field named "Mija o:" with value "%{_now}%" to embed
 			
+			log("ModLogListener: %{_jpg}%")
 			if "%{_jpg}%" is not "<none>":
 				set the thumbnail of embed to "%{_jpg}%"
 		

@@ -121,9 +121,9 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		if {_adm}.isBot() is false:
 			if expr-5 is not set:
 				set {_jpg} to event.getMessage().getAttachments().get(0).getUrl()
-				log("1 %event.getMessage().getContentRaw()%")
+				log("1 %event.getMessage().getContentRaw()% (%{_jpg}%)")
 			else:
 				set {_jpg} to expr-5.getMessage().getAttachments().get(0).getUrl()
-				log("2 %expr-5%")
+				log("2 %expr-5% (%{_jpg}%)")
 
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
