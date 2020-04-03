@@ -16,7 +16,7 @@ import:
 	java.io.PrintWriter
 	java.math.BigInteger
 	java.net.URL
-	java.net.URL{_conn}ection
+	java.net.URLConnection
 	java.security.MessageDigest
 	java.util.Date
 	java.util.HashMap
@@ -27,16 +27,16 @@ function getMd5(s: text) :: string:
 	{_md}.update({_s}.getBytes())
 	return new BigInteger(1, {_md}.digest()).toString(16)
 
-effect KamilAPI send post with %url% and param[metrs] %string% in %event%:
+effect KamilAPI send post with %string% and param[metrs] %string% in %event%:
 	trigger:
 		delay the effect
 		set {_url} to expr-1
 		set {_param} to expr-2
 		set {_event} to expr-3
 
-		set {_realUrl} = new URL({_url})
+		set {_realUrl} to new URL({_url})
 
-		set {_conn} = {_realUrl}.openConnection();
+		set {_conn} to {_realUrl}.openConnection();
 
 		{_conn}.setRequestProperty("accept", "text/xml,text/javascript,text/html,application/json")
 		{_conn}.setRequestProperty("connection", "Keep-Alive")
@@ -44,7 +44,7 @@ effect KamilAPI send post with %url% and param[metrs] %string% in %event%:
 		{_conn}.setDoOutput(true)
 		{_conn}.setDoInput(true)
 
-		set {_out} = new PrintWriter({_conn}.getOutputStream())
+		set {_out} to new PrintWriter({_conn}.getOutputStream())
 
 		{_out}.print({_param})
 
@@ -72,7 +72,7 @@ effect KamilAPI send post with %url% and param[metrs] %string% in %event%:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_btSign} to = "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
+		set {_btSign} to to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
 		set {_url} to "https://kamil0024.me:2137/system?action=GetSystemTotal"
 		set {_timestamp} to "%new Date().getTime()%"
 		set {_md5Sign} to getMd5({_btSign})
