@@ -10,7 +10,7 @@ on script load:
 	set {command::{@cmd}::uzycie} to "vps"
 
 import:
-	pl.kamil0024.aapanel.Main
+	pl.kamil0024.aapanel.Main at Panel
 
 function aaPanel(url: string, action: string, token: string) :: string:
 	return Main.getJSON({_url}, {_action}, {_token})
@@ -18,7 +18,7 @@ function aaPanel(url: string, action: string, token: string) :: string:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_json} to Main.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
+		set {_json} to Panel.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
 		reply with "%{_json}%"
 
