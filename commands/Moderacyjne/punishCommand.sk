@@ -95,6 +95,7 @@ discord command {@cmd} [<text>] [<text>]:
 						add 1 to {_warns::%{_n}%}
 
 			set {v::%event-user%::pun::karany} to {_member}
+			set {v::%event-user.getId()%::pun::msg} to event-message
 
 			if arg-2 is not set:
 				set {_lul} to 1
@@ -158,6 +159,7 @@ discord command {@cmd} [<text>] [<text>]:
 						KamilAPI add emote "red" to {_msg}
 						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
 						set {v::%event-user.getId()%::pun::powod} to {_name}
+						set {v::%event-user.getId()%::pun::msg} to event-message
 						stop
 				delete {v::%event-user.getId()%::pun::*}
 				KamilAPI cmd error "Nie ma takiego numeru!" to event-message
@@ -166,7 +168,7 @@ on reaction add:
 	if {v::%event-user.getId()%::pun::botmsg} is event-message:
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
-			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel
+			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel and set message to {v::%event-user.getId()%::pun::msg}
 		deleteMessage(event-message)
 		delete {v::%event-user.getId()%::pun::*}
 
@@ -190,6 +192,6 @@ on guild message receive:
 		delete {v::%event-user.getId()%::pun::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
-	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel
+	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel and set message to {v::%event-user.getId()%::pun::msg}
 	deleteMessage({v::%event-user.getId()%::pun::botmsg})
 	delete {v::%event-user.getId()%::pun::*}
