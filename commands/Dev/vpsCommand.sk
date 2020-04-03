@@ -11,13 +11,14 @@ on script load:
 
 import:
 	pl.kamil0024.aapanel.Main as Panel
+	java.lang.String
 
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_url} to "https://kamil0024.me:2137"
-		set {_akcja} to "GetSystemTotal"
-		set {_token} to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
+		set {_url} to new String("https://kamil0024.me:2137")
+		set {_akcja} to new String("GetSystemTotal")
+		set {_token} to new String("10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
 		log(Panel.getJSON({_url}, {_akcja}, {_token}))
 
