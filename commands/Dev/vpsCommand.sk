@@ -1,20 +1,6 @@
 options:
 	cmd: vps
 
-import:
-	java.io.BufferedReader
-	java.io.IOException
-	java.io.InputStreamReader
-	java.io.PrintWriter
-	java.math.BigInteger
-	java.net.URL
-	java.net.URLConnection
-	java.security.MessageDigest
-	java.util.Date
-	java.util.HashMap
-	java.util.Map
-
-
 on script load:
 	set {command::{@cmd}::poziom} to 0
 	set {command::{@cmd}::cooldown} to 0 seconds
@@ -23,29 +9,44 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Deweloperskie"
 	set {command::{@cmd}::uzycie} to "vps"
 
-discord command {@cmd} [<text>]:
-	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+import:
+	java.io.BufferedReader
+	java.io.IOException
+	java.io.InputStreamReader
+	java.io.PrintWriter
+	java.math.BigInteger
+	java.net.URL
+	java.net.URL{_conn}ection
+	java.security.MessageDigest
+	java.util.Date
+	java.util.HashMap
+	java.util.Map
+
+function getMd5(s: text) :: string:
+	set {_md} to MessageDigest.getInstance("MD5")
+	{_md}.update({_s}.getBytes())
+	return new BigInteger(1, {_md}.digest()).toString(16)
+
+effect KamilAPI send post with %url% and param[metrs] %string% in %event%:
 	trigger:
-		set {_url} to "https://kamil0024.me:2137/system?action=GetSystemTotal"
-		
-		set {_date} to new Date().getTime()
-		set {_timestamp} to "%{_date}%"
+		delay the effect
+		set {_url} to expr-1
+		set {_param} to expr-2
+		set {_event} to expr-3
 
-		set {_json} to "request_time=%{_timestamp}%&request_token=10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
+		set {_realUrl} = new URL({_url})
 
-		set {_realUrl} to new Url({_url})
-
-		set {_conn} to {_realUrl}.openConnection()
+		set {_conn} = {_realUrl}.openConnection();
 
 		{_conn}.setRequestProperty("accept", "text/xml,text/javascript,text/html,application/json")
-    {_conn}.setRequestProperty("connection", "Keep-Alive")
+		{_conn}.setRequestProperty("connection", "Keep-Alive")
 
 		{_conn}.setDoOutput(true)
 		{_conn}.setDoInput(true)
 
-		set {_out} to new PrintWriter({_conn}.getOutputStream())
+		set {_out} = new PrintWriter({_conn}.getOutputStream())
 
-		{_out}.print({_json})
+		{_out}.print({_param})
 
 		{_out}.flush()
 
@@ -65,6 +66,23 @@ discord command {@cmd} [<text>]:
 
 				delete {_line}
 
-		log("%{_builder}%")
+		KamilAPI set var {_json} to "%{_builder}%" in {_event}
+		continue
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_btSign} to = "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
+		set {_url} to "https://kamil0024.me:2137/system?action=GetSystemTotal"
+		set {_timestamp} to "%new Date().getTime()%"
+		set {_md5Sign} to getMd5({_btSign})
+		set {_temp} to "%{_timestamp}%%{_md5Sign}%"
+		set {_token} to getMd5({_temp})
+		set {_json} to "request_time=%{_timestamp}%&request_token=%{_token}%"
+
+		KamilAPI send post with {_url} and param {_json} in event
 		
+		reply with "%{_json}%"
+
 		KamilAPI add emote "green" to event-message of event-user
+
