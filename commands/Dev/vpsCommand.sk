@@ -16,13 +16,19 @@ import:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_url} to new String("https://kamil0024.me:2137")
-		set {_akcja} to new String("GetSystemTotal")
-		set {_token} to new String("10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
-		log(Panel.getJSON({_url}.toString(), {_akcja}.toString(), {_token}.toString()))
+		set {_url} to String.format("%s/system?action=%s", "https://kamil0024.me:2137", "GetSystemTotal")
+		set {_timestamp} to "%new Date().getTime()%"
+		set {_md5Sign} to Panel.getMd5("10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
+		set {_temp} to "%{_timestamp}%%{_md5Sign}%"
+		set {_token} to Panel.getMd5({_temp})
 
-		reply with Panel.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
+		set {_json} to "request_time=%{_timestamp}%&request_token=%{_token}%"
+
+		set {_final} to Panel.sendPost({_url}, {_json})
+
+		log(Panel.sendPost({_url}, {_json}))
+		reply with "%{_final}%"
 
 		KamilAPI add emote "green" to event-message of event-user
 
