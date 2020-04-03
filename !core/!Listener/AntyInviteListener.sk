@@ -5,4 +5,4 @@ on guild message receive:
 	if {_beka} contains "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124":
 		reply with ":octagonal_sign: %getMention(event-user.getId())% reklamowanie się jest zabronione :octagonal_sign:"
 		delete event-message
-		KamilAPI add punish to event-user with reason "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl" by getUser({bot::id}) in channel event-channel # FIXME: punish
+		KamilAPI add punish to event-user with reason "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl" by getUser({bot::id}) # FIXME: punish

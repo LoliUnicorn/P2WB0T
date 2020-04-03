@@ -1,4 +1,4 @@
-function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, czas: text="null", end: text="null"):
+function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, czas: text="null", end: text="null", jpg: text="<none>"):
 	execute "SELECT id FROM akcje" in {bot::sql} and store result in {_kek::*}
 	set {_karainfo} to "%(size of {_kek::id::*})+1%"
 
@@ -32,8 +32,13 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 				set {_end} to "%convert date {_now} to unix date%"
 				add field named "Nadano na czas:" with value getTimespan("%{_xd}%") to embed
 				add field named "Mija o:" with value "%{_now}%" to embed
+			
+			if "%{_jpg}%" is not "<none>":
+				set the thumbnail of embed to "%{_jpg}%"
 		
 			set the thumbnail of embed to "%avatar of {_karany}%"
 		send last created embed to channel with id getConfig("Config.modlogi") with {bot::name}
 		
 	addAkcje({_karany}.getId(), {_adm}.getId(), {_typ}, {_powod}, {_nick}, {_karainfo} parsed as number ,{_czas}, {_end})
+
+
