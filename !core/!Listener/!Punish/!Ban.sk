@@ -1,4 +1,4 @@
-effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user% [jpg %text%]:
+effect KamilAPI ban %user/member/text% with reason %text% (with|by) %user% [jpg %-text%]:
 	trigger: 
 		delay the effect
 		set {_g} to guild with id {bot::guild}

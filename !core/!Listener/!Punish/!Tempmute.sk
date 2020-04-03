@@ -1,4 +1,4 @@
-effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user% [jpg %text%]:
+effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|time) %text% (with|by) %user% [jpg %-text%]:
 	trigger: 
 		delay the effect
 		checkRepairMute()

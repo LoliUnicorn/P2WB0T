@@ -1,4 +1,4 @@
-effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [jpg %text%]:
+effect KamilAPI mute %user/member/text% with reason %text% (with|by) %user% [jpg %-text%]:
 	trigger: 
 		delay the effect
 		checkRepairMute()
