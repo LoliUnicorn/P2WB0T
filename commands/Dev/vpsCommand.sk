@@ -20,7 +20,7 @@ discord command {@cmd} [<text>]:
 		set {_akcja} to new String("GetSystemTotal")
 		set {_token} to new String("10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
-		log(Panel.getJSON({_url}, {_akcja}, {_token}))
+		log(Panel.getJSON({_url}.toString(), {_akcja}.toString(), {_token}.toString()))
 
 		reply with Panel.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
