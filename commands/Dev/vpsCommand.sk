@@ -66,6 +66,7 @@ effect KamilAPI send post with %string% and param[metrs] %string% in %event%:
 
 				delete {_line}
 
+		log("%{_builder}%")
 		KamilAPI set var {_json} to "%{_builder}%" in {_event}
 		continue
 
