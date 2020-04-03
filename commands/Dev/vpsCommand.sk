@@ -12,6 +12,7 @@ on script load:
 import:
 	pl.kamil0024.aapanel.Main as Panel
 	java.lang.String
+	java.util.Date
 
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
