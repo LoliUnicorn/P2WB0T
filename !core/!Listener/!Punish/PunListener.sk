@@ -32,7 +32,7 @@ effect KamilAPI check reset of %text% with reason %text% and warn[s] %number%:
 			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}%' AND powod='%unsafe {_powod}%' AND typ='Pun'" in {bot::sql}
 		continue
 
-effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%] [and set message to %-message% and event %event%]:
+effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|by) %user% [in channel %-channel%] [and set message to %-message% and event %-event%]:
 	trigger:
 		set {_g} to guild with id {bot::guild}
 		set {_user} to expr-1
