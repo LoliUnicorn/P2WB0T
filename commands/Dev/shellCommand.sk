@@ -55,7 +55,7 @@ discord command {@cmd} [<text>]:
 
 		set {_result} to {_builder}.toString()
 		if {_result}.length() > 1993:
-			set {_result} to {_result}.substring(0, 1993)
+			set {_result} to {_result}.substring(0, 1980)
 
 		edit {_msg} to show "```%nl%%{_result}%%nl%```"
 		KamilAPI add emote "green" to event-message of event-user
