@@ -12,16 +12,16 @@ on script load:
 import:
 	pl.kamil0024.aapanel.Main as Panel
 
-# function aaPanel(url: string, action: string, token: string) :: string:
-# 	return Main.getJSON({_url}, {_action}, {_token})
-
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_json} to Panel.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
-		log("https://kamil0024.me:2137, GetSystemTotal, 10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
+		set {_url} to "https://kamil0024.me:2137"
+		set {_akcja} to GetSystemTotal
+		set {_token} to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
 
-		reply with "%{_json}%"
+		log(Panel.getJSON({_url}, {_akcja}, {_token}))
+
+		reply with Panel.getJSON("https://kamil0024.me:2137", "GetSystemTotal", "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB")
 
 		KamilAPI add emote "green" to event-message of event-user
 
