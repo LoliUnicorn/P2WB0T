@@ -36,7 +36,7 @@ effect KamilAPI send post with %string% and param[metrs] %string% in %event%:
 
 		set {_realUrl} to new URL({_url})
 
-		set {_conn} to {_realUrl}.openConnection();
+		set {_conn} to {_realUrl}.openConnection()
 
 		{_conn}.setRequestProperty("accept", "text/xml,text/javascript,text/html,application/json")
 		{_conn}.setRequestProperty("connection", "Keep-Alive")
@@ -72,7 +72,7 @@ effect KamilAPI send post with %string% and param[metrs] %string% in %event%:
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		set {_btSign} to to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
+		set {_btSign} to "10r7KXYKnzzJXyFI4pCSxtUMCmWlvYjB"
 		set {_url} to "https://kamil0024.me:2137/system?action=GetSystemTotal"
 		set {_timestamp} to "%new Date().getTime()%"
 		set {_md5Sign} to getMd5({_btSign})
