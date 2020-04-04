@@ -134,4 +134,5 @@ on script load:
 	set {bot::helpmention} to "%mention tag of {_bot}% "
 	
 	delete {bot::status}
+	wait 20 tick
 	setCustomStatus()
