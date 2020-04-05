@@ -6,7 +6,7 @@ function setCustomStatus():
 	while true:
 		wait a tick
 		if {bot::status} is not true:
-			stop
+			stop loop
 		delete {_s::*}
 		set {_s::*} to "Prefix: %{bot::prefix}%", "%day%/%month%/%year%", "%{bot::prefix}%help", "DerpMC.pl", "Feerko.pl", "RoiZy.pl", "p2w.pl"
 		mark "%{bot::name}%" as playing "%(random element of {_s::*})%"
