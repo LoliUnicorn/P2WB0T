@@ -26,6 +26,16 @@
 				"maxWarns": 5,
 				"type": "Tempban",
 				"time": "3d"
+			}],
+			"tier_6": [{
+				"maxWarns": 6,
+				"type": "Tempban",
+				"time": "4d"
+			}],
+			"tier_7": [{
+				"maxWarns": 7,
+				"type": "Tempban",
+				"time": "5d"
 			}]
 		}],
 		"2": [{

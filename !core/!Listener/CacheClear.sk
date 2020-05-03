@@ -1,9 +1,11 @@
 import:
 	java.lang.System
+	me.iblitzkriegi.vixio.util.UpdatingMessage
 
 function cache():
 	System.gc()
-	execute console command "sk reload P2WB0T/!core/Main.sk"
+	UpdatingMessage.clearAll()
+	
 
 every 10 minutes:
 	cache()
