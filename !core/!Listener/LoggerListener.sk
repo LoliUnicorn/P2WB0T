@@ -42,15 +42,15 @@ on message delete:
 	set {_m} to UpdatingMessage.getUpdatingMessage(discord id of event-message)
 	{_m} is set
 	wait 20 tick
-
-	set {_g} to event-guild
-
-	set {_name} to getFullName((author of event-message).getId())
-	if {_name} contains "<none>":
-		set {_name} to "Nie udało się uzyskać."
-
-	set {_sender} to "Ni ma i nie będzie." #"Najprawdopodobniej autor wiadomości, lub jakiś bot."
-
+#
+#	set {_g} to event-guild
+#
+#	set {_name} to getFullName((author of event-message).getId())
+#	if {_name} contains "<none>":
+#		set {_name} to "Nie udało się uzyskać."
+#
+#	set {_sender} to "Ni ma i nie będzie." #"Najprawdopodobniej autor wiadomości, lub jakiś bot."
+#
 	# loop ...{_g}.retrieveAuditLogs().cache(false):
 	# 	set {_v} to loop-value
 	# 	if "%{_v}.getType()%".equals("MESSAGE_DELETE"):
@@ -60,15 +60,15 @@ on message delete:
 	# 				set {_sender} to getFullName("%{_v}.getUser().getId()%")
 	# 	stop loop
 		
-	if ...{_m}.getMessage().getEmbeds() is not set:
-		set {_tresc} to "%{_m}%"
-	else:
-		set {_tresc} to "Zawiera embed. Patrz poniżej."
-
-	set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "Kanał", "Treść wiadomości"), ({_name}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
-	send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
-
-	if ...{_m}.getMessage().getEmbeds() is set:
-		send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+	#if ...{_m}.getMessage().getEmbeds() is not set:
+	#	set {_tresc} to "%{_m}%"
+	#else:
+	#	set {_tresc} to "Zawiera embed. Patrz poniżej."
+#
+#	set {_embed} to createEmbed("Wiadomość usunięta.", ("Autor", "Kanał", "Treść wiadomości"), ({_name}, "<##%event-channel.getId()%>(##%event-channel%)[%event-channel.getId()%]", {_tresc}))
+#	send {_embed} to channel with id getConfig("Config.logiWiadomosci") with event-bot
+#
+#	if ...{_m}.getMessage().getEmbeds() is set:
+#		send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
 		
 	{_m}.finalize()
