@@ -10,7 +10,7 @@ function instantKaryId(user: user):
 			fajnaNazwaFunkcji({_user}, "Te konto jest permanentnie zbanowane")
 			stop
 		if {_r::typ::%{_inx}%} is "Mute":
-		fajnaNazwaFunkcji({_user}, "Te konto jest permanentnie wyciszone")
+			fajnaNazwaFunkcji({_user}, "Te konto jest permanentnie wyciszone")
 			KamilAPI mute {_user} with reason "Ta osoba ma perm muta!" by getUser({_r::adm::%{_inx}%})
 			stop
 
