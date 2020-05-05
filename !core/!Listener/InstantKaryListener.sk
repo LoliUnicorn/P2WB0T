@@ -45,7 +45,7 @@ function instantKaryCheck(u: text):
 			KamilAPI ban {_user} with reason "Ten nick (**%{_nick}%**) ma perm bana!" by getUser({_o::adm::%{_inx}%})
 			stop
 		if {_o::typ::%{_inx}%} is "Mute":
-		fajnaNazwaFunkcji({_user}, "Nick z, którego dołączyłeś (%{_nick}%) jest permanentnie wyciszone")
+			fajnaNazwaFunkcji({_user}, "Nick z, którego dołączyłeś (%{_nick}%) jest permanentnie wyciszone")
 			KamilAPI mute {_user} with reason "Ten nick (**%{_nick}%**) ma perm muta!" by getUser({_o::adm::%{_inx}%})
 			stop
 
