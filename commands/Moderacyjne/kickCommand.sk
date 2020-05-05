@@ -35,6 +35,7 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI command error "Nie udało się wyrzucić użytkownika: Błąd: `%{_l}%`" to event-message
 
 		modLog({_member}.getUser().getId(), event-user.getId(), "Kick", {_powod}, {_nick})
+		send "Hey :wave:%nl%Właśnie zostałeś(-aś) wyrzucony z serwera za: **%{_powod}%**%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_member}.getUser() with {bot::name}
 		reply with "Pomyślnie wyrzucono **%getName(arg-1)%** z powodem %getRegex({_powod})%"
 		KamilAPI add emote "green" to event-message of event-user
 		KamilAPI check delete event-message from event-user

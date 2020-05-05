@@ -31,6 +31,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_error} is set:
 			KamilAPI cmd error "Nie udało się wyciszyć użytkownika! (`%{_error}%`)" to event-message
 
+		send "Hey :wave:%nl%Właśnie zostałeś(-aś) permanentnie wyciszony za: **%{_powod}%**%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_m}.getUser() with {bot::name}
 		reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%**"
 		KamilAPI add emote "green" to event-message of event-user
 		KamilAPI check delete event-message from event-user

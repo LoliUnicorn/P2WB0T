@@ -1,11 +1,16 @@
+function fajnaNazwaFunkcji(user: user, t: text):
+	send "%{_t}%" to {_m} with {bot::name}
+
 function instantKaryId(user: user):
 	execute "SELECT typ,adm,end FROM akcje WHERE karany='%unsafe {_user}.getId()%' AND aktywna='Tak'" in {bot::sql} and store result in {_r::*}
 	loop {_r::typ::*}:
 		set {_inx} to loop-index
 		if {_r::typ::%{_inx}%} is "Ban":
 			KamilAPI ban {_user} with reason "Ta osoba ma perm bana!" by getUser({_r::adm::%{_inx}%})
+			fajnaNazwaFunkcji("Te konto jest permanentnie zbanowane")
 			stop
 		if {_r::typ::%{_inx}%} is "Mute":
+		fajnaNazwaFunkcji("Te konto jest permanentnie wyciszone")
 			KamilAPI mute {_user} with reason "Ta osoba ma perm muta!" by getUser({_r::adm::%{_inx}%})
 			stop
 
@@ -13,10 +18,12 @@ function instantKaryId(user: user):
 		set {_jeszcze} to difference between now and {_end}
 
 		if {_r::typ::%{_inx}%} is "Tempban":
+			fajnaNazwaFunkcji("Te konto jest tymczasowo zbanowane")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE typ='Tempban' AND karany=%unsafe {_user}.getId()%" in {bot::sql}
 			KamilAPI tempban {_user} with reason "Ta osoba ma tempbana!" in time "%{_jeszcze}%" by getUser({_o::adm::%{_inx}%})
 			stop
 		if {_r::typ::%{_inx}%} is "Tempmute":
+			fajnaNazwaFunkcji("Te konto jest tymczasowo wyciszone")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE typ='Tempmute' AND karany=%unsafe {_user}.getId()%" in {bot::sql}
 			KamilAPI tempmute {_user} with reason "Ta osoba ma tempmuta!" in time "%{_jeszcze}%" by getUser({_o::adm::%{_inx}%})
 			stop
@@ -34,9 +41,11 @@ function instantKaryCheck(u: text):
 	loop {_o::typ::*}:
 		set {_inx} to loop-index
 		if {_o::typ::%{_inx}%} is "Ban":
+			fajnaNazwaFunkcji("Nick z, którego dołączyłeś (%{_nick}%) jest permanentnie zbanowane")
 			KamilAPI ban {_user} with reason "Ten nick (**%{_nick}%**) ma perm bana!" by getUser({_o::adm::%{_inx}%})
 			stop
 		if {_o::typ::%{_inx}%} is "Mute":
+		fajnaNazwaFunkcji("Nick z, którego dołączyłeś (%{_nick}%) jest permanentnie wyciszone")
 			KamilAPI mute {_user} with reason "Ten nick (**%{_nick}%**) ma perm muta!" by getUser({_o::adm::%{_inx}%})
 			stop
 
@@ -44,10 +53,12 @@ function instantKaryCheck(u: text):
 		set {_jeszcze} to difference between now and {_end}
 
 		if {_o::typ::%{_inx}%} is "Tempban":
+			fajnaNazwaFunkcji("Nick z, którego dołączyłeś (%{_nick}%) jest tymczasowo zbanowane")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE typ='Tempban' AND karany=%unsafe {_user}.getId()%" in {bot::sql}
 			KamilAPI tempban {_user} with reason "Ten nick (**%{_nick}%**) ma tempbana!" in time "%{_jeszcze}%" by getUser({_o::adm::%{_inx}%})
 			stop
 		if {_o::typ::%{_inx}%} is "Tempmute":
+			fajnaNazwaFunkcji("Nick z, którego dołączyłeś (%{_nick}%) jest tymczasowo wyciszone")
 			execute "UPDATE akcje SET aktywna='Nie' WHERE typ='Tempmute' AND karany=%unsafe {_user}.getId()%" in {bot::sql}
 			KamilAPI tempmute {_user} with reason "Ten nick (**%{_nick}%**) ma tempmuta!" in time "%{_jeszcze}%" by getUser({_o::adm::%{_inx}%})
 			stop
