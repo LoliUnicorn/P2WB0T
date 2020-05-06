@@ -46,12 +46,13 @@ on reaction add:
 		
 			set the description of embed to "%{v::%event-user.getId()%::ogloszenie::tekst}%"
       
-		set {_e} to last created embed
+		set {_embed} to last created embed
 		set {_b} to a new message builder
-		set embed of {_e} to {_b}
-		if {_e} is getConfig("emote.green"):
-			set text of {_e} to "@everyone"
+		set embed of {_b} to {_embed}
 
-		send {_e} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with event-bot
+		if {_e} is getConfig("emote.green"):
+			set text of {_b} to "@everyone"
+
+		send {_b} to channel with id {v::%event-user.getId()%::ogloszenie::kanal} with event-bot
 		delete {v::%event-user.getId()%::ogloszenie::*}
 		deleteMessage(event-message)

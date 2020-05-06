@@ -1,7 +1,6 @@
 on guild message receive:
 	getPoziom(event-user.getId()) < 1
 	event-user.isBot() is false
-	event-user.isWebhookMessage() is false
 	set {_message} to "%event-message%"
 	set {_beka} to regex replace all pattern "(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]" with "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124" in {_message}
 	if {_beka} contains "CzemuTutajJestKurwaJakisJebanyInvite42124124124124124":
