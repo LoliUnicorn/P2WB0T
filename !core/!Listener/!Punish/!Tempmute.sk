@@ -60,4 +60,5 @@ effect KamilAPI tempmute %user/member/text% with reason %text% in (duraction|tim
 
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getUser().getId()%' AND typ='Tempmute' AND aktywna='Tak'" in {bot::sql}
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Tempmute", {_powod}, getMcNick({_u}.getUser().getId()), "%{_time}%", "null", "%{_jpg}%")
+		{_g}.kickVoiceMember({_u}).queue()
 		continue
