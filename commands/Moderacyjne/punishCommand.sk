@@ -145,6 +145,7 @@ discord command {@cmd} [<text>] [<text>]:
 		
 			else:
 				deleteMessage({_msg})
+				KamilAPI check delete event-message from event-user
 				set {_num} to arg-2 parsed as number
 				if {_num} is not set:
 					delete {v::%event-user.getId()%::pun::*}

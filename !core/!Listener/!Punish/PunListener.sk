@@ -123,6 +123,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
 			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc miej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+		KamilAPI check delete {_msg} from event-user
 		wait 40 tick
 
 		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
