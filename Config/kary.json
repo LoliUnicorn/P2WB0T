@@ -310,6 +310,29 @@
 				"type": "Tempban",
 				"time": "3h"
 			}]
+		}],
+		"23": [{
+			"name": "Dublowanie kont",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Kick",
+				"time": "-"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "3h"
+			}],
+			"tier_3": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "5h"
+			}],
+			"tier_4": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "8h"
+			}]
 		}]
 	}
 }

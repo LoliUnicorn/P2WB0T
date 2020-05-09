@@ -34,6 +34,11 @@ on vixio command:
 			cancel event
 			KamilAPI cmd error "<@%event-user.getId()%>, komendy zostały wyłączone. Można to zmienić w `%{bot::prefix}%config`" to event-message
 
+	if {_cmd} is "userinfo":
+		if event-user.getId() is "439707646472486912":
+			cancel event
+			KamilAPI cmd error "<@%event-user.getId()%>, wystąpił błąd przy użyciu komendy `userinfo`. `pl.kamil0024.p2w.commands.CommandException: Lol, to sie nie powinno zdarzyc`" to event-message
+
 	if {command::%{_cmd}%::kategoria} is "Muzyka":
 		if {_poziom} < 1:
 			cancel event
