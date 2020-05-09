@@ -2,10 +2,10 @@ options:
 	cmd: giveaway
 
 on script load:
-	set {command::{@cmd}::poziom} to 4
+	set {command::{@cmd}::poziom} to 6
 	set {command::{@cmd}::cooldown} to 0 seconds
 
-	set {command::{@cmd}::opis} to "Tworzy konkurs/"
+	set {command::{@cmd}::opis} to "Tworzy konkurs."
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "giveaway (stworz|usun) [id]"
 
@@ -65,7 +65,8 @@ function updateKonkurs(id: text="null"):
 				set {_us::*} to konkursGetUsers({_m})
 				set {_wygrany} to random element out of {_us::*}
 
-			create embed:
+			set {_e} to a new embed
+			create embed {_e}:
 				set the title of embed to title with text "Konkurs!"
 				set the colour of the embed to aqua
 				set the footer of embed to footer with text "ID: %{_id}%"
@@ -85,7 +86,7 @@ function updateKonkurs(id: text="null"):
 				else:
 					add field named "" with value "Aby wziąć udział w konkursie kliknij reakcje :tada:" to embed
 			
-			edit {_m} to show last created embed
+			edit {_m} to show {_e}
 			if {_wygrany} is set:
 				send "**Gratulacje!!** :tada: %getMention({_wygrany}.getId())% :tada: Wygrywasz: %getRegex({_nagroda})%" to channel with id {_channel}.getId() with {bot::name}
 				execute "UPDATE konkurs SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
