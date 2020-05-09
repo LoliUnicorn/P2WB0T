@@ -36,7 +36,8 @@ function updateUrlopMessages():
 
 		set {_dif} to getTimespan("%difference between now and {_end}%")
 
-		create embed:
+		set {_e} to a new embed
+		create embed {_e}:
 			set the colour of the embed to blue
 			
 			set the author info of the embed to author named getName({_user}) with no url and icon "%avatar of getUser({_user})%"
@@ -49,7 +50,7 @@ function updateUrlopMessages():
 			
 			set the thumbnail of embed to "%avatar of getUser({_user})%"
 
-		edit {_msg} to show last created embed
+		edit {_msg} to show {_e}
 
 function createNieobecnosc(user: text, powod: object, start: object, end: object):
 	loop {_start}.getTime(), {_end}.getTime():
