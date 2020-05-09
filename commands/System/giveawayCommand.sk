@@ -75,14 +75,13 @@ function updateKonkurs(id: text="null"):
 
 				if {_wygrany} is set:
 					add split field named "Koniec za:" with value "-" to embed
-
 					add split field named "Wygrany:" with value getMention({_wygrany}.getId()) to embed
 					
 				else:
 					add split field named "Koniec za:" with value "%{_end}% (%{_data}%)" to embed
-				add split field named "Organizowany przez:" with value getMention({_sender}) to embed
+				add field named "Organizowany przez:" with value getMention({_sender}) to embed
 				if {_wygrany} is set:
-					add field named "" with value "Konkurs sie skonczyl." to embed
+					add field named "" with value "Konkurs dobiegł końca." to embed
 				else:
 					add field named "" with value "Aby wziąć udział w konkursie kliknij reakcje :tada:" to embed
 			
@@ -115,7 +114,8 @@ on guild message receive:
 
 		set {v::%event-user.getId()%::giveaway::koniec} to "%convert date {_now} to unix date%" # final koniec
 
-		create embed:
+		set {_embed} to a new embed
+		create embed {_embed}:
 			set the title of embed to title with text "Konkurs!"
 			set the colour of the embed to aqua
 			set the footer of embed to footer with text "ID: ?"
@@ -124,7 +124,7 @@ on guild message receive:
 			add split field named "Koniec za:" with value "? (?)" to embed
 			add split field named "Organizowany przez:" with value "?" to embed
 			add field named "" with value "Aby wziąć udził kliknij na reakcje :tada:" to embed
-		send last created embed to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name} and store it in {_msg}
+		send {_embed} to channel with id {v::%event-user.getId()%::giveaway::kanal} with {bot::name} and store it in {_msg}
 		add emote "tada" to reactions of {_msg} with event-bot
 
 		execute "SELECT id FROM konkurs" in {bot::sql} and store result in {_r::*}
@@ -151,7 +151,7 @@ on guild message receive:
 	if {v::%event-user.getId()%::giveaway::typ} is "nagroda":
 		konkursDeleteMessage(event-user.getId())
 		set {v::%event-user.getId()%::giveaway::nagroda} to "%event-message%" # final nagroda
-		reply with "Napisz za ile czasu będzie koniec! (5s,[sekundy], 5m [minuty], 5h [godziny], 5d [dni]). Czasy nie mogą się łączyć!"
+		reply with "Napisz za ile czasu będzie koniec! (5s [sekundy], 5m [minuty], 5h [godziny], 5d [dni]). Czasy nie mogą się łączyć!"
 		set {v::%event-user.getId()%::giveaway::typ} to "czas"
 
 	if {v::%event-user.getId()%::giveaway::typ} is "channel":
