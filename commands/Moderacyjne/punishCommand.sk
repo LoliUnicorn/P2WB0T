@@ -70,7 +70,6 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI add emote "green" to event-message of event-user
 
 		else:
-
 			set {_member} to getUser(arg-1) in event-guild
 			if {_member} is not set:
 				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
@@ -78,6 +77,16 @@ discord command {@cmd} [<text>] [<text>]:
 			KamilAPI bypass event-member at {_member} with event-message
 			if {_member} is event-member:
 				KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie." to event-message
+
+			set {_w} to difference between {v::karacooldown::%{_member}.getUser().getId()%} and now
+			if {_w} is less than 2 minutes:
+				set {_d::*} to difference between {v::karacooldown::%{_member}.getUser().getId()%} and now, 2 minutes, 2 minutes
+
+				remove {_d::1} from {_d::2}
+				set {_czas} to getTimespan("%{_d::2}%")
+				KamilAPI cmd error "Zabezpieczenie anty-debilowe wykryło, że próbujesz zdublować karę użytkownikowi. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika." to event-message
+
+			set {v::karacooldown::%{_member}.getUser().getId()%} to now
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
