@@ -71,6 +71,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 		else:
 			set {_member} to getUser(arg-1) in event-guild
+			set {_id} to discord id of {_member}
 			if {_member} is not set:
 				KamilAPI cmd error "Nie ma takiej osoby na tym serwerze! Użyj: %{bot::prefix}%pun (<osoba>|info)" to event-message
 			
@@ -78,17 +79,17 @@ discord command {@cmd} [<text>] [<text>]:
 			if {_member} is event-member:
 				KamilAPI cmd error "Nie możesz podajmować akcji na samym sobie." to event-message
 
-			log("%{v::%{_member}.getUser().getId()%::kara::cooldown}%")
-			set {_w} to difference between {v::%{_member}.getUser().getId()%::kara::cooldown} and now
+			log("%{v::%{_id}%::kara::cooldown}%")
+			set {_w} to difference between {v::%{_id}%::kara::cooldown} and now
 			if {_w} is less than 2 minutes:
-				set {_d::*} to difference between {v::%{_member}.getUser().getId()%::kara::cooldown} and now, 2 minutes, 2 minutes
+				set {_d::*} to difference between {v::%{_id}%::kara::cooldown} and now, 2 minutes, 2 minutes
 
 				remove {_d::1} from {_d::2}
 				set {_czas} to getTimespan("%{_d::2}%")
 				KamilAPI cmd error "Zabezpieczenie anty-debilowe wykryło, że próbujesz zdublować karę użytkownikowi. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika." to event-message
 
-			set {v::%{_member}.getUser().getId()%::kara::cooldown} to now
-			log("Setuje: %{v::%{_member}.getUser().getId()%::kara::cooldown}%")
+			set {v::%{_id}%::kara::cooldown} to now
+			log("Setuje: %{v::%{_id}%::kara::cooldown}%")
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
