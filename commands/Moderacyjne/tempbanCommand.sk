@@ -28,7 +28,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				KamilAPI cmd error "Ten użytkownik jest już zbanowany!" to event-message
 
 		KamilAPI bypass event-member at ({_m} in event-guild) with event-message
-		
+		KamilAPI check double case of {_m}.getId() with event-message
 		KamilAPI tempban {_m} with reason {_p} in time arg-2 by event-user
 
 		set {_xD} to getTimespan("%{_time}%")

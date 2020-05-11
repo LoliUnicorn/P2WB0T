@@ -30,7 +30,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				KamilAPI cmd error "Ten użytkownik jest już wyciszony!" to event-message
 
 		KamilAPI bypass event-member at {_m} with event-message
-		
+		KamilAPI check double case of {_m}.getUser().getId() with event-message
+
 		KamilAPI tempmute {_m} with reason {_p} in time arg-2 by event-user
 
 		set {_xD} to getTimespan("%{_time}%")
