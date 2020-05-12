@@ -91,12 +91,10 @@ discord command {@cmd} [<text>]:
 					set {_line} to {_reader}.readLine()
 					if {_line} is not set:
 						stop loop
-
 					if {_builder} is set:
 						set {_builder} to "%{_builder}%%{_line}%%nl%"
 					else:
 						set {_builder} to "%{_line}%%nl%"
-
 					delete {_line}
 			
 			{_process}.destroyForcibly()
