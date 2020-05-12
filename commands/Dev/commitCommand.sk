@@ -105,7 +105,9 @@ discord command {@cmd} [<text>]:
 			replace all ", " and " and " with "" in {_xD}
 
 			if {_xd} contains "Already up to date.":
-				KamilAPI cmd error "Najnowsza aktualizacja jest już wgrana!" to event-message
+				edit {v::update::botmsg} to show "Najnowsza aktualizacja jest już wgrana!"
+				KamilAPI add emote "red" to event-message of event-user
+				stop
 
 			set {_a} to a new embed
 			create embed {_a}:
