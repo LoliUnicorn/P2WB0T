@@ -49,7 +49,7 @@ discord command {@cmd} [<text>]:
 
 			send a "GET" request to "https://api.github.com/repos/KAMIL0024/P2WB0T/commits/%{_com}%" with header "Authorization: token f07475480bd999564f70934b3c2a06e408678e11"
 			map json body of last http response to {_r::*}
-			log("%body of last http%")
+			log("%json body of last http%")
 			loop {_r::files::*}:
 				loop {_r::files::%loop-index%::*}:
 					if loop-index-2 is "filename":
