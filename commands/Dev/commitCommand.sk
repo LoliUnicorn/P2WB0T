@@ -9,6 +9,15 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Deweloperskie"
 	set {command::{@cmd}::uzycie} to "commit (info|pull)"
 
+import:
+	java.io.BufferedReader
+	java.io.InputStreamReader
+	java.util.Arrays
+	java.util.Objects
+	java.util.concurrent.TimeUnit
+	java.lang.System
+	java.lang.ProcessBuilder
+
 discord command {@cmd} [<text>]:
 	aliases: git,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
@@ -21,19 +30,27 @@ discord command {@cmd} [<text>]:
 
 		if arg-1 is "info":
 			reply with "%{_l}% Ładuje..." and store it in {v::update::botmsg}
-			run script at "plugins\Skript\scripts\0024B0T\commit.sh"
-			while true:
-				wait a tick
-				set {_commit::*} to lines from file "plugins\Skript\scripts\0024B0T\log.api"
-				if {_commit::1} is set:
-					stop loop
-				else:
-					add 1 to {_nokurwaniema}
-				if {_nokurwaniema} >= 100:
-					KamilAPI cmd error "Po **5** sekundach nie utworzył się plik `log.api`! Anuluje komendę..."
 
-			send a request to "https://api.github.com/repos/KAMIL0024/0024B0T/commits/%{_commit::1}%"
+			# curl -H "Authorization: token f07475480bd999564f70934b3c2a06e408678e11" https://api.github.com/repos/KAMIL0024/P2WB0T/commits/
+			set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", "cd /home/kamil/P2WB0T/plugins/Skript/scripts/P2WB0T && git rev-parse --verify HEAD")).redirectErrorStream(true).start()
+			{_process}.waitFor(2, TimeUnit.MINUTES!)
+			set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
+
+			set {_builder} to ""
+			if {_reader}.ready():
+				loop 100 times:
+					set {_line} to {_reader}.readLine()
+					if {_line} is not set:
+						stop loop
+
+					set {_com} to "%{_line}%"
+					stop loop
+			log("com=%{_com}%")
+			{_process}.destroyForcibly()
+
+			send a request to "https://api.github.com/repos/KAMIL0024/P2WB0T/commits/%{_com}%" with header "Authorization: token f07475480bd999564f70934b3c2a06e408678e11"
 			map json body of last http response to {_r::*}
+			log("%{_r::*}%")
 			loop {_r::files::*}:
 				loop {_r::files::%loop-index%::*}:
 					if loop-index-2 is "filename":
@@ -42,7 +59,8 @@ discord command {@cmd} [<text>]:
 			set {_xD} to "```%nl%%{_edytowane::*}%%nl%```"
 			replace all ", " and " and " with "" in {_xD}
 
-			create embed:
+			set {_a} to a new embed
+			create embed {_a}:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
 				set the footer of embed to footer with text "Commit info" and icon "%avatar of event-bot%"
@@ -55,7 +73,7 @@ discord command {@cmd} [<text>]:
 				add field named "Staty" with value "Dodane linijki: %{_r::stats::additions}%%nl%Usunięte linijki: %{_r::stats::deletions}%" to embed
 				set the thumbnail of embed to "%{_r::author::avatar_url}%"
 
-			edit {v::update::botmsg} to show last created embed
+			edit {v::update::botmsg} to {_a}
 			edit {v::update::botmsg} to show " "
 			KamilAPI add emote "green" to event-message of event-user
 			delete {v::update::botmsg}

@@ -21,7 +21,8 @@ discord command {@cmd} [<text>]:
 		replace all "```" with "" in {_arg}
 		evaluate logging errors in {_error::*}: {_arg}
 		set {_opis} to first element of ({_error::1} split at "(TuSKe")
-		create embed:
+		set {_a} to a new embed
+		create embed {_a}:
 			set the timestamp of embed to now
 			set the footer of embed to footer with text "%difference between {_now} and system millis%ms"
 			add field named ":inbox_tray: INPUT" with value "```js%nl%%{_arg}%%nl%```" to embed
@@ -33,4 +34,4 @@ discord command {@cmd} [<text>]:
 				add field named ":outbox_tray: OUTPUT" with value "```js%nl%Wygenerowano!%nl%```" to embed
 				KamilAPI add emote "green" to event-message of event-user
 				set the colour of the embed to green
-			send the last created embed to event-channel with event-bot
+			send {_a} to event-channel with event-bot
