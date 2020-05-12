@@ -14,14 +14,16 @@ discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is not set:
-			KamilAPI command error "Użyj: %{bot::prefix}%mcpremium (nick)"
+			KamilAPI command error "Użyj: %{bot::prefix}%mcpremium (nick)" to event-message
+		if arg-1 is "Feerko":
+			KamilAPI command error "No chyba nie" to event-message
 		set {_pl} to arg-1 parsed as offlineplayer
 		set {_p} to uuid of {_pl}
 		replace all "-" with "" in {_p}
 		send a request to "https://api.mojang.com/user/profiles/%{_p}%/names"
 		map json body of last http response to {_r::*}
 		if {_r::*} is not set:
-			KamilAPI command error "Taki użytkownik nie posiada Minecraft premium. Użyj: %{bot::prefix}%mcpremium (nick)"
+			KamilAPI command error "Taki użytkownik nie posiada Minecraft premium. Użyj: %{bot::prefix}%mcpremium (nick)" to event-message
 		loop {_r::*}:
 			loop {_r::%loop-index%::*}:
 				if loop-index-2 is "name":
@@ -35,7 +37,7 @@ discord command {@cmd} [<text>]:
 		create embed:
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			add field named "Nazwa:" with value "%{_pl}%" to embed
+			add field named "Nazwa:" with value "`%{_pl}%`" to embed
 			add field named "UUID:" with value "%{_p}%" to embed
 			add field named "Profil na namemc:" with value "[namemc.com](https://namemc.com/%arg-1%.1)" to embed
 			add field named "Historie nicku:" with value "```js%nl%%{_name}%%nl%```" to embed

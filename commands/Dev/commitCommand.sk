@@ -74,8 +74,6 @@ discord command {@cmd} [<text>]:
 			edit {v::update::botmsg} to show " "
 			KamilAPI add emote "green" to event-message of event-user
 			delete {v::update::botmsg}
-			wait 15 tick
-			delete file "plugins\Skript\scripts\0024B0T\log.api"
 			stop
 
 		if arg-1 is "pull":
