@@ -31,7 +31,6 @@ discord command {@cmd} [<text>]:
 		if arg-1 is "info":
 			reply with "%{_l}% Ładuje..." and store it in {v::update::botmsg}
 
-			# curl -H "Authorization: token f07475480bd999564f70934b3c2a06e408678e11" https://api.github.com/repos/KAMIL0024/P2WB0T/commits/
 			set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", "cd /home/kamil/P2WB0T/plugins/Skript/scripts/P2WB0T && git rev-parse --verify HEAD")).redirectErrorStream(true).start()
 			{_process}.waitFor(2, TimeUnit.MINUTES!)
 			set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
@@ -81,29 +80,41 @@ discord command {@cmd} [<text>]:
 
 		if arg-1 is "pull":
 			reply with "%{_l}% Aktualizuje pliki..." and store it in {v::update::botmsg}
-			run script at "plugins\Skript\scripts\0024B0T\pull.sh"
-			while true:
-				wait a tick
-				set {_pull::*} to lines from file "plugins\Skript\scripts\0024B0T\pull.api"
-				if {_pull::1} is set:
-					stop loop
+			set {_process} to new ProcessBuilder(Arrays.asList(System.getenv("SHELL"), "-c", "cd /home/kamil/P2WB0T/plugins/Skript/scripts/P2WB0T && git pull")).redirectErrorStream(true).start()
+			{_process}.waitFor(2, TimeUnit.MINUTES!)
 
-			set {_xD} to "```%nl%%{_pull::*}%%nl%```"
+			set {_reader} to new BufferedReader(new InputStreamReader({_process}.getInputStream()))
+
+			set {_builder} to ""
+			if {_reader}.ready():
+				loop 100 times:
+					set {_line} to {_reader}.readLine()
+					if {_line} is not set:
+						stop loop
+
+					if {_builder} is set:
+						set {_builder} to "%{_builder}%%{_line}%%nl%"
+					else:
+						set {_builder} to "%{_line}%%nl%"
+
+					delete {_line}
+			
+			{_process}.destroyForcibly()
+
+			set {_xD} to "```%nl%%{_builder}%%nl%```"
 			replace all ", " and " and " with "" in {_xD}
 
-			if {_xd} is "```%nl%Already up to date.%nl%```":
-				deleteMessage({v::update::botmsg}, 0)
-				delete file "plugins\Skript\scripts\0024B0T\pull.api"
+			if {_xd} contains "Already up to date.":
 				KamilAPI cmd error "Najnowsza aktualizacja jest już wgrana!" to event-message
 
-			create embed:
+			set {_a} to a new embed
+			create embed {_a}:
 				set the colour of the embed to color of getColor(event-member)
 				set the timestamp of embed to now
-				set the footer of embed to footer with text "Commit info" and icon "%avatar of event-bot%"
-				set the description of embed to "Treść gita: %{_xD}%"
+				set the footer of embed to footer with text "Aktualizacja plików" and icon "%avatar of event-bot%"
+				set the description of embed to "%{_xD}%"
 
-			edit {v::update::botmsg} to show last created embed
+			edit {v::update::botmsg} to show {_a}
 			edit {v::update::botmsg} to show " "
 			delete {v::update::botmsg}
 			KamilAPI add emote "green" to event-message of event-user
-			delete file "plugins\Skript\scripts\0024B0T\pull.api"
