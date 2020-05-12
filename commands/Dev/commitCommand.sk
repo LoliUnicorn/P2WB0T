@@ -45,12 +45,10 @@ discord command {@cmd} [<text>]:
 
 					set {_com} to "%{_line}%"
 					stop loop
-			log("com=%{_com}%")
 			{_process}.destroyForcibly()
 
 			send a request to "https://api.github.com/repos/KAMIL0024/P2WB0T/commits/%{_com}%" with header "Authorization: token f07475480bd999564f70934b3c2a06e408678e11"
 			map json body of last http response to {_r::*}
-			log("%{_r::*}%")
 			loop {_r::files::*}:
 				loop {_r::files::%loop-index%::*}:
 					if loop-index-2 is "filename":
@@ -73,7 +71,7 @@ discord command {@cmd} [<text>]:
 				add field named "Staty" with value "Dodane linijki: %{_r::stats::additions}%%nl%Usunięte linijki: %{_r::stats::deletions}%" to embed
 				set the thumbnail of embed to "%{_r::author::avatar_url}%"
 
-			edit {v::update::botmsg} to {_a}
+			edit {v::update::botmsg} to show {_a}
 			edit {v::update::botmsg} to show " "
 			KamilAPI add emote "green" to event-message of event-user
 			delete {v::update::botmsg}
