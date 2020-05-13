@@ -54,7 +54,7 @@ discord command {@cmd} [<text>]:
 			loop files in dir "%loop-value%/":
 				set {_v} to loop-value-2
 				set {_name} to last element of ({_v} split at "/")
-				if {_name} contains "eval":
+				if {_name} contains {_cmd}:
 					set {_pwd} to last element of ({_v} split at "scripts/")
 					stop loop
 
@@ -65,12 +65,11 @@ discord command {@cmd} [<text>]:
 		set {_e} to reloadCommands(2)
 		edit {_msg} to show {_e}
 
-		sync:
-			execute console command "sk unload %{_pwd}%"
-			set {_e} to reloadCommands(3)
-			edit {_msg} to show {_e}
-			execute console command "sk reload %{_pwd}%"
-			set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms")
-			edit {_msg} to show {_e}
+		execute console command "sk unload %{_pwd}%"
+		set {_e} to reloadCommands(3)
+		edit {_msg} to show {_e}
+		execute console command "sk reload %{_pwd}%"
+		set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms")
+		edit {_msg} to show {_e}
  
 		KamilAPI add emote "green" to event-message of event-user
