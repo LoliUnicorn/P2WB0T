@@ -103,8 +103,8 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 
 				set {_dif} to "%difference between {_start} and {_end}%"
-				set {_dif} to last element of ({_dif} split at " ")
-				log("dni: %{_dif}%")
+				set {_dif} to first element of ({_dif} split at " ")
+				add ({_dif} parsed as number) to {_dni::%loop-value%}
 				add 1 to {_kekw::%loop-value%}
 			
 			set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
