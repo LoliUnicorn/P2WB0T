@@ -15,6 +15,7 @@ on guild message receive:
 				set {_up} to 0
 				loop {_s::*}:
 					loop-value is not ""
+					loop-value is not " "
 					if Character.isUpperCase(loop-value):
 						add 1 to {_up}
 
