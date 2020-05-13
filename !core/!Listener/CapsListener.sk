@@ -1,11 +1,7 @@
 import:
 	java.lang.Character
 
-function getNicknames() :: strings:
-	set {_g} to guild with id getConfig("config.guild")
-
 on guild message receive:
-	event-user.getId() is "343467373417857025"
 	set {_msg} to content of event-message
 	set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
 	if {_msg} is set:
@@ -21,6 +17,5 @@ on guild message receive:
 
 				{_up} is not 0
 				set {_procent} to ({_up} / size of {_s::*}) * 100
-				reply with "caps: %{_up}% dużych na %size of {_s::*}% char (%{_procent}%%%)"
-				if {_procent} > 70:
-					reply with "usuwam"
+				if {_procent} > 80:
+					deleteMessage(event-message)
