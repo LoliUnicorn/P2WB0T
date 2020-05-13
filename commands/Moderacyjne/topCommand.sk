@@ -132,11 +132,6 @@ discord command {@cmd} [<text>] [<text>]:
 				if {_test} > {_now}:
 					add 1 to {_ilosc::%{_powod}%}
 			
-			if size of {_ilosc::*} is 0:
-				edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
-				KamilAPI add emote "red" to event-message of event-user
-				stop
-			
 			set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
 			
 			set {_lul} to 1 
