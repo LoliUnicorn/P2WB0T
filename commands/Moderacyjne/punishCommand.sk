@@ -27,10 +27,12 @@ discord command {@cmd} [<text>] [<text>]:
 			loop {_pun::list::*}:
 				set {_inx} to loop-index
 				set {_bol} to false
+
 				if {_pun::list::%{_inx}%::1::name} contains arg-2:
 					set {_bol} to true
-				if {_inx} is arg-1:
-					set {_bol} to true:
+				else if {_inx} is arg-2:
+					set {_bol} to true
+
 				if {_bol} is true
 					set {_xd::name} to {_pun::list::%{_inx}%::1::name}
 					set {_xd::tierow} to checkTier({_inx})
