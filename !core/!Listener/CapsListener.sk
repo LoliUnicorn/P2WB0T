@@ -2,6 +2,7 @@ import:
 	java.lang.Character
 
 on guild message receive:
+	getPoziom(event-user.getId()) is 0
 	set {_msg} to content of event-message
 	set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
 	if {_msg} is set:
