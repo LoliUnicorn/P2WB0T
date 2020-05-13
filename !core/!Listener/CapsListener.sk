@@ -14,6 +14,6 @@ on guild message receive:
 						add 1 to {_up}
 			
 				set {_procent} to (size of {_s::*} / {_up}) * 100
-				reply with "caps: %size of {_s::*}/%{_up}%% (%{_procent}%%%)"
+				reply with "caps: %size of {_s::*}%/%{_up}% (%{_procent}%%%)"
 				if {_procent} > 70:
 					reply with "usuwam"
