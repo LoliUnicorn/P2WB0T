@@ -96,8 +96,13 @@ discord command {@cmd} [<text>] [<text>]:
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-			execute "select id from nieobecnosci" in {bot::sql} and store result in {_r::*}
+			execute "select id,start,end from nieobecnosci" in {bot::sql} and store result in {_r::*}
 			loop {_r::id::*}:
+				set {_inx} to loop-index
+				set {_start} to unix date ("%{_r::start::%{_inx}%}%" parsed as number) as date
+				set {_end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
+				set {_dif} to last element of ("%difference between {_start} and {_end}%" split at " ")
+				add ({_dif} parsed as number) to {_dni::%loop-value%}
 				add 1 to {_kekw::%loop-value%}
 			
 			set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
@@ -109,7 +114,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_l::*} to loop-value split at ";"
 				set {_user} to getMcNick({_l::1})
 				set {_akcji} to rzeczownik({_l::2} parsed as number, "urlop", "urlopy", "urlopów")
-				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}%"
+				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}% (%{_dni}% dni wolnego)"
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
@@ -128,41 +133,4 @@ discord command {@cmd} [<text>] [<text>]:
 
 		edit {_msg} to show last created embed
 		edit {_msg} to show " "
-		# else if arg-1 is "urlop":
-		# 	set {_title} to "Topka urlopów"
-
-		# 	reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
-
-		# 	execute "select id from nieobecnosci" in {bot::sql} and store result in {_r::*}
-		# 	loop {_r::id::*}:
-		# 		add 1 to {_kekw::%loop-value%}
-			
-		# 	set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
-			
-		# 	set {_lul} to 1 
-		# 	set {_m::%{_lul}%} to a message builder
-		# 	append line "```asciidoc"
-		# 	loop {_top::*}:
-		# 		set {_l::*} to loop-value split at ";"
-		# 		set {_user} to getMcNick({_l::1})
-		# 		set {_akcji} to rzeczownik({_l::2} parsed as number, "urlop", "urlopy", "urlopów")
-		# 		append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}%"
-		# 		if {_m::%{_lul}%}.length() >= 850:
-		# 			add 1 to {_lul}
-		# 			set {_m::%{_lul}%} to a message builder
-		# 	append line "```"
-		# 	create embed:
-		# 		set the title of embed to title with text {_title}
-		# 		set the colour of the embed to color of getColor(event-member)
-		# 		set the timestamp of embed to now
-		# 		set the footer of embed to footer with text "Top"
-				
-		# 		loop {_m::*}:
-		# 			if loop-index is "1":
-		# 				add split field named "Topka:" with value "%loop-value%" to embed
-		# 			else:
-		# 				add split field named "" with value "%loop-value%" to embed
-
-		# 	edit {_msg} to show last created embed
-			edit {_msg} to show " "
 		KamilAPI add emote "green" to event-message of event-user
