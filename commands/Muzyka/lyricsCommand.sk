@@ -36,7 +36,7 @@ discord command {@cmd} [<text>]:
 
 			loop 20 times:
 				set {_wyswietlany} to first {_int} characters of {_r::lyrics}
-				if last character of {_wyswietlany} is "%nl%":
+				if last character of {_wyswietlany} is "\n":
 					stop loop
 				else:
 					add 1 to {_int}
