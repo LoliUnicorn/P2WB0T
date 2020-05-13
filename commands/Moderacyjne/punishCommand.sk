@@ -26,7 +26,12 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is "info":
 			loop {_pun::list::*}:
 				set {_inx} to loop-index
+				set {_bol} to false
 				if {_pun::list::%{_inx}%::1::name} contains arg-2:
+					set {_bol} to true
+				if {_inx} is arg-1:
+					set {_bol} to true:
+				if {_bol} is true
 					set {_xd::name} to {_pun::list::%{_inx}%::1::name}
 					set {_xd::tierow} to checkTier({_inx})
 
@@ -54,7 +59,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_k} to a message builder
 				loop {_pun::list::*}:
 					append line "%loop-index%. %{_pun::list::% loop-index%::1::name}%"
-				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%Sposoby na ukaranie: ```%nl%%{_k}%%nl%```" to event-message
+				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
 			set {_des} to a message builder
 			set {_a} to a new embed
