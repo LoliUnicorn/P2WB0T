@@ -20,7 +20,7 @@ on guild message receive:
 						add 1 to {_up}
 
 				{_up} is not 0
-				set {_procent} to (size of {_s::*} / {_up}) * 100
+				set {_procent} to ({_up} / size of {_s::*}) * 100
 				reply with "caps: %size of {_s::*}%/%{_up}% (%{_procent}%%%)"
 				if {_procent} > 70:
 					reply with "usuwam"
