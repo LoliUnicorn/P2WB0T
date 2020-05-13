@@ -33,7 +33,7 @@ discord command {@cmd} [<text>] [<text>]:
 				else if {_inx} is arg-2:
 					set {_bol} to true
 
-				if {_bol} is true
+				if {_bol} is true:
 					set {_xd::name} to {_pun::list::%{_inx}%::1::name}
 					set {_xd::tierow} to checkTier({_inx})
 
