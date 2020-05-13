@@ -65,7 +65,7 @@ discord command {@cmd} [<text>]:
 		set {_e} to reloadCommands(2)
 		edit {_msg} to show {_e}
 
-		execute console command "sk unload %{_pwd}%"
+		execute console command "sk disable %{_pwd}%"
 		set {_e} to reloadCommands(3)
 		edit {_msg} to show {_e}
 		execute console command "sk reload %{_pwd}%"
