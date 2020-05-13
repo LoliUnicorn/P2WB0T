@@ -65,7 +65,7 @@ discord command {@cmd} [<text>]:
 					set the description of embed to "Zmienione pliki:%nl% %{_xD}%"
 
 				add field named "Aktualny commit" with value "[Klik](%{_r::parents::1::html_url}%)" to embed
-				add field named "Author" with value "[%{_r::author::login}%](%{_r::author::html_url}%)" to embed
+				add field named "Autor" with value "[%{_r::author::login}%](%{_r::author::html_url}%)" to embed
 				add field named "Treść commita" with value "%{_r::commit::message}%" to embed
 				add field named "Staty" with value "Dodane linijki: %{_r::stats::additions}%%nl%Usunięte linijki: %{_r::stats::deletions}%" to embed
 				set the thumbnail of embed to "%{_r::author::avatar_url}%"

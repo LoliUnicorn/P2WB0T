@@ -63,6 +63,11 @@ discord command {@cmd} [<text>]:
 		
 		set {_u} to event-user
 		set {_u} to getUser(arg-1)
+
+		if {_u}.getId() is not event-user.getId():
+			if getPoziom(event-user.getId()) is 0:
+				KamilAPI cmd error "Nie możesz podglądać kont innych użytkowników" to event-message
+
 		set {_mem} to {_u} in event-guild
 
 		set {_nick} to check "%{_mem}%" = "<none>" : "%getMention({_u}.getId())%(%getName({_u}.getId())%)" ? getFullName({_u}.getId())
