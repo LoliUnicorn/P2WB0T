@@ -104,7 +104,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 				set {_dif} to "%difference between {_start} and {_end}%"
 				set {_dif} to last element of ({_dif} split at " ")
-				add ({_dif} parsed as number) to {_dni::%loop-value%}
+				log("dni: %{_dif}%")
 				add 1 to {_kekw::%loop-value%}
 			
 			set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
@@ -116,7 +116,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_l::*} to loop-value split at ";"
 				set {_user} to getMcNick({_l::1})
 				set {_akcji} to rzeczownik({_l::2} parsed as number, "urlop", "urlopy", "urlopów")
-				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}% (%{_dni::%{_l::1}%}% dni)"
+				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}%"
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
