@@ -114,7 +114,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_l::*} to loop-value split at ";"
 				set {_user} to getMcNick({_l::1})
 				set {_akcji} to rzeczownik({_l::2} parsed as number, "urlop", "urlopy", "urlopów")
-				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}%"
+				append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}% (%{_dni::%{_l::1}%}% dni)"
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
