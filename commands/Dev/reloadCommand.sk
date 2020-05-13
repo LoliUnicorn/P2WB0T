@@ -13,8 +13,8 @@ function reloadCommands(typ: number=0, fot: text="") :: embed:
 	set {_e} to a new embed
 
 	set {_green} to getConfigEmote("green")
-	set {_green} to getConfigEmote("red")
-	set {_green} to getConfigEmote("loading")
+	set {_red} to getConfigEmote("red")
+	set {_reload} to getConfigEmote("loading")
 
 	create embed {_e}:
 		set the colour of the embed to green
