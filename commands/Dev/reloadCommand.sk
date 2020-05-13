@@ -9,7 +9,7 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Deweloperskie"
 	set {command::{@cmd}::uzycie} to "reload command <nazwa komendy>"
 
-function reloadCommands(typ: number=0, fot: text="") :: embed:
+function reloadCommands(typ: number=0, fot: text="", pwd: text="") :: embed:
 	set {_e} to a new embed
 
 	set {_green} to getConfigEmote("green")
@@ -29,11 +29,11 @@ function reloadCommands(typ: number=0, fot: text="") :: embed:
 		if {_typ} is 1:
 			set the description of embed to "%{_red}% Szukam pliku (nie znaleziono pliku) %nl%%{_red}% Unload %nl% %{_red}% Load"
 		if {_typ} is 2:
-			set the description of embed to "%{_green}% Szukam pliku %nl%%{_reload}% Unload %nl% %{_red}% Load"
+			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_reload}% Unload %nl% %{_red}% Load"
 		if {_typ} is 3:
-			set the description of embed to "%{_green}% Szukam pliku %nl%%{_green}% Unload %nl% %{_reload}% Load"
+			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_green}% Unload %nl% %{_reload}% Load"
 		if {_typ} is 4:
-			set the description of embed to "%{_green}% Szukam pliku %nl%%{_green}% Unload %nl% %{_green}% Load"
+			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_green}% Unload %nl% %{_green}% Load"
 
 	return {_e}
 
@@ -62,16 +62,14 @@ discord command {@cmd} [<text>]:
 			set {_e} to reloadCommands(1)
 			edit {_msg} to show {_e}
 			stop
-		set {_e} to reloadCommands(2)
+		set {_e} to reloadCommands(2, "", {_pwd})
 		edit {_msg} to show {_e}
 
-		sync:
-			async:
-				execute console command "sk disable %{_pwd}%"
-				set {_e} to reloadCommands(3)
-				edit {_msg} to show {_e}
-				execute console command "sk enable %{_pwd}%"
-				set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms")
-				edit {_msg} to show {_e}
+		execute console command "sk disable %{_pwd}%"
+		set {_e} to reloadCommands(3, "", {_pwd})
+		edit {_msg} to show {_e}
+		execute console command "sk enable %{_pwd}%"
+		set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms", {_pwd})
+		edit {_msg} to show {_e}
  
 		KamilAPI add emote "green" to event-message of event-user
