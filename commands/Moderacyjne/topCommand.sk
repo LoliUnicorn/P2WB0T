@@ -122,8 +122,8 @@ discord command {@cmd} [<text>] [<text>]:
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-			execute "SELECT powod,now FROM akcje WHERE typ='pun'" in {bot::sql} and store result in {_r::*}
-			loop {_r::adm::*}:
+			execute "SELECT powod,now FROM akcje WHERE typ='Pun'" in {bot::sql} and store result in {_r::*}
+			loop {_r::powod::*}:
 				set {_powod} to {_r::powod::%loop-index%}
 				set {_n} to "%{_r::now::%loop-index%}%"
 				set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
