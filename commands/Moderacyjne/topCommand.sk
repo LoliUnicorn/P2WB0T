@@ -130,7 +130,7 @@ discord command {@cmd} [<text>] [<text>]:
 			
 			set {_lul} to 1 
 			set {_m::%{_lul}%} to a message builder
-			append "```asciidoc"
+			append line "```asciidoc"
 			loop {_top::*}:
 				set {_l::*} to loop-value split at ";"
 				set {_user} to getMcNick({_l::1})
@@ -139,7 +139,7 @@ discord command {@cmd} [<text>] [<text>]:
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
-			append "```"
+			append line "```"
 			create embed:
 				set the title of embed to title with text {_title}
 				set the colour of the embed to color of getColor(event-member)
