@@ -68,7 +68,7 @@ discord command {@cmd} [<text>]:
 		execute console command "sk disable %{_pwd}%"
 		set {_e} to reloadCommands(3)
 		edit {_msg} to show {_e}
-		execute console command "sk reload %{_pwd}%"
+		execute console command "sk enable %{_pwd}%"
 		set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms")
 		edit {_msg} to show {_e}
  
