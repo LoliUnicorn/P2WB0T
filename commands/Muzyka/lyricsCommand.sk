@@ -31,18 +31,18 @@ discord command {@cmd} [<text>]:
 			KamilAPI command error "API zwróciło nieoczekiwany błąd! `%{_r::error}%`" to event-message
 
 		replace all "[Tekst i adnotacje na Rap Genius Polska]" with "" in {_r::lyrics}
+		replace all "\n" with nl in {_wyswietlany}
 		loop 25 times:
 			set {_int} to 900
 
 			loop 20 times:
 				set {_wyswietlany} to first {_int} characters of {_r::lyrics}
-				if last character of {_wyswietlany} is "\n":
+				if last character of {_wyswietlany} is nl:
 					stop loop
 				else:
 					add 1 to {_int}
 
 			set {_replace} to {_wyswietlany}
-			replace all "\n" with nl in {_wyswietlany}
 			add {_wyswietlany} to {_field::*}
 			replace all {_replace} with "" in {_r::lyrics}
 			if {_r::lyrics}.length() = 0:
