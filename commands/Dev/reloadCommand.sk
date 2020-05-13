@@ -52,10 +52,10 @@ discord command {@cmd} [<text>]:
 		set {_f::*} to files in dir "plugins/Skript/scripts/P2WB0T/commands/"
 		loop {_f::*}:
 			loop files in dir "%loop-value%/":
-				set {_v} to "%loop-value-2%"
+				set {_v} to loop-value-2
 				set {_name} to last element of ({_v} split at "/")
 				if {_name} contains "eval":
-					set {_pwd} to last element of ("%loop-value-2%" split at "scripts/")
+					set {_pwd} to last element of ({_v} split at "scripts/")
 					stop loop
 
 		if {_pwd} is not set:
