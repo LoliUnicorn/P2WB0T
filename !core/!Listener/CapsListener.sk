@@ -1,0 +1,19 @@
+import:
+	java.lang.Character
+
+on guild message receive:
+	event-user.getId() is "343467373417857025"
+	set {_msg} to content of event-message
+	if {_msg} is set:
+		if event-user.isBot() is false:
+			set {_s::*} to {_msg} split at ""
+			if size of {_s::*} > 5:
+				set {_up} to 0
+				loop {_s::*}:
+					if Character.isUpperCase(loop-value):
+						add 1 to {_up}
+			
+				set {_procent} to (size of {_s::*} / {_up}) * 100
+				reply with "caps: %size of {_s::*}/%{_up}%% (%{_procent}%%%)"
+				if {_procent} > 70:
+					reply with "usuwam"

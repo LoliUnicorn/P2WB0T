@@ -9,3 +9,6 @@ function cache():
 
 every 10 minutes:
 	cache()
+
+on script load:
+	cache()
