@@ -21,6 +21,6 @@ on guild message receive:
 
 				{_up} is not 0
 				set {_procent} to ({_up} / size of {_s::*}) * 100
-				reply with "caps: %size of {_s::*}%/%{_up}% (%{_procent}%%%)"
+				reply with "caps: %{_up}% dużych na %size of {_s::*}% char (%{_procent}%%%)"
 				if {_procent} > 70:
 					reply with "usuwam"
