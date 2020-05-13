@@ -28,9 +28,9 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_inx} to loop-index
 				set {_bol} to false
 
-				if {_pun::list::%{_inx}%::1::name} contains arg-2:
+				if {_inx} is arg-2:
 					set {_bol} to true
-				else if {_inx} is arg-2:
+				else if {_pun::list::%{_inx}%::1::name} contains arg-2:
 					set {_bol} to true
 
 				if {_bol} is true:
