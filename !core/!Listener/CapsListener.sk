@@ -1,18 +1,24 @@
 import:
 	java.lang.Character
 
+function getNicknames() :: strings:
+	set {_g} to guild with id getConfig("config.guild")
+
 on guild message receive:
 	event-user.getId() is "343467373417857025"
 	set {_msg} to content of event-message
+	set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
 	if {_msg} is set:
 		if event-user.isBot() is false:
 			set {_s::*} to {_msg} split at ""
 			if size of {_s::*} > 5:
 				set {_up} to 0
 				loop {_s::*}:
+					loop-value is not ""
 					if Character.isUpperCase(loop-value):
 						add 1 to {_up}
-			
+
+				{_up} is not 0
 				set {_procent} to (size of {_s::*} / {_up}) * 100
 				reply with "caps: %size of {_s::*}%/%{_up}% (%{_procent}%%%)"
 				if {_procent} > 70:
