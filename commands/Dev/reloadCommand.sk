@@ -46,7 +46,8 @@ discord command {@cmd} [<text>]:
 			KamilAPI cmd error "%{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		set {_now} to system millis
 
-		reply with reloadCommands(0) and store it in {_msg}
+		set {_e} to reloadCommands(0)
+		reply with {_e} and store it in {_msg}
 
 		set {_f::*} to files in dir "plugins/Skript/scripts/P2WB0T/commands/"
 		loop {_f::*}:
@@ -58,15 +59,18 @@ discord command {@cmd} [<text>]:
 					stop loop
 
 		if {_pwd} is not set:
-			edit {_msg} to show reloadCommands(1)
+			set {_e} to reloadCommands(1)
+			edit {_msg} to show {_e}
 			stop
-		
-		edit {_msg} to show reloadCommands(2)
+		set {_e} to reloadCommands(2)
+		edit {_msg} to show {_e}
 
 		sync:
 			execute console command "sk unload %{_pwd}%"
-			edit {_msg} to show reloadCommands(3)
+			set {_e} to reloadCommands(3)
+			edit {_msg} to show {_e}
 			execute console command "sk reload %{_pwd}%"
-			edit {_msg} to show reloadCommands(4, "%difference between {_now} and system millis%ms")
+			set {_e} to reloadCommands(4, "%difference between {_now} and system millis%ms")
+			edit {_msg} to show {_e}
  
 		KamilAPI add emote "green" to event-message of event-user
