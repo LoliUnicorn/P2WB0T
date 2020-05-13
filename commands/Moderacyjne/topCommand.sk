@@ -91,33 +91,7 @@ discord command {@cmd} [<text>] [<text>]:
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
-
-			create embed:
-				set the title of embed to title with text {_title}
-				set the colour of the embed to color of getColor(event-member)
-				set the timestamp of embed to now
-				set the footer of embed to footer with text "Top"
-				
-				loop {_m::*}:
-					if loop-index is "1":
-						add split field named "Topka:" with value "%loop-value%" to embed
-					else:
-						add split field named "" with value "%loop-value%" to embed
-
-			edit {_msg} to show last created embed
-			edit {_msg} to show " "
-		else if arg-1 is "urlop":
-			set {_dni} to arg-2
-
-			set {_timespan} to arg-2
-			replace all "d" with " days" in {_timespan}
-			set {_timespan} to {_timespan} parsed as timespan
-			set {_now} to now
-			remove {_timespan} from {_now}
-
-			replace all "d" with "" in {_dni}
-			set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
-			set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
+		if arg-1 is "urlop":
 			set {_title} to "Topka urlopów"
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
@@ -140,18 +114,55 @@ discord command {@cmd} [<text>] [<text>]:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
 			append line "```"
-			create embed:
-				set the title of embed to title with text {_title}
-				set the colour of the embed to color of getColor(event-member)
-				set the timestamp of embed to now
-				set the footer of embed to footer with text "Top"
+		create embed:
+			set the title of embed to title with text {_title}
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "Top"
 				
-				loop {_m::*}:
-					if loop-index is "1":
-						add split field named "Topka:" with value "%loop-value%" to embed
-					else:
-						add split field named "" with value "%loop-value%" to embed
+			loop {_m::*}:
+				if loop-index is "1":
+					add split field named "Topka:" with value "%loop-value%" to embed
+				else:
+					add split field named "" with value "%loop-value%" to embed
 
-			edit {_msg} to show last created embed
+		edit {_msg} to show last created embed
+		edit {_msg} to show " "
+		# else if arg-1 is "urlop":
+		# 	set {_title} to "Topka urlopów"
+
+		# 	reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+		# 	execute "select id from nieobecnosci" in {bot::sql} and store result in {_r::*}
+		# 	loop {_r::id::*}:
+		# 		add 1 to {_kekw::%loop-value%}
+			
+		# 	set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
+			
+		# 	set {_lul} to 1 
+		# 	set {_m::%{_lul}%} to a message builder
+		# 	append line "```asciidoc"
+		# 	loop {_top::*}:
+		# 		set {_l::*} to loop-value split at ";"
+		# 		set {_user} to getMcNick({_l::1})
+		# 		set {_akcji} to rzeczownik({_l::2} parsed as number, "urlop", "urlopy", "urlopów")
+		# 		append line "%loop-index%. %{_user}% :: %{_l::2}% %{_akcji}%"
+		# 		if {_m::%{_lul}%}.length() >= 850:
+		# 			add 1 to {_lul}
+		# 			set {_m::%{_lul}%} to a message builder
+		# 	append line "```"
+		# 	create embed:
+		# 		set the title of embed to title with text {_title}
+		# 		set the colour of the embed to color of getColor(event-member)
+		# 		set the timestamp of embed to now
+		# 		set the footer of embed to footer with text "Top"
+				
+		# 		loop {_m::*}:
+		# 			if loop-index is "1":
+		# 				add split field named "Topka:" with value "%loop-value%" to embed
+		# 			else:
+		# 				add split field named "" with value "%loop-value%" to embed
+
+		# 	edit {_msg} to show last created embed
 			edit {_msg} to show " "
 		KamilAPI add emote "green" to event-message of event-user
