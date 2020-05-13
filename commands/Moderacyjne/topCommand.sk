@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Wyświetla topke administracji."
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "topka <ilość dni wstecz> np. topka 5d"
+	set {command::{@cmd}::uzycie} to "topka <ilość dni wstecz> np. topka 5d%nl%topka kary <ilość dni wstecz>"
 
 import:
 	java.lang.System
@@ -36,73 +36,133 @@ function translateTyp(t: text) :: text:
 	replace all "pun" with "Puny" in {_t}
 	return {_t}
 
-discord command {@cmd} [<text>]:
+discord command {@cmd} [<text>] [<text>]:
 	aliases: topka
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
-		set {_dni} to arg-1
+		if arg-1 is not "kary":
+			set {_dni} to arg-1
 
-		set {_timespan} to arg-1
-		replace all "d" with " days" in {_timespan}
-		set {_timespan} to {_timespan} parsed as timespan
-		set {_now} to now
-		remove {_timespan} from {_now}
+			set {_timespan} to arg-1
+			replace all "d" with " days" in {_timespan}
+			set {_timespan} to {_timespan} parsed as timespan
+			set {_now} to now
+			remove {_timespan} from {_now}
 
-		replace all "d" with "" in {_dni}
-		set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
-		set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
-		set {_title} to "Aktywność z ostatni%{_kochamPolski}% %{_dni}% %{_title}%"
+			replace all "d" with "" in {_dni}
+			set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
+			set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
+			set {_title} to "Aktywność z ostatni%{_kochamPolski}% %{_dni}% %{_title}%"
 
-		reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-		execute "SELECT typ,adm,now FROM akcje" in {bot::sql} and store result in {_r::*}
-		loop {_r::adm::*}:
+			execute "SELECT typ,adm,now FROM akcje" in {bot::sql} and store result in {_r::*}
+			loop {_r::adm::*}:
 
-			set {_n} to "%{_r::now::%loop-index%}%"
-			set {_typ} to "%{_r::typ::%loop-index%}%"
-			set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
-			set {_test} to date from unix {_test}.getTime()
+				set {_n} to "%{_r::now::%loop-index%}%"
+				set {_typ} to "%{_r::typ::%loop-index%}%"
+				set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
+				set {_test} to date from unix {_test}.getTime()
 
-			if {_test} > {_now}:
-				add 1 to {_ilosc::%loop-value%}
-				add 1 to {_typ::%loop-value%::%{_typ}%}
-		
-		if size of {_ilosc::*} is 0:
-			edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
-			KamilAPI add emote "red" to event-message of event-user
-			stop
-		
-		set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
-		
-		set {_lul} to 1 
-		set {_m::%{_lul}%} to a message builder
-
-		loop {_top::*}:
-			set {_l::*} to loop-value split at ";"
-			set {_user} to getMention({_l::1})
-			set {_akcji} to {_l::2}
-			append line "%loop-index%. %{_user}% - %{_akcji}% akcji"
-			loop {_typ::%{_l::1}%::*}:
-				append line "   %translateTyp(loop-index-2)%: **%loop-value-2%**"
-			if {_m::%{_lul}%}.length() >= 850:
-				add 1 to {_lul}
-				set {_m::%{_lul}%} to a message builder
-
-		create embed:
-			set the title of embed to title with text {_title}
-			set the colour of the embed to color of getColor(event-member)
-			set the timestamp of embed to now
-			set the footer of embed to footer with text "Top"
+				if {_test} > {_now}:
+					add 1 to {_ilosc::%loop-value%}
+					add 1 to {_typ::%loop-value%::%{_typ}%}
 			
-			loop {_m::*}:
-				if loop-index is "1":
-					add split field named "Topka:" with value "%loop-value%" to embed
-				else:
-					add split field named "" with value "%loop-value%" to embed
+			if size of {_ilosc::*} is 0:
+				edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
+				KamilAPI add emote "red" to event-message of event-user
+				stop
+			
+			set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
+			
+			set {_lul} to 1 
+			set {_m::%{_lul}%} to a message builder
 
-		edit {_msg} to show last created embed
-		edit {_msg} to show " "
+			loop {_top::*}:
+				set {_l::*} to loop-value split at ";"
+				set {_user} to getMention({_l::1})
+				set {_akcji} to {_l::2}
+				append line "%loop-index%. %{_user}% - %{_akcji}% akcji"
+				loop {_typ::%{_l::1}%::*}:
+					append line "   %translateTyp(loop-index-2)%: **%loop-value-2%**"
+				if {_m::%{_lul}%}.length() >= 850:
+					add 1 to {_lul}
+					set {_m::%{_lul}%} to a message builder
+
+			create embed:
+				set the title of embed to title with text {_title}
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Top"
+				
+				loop {_m::*}:
+					if loop-index is "1":
+						add split field named "Topka:" with value "%loop-value%" to embed
+					else:
+						add split field named "" with value "%loop-value%" to embed
+
+			edit {_msg} to show last created embed
+			edit {_msg} to show " "
+		else:
+			set {_dni} to arg-2
+
+			set {_timespan} to arg-2
+			replace all "d" with " days" in {_timespan}
+			set {_timespan} to {_timespan} parsed as timespan
+			set {_now} to now
+			remove {_timespan} from {_now}
+
+			replace all "d" with "" in {_dni}
+			set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
+			set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
+			set {_title} to "Aktywność z ostatni%{_kochamPolski}% %{_dni}% %{_title}%"
+
+			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
+
+			execute "SELECT powod,now FROM akcje WHERE typ='pun'" in {bot::sql} and store result in {_r::*}
+			loop {_r::adm::*}:
+				set {_powod} to {_r::powod::%loop-index%}
+				set {_n} to "%{_r::now::%loop-index%}%"
+				set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
+				set {_test} to date from unix {_test}.getTime()
+
+				if {_test} > {_now}:
+					add 1 to {_ilosc::%{_powod}%}
+			
+			if size of {_ilosc::*} is 0:
+				edit {_msg} to show "Nikt nie nadał jeszcze żadnej kary xD"
+				KamilAPI add emote "red" to event-message of event-user
+				stop
+			
+			set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
+			
+			set {_lul} to 1 
+			set {_m::%{_lul}%} to a message builder
+
+			loop {_top::*}:
+				set {_l::*} to loop-value split at ";"
+				set {_user} to {_l::1}
+				set {_akcji} to {_l::2}
+				append line "%loop-index%. %{_user}% - %{_akcji}% akcji"
+				if {_m::%{_lul}%}.length() >= 850:
+					add 1 to {_lul}
+					set {_m::%{_lul}%} to a message builder
+
+			create embed:
+				set the title of embed to title with text {_title}
+				set the colour of the embed to color of getColor(event-member)
+				set the timestamp of embed to now
+				set the footer of embed to footer with text "Top"
+				
+				loop {_m::*}:
+					if loop-index is "1":
+						add split field named "Topka:" with value "%loop-value%" to embed
+					else:
+						add split field named "" with value "%loop-value%" to embed
+
+			edit {_msg} to show last created embed
+			edit {_msg} to show " "
 		KamilAPI add emote "green" to event-message of event-user
