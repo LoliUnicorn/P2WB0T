@@ -4,6 +4,7 @@ import:
 on guild message receive:
 	getPoziom(event-user.getId()) is 0
 	set {_msg} to content of event-message
+	replace all " " with "" in {_msg}
 	set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
 	if {_msg} is set:
 		if event-user.isBot() is false:
@@ -12,7 +13,6 @@ on guild message receive:
 				set {_up} to 0
 				loop {_s::*}:
 					loop-value is not ""
-					loop-value is not " "
 					if Character.isUpperCase(loop-value):
 						add 1 to {_up}
 
