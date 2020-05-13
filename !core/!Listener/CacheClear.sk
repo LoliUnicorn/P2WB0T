@@ -3,9 +3,9 @@ import:
 	me.iblitzkriegi.vixio.util.UpdatingMessage
 
 function cache():
-	System.gc()
 	UpdatingMessage.clearAll()
-	
+	delete {v::*}
+	System.gc()
 
 every 10 minutes:
 	cache()
