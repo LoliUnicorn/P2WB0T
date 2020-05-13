@@ -7,7 +7,7 @@ on script load:
 
 	set {command::{@cmd}::opis} to "Wyświetla topke administracji."
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
-	set {command::{@cmd}::uzycie} to "topka <ilość dni wstecz> np. topka 5d%nl%topka kary <ilość dni wstecz>"
+	set {command::{@cmd}::uzycie} to "topka <ilość dni wstecz> np. topka 5d%nl%topka urlop"
 
 import:
 	java.lang.System
@@ -43,7 +43,7 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
-		if arg-1 is not "kary":
+		if arg-1 is not "urlop":
 			set {_dni} to arg-1
 
 			set {_timespan} to arg-1
@@ -106,7 +106,7 @@ discord command {@cmd} [<text>] [<text>]:
 
 			edit {_msg} to show last created embed
 			edit {_msg} to show " "
-		else:
+		else if arg-1 is "urlop":
 			set {_dni} to arg-2
 
 			set {_timespan} to arg-2
@@ -118,30 +118,24 @@ discord command {@cmd} [<text>] [<text>]:
 			replace all "d" with "" in {_dni}
 			set {_title} to rzeczownik(("%{_dni}%" parsed as number), "dnia", "dni", "dni")
 			set {_kochamPolski} to rzeczownik(("%{_dni}%" parsed as number), "ego", "ch", "ch")
-			set {_title} to "Aktywność z ostatni%{_kochamPolski}% %{_dni}% %{_title}%"
+			set {_title} to "Topka urlopów"
 
 			reply with "%getConfigEmote(""loading"")% Ładuje..." and store it in {_msg}
 
-			execute "SELECT powod,now FROM akcje WHERE typ='Pun'" in {bot::sql} and store result in {_r::*}
-			loop {_r::powod::*}:
-				set {_powod} to {_r::powod::%loop-index%}
-				set {_n} to "%{_r::now::%loop-index%}%"
-				set {_test} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("%{_n}%")
-				set {_test} to date from unix {_test}.getTime()
-
-				if {_test} > {_now}:
-					add 1 to {_ilosc::%{_powod}%}
+			execute "select id from nieobecnosci" in {bot::sql} and store result in {_r::*}
+			loop {_r::id::*}:
+				add 1 to {_kekw::%loop-value%}
 			
-			set {_top::*} to sorted {_ilosc::*} from highest to lowest with format "@index;@value"
+			set {_top::*} to sorted {_kekw::*} from highest to lowest with format "@index;@value"
 			
 			set {_lul} to 1 
 			set {_m::%{_lul}%} to a message builder
 
 			loop {_top::*}:
 				set {_l::*} to loop-value split at ";"
-				set {_user} to {_l::1}
+				set {_user} to getMcNick({_l::1})
 				set {_akcji} to {_l::2}
-				append line "%loop-index%. %{_user}% - %{_akcji}% akcji"
+				append line "%loop-index%. %{_user}% - %{_akcji}% urlopów"
 				if {_m::%{_lul}%}.length() >= 850:
 					add 1 to {_lul}
 					set {_m::%{_lul}%} to a message builder
