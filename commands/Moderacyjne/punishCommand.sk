@@ -158,6 +158,7 @@ discord command {@cmd} [<text>] [<text>]:
 						edit {_msg} to show {_e}
 				create embed {_e}:
 					loop {_m::*}:
+						"%loop-value%" is not "null"
 						add field named " " with value "%loop-value%" to embed
 				edit {_msg} to show {_e}
 
