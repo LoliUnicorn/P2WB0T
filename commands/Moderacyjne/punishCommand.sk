@@ -152,6 +152,7 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_update} to 0
 						create embed {_e}:
 							loop {_m::*}:
+								"%loop-value-2%" is not "null"
 								add field named " " with value "%loop-value-2%" to embed
 						set {_lul} to 1
 						set {_m::%{_lul}%} to a message builder
