@@ -6,6 +6,7 @@ on guild message receive:
 	set {_msg} to content of event-message
 	replace all " " with "" in {_msg}
 	set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
+	set {_msg} to regex replace all pattern "<@!?([0-9])*>" with "" in {_msg}
 	if {_msg} is set:
 		if event-user.isBot() is false:
 			set {_s::*} to {_msg} split at ""
