@@ -102,28 +102,36 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 		# sprawdzamy czy typ teraz ma karę
 		set {_tier::2} to {_tier::2} parsed as number
 
+		set {_e} to random 4 char string from charset `a-zA-Z`
+		execute "SELECT id FROM akcje" in {bot::sql} and store result in {_kur::*}
+		set {_id} to last element of {_kur::id::*}
+		set {_finalid} to ({_id} parsed as number) +1
+		set {_finalid} to "DISC-%{_e}%-%{_finalid}%"
+
 		if {_jegoWarny} is {_tier::2}: # ma kare bo jego warny są równe warny na tier
 			set {_type} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::type}
 			set {_time} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::time}
 
 			edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
-			if {_type} is "Kick":
-				kick {_u} from {_g} due to {_powod} with {bot::name}
-				modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
-			if {_type} is "Ban":
-				KamilAPI ban {_u} with reason {_powod} by {_adm} jpg {_jpg}
-			if {_type} is "Tempmute":
-				KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
-			if {_type} is "Tempban":
-				KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
-			if {_type} is "Mute":
-				KamilAPI mute {_u} with reason {_powod} by {_adm} in {_event}
-			send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_type}%** na czas **%{_time}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+			if getPoziom({_u}.getUser().getId()) is 0:
+				if {_type} is "Kick":
+					kick {_u} from {_g} due to {_powod} with {bot::name}
+					modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
+				if {_type} is "Ban":
+					KamilAPI ban {_u} with reason {_powod} by {_adm} jpg {_jpg}
+				if {_type} is "Tempmute":
+					KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
+				if {_type} is "Tempban":
+					KamilAPI tempban {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
+				if {_type} is "Mute":
+					KamilAPI mute {_u} with reason {_powod} by {_adm} in {_event}
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_type}%** na czas **%{_time}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%ID kary: **##%{_finalid}%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		else:
 			set {_kekw} to rzeczownik({_tier::2}-{_jegowarny}, "warna", "warny", "warnów")
 			edit {_msg} to show "Pomyślnie nadano ostrzeżenie dla gracza **%getName({_u}.getUser().getId())%** z powodem **%{_powod}%**! Dostanie on kare za jeszcze **%{_tier::2}-{_jegowarny}%** %{_kekw}%"
-			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc miej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+			send "Hey :wave:%nl%Właśnie dostałeś(-aś) ostrzeżenie za: **%{_powod}%**.%nl%Masz już **%{_jegoWarny}%** `/` **%{_tier::2}%** warnów, więc miej się na baczności!%nl%%nl%Czas nadania: **%now%**%nl%ID kary: **##%{_finalid}%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 		KamilAPI check delete {_msg} from {_adm}
 		wait 40 tick
 
-		modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
+		if getPoziom({_u}.getUser().getId()) is 0:
+			modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
