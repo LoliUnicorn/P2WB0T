@@ -156,6 +156,10 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_lul} to 1
 						set {_m::%{_lul}%} to a message builder
 						edit {_msg} to show {_e}
+				create embed {_e}:
+					loop {_m::*}:
+						add field named " " with value "%loop-value%" to embed
+				edit {_msg} to show {_e}
 
 				# ###################################################
 				# loop {_pun::list::*}:
