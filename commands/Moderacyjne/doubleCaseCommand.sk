@@ -20,7 +20,7 @@ discord command {@cmd} [<text>]:
 
 		reply with "%{_emote}% Ładuje..." and store it in {_msg}
 
-		execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_f::*}
+		execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::sql} and store result in {_f::*}
 		
 		loop {_f::id::*}:
 			log("log: %loop-index%")
@@ -33,7 +33,7 @@ discord command {@cmd} [<text>]:
 			edit {_msg} to show "%{_emote}% Typ akcji nie jest punem! Szukam dopasowania..."
 			set {_id} to {_id} parsed as number
 			add 1 to {_id}
-			execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_l::*}
+			execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::sql} and store result in {_l::*}
 			loop {_f::id::*}:
 				set {_typl} to {_l::typ::%loop-index%}
 				set {_lkarany} to {_l::karany::%loop-index%}
