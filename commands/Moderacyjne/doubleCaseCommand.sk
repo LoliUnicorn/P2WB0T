@@ -22,7 +22,7 @@ discord command {@cmd} [<text>]:
 
 		execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_f::*}
 		
-		loop {_f::*}:
+		loop {_f::id::*}:
 			set {_typ} to {_f::typ::%loop-index%}
 			set {_karany} to {_f::karany::%loop-index%}
 
@@ -33,7 +33,7 @@ discord command {@cmd} [<text>]:
 			set {_id} to {_id} parsed as number
 			add 1 to {_id}
 			execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_l::*}
-			loop {_f::*}:
+			loop {_f::id::*}:
 				set {_typl} to {_l::typ::%loop-index%}
 				set {_lkarany} to {_l::karany::%loop-index%}
 			if {_lkarany} is not {_karany}:
