@@ -65,10 +65,12 @@ discord command {@cmd} [<text>] [<text>]:
 					if {_k::%{_lol}%}.length() > 1800:
 						add 1 to {_lol}
 						set {_k::%{_lol}%} to a message builder
-				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%```%nl%%{_k::1}%%nl%```" to event-message
+				reply with "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%```%nl%%{_k::1}%%nl%```"
 				loop {_k::*}:
 					loop-index is not "1"
 					reply with "```%nl%%loop-value%%nl%```"
+				KamilAPI add emote "red" to event-message of event-user
+				stop
 
 			set {_des} to a message builder
 			set {_a} to a new embed
