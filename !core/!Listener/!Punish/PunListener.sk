@@ -151,6 +151,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 on reaction add:
 	set {_id} to event-user.getId()
 	if {v::punlistener::%{_id}%::botmsg} is event-message:
+		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
 			edit event-message to show "Ojoj byczq, obyś tego nie żałował"
 		else if {_e} is getConfig("emote.red"):
