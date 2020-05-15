@@ -54,7 +54,7 @@ discord command {@cmd} [<text>] [<text>]:
 						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Kick":
 							set {_type} to " %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%     "
 						if {_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type} is "Ban":
-							set {_type} to "    %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%   "
+							set {_type} to "   %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::type}%    "
 
 						append line "##%loop-value-2%   |%{_jeb}%|%{_type}%| %{_pun::list::%{_inx}%::1::tier_%loop-value-2%::1::time}%"
 					append line "```"
