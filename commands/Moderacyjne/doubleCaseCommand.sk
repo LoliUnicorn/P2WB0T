@@ -41,5 +41,5 @@ discord command {@cmd} [<text>]:
 				set {_id} to {_id}+1
 		
 		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'" in {bot::sql}
-		edit {_msg} to show "Pomyślnie usunięto karę #%{_id}% z konta użytkownika"
+		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
 		KamilAPI add emote "green" to event-message of event-user
