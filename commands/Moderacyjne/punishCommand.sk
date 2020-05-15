@@ -62,7 +62,7 @@ discord command {@cmd} [<text>] [<text>]:
 				set {_k::%{_lol}%} to a message builder
 				loop {_pun::list::*}:
 					append line "%loop-index%. %{_pun::list::% loop-index%::1::name}%"
-					if {_pun::list::*}.length() > 1800:
+					if {_k::%{_lol}%}.length() > 1800:
 						add 1 to {_lol}
 						set {_k::%{_lol}%} to a message builder
 				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%```%nl%%{_k::1}%%nl%```" to event-message
