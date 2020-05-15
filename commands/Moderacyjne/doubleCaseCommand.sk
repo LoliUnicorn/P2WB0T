@@ -32,7 +32,6 @@ discord command {@cmd} [<text>]:
 			add 1 to {_id}
 			set {_id} to "%{_id}%"
 			execute "SELECT * FROM akcje WHERE id=%{_id}%" in {bot::sql} and store result in {_l::*}
-			log("SELECT * FROM akcje WHERE id=%{_id}%")
 			loop {_f::id::*}:
 				set {_typl} to {_l::typ::%loop-index%}
 				set {_lkarany} to {_l::karany::%loop-index%}
@@ -43,7 +42,6 @@ discord command {@cmd} [<text>]:
 				KamilAPI add emote "red" to event-message of event-user
 				stop
 		
-		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'" in {bot::sql}
-		log("UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'")
+		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id=%{_id}%" in {bot::sql}
 		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
 		KamilAPI add emote "green" to event-message of event-user
