@@ -114,7 +114,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_type} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::type}
 			set {_time} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::time}
 
-			edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
+			if {_type} is not "Ban":
+				edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
 			if getPoziom({_u}.getUser().getId()) is 0:
 				if {_type} is "Kick":
 					kick {_u} from {_g} due to {_powod} with {bot::name}
@@ -123,7 +124,8 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					if {_adm}.isBot() is false:
 						set {_id} to {_adm}.getId()
 						set {v::punlistener::%{_id}%::karany} to {_u}
-						send "%getMention({_adm}.getId())%, byczq chcesz dać typowi perma. Zapytałeś lidera, bo tak sam z siebie możesz zbanować" to channel with id {_channel}.getId() and store it in {v::punlistener::%{_id}%::botmsg}
+						edit {_msg} to show "%getMention({_adm}.getId())%, byczq chcesz dać typowi perma. Zapytałeś lidera, bo tak sam z siebie możesz zbanować"
+						set {v::punlistener::%{_id}%::botmsg} to {_msg}
 						KamilAPI add emote "red" to {v::punlistener::%{_id}%::botmsg}
 						KamilAPI add emote "green" to {v::punlistener::%{_id}%::botmsg}
 						stop
@@ -150,7 +152,7 @@ on reaction add:
 	if {v::punlistener::%{_id}%::botmsg} is event-message:
 		if {_e} is getConfig("emote.green"):
 			edit event-message to show "Ojoj byczq, obyś tego nie żałował"
-		else if {_e} is getConfig("emote.red")
+		else if {_e} is getConfig("emote.red"):
 			edit event-message to show "Ojoj byczq, to idź się pytaj"
 		KamilAPI clear reactions from event-message
 		delete {v::punlistener::%{_id}%::*}
