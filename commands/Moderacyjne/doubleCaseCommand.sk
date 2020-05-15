@@ -40,7 +40,7 @@ discord command {@cmd} [<text>]:
 					delete {_typl}
 				stop loop
 			if {_typl} is not "Pun":
-				edit {_msg} to show "Podałeś złe ID! (%{_typl}%||%{_id}%)"
+				edit {_msg} to show "Podałeś złe ID!"
 				KamilAPI add emote "red" to event-message of event-user
 				stop
 		
