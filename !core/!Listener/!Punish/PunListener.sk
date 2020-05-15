@@ -153,8 +153,10 @@ on reaction add:
 	if {v::punlistener::%{_id}%::botmsg} is event-message:
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
-			edit event-message to show "Ojoj byczq, obyś tego nie żałował"
+			edit event-message to show "%getMention(event-user.getId())%, ojoj byczq, obyś tego nie żałował"
+			KamilAPI ban {v::punlistener::%{_id}%::karany} with reason "Rozpowszechnianie danych osobowych, adresów zamieszkania i innych wrażliwych informacji" by event-user # FIXME: punish
+			send "<@416264257978761217>, %getFullName(event-user.getId())% właśnie dał perma dla %getFullName({v::punlistener::%{_id}%::karany}.getUser().getId())%" to channel with id "703607301407375500" with event-bot
 		else if {_e} is getConfig("emote.red"):
-			edit event-message to show "Ojoj byczq, to idź się pytaj"
+			edit event-message to show "%getMention(event-user.getId())%, Ojoj byczq, to idź się pytaj"
 		KamilAPI clear reactions from event-message
 		delete {v::punlistener::%{_id}%::*}
