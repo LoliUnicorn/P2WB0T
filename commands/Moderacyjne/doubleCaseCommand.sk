@@ -25,7 +25,6 @@ discord command {@cmd} [<text>]:
 		loop {_f::*}:
 			set {_typ} to {_f::typ::%loop-index%}
 			set {_karany} to {_f::karany::%loop-index%}
-			stop loop
 
 		log("typ: %{_typ}% : karany: %{_karany}%")
 
@@ -36,9 +35,9 @@ discord command {@cmd} [<text>]:
 			execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_l::*}
 			loop {_f::*}:
 				set {_typl} to {_l::typ::%loop-index%}
-				if {_l::karany::%loop-index%} is not {_karany}:
-					delete {_typl}
-				stop loop
+				set {_lkarany} to {_l::karany::%loop-index%}
+			if {_lkarany} is not {_karany}:
+				delete {_typl}
 			if {_typl} is not "Pun":
 				edit {_msg} to show "Podałeś złe ID!"
 				KamilAPI add emote "red" to event-message of event-user
