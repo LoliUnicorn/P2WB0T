@@ -4,14 +4,14 @@ effect KamilAPI check double case of %text% with %message%:
 		set {_id} to expr-1
 		set {_msg} to expr-2
 
-		set {_w} to difference between {v::%{_id}%::kara::cooldown} and now
+		set {_w} to difference between {vv::%{_id}%::kara::cooldown} and now
 		if {_w} is less than 2 minutes:
-			set {_d::*} to difference between {v::%{_id}%::kara::cooldown} and now, 2 minutes
+			set {_d::*} to difference between {vv::%{_id}%::kara::cooldown} and now, 2 minutes
 
 			remove {_d::1} from {_d::2}
 			set {_czas} to getTimespan("%{_d::2}%")
 			KamilAPI cmd error "Zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika." to {_msg}
 
-		set {v::%{_id}%::kara::cooldown} to now
+		set {vv::%{_id}%::kara::coldown} to now
 
 		continue
