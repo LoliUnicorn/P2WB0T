@@ -45,6 +45,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_channel} to event.getChannel()
 		else:
 			set {_channel} to expr-4
+		delete {v::punlistener::%{_adm}.getId()%::*}
 
 		if {_user} is instance of User:
 			set {_u} to getUser({_user}.getId()) in {_g}
