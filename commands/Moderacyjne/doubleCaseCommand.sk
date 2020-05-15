@@ -27,10 +27,13 @@ discord command {@cmd} [<text>]:
 			set {_karany} to {_f::karany::%loop-index%}
 			stop loop
 
+		log("typ: %{_typ}% : karany: %{_karany}%")
+
 		if {_typ} is not "Pun":
 			edit {_msg} to show "%{_emote}% Typ akcji nie jest punem! Szukam dopasowania..."
 			set {_id} to {_id} parsed as number
-			execute "SELET * FROM akcje WHERE id='%{_id}+1%'" in {bot::db} and store result in {_l::*}
+			add 1 to {_id}
+			execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_l::*}
 			loop {_f::*}:
 				set {_typl} to {_l::typ::%loop-index%}
 				if {_l::karany::%loop-index%} is not {_karany}:
@@ -40,8 +43,6 @@ discord command {@cmd} [<text>]:
 				edit {_msg} to show "Podałeś złe ID! (%{_typl}%||%{_id}%)"
 				KamilAPI add emote "red" to event-message of event-user
 				stop
-			else:
-				set {_id} to {_id}+1
 		
 		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'" in {bot::sql}
 		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
