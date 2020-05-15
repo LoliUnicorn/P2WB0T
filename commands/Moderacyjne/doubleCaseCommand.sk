@@ -23,6 +23,7 @@ discord command {@cmd} [<text>]:
 		execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::db} and store result in {_f::*}
 		
 		loop {_f::id::*}:
+			log("log: %loop-index%")
 			set {_typ} to {_f::typ::%loop-index%}
 			set {_karany} to {_f::karany::%loop-index%}
 
