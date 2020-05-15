@@ -20,7 +20,8 @@ discord command {@cmd} [<text>]:
 
 		reply with "%{_emote}% Ładuje..." and store it in {_msg}
 
-		execute "SELET * FROM akcje WHERE id='%{_id}%'" in {bot::sql} and store result in {_f::*}
+		execute "SELET * FROM akcje WHERE id=%{_id}%" in {bot::sql} and store result in {_f::*}
+		log("SELET * FROM akcje WHERE id=%{_id}%")
 		
 		loop {_f::id::*}:
 			log("log: %loop-index%")
