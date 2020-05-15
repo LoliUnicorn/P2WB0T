@@ -297,7 +297,7 @@
 			}]
 		}],
 		"23": [{
-			"name": "Dublowanie kont",
+			"name": "Dublowanie kont przebywających na serwisie Discord",
 			"tier_1": [{
 				"maxWarns": 1,
 				"type": "Kick",
@@ -371,6 +371,29 @@
 				"maxWarns": 3,
 				"type": "Tempban",
 				"time": "2d"
+			}]
+		}],
+		"27": [{
+			"name": "Zaśmiecanie chatu",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempmute",
+				"time": "2h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "5h"
+			}],
+			"tier_4": [{
+				"maxWarns": 3,
+				"type": "Tempmute",
+				"time": "12h"
 			}]
 		}]
 	}

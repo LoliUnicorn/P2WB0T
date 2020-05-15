@@ -58,10 +58,17 @@ discord command {@cmd} [<text>] [<text>]:
 					append line "```"
 
 			if {_xd::name} is not set:
-				set {_k} to a message builder
+				set {_lol} to 1
+				set {_k::%{_lol}%} to a message builder
 				loop {_pun::list::*}:
 					append line "%loop-index%. %{_pun::list::% loop-index%::1::name}%"
-				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+					if {_pun::list::*}.length() > 1800:
+						add 1 to {_lol}
+						set {_k::%{_lol}%} to a message builder
+				KamilAPI cmd error "Nie ma takiego sposobu! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%%nl%```%nl%%{_k::1}%%nl%```" to event-message
+				loop {_k::*}:
+					loop-index is not "1"
+					reply with "```%nl%%loop-value%%nl%```"
 
 			set {_des} to a message builder
 			set {_a} to a new embed
