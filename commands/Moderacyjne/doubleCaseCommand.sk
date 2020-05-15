@@ -42,7 +42,7 @@ discord command {@cmd} [<text>]:
 				KamilAPI add emote "red" to event-message of event-user
 				stop
 		
-		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id=%{_id}%" in {bot::sql}
-		log("UPDATE akcje SET karany=%{bot::id}% WHERE id=%{_id}%")
+		execute "UPDATE akcje SET karany='%unsafe {bot::id}%' WHERE id=%unsafe {_id}%" in {bot::sql}
+		log("UPDATE akcje SET karany=%unsafe {bot::id}% WHERE id=%unsafe {_id}%")
 		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
 		KamilAPI add emote "green" to event-message of event-user
