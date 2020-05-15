@@ -15,7 +15,6 @@ discord command {@cmd} [<text>] [<text>]:
 		if arg-1 is not set:
 			KamilAPI cmd error "Użyj: %{bot::prefix}%warn <member> [powód]" to event-message
 		set {_member} to getUser(arg-1) in event-guild
-
 		if {_member} is not set:
 			KamilAPI cmd error "Nie ma takiego użytkownika na tym serwerze!" to event-message
 		if {_member}.getUser().getId() is event-user.getId():
@@ -23,11 +22,8 @@ discord command {@cmd} [<text>] [<text>]:
 		if {_member}.getUser().isBot() is true:
 			KamilAPI cmd error "Nie możesz wykonywać akcji na bocie!" to event-message
 		KamilAPI bypass event-member at {_member} with event-message
-
 		set {_powod} to getPowod(arg-2)
-
 		reply with "Pomyślnie nadomo warna dla **%getName(arg-1)%** z powodem **%getRegex({_powod})%**"
-
 		KamilAPI add emote "green" to event-message of event-user
 		KamilAPI check delete event-message from event-user
 		modLog({_member}.getUser().getId(), event-user.getId(), "Warn", {_powod}, getMcNick({_member}.getUser().getId()))
