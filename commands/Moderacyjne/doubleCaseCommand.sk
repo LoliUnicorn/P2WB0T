@@ -21,20 +21,18 @@ discord command {@cmd} [<text>]:
 		reply with "%{_emote}% Ładuje..." and store it in {_msg}
 
 		execute "SELECT * FROM akcje WHERE id=%{_id}%" in {bot::sql} and store result in {_f::*}
-		log("SELECT * FROM akcje WHERE id=%{_id}%")
 		
 		loop {_f::id::*}:
-			log("log: %loop-index%")
 			set {_typ} to {_f::typ::%loop-index%}
 			set {_karany} to {_f::karany::%loop-index%}
-
-		log("typ: %{_typ}% : karany: %{_karany}%")
 
 		if {_typ} is not "Pun":
 			edit {_msg} to show "%{_emote}% Typ akcji nie jest punem! Szukam dopasowania..."
 			set {_id} to {_id} parsed as number
 			add 1 to {_id}
-			execute "SELECT * FROM akcje WHERE id='%{_id}%'" in {bot::sql} and store result in {_l::*}
+			set {_id} to "%{_id}%"
+			execute "SELECT * FROM akcje WHERE id=%{_id}%" in {bot::sql} and store result in {_l::*}
+			log("SELECT * FROM akcje WHERE id=%{_id}%")
 			loop {_f::id::*}:
 				set {_typl} to {_l::typ::%loop-index%}
 				set {_lkarany} to {_l::karany::%loop-index%}
@@ -46,5 +44,6 @@ discord command {@cmd} [<text>]:
 				stop
 		
 		execute "UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'" in {bot::sql}
+		log("UPDATE akcje SET karany='%{bot::id}%' WHERE id='%{_id}%'")
 		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
 		KamilAPI add emote "green" to event-message of event-user
