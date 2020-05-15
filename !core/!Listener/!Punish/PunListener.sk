@@ -119,7 +119,14 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 					kick {_u} from {_g} due to {_powod} with {bot::name}
 					modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
 				if {_type} is "Ban":
-					KamilAPI ban {_u} with reason {_powod} by {_adm} jpg {_jpg}
+					if {_adm}.isBot() is false:
+						set {_id} to {_adm}.getId()
+						set {v::punlistener::%{_id}%::karany} to {_u}
+						send "%getMention({_adm}.getId())%, byczq chcesz dać typowi perma. Zapytałeś lidera, bo tak sam z siebie możesz zbanować" to channel with id {_channel}.getId() and store it in {v::punlistener::%{_id}%::botmsg}
+						KamilAPI add emote "red" to {v::punlistener::%{_id}%::botmsg}
+						KamilAPI add emote "green" to {v::punlistener::%{_id}%::botmsg}
+						stop
+					# KamilAPI ban {_u} with reason {_powod} by {_adm} jpg {_jpg}
 				if {_type} is "Tempmute":
 					KamilAPI tempmute {_u} with reason {_powod} in time {_time} by {_adm} jpg {_jpg}
 				if {_type} is "Tempban":
@@ -136,3 +143,13 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 		if getPoziom({_u}.getUser().getId()) is 0:
 			modLog({_u}.getUser().getId(), {_adm}.getId(), "Pun", "%{_powod}% -s", getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%") # dodaje Puna
+
+on reaction add:
+	set {_id} to event-user.getId()
+	if {v::punlistener::%{_id}%::botmsg} is event-message:
+		if {_e} is getConfig("emote.green"):
+			edit event-message to show "Ojoj byczq, obyś tego nie żałował"
+		else if {_e} is getConfig("emote.red")
+			edit event-message to show "Ojoj byczq, to idź się pytaj"
+		KamilAPI clear reactions from event-message
+		delete {v::punlistener::%{_id}%::*}
