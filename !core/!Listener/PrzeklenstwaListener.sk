@@ -58,6 +58,7 @@ on guild message receive:
 	
 		set {_int} to checkFlood({_tak})
 		if {_int} >= 4:
+			log("usuwam bo flood %checkFlood({_tak})% (%{_tak}%)")
 			deleteMessage(event-message)
 			stop
 
