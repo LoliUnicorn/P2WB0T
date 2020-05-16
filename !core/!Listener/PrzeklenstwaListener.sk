@@ -1,3 +1,9 @@
+import:
+	pl.kamil0024.Main as L
+
+function levenshtein(s: text, l: text) :: number:
+	return L.levenshtein({_s}, {_l})
+
 function checkFlood(msg: text) :: number:
 	replace all " " with "" in {_msg}
 	set {_s::*} to {_msg} split at ""
@@ -58,15 +64,21 @@ on guild message receive:
 			deleteMessage(event-message)
 			stop
 
-	event-user.getId() is "343467373417857025"
+		# set {_c} to "640906076774072320"
 
-	set {_id} to event-user.getId()
-	add "%event-message%" to {v::antydebil::%{_id}%::msg::*}
-	set {_s} to size of {v::antydebil::%{_id}%::msg::*}
-	set {_s::*} to {_s}, {_s}-1, {_s}-2
+		# set {_id} to event-user.getId()
+		# add "%event-message%" to {v::antydebil::%{_id}%::msg::*}
+		# set {_s} to size of {v::antydebil::%{_id}%::msg::*}
+		# set {_s::*} to {_s}, {_s}-1, {_s}-2
 
-	if {_s} >= 3:
-		if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::2}%}:
-			if {v::antydebil::%{_id}%::msg::%{_s::2}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
-				if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
-					reply with "%getMention(event-user.getId())%, napisałeś taką samą wiadomość 3 razy pod rząd! Dopisuję ostrzeżenie."
+		# if {_s} >= 3:
+		# 	if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::2}%}:
+		# 		if {v::antydebil::%{_id}%::msg::%{_s::2}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
+		# 			if {v::antydebil::%{_id}%::msg::%{_s::1}%} is {v::antydebil::%{_id}%::msg::%{_s::3}%}:
+
+		# 				set {_m} to "`%{v::antydebil::%{_id}%::msg::%{_s::1}%}%`, `%{v::antydebil::%{_id}%::msg::%{_s::2}%}%`, `%{v::antydebil::%{_id}%::msg::%{_s::3}%}%`"
+		# 				replace all "@" with "<małpa>" in {_m}
+		# 				send "%getLogName(event-user.getId())% napisał 3 takie same wiadomości```%nl%%{_m}%%nl%```" to channel with id {_c} with event-bot
+		# 				KamilAPI add punish to event-user with reason "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" by getUser({bot::id}) in channel event-channel # FIXME: punish
+		# 				delete {v::antydebil::%{_id}%::msg:*}
+		# 				stop
