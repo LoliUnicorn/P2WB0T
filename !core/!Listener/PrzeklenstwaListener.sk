@@ -1,9 +1,3 @@
-import:
-	pl.kamil0024.Main as L
-
-function levenshtein(s: text, l: text) :: number:
-	return L.levenshtein({_s}, {_l})
-
 function checkFlood(msg: text) :: number:
 	replace all " " with "" in {_msg}
 	set {_s::*} to {_msg} split at ""
