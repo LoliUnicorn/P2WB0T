@@ -16,6 +16,8 @@ function checkFlood(msg: text) :: number:
 				return {_flood}
 		else:
 			delete {_flood}
+	if {_flood} is set:
+		return {_flood}
 	return 0
 
 on guild message receive:
