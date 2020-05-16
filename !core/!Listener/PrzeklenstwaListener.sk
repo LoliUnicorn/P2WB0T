@@ -56,9 +56,12 @@ on guild message receive:
 					KamilAPI add pun to event-user with reason "Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy" by getUser({bot::id}) # FIXME: punish
 					stop
 	
-		set {_int} to checkFlood({_tak})
+		set {_flood} to "%event-message%"
+		set {_flood} to regex replace all pattern "<@!?([0-9])*>" with "" in {_flood}
+		set {_flood} to regex replace all pattern "[0-9]*" with "" in {_flood}
+		set {_int} to checkFlood({_flood})
 		if {_int} >= 4:
-			log("usuwam bo flood %checkFlood({_tak})% (%{_tak}%)")
+			log("usuwam bo flood %checkFlood({_flood})% (%{_flood}%)")
 			deleteMessage(event-message)
 			stop
 
