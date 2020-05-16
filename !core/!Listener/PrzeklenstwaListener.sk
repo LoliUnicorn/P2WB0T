@@ -61,6 +61,7 @@ on guild message receive:
 	event-user.getId() is "343467373417857025"
 
 	set {_id} to event-user.getId()
+	add "%event-message%" to {v::antydebil::%{_id}%::msg::*}
 	set {_s} to size of {v::antydebil::%{_id}%::msg::*}
 	set {_s::*} to {_s}, {_s}-1, {_s}-2
 
