@@ -45,6 +45,7 @@ on guild message receive:
 		set {_kek::*} to lines from file "plugins/Skript/scripts/P2WB0T/commands/!Utils/Przeklenstwa.api"
 		set {_tak} to regex replace all pattern "[^\w\s]*" with "" in {_message}
 		set {_tak} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_tak}
+		set {_tak} to regex replace all pattern "<@!?([0-9])*>" with "" in {_tak}
 		
 		set {_tak::*} to {_tak} split at " "
 		loop {_kek::*}:
