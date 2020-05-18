@@ -20,7 +20,7 @@ discord command {@cmd} [<text>]:
 		log("SELECT id FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND karany='%unsafe {_u}.getId()%")
 		execute "SELECT id FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND karany='%unsafe {_u}.getId()%'" in {bot::sql} and store result in {_r::*}
 		set {_id} to "???"
-		loop {_r::id::*}
+		loop {_r::id::*}:
 			set {_id} to loop-value
 
 		grab bans of event-guild
