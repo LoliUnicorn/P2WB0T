@@ -19,7 +19,19 @@ discord command {@cmd} [<text>]:
 	trigger:
 		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/vps/"
 		map json body of last http response to {_r::*}
-		reply with "%{_r::*}%"
+		
+		set {_e} to a new embed
+		create embed {_e}:
+			set the colour of the embed to color of getColor(event-member)
+			set the timestamp of embed to now
+			set the footer of embed to footer with text "VPS" and no icon
+		
+			add split field named "Zużycie ramu" with value "%{_r::memTotal}%/%{_r::memRealUsed}% (Cache: %{_r::memCached}%)" to embed
+			add split field named "Uptime" with value "%{_r::time}%" to embed
+			add split field named "CPU" with value "%{_r::cpuRealUsed}%%% (%{_r::cpuNum}% Core)" to embed
+			add split field named "OS" with value "%{_r::system}%" to embed
+			add split field named "aaPanel" with value "v%{_r::version}%" to embed
 
+		reply with {_e}
 		KamilAPI add emote "green" to event-message of event-user
 
