@@ -30,12 +30,11 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_stary::end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" parsed as timespan
 			set {_stary::now} to "%{_r::now::%{_inx}%}%"
+		
+		set {_now} to now
+		add {_stary::czas} to now
+		add {_stary::czas} to now
 
-		set {_pozostalo} to difference between now and {_stary::czas}
-
-		set {_k} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse({_stary::now})
-		set {_stary::now} to new Date({_k}.getTime())
-
-		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%` o godzinie `%{_stary::now}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
+		reply with "Typ dostał karę `%{_stary::typ}%` na czas %{_stary::czas}%. Jego kara zostaje podwojona - kończy się o %{_now}%"
 
 		KamilAPI add emote "green" to event-message of event-user
