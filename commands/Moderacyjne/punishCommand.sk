@@ -251,7 +251,7 @@ on guild message receive:
 	{vv::%event-user.getId()%::pun::*} is set
 	deleteMessage(event-message)
 	set {_msg} to "%event-message%"
-	set {_karanyid} to 
+	set {_karanyid} to discord id of {vv::%event-user%::pun::karany}
 	if {_msg} contains {bot::prefix}:
 		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
 		delete {vv::%{_karanyid}%::kara::cooldown}
