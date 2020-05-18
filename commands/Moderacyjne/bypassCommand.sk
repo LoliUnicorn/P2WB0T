@@ -9,6 +9,9 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
 	set {command::{@cmd}::uzycie} to "bypass <osoba karana> <jej wcześniejsze konto>"
 
+import:
+	java.text.SimpleDateFormat
+
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
@@ -26,9 +29,11 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_stary::typ} to {_r::typ::%{_inx}%}
 			set {_stary::end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" parsed as timespan
-			set {_stary::now} to "%{_r::now::%{_inx}%}%" parsed as date
+			set {_stary::now} to "%{_r::now::%{_inx}%}%"
 
 		set {_pozostalo} to difference between now and {_stary::czas}
+
+		set {_stary::now} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse({_stary::now})
 
 		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%` o godzinie `%{_stary::now}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
 
