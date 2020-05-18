@@ -50,6 +50,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		if {_stary::typ} is "Tempban":
 			KamilAPI tempban {_u::1} with reason {_powod} in time {_dif} by event-user jpg {_jpg}
 		if {_stary::typ} is "Mute":
-			KamilAPI mute {_u::1} with reason {_powod} by event-user in event
+			KamilAPI mute {_u::1} with reason {_powod} by event-user
 		
 		KamilAPI add emote "green" to event-message of event-user
