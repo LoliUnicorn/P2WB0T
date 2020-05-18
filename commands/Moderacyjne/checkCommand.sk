@@ -36,8 +36,11 @@ discord command {@cmd} [<text>]:
 		set {_cmute} to "Nie"
 		if {_serwer} is "Tak":
 			set {_mute} to role with id getConfig("Config.muterole")
-			if (roles of {_m}) contains {_mute}:
-				set {_cmute} to "Tak"
+			loop ...{_m}.getRoles():
+				set {_v} to loop-value
+				if {_v}.getId() is {_mute}.getId():
+					set {_cmute} to "Tak"
+					stop loop
 
 		set {_m} to a message builder
 		append line "```asciidoc"
