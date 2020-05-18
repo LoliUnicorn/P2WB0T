@@ -53,7 +53,7 @@ discord command {@cmd} [<text>]:
 
 		set {_e} to a new embed
 		create embed {_e}:
-			set the description of embed to "Description%nl%The title leads to the URL, if given"
+			set the description of embed to "%{_m}%"
 
 			set the thumbnail of embed to "%avatar of {_u}%"
 		
