@@ -1,0 +1,25 @@
+options:
+	cmd: vps
+
+on script load:
+	set {command::{@cmd}::poziom} to 10
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Wyświetla specyfikacjee maszyny"
+	set {command::{@cmd}::kategoria} to "Deweloperskie"
+	set {command::{@cmd}::uzycie} to "vps"
+
+import:
+	pl.kamil0024.aapanel.Main as Panel
+	java.lang.String
+	java.util.Date
+
+discord command {@cmd} [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/vps/"
+		map json body of last http response to {_r::*}
+		reply with "%{_r::*}%"
+
+		KamilAPI add emote "green" to event-message of event-user
+
