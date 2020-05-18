@@ -34,7 +34,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		set {_now} to now
 		add {_stary::czas} to {_now}
 		add {_stary::czas} to {_now}
+		set {_dif} to difference between now and {_now}
 
-		reply with "Typ dostał karę `%{_stary::typ}%` na czas %{_stary::czas}%. Jego kara zostaje podwojona - kończy się o %{_now}%"
+		reply with "Typ dostał karę `%{_stary::typ}%` na czas %{_stary::czas}%. Jego kara zostaje podwojona - kończy się o `%{_now}%` czyli za %{_dif}%"
 
 		KamilAPI add emote "green" to event-message of event-user
