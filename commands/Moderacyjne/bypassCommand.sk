@@ -34,7 +34,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		set {_pozostalo} to difference between now and {_stary::czas}
 
 		set {_k} to new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse({_stary::now})
-		set {_stary::now} to new Dime({_k}.getTime())
+		set {_stary::now} to new Date({_k}.getTime())
 
 		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%` o godzinie `%{_stary::now}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
 
