@@ -20,15 +20,16 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		if {_u::2} is not set:
 			KamilAPI cmd error "Takie mk nie istnieje! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		
-		execute "SELECT id,typ,end,czas FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND typ!='Kick' AND typ!='Warn' AND aktywna='Tak' AND karany='%unsafe {_u::2}.getId()%'" in {bot::sql} and store result in {_r::*}
+		execute "SELECT * FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND typ!='Kick' AND typ!='Warn' AND aktywna='Tak' AND karany='%unsafe {_u::2}.getId()%'" in {bot::sql} and store result in {_r::*}
 		loop {_r::id::*}:
 			set {_inx} to loop-index
 			set {_stary::typ} to {_r::typ::%{_inx}%}
 			set {_stary::end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" parsed as timespan
-
+			log("%{_r::czas::%{_inx}%}%")
+			
 		set {_pozostalo} to difference between now and {_stary::czas}
 
-		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_stary::end}%`. Zostało jeszcze %{_pozostalo}%"
+		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
 
 		KamilAPI add emote "green" to event-message of event-user
