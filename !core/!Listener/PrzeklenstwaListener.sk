@@ -61,7 +61,6 @@ on guild message receive:
 		set {_flood} to regex replace all pattern "[0-9]*" with "" in {_flood}
 		set {_int} to checkFlood({_flood})
 		if {_int} >= 4:
-			log("usuwam bo flood %checkFlood({_flood})% (%{_flood}%)")
 			deleteMessage(event-message)
 			stop
 

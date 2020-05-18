@@ -13,7 +13,7 @@ discord command {@cmd} [<text>] [<text>]:
 	aliases: pun,
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
-		delete {v::%event-user.getId()%::pun::*}
+		delete {vv::%event-user.getId()%::pun::*}
 		set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 		map json {_xd} to {_pun::*}
 		if {_pun::*} is not set:
@@ -115,8 +115,8 @@ discord command {@cmd} [<text>] [<text>]:
 					if {_n} contains loop-value-2:
 						add 1 to {_warns::%{_n}%}
 
-			set {v::%event-user%::pun::karany} to {_member}
-			set {v::%event-user.getId()%::pun::msg} to event-message
+			set {vv::%event-user%::pun::karany} to {_member}
+			set {vv::%event-user.getId()%::pun::msg} to event-message
 
 			if arg-2 is not set:
 				set {_lul} to 1
@@ -151,7 +151,7 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
 					if getTier({_n}, {_jegoWarny}) is not set:
 						set {_tier::*} to getTier({_n}, 1) split at "|"
-					set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+					set {vv::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 					append line "—"
@@ -187,7 +187,7 @@ discord command {@cmd} [<text>] [<text>]:
 				# 		set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
 				# 	if getTier({_n}, {_jegoWarny}) is not set:
 				# 		set {_tier::*} to getTier({_n}, 1) split at "|"
-				# 	set {v::%event-user.getId()%::pun::%{_inx}%} to {_n}
+				# 	set {vv::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
 				# 	append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 				# 	append line "—"
@@ -212,7 +212,7 @@ discord command {@cmd} [<text>] [<text>]:
 					
 				# edit {_msg} to show {_e}
 				# edit {_msg} to show " "
-				set {v::%event-user.getId()%::pun::botmsg} to {_msg}
+				set {vv::%event-user.getId()%::pun::botmsg} to {_msg}
 				KamilAPI add emote "green" to event-message of event-user
 				KamilAPI check delete event-message from event-user
 		
@@ -221,7 +221,7 @@ discord command {@cmd} [<text>] [<text>]:
 				KamilAPI check delete event-message from event-user
 				set {_num} to arg-2 parsed as number
 				if {_num} is not set:
-					delete {v::%event-user.getId()%::pun::*}
+					delete {vv::%event-user.getId()%::pun::*}
 					KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 
 				loop {_pun::list::*}:
@@ -231,41 +231,45 @@ discord command {@cmd} [<text>] [<text>]:
 						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
 						KamilAPI add emote "green" to {_msg}
 						KamilAPI add emote "red" to {_msg}
-						set {v::%event-user.getId()%::pun::botmsg} to {_msg}
-						set {v::%event-user.getId()%::pun::powod} to {_name}
-						set {v::%event-user.getId()%::pun::msg} to event-message
+						set {vv::%event-user.getId()%::pun::botmsg} to {_msg}
+						set {vv::%event-user.getId()%::pun::powod} to {_name}
+						set {vv::%event-user.getId()%::pun::msg} to event-message
 						stop
-				delete {v::%event-user.getId()%::pun::*}
+				delete {vv::%event-user.getId()%::pun::*}
 				KamilAPI cmd error "Nie ma takiego numeru!" to event-message
 
 on reaction add:
-	if {v::%event-user.getId()%::pun::botmsg} is event-message:
+	if {vv::%event-user.getId()%::pun::botmsg} is event-message:
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
-			KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::powod} by event-user in channel event-channel and set message to {v::%event-user.getId()%::pun::msg} and event event
+			KamilAPI add punish to {vv::%event-user%::pun::karany} with reason {vv::%event-user.getId()%::pun::powod} by event-user in channel event-channel and set message to {vv::%event-user.getId()%::pun::msg} and event event
 		deleteMessage(event-message)
-		delete {v::%event-user.getId()%::pun::*}
+		delete {vv::%event-user.getId()%::pun::*}
 
 on guild message receive:
-	{v::%event-user.getId()%::pun::powod} is not set
-	{v::%event-user.getId()%::pun::*} is set
+	{vv::%event-user.getId()%::pun::powod} is not set
+	{vv::%event-user.getId()%::pun::*} is set
 	deleteMessage(event-message)
 	set {_msg} to "%event-message%"
+	set {_karanyid} to 
 	if {_msg} contains {bot::prefix}:
-		deleteMessage({v::%event-user.getId()%::pun::botmsg})
-		delete {v::%event-user.getId()%::pun::*}
+		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
+		delete {vv::%{_karanyid}%::kara::cooldown}
+		delete {vv::%event-user.getId()%::pun::*}
 		stop
 		deleteMessage(event-message)
 	if {_msg} is "0":
-		deleteMessage({v::%event-user.getId()%::pun::botmsg})
-		delete {v::%event-user.getId()%::pun::*}
+		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
+		delete {vv::%{_karanyid}%::kara::cooldown}
+		delete {vv::%event-user.getId()%::pun::*}
 		reply with "Anuluje operacje!"
 		stop
-	if {v::%event-user.getId()%::pun::%{_msg}%} is not set:
-		deleteMessage({v::%event-user.getId()%::pun::botmsg})
-		delete {v::%event-user.getId()%::pun::*}
+	if {vv::%event-user.getId()%::pun::%{_msg}%} is not set:
+		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
+		delete {vv::%{_karanyid}%::kara::cooldown}
+		delete {vv::%event-user.getId()%::pun::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
-	KamilAPI add punish to {v::%event-user%::pun::karany} with reason {v::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel and set message to {v::%event-user.getId()%::pun::msg} and event event
-	deleteMessage({v::%event-user.getId()%::pun::botmsg})
-	delete {v::%event-user.getId()%::pun::*}
+	KamilAPI add punish to {vv::%event-user%::pun::karany} with reason {vv::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel and set message to {vv::%event-user.getId()%::pun::msg} and event event
+	deleteMessage({vv::%event-user.getId()%::pun::botmsg})
+	delete {vv::%event-user.getId()%::pun::*}

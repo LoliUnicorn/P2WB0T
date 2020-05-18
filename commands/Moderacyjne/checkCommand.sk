@@ -1,0 +1,58 @@
+options:
+	cmd: check
+
+on script load:
+	set {command::{@cmd}::poziom} to 3
+	set {command::{@cmd}::cooldown} to 5 seconds
+
+	set {command::{@cmd}::opis} to "Sprawdza ostatnią karę użytkownika"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "check <user>"
+
+discord command {@cmd} [<text>]:
+	aliases: sprawdz
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		set {_u} to getUser(arg-1)
+		if {_u} is not set:
+			KamilAPI cmd error "Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
+
+		execute "SELECT id FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND karany='%{_u}.getId()%'" in {bot::sql} and store it in {_r::*}
+		set {_id} to "???"
+		set {_id} to last element of {_r::id::*}
+
+		grab bans of event-guild
+		loop grabbed bans:
+			if loop-value.getId() is {_u}.getId():
+				set {_t} to true
+				stop loop
+		set {_ban} to "Nie"
+		if {_t} is true:
+			set {_ban} to "Tak"
+			
+		set {_serwer} to check {_u} in event-guild is not set : "Nie" ? "Tak"
+
+		set {_cmute} to "Nie"
+		if {_serwer} is "Tak":
+			set {_mute} to role with id getConfig("Config.muterole")
+			set {_m} to getUser({_u}.getId) in event-guild
+			if roles of {_m} contains {_mute}:
+				set {_cmute} to "Tak"
+
+		set {_m} to a message builder
+		append line "```asciidoc"
+		append line "Użytkownik: %getName({_u}.getId())%"
+		append line "Jest na serwerze :: %{_serwer}%"
+		append line "Jest wyciszony :: %{_cmute}%"
+		append line "Jest zbanowany :: %{_ban}%"
+		append line "Ostatnia kara :: ##%{_id}%"
+		append line "```"
+
+		set {_e} to a new embed
+		create embed {_e}:
+			set the description of embed to "Description%nl%The title leads to the URL, if given"
+
+			set the thumbnail of embed to "%avatar of {_u}%"
+		
+		reply with {_e}
+		KamilAPI add emote "green" to event-message of event-user
