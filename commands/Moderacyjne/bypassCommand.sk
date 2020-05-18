@@ -26,7 +26,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_stary::typ} to {_r::typ::%{_inx}%}
 			set {_stary::end} to {_r::end::%{_inx}%}
 
-		set {_end} to new Date({_stary::end})
+		set {_end} to new Date(({_stary::end} parsed as number))
 
 		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_end}%`"
 
