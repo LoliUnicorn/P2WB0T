@@ -30,13 +30,13 @@ discord command {@cmd} [<text>]:
 		if {_t} is true:
 			set {_ban} to "Tak"
 			
-		set {_serwer} to check ({_u} in event-guild) is not set : "Nie" ? "Tak"
+		set {_m} to getUser({_u}.getId()) in event-guild
+		set {_serwer} to check "%{_m}%" = "<none>" : "Nie" ? "Tak"
 
 		set {_cmute} to "Nie"
 		if {_serwer} is "Tak":
 			set {_mute} to role with id getConfig("Config.muterole")
-			set {_m} to getUser({_u}.getId()) in event-guild
-			if *roles of {_m}) contains {_mute}:
+			if (roles of {_m}) contains {_mute}:
 				set {_cmute} to "Tak"
 
 		set {_m} to a message builder
