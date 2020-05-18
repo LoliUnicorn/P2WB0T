@@ -26,11 +26,11 @@ discord command {@cmd} [<text>]:
 			set the timestamp of embed to now
 			set the footer of embed to footer with text "VPS" and no icon
 		
-			add split field named "Zużycie ramu" with value "%{_r::memTotal}%/%{_r::memRealUsed}% (Cache: %{_r::memCached}%)" to embed
-			add split field named "Uptime" with value "%{_r::time}%" to embed
-			add split field named "CPU" with value "%{_r::cpuRealUsed}%%% (%{_r::cpuNum}% Core)" to embed
-			add split field named "OS" with value "%{_r::system}%" to embed
-			add split field named "aaPanel" with value "v%{_r::version}%" to embed
+			add field named "Zużycie ramu" with value "%{_r::memTotal}%/%{_r::memRealUsed}% (Cache: %{_r::memCached}%)" to embed
+			add field named "Uptime" with value "%{_r::time}%" to embed
+			add field named "CPU" with value "%{_r::cpuRealUsed}%%% (%{_r::cpuNum}% Core)" to embed
+			add field named "OS" with value "%{_r::system}%" to embed
+			add field named "aaPanel" with value "v%{_r::version}%" to embed
 
 		reply with {_e}
 		KamilAPI add emote "green" to event-message of event-user
