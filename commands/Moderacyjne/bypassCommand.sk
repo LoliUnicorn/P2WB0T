@@ -1,0 +1,33 @@
+options:
+	cmd: bypass
+
+on script load:
+	set {command::{@cmd}::poziom} to 3
+	set {command::{@cmd}::cooldown} to 0 seconds
+
+	set {command::{@cmd}::opis} to "Dla osób, które lubią omijać bana/muta"
+	set {command::{@cmd}::kategoria} to "Moderacyjne"
+	set {command::{@cmd}::uzycie} to "bypass <osoba karana> <jej wcześniejsze konto>"
+
+discord command {@cmd} [<text>] [<text>] [<text>]:
+	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
+	trigger:
+		
+		set {_u::1} to getUser(arg-1)
+		set {_u::2} to getUser(arg-2)
+		if {_u::1} is not set:
+			KamilAPI cmd error "Nie ma takiej osoby karanej! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to evnet-message
+		if {_u::2} is not set:
+			KamilAPI cmd error "Takie mk nie istnieje! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to evnet-message
+		
+		execute "SELECT id,typ,end FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND typ!='Kick' AND typ!='Warn' AND aktywna='Tak' AND karany='%unsafe {_u::2}.getId()%'" in {bot::sql} and store result in {_r::*}
+		loop {_r::id::*}:
+			set {_inx} to loop-index
+			set {_stary::typ} to {_r::typ::%{_inx}%}
+			set {_stary::end} to {_r::end::%{_inx}%}
+
+		set {_end} to new Date({_stary::end})
+
+		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_end}%`"
+
+		KamilAPI add emote "green" to evnet-message of evnet-user
