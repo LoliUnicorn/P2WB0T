@@ -16,9 +16,9 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		set {_u::1} to getUser(arg-1)
 		set {_u::2} to getUser(arg-2)
 		if {_u::1} is not set:
-			KamilAPI cmd error "Nie ma takiej osoby karanej! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to evnet-message
+			KamilAPI cmd error "Nie ma takiej osoby karanej! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		if {_u::2} is not set:
-			KamilAPI cmd error "Takie mk nie istnieje! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to evnet-message
+			KamilAPI cmd error "Takie mk nie istnieje! Użyj: %{bot::prefix}%%{command::{@cmd}::uzycie}%" to event-message
 		
 		execute "SELECT id,typ,end FROM akcje WHERE typ!='Pun' AND typ!='Unmute' AND typ!='Unban' AND typ!='Kick' AND typ!='Warn' AND aktywna='Tak' AND karany='%unsafe {_u::2}.getId()%'" in {bot::sql} and store result in {_r::*}
 		loop {_r::id::*}:
@@ -30,4 +30,4 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_end}%`"
 
-		KamilAPI add emote "green" to evnet-message of evnet-user
+		KamilAPI add emote "green" to event-message of event-user
