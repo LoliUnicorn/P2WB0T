@@ -25,7 +25,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_inx} to loop-index
 			set {_stary::typ} to {_r::typ::%{_inx}%}
 			set {_stary::end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
-			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" prased as timespan
+			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" parsed as timespan
 
 		set {_pozostalo} to difference between now and {_stary::czas}
 
