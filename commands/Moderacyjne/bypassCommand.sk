@@ -26,10 +26,10 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_stary::typ} to {_r::typ::%{_inx}%}
 			set {_stary::end} to unix date ("%{_r::end::%{_inx}%}%" parsed as number) as date
 			set {_stary::czas} to "%{_r::czas::%{_inx}%}%" parsed as timespan
-			log("%{_r::czas::%{_inx}%}%")
-			
+			set {_stary::now} to "%{_r::now::%{_inx}%}%" parsed as date
+
 		set {_pozostalo} to difference between now and {_stary::czas}
 
-		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
+		reply with "Typ dubluje kare przez mk (%{_u::1}%) kare `%{_stary::typ}%` o godzinie `%{_stary::now}%`. Konczy sie o `%{_stary::end}%`. Typ dostał karę na %{_stary::czas}%"
 
 		KamilAPI add emote "green" to event-message of event-user
