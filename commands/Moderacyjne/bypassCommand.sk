@@ -35,7 +35,21 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		add {_stary::czas} to {_now}
 		add {_stary::czas} to {_now}
 		set {_dif} to difference between now and {_now}
+		if "%{_dif}%" is "<none>":
+			set {_dif} to "-"
+		else:
+			set {_dif} to getTimespan("%{_dif}%")
 
-		reply with "Typ dostał karę `%{_stary::typ}%` na czas %{_stary::czas}%. Jego kara zostaje podwojona - kończy się o `%{_now}%` czyli za %{_dif}%"
+		set {_powod} to "Celowe wykorzystywanie błędów aplikacji Discord lub luk w uprawnieniach serwerowych"
+		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%{_dif}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 
+		if {_stary::typ} is "Ban":
+			KamilAPI ban {_u::1} with reason {_powod} by event-user jpg {_jpg}
+		if {_stary::typ} is "Tempmute":
+			KamilAPI tempmute {_u::1} with reason {_powod} in time {_dif} by event-user jpg {_jpg}
+		if {_stary::typ} is "Tempban":
+			KamilAPI tempban {_u::1} with reason {_powod} in time {_dif} by event-user jpg {_jpg}
+		if {_stary::typ} is "Mute":
+			KamilAPI mute {_u::1} with reason {_powod} by event-user in event
+		
 		KamilAPI add emote "green" to event-message of event-user
