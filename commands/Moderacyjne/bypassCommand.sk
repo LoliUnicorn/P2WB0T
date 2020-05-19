@@ -43,7 +43,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		set {_powod} to "Celowe wykorzystywanie błędów aplikacji Discord lub luk w uprawnieniach serwerowych"
 		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%{_dif}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 
-		reply with "%{_stary::typ}%"
+		reply with "%{_stary::typ}% | %{_dif}%"
 		if {_stary::typ} is "Ban":
 			KamilAPI ban {_u::1} with reason {_powod} by event-user jpg {_jpg}
 		if {_stary::typ} is "Tempmute":
