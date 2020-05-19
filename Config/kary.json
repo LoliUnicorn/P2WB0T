@@ -210,19 +210,6 @@
 			}]
 		}],
 		"14": [{
-			"name": "Celowe wykorzystywanie błędów aplikacji Discord lub luk w uprawnieniach serwerowych",
-			"tier_1": [{
-				"maxWarns": 1,
-				"type": "Tempban",
-				"time": "3h"
-			}],
-			"tier_2": [{
-				"maxWarns": 4,
-				"type": "Ban",
-				"time": "-"
-			}]
-		}],
-		"15": [{
 			"name": "Rozsyłanie scamlinków na kanałach tekstowych",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -230,7 +217,7 @@
 				"time": "3d"
 			}]
 		}],
-		"16": [{
+		"15": [{
 			"name": "Niestosowanie się do wytycznych kanału #filmy",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -238,7 +225,7 @@
 				"time": "1d"
 			}]
 		}],
-		"17": [{
+		"16": [{
 			"name": "Pisanie obraźliwych lub nieetycznych skrótów (w zależności od sytuacji i kontekstu)",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -256,7 +243,7 @@
 				"time": "5h"
 			}]
 		}],
-		"18": [{
+		"17": [{
 			"name": "Brak kultury na publicznych lub prywatnych kanałach głosowych",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -264,7 +251,7 @@
 				"time": "3h"
 			}]
 		}],
-		"19": [{
+		"18": [{
 			"name": "Celowe utrudnianie rozmowy na publicznych lub prywatnych kanałach głosowych, wliczając w to puszczanie muzyki, bindów lub dmuchanie w mikrofon",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -272,7 +259,7 @@
 				"time": "3h"
 			}]
 		}],
-		"20": [{
+		"19": [{
 			"name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -280,7 +267,7 @@
 				"time": "5h"
 			}]
 		}],
-		"21": [{
+		"20": [{
 			"name": "Wulgarna lub nieodpowiednia nazwa kanału głosowego",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -288,7 +275,7 @@
 				"time": "3h"
 			}]
 		}],
-		"22": [{
+		"21": [{
 			"name": "Używanie modulatorów głosu i programów podobnych",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -296,7 +283,7 @@
 				"time": "3h"
 			}]
 		}],
-		"23": [{
+		"22": [{
 			"name": "Dublowanie kont przebywających na serwisie Discord",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -319,7 +306,7 @@
 				"time": "8h"
 			}]
 		}],
-		"24": [{
+		"23": [{
 			"name": "Reklamowanie serwerów w żaden sposób niepowiązanych z siecią serwerów P2W.pl w wiadomości prywatnej",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -337,7 +324,7 @@
 				"time": "7d"
 			}]
 		}],
-		"25": [{
+		"24": [{
 			"name": "Niestosowne, niecenzuralne oraz nieprzyzwoite nazewnictwo sieci, jak i samych serwerów P2W.pl",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -355,7 +342,7 @@
 				"time": "3d"
 			}]
 		}],
-		"26": [{
+		"25": [{
 			"name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
 			"tier_1": [{
 				"maxWarns": 1,
@@ -373,7 +360,7 @@
 				"time": "2d"
 			}]
 		}],
-		"27": [{
+		"26": [{
 			"name": "Zaśmiecanie chatu",
 			"tier_1": [{
 				"maxWarns": 1,
