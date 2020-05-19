@@ -37,11 +37,9 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		set {_dif} to difference between now and {_now}
 		if "%{_dif}%" is "<none>":
 			set {_dif} to "-"
-		else:
-			set {_dif} to getTimespan("%{_dif}%")
 
 		set {_powod} to "Celowe wykorzystywanie błędów aplikacji Discord lub luk w uprawnieniach serwerowych"
-		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%{_dif}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
+		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%getTimespan(""%{_dif}%"")%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u}.getUser() with {bot::name}
 
 		reply with "%{_stary::typ}% | %{_dif}%"
 		if {_stary::typ} is "Ban":
