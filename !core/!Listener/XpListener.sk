@@ -18,7 +18,10 @@ effect KamilAPI add %number% xp to %text% with %text%:
 
 		set {_num} to "%{_num}%"
 		if {vv::%{_id}%::xplistener} is not true:
-			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
+			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_k::*}
+			set {_null} to last element of {_k::xp::*}
+			if {_null} is not set:
+				execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
 			set {vv::%{_id}%::xplistener} to true
 		else:
 			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
