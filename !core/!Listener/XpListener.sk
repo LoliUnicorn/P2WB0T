@@ -22,7 +22,7 @@ effect KamilAPI add %number% xp to %text% with %text%:
 			set {vv::%{_id}%::xplistener} to true
 		else:
 			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
-			set {_curretXp} to {_r::xp::1} parsed as number
+			set {_curretXp} to (last element of {_r::xp::*}) parsed as number
 			set {_num} to {_num} parsed as number
 			set {_num} to "%{_curretXp}+{_num}%"
 			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
@@ -32,8 +32,8 @@ on guild message receive:
 	if event-user.isBot() is false:
 
 		set {_w} to difference between {vv::%event-user.getId()%::xplistener::cooldown} and now
-		if {_w} is less than 1 minute:
-			log("jest na cooldownie")
+		if {_w} is less than 3 minute:
+			set {_Xwefwrg} to ""
 		else:
 			set {vv::%event-user.getId()%::xplistener::cooldown} to now
 			set {_num} to rounded down random number between 1 and 15
@@ -44,4 +44,7 @@ on message delete:
 	# zrób to w java API, tak samo jak w add
 	if event-user.isBot() is false:
 		set {_num} to rounded down random number between 10 and 20
+		send a "GET" request to "kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
+		map json body of last http response to {_r::*}
+		log("%{_r::*}%")
 		# KamilAPI remove {_num} xp to event-user.getId()
