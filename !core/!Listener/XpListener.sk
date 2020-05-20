@@ -2,13 +2,19 @@ effect KamilAPI add %number% xp to %text% with %text%:
 	trigger:
 		set {_num} to expr-1
 		set {_id} to expr-2
+
 		set {_msg} to expr-3
+		set {_msg} to regex replace all pattern "<(a?):(\w{2,32}):(\w{2,100})>" with "" in {_msg}
+		set {_msg} to regex replace all pattern "[^\w\s]*" with "" in {_msg}
+		set {_msg} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "" in {_msg}
+		set {_msg} to regex replace all pattern "<@!?([0-9])*>" with "" in {_msg}
+
 		if {_num} is not set:
 			stop
 		if {_id} is not set:
 			stop
 
-		set {_num} to {_num} + (rounded up {_msg}.lenght() / 80)
+		set {_num} to {_num} + (rounded down {_msg}.length() / 80)
 
 		set {_num} to "%{_num}%"
 		if {vv::%{_id}%::xplistener} is not true:
@@ -24,11 +30,18 @@ effect KamilAPI add %number% xp to %text% with %text%:
 on guild message receive:
 	event-user.getId() is "343467373417857025"
 	if event-user.isBot() is false:
-		set {_num} to rounded down random number between 1 and 15
-		KamilAPI add {_num} xp to event-user.getId() with "%event-message%"
+
+		set {_w} to difference between {vv::%event-user.getId()%::xplistener::cooldown} and now
+		if {_w} is less than 1 minute:
+			log("jest na cooldownie")
+		else:
+			set {vv::%event-user.getId()%::xplistener::cooldown} to now
+			set {_num} to rounded down random number between 1 and 15
+			KamilAPI add {_num} xp to event-user.getId() with "%event-message%"
 
 on message delete:
 	event-user.getId() is "343467373417857025"
+	# zrób to w java API, tak samo jak w add
 	if event-user.isBot() is false:
 		set {_num} to rounded down random number between 10 and 20
-		KamilAPI remove {_num} xp to event-user.getId()
+		# KamilAPI remove {_num} xp to event-user.getId()
