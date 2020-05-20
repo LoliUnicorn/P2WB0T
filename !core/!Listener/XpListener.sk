@@ -1,3 +1,23 @@
+effect KamilAPI add %number% xp to %text%:
+	trigger:
+		set {_num} to expr-1
+		set {_id} to expr-2
+		if {_num} is not set:
+			stop
+		if {_id} is not set:
+			stop
+
+		set {_num} to "%{_num}%"
+		if {vv::%event-user.getId()%::xplistener} is not true:
+			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
+			set {vv::%event-user.getId()%::xplistener} to true
+		else:
+			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
+			set {_curretXp} to {_r::xp::1} parsed as number
+			set {_num} to {_num} parsed as number
+			set {_num} to "%{_curretXp}+{_num}%"
+			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
+
 on guild message receive:
 	if event-user.isBot() is false:
 		set {_num} to rounded down random number between 1 and 15
@@ -8,20 +28,4 @@ on message delete:
 	if event-user.isBot() is false:
 		set {_num} to rounded down random number between 10 and 20
 		KamilAPI remove {_num} xp to event-user.getId()
-
-effect KamilAPI add %number% {_xp} to %text%:
-	trigger:
-		set {_num} to expr-1
-		set {_id} to expr-2
-		if {_num} is not set:
-			stop
-		if {_id} id not set:
-			stop
-
-		set {_num} to "%{_num}%"
-		if {vv::%event-user.getId()%::xplistener} is not true:
-			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
-			set {vv::%event-user.getId()%::xplistener} to true
-		else:
-			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
 
