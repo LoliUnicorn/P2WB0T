@@ -23,13 +23,14 @@ effect KamilAPI add %number% xp to %text% with %text%:
 			if {_null} is not set:
 				execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
 			set {vv::%{_id}%::xplistener} to true
-		else:
+			stop
+		else if {vv::%{_id}%::xplistener} is true:
 			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
 			set {_curretXp} to last element of {_r::xp::*}
 			set {_curretXp} to {_curretXp} parsed as number
 			set {_num} to {_num} parsed as number
 			set {_num} to "%{_curretXp}+{_num}%"
-			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
+			execute "UPDATE xp SET xp=%unsafe {_num}% WHERE id=%unsafe {_id}%" in {bot::sql}
 
 effect KamilAPI remove %number% xp from %text%:
 	trigger:
