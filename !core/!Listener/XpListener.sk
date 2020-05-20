@@ -28,7 +28,7 @@ effect KamilAPI add %number% xp to %text% with %text%:
 			set {_num} to "%{_curretXp}+{_num}%"
 			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
 
-effect KamilAPI remove %number% xp to %text%:
+effect KamilAPI remove %number% xp from %text%:
 	trigger:
 		set {_num} to expr-1
 		set {_id} to expr-2
@@ -38,13 +38,13 @@ effect KamilAPI remove %number% xp to %text%:
 		if {_id} is not set:
 			stop
 
-		if {vv::%{_id}%::xplistener} is true:
-			execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
-			set {_curretXp} to last element of {_r::xp::*}
-			set {_curretXp} to {_curretXp} parsed as number
-			set {_num} to {_num} parsed as number
-			set {_num} to "%{_curretXp}-{_num}%"
-			execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
+		execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
+		set {_curretXp} to last element of {_r::xp::*}
+		set {_curretXp} to {_curretXp} parsed as number
+		set {_num} to {_num} parsed as number
+		set {_num} to "%{_curretXp}-{_num}%"
+		execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
+		log("UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%")
 
 on guild message receive:
 	event-user.getId() is "343467373417857025"
@@ -65,4 +65,4 @@ on message delete:
 		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
 		map json body of last http response to {_r::*}
 		set {_num} to {_num} + (rounded up {_r::content}.length() / 30)
-		KamilAPI remove {_num} xp to event-user.getId()
+		KamilAPI remove {_num} xp from event-user.getId()
