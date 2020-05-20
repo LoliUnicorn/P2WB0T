@@ -15,7 +15,7 @@ effect KamilAPI add %number% xp to %text% with %text%:
 			stop
 
 		set {_num} to {_num} + (rounded down {_msg}.length() / 80)
-		if {_num} > 30
+		if {_num} > 30:
 			set {_num} to 30
 
 		set {_num} to "%{_num}%"
