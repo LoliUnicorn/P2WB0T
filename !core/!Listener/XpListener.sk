@@ -1,11 +1,14 @@
-effect KamilAPI add %number% xp to %text%:
+effect KamilAPI add %number% xp to %text% with %text%:
 	trigger:
 		set {_num} to expr-1
 		set {_id} to expr-2
+		set {_msg} to expr-3
 		if {_num} is not set:
 			stop
 		if {_id} is not set:
 			stop
+
+		set {_num} = {_num} + (rounded up {_msg}.lenght() / 80)
 
 		set {_num} to "%{_num}%"
 		if {vv::%{_id}%::xplistener} is not true:
@@ -22,7 +25,7 @@ on guild message receive:
 	event-user.getId() is "343467373417857025"
 	if event-user.isBot() is false:
 		set {_num} to rounded down random number between 1 and 15
-		KamilAPI add {_num} xp to event-user.getId()
+		KamilAPI add {_num} xp to event-user.getId() with "%event-message%"
 
 on message delete:
 	event-user.getId() is "343467373417857025"
