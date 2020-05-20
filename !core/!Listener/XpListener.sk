@@ -8,7 +8,7 @@ effect KamilAPI add %number% xp to %text% with %text%:
 		if {_id} is not set:
 			stop
 
-		set {_num} = {_num} + (rounded up {_msg}.lenght() / 80)
+		set {_num} to {_num} + (rounded up {_msg}.lenght() / 80)
 
 		set {_num} to "%{_num}%"
 		if {vv::%{_id}%::xplistener} is not true:
