@@ -48,7 +48,6 @@ effect KamilAPI remove %number% xp from %text%:
 		set {_num} to {_num} parsed as number
 		set {_num} to "%{_curretXp}-{_num}%"
 		execute "UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%" in {bot::sql}
-		log("UPDATE xp SET xp='%unsafe {_num}%' WHERE id=%unsafe {_id}%")
 
 on guild message receive:
 	event-user.getId() is "343467373417857025"
@@ -65,8 +64,8 @@ on guild message receive:
 on message delete:
 	discord id of author of event-message is "343467373417857025"
 	if bot state of author of event-message is false:
-		set {_num} to rounded down random number between 10 and 20
+		set {_num} to rounded down random number between 8 and 20
 		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
 		map json body of last http response to {_r::*}
-		set {_num} to {_num} + (rounded up {_r::content}.length() / 30)
-		KamilAPI remove {_num} xp from event-user.getId()
+		set {_num} to {_num} + (rounded up {_r::content}.length() / 70)
+		KamilAPI remove {_num} xp from discord id of author of event-message
