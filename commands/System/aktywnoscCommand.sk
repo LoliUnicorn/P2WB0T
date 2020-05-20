@@ -44,8 +44,8 @@ discord command {@cmd} [<text>]:
 			reply with {_e}
 		else if {_act} is "reset":
 			reply with "Resetuje statystyki!"
-			execute "DELETE FROM xp" in {bot::sql}
+			execute "DELETE FROM xp" in {bot::sql} and store result in {_xdddt::*}
 			set {_now} to "%now%"
-			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {bot::id}%, %unsafe {_now}%)" in {bot::sql}
+			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {bot::id}%, '%unsafe {_now}%')" in {bot::sql}
 
 		KamilAPI add emote "green" to event-message of event-user
