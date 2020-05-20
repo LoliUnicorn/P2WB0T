@@ -24,7 +24,6 @@ effect KamilAPI add %number% xp to %text% with %text%:
 				execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {_id}%, %unsafe {_num}%)" in {bot::sql}
 				stop
 			set {vv::%{_id}%::xplistener} to true
-		log("update")
 		execute "SELECT xp FROM xp WHERE id=%unsafe {_id}%" in {bot::sql} and store result in {_r::*}
 		set {_curretXp} to last element of {_r::xp::*}
 		set {_curretXp} to {_curretXp} parsed as number
@@ -52,7 +51,6 @@ effect KamilAPI remove %number% xp from %text%:
 on guild message receive:
 	event-user.getId() is "343467373417857025"
 	if event-user.isBot() is false:
-
 		set {_w} to difference between {vv::%event-user.getId()%::xplistener::cooldown} and now
 		if {_w} is less than 3 minute:
 			set {_Xwefwrg} to ""
@@ -63,9 +61,11 @@ on guild message receive:
 
 on message delete:
 	discord id of author of event-message is "343467373417857025"
-	if bot state of author of event-message is false:
-		set {_num} to rounded down random number between 8 and 20
-		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
-		map json body of last http response to {_r::*}
+	set {_num} to rounded down random number between 8 and 20
+	send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
+	map json body of last http response to {_r::*}
+	if {_r::content} is set:
 		set {_num} to {_num} + (rounded up {_r::content}.length() / 70)
-		KamilAPI remove {_num} xp from discord id of author of event-message
+	else:
+		add 20 to {_num}
+	KamilAPI remove {_num} xp from {_r::id}

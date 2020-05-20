@@ -118,6 +118,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			if {_type} is not "Ban":
 				edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
 			if getPoziom({_u}.getUser().getId()) is 0:
+				KamilAPI remove 500 xp from {_u}.getUser().getId()
 				if {_type} is "Kick":
 					kick {_u} from {_g} due to {_powod} with {bot::name}
 					modLog({_u}.getUser().getId(), {_adm}.getId(), "Kick", {_powod}, getMcNick({_u}.getUser().getId()), "null", "null", "%{_jpg}%")
