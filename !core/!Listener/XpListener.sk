@@ -41,9 +41,11 @@ on guild message receive:
 			KamilAPI add {_num} xp to event-user.getId() with "%event-message%"
 
 on message delete:
-	log("%discord id of author of event-message%")
+	discord id of author of event-message is "343467373417857025"
+	log("1")
 	# zrób to w java API, tak samo jak w add
-	if event-user.isBot() is false:
+	if bot state of author of event-message is false:
+		log("2")
 		set {_num} to rounded down random number between 10 and 20
 		send a "GET" request to "http://kamil0024.me:1234/api/supertajnytoken/message/%discord id of event-message%"
 		map json body of last http response to {_r::*}
