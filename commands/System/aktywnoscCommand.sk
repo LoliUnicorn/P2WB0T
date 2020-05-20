@@ -20,6 +20,8 @@ discord command {@cmd} [<text>]:
 		
 		if {_act} is "list":
 			execute "SELECT * FROM xp" in {bot::sql} and store result in {_r::*}
+			execute "SELECT xp FROM xp WHERE id=%unsafe {bot::id}%" in {bot::sql} and store result in {_bot::*}
+			set {_now} to last element of {_bot::xp::*}
 			loop {_r::id::*}:
 				set {_xp::%loop-value%} to {_r::xp::%loop-index%} parsed as number
 			
@@ -35,10 +37,15 @@ discord command {@cmd} [<text>]:
 				loop {_top::*}:
 					set {_v::*} to loop-value split at ";"
 					set {_u} to getFullName({_v::1})
-					append line "%{_u}% : %{_v::2}% XP"
+					append line "%{_u}% :: `%{_v::2}% XP`"
 		
-				add split field named "" with value "%{_b}%" to embed
+				add split field named "Liczone od %{_now}%" with value "%{_b}%" to embed
 
 			reply with {_e}
-	
+		else if {_act} is "reset":
+			reply with "Resetuje statystyki!"
+			execute "DELETE FROM xp" in {bot::sql}
+			set {_now} to "%now%"
+			execute "INSERT INTO `xp` (id,xp) VALUES(%unsafe {bot::id}%, %unsafe {_now}%)" in {bot::sql}
+
 		KamilAPI add emote "green" to event-message of event-user
