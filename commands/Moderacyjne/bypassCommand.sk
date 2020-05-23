@@ -45,7 +45,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%{_xd}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u::1}.getUser() with {bot::name}
 		send "Hey :wave:%nl%Właśnie dostałeś(-aś) karę **%{_stary::typ}%** na czas **%{_xd}%** z powodem **%{_powod}%**%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_u::2}.getUser() with {bot::name}
 		
-		reply with "%{_stary::typ}% | %{_dif}%"
 		if {_stary::typ} is "Ban":
 			KamilAPI ban {_u::2} with reason {_powod} by event-user jpg {_jpg}
 			wait 30 tick
@@ -66,6 +65,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		if {_error} is set:
 			reply with "Wystąpił błąd! `%{_error}%`"
 		else:
-			reply with "Daje kare **%{_stary::typ}%** dla użytkownika **%getUser({_u::1}.getUser().getId())%** na czas **%{_xd}%**!"	
+			reply with "Daje kare **%{_stary::typ}%** dla użytkownika **%getUser({_u::1}.getId())%** & **%getUser({_u::2}.getId())%** na czas **%{_xd}%**!"	
 		
 		KamilAPI add emote "green" to event-message of event-user
