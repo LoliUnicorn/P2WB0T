@@ -33,11 +33,12 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 				if getGuildConfig("Config.%loop-value%.type") is "list":
 					replace all "[" and "]" with "" in {_value}
 					set {_v::*} to {_value} split at ","
-					set {_value} to ""
 					loop {_v::*}:
 						set {_lul} to channel with id "%loop-value-2%"
-						if {_kanal} is set:
+						if {_lul} is set:
 							add "##%discord name of {_lul}%" to {_kurwa::*}
+						else:
+							add "%loop-value-2%" to  {_kurwa::*}
 					set {_value} to getList({_kurwa::*})
 				append line "%loop-index%. %{_name}% :: %{_value}%"
 			append "```"
