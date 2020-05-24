@@ -37,6 +37,10 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 						set {_lul} to channel with id "%loop-value-2%"
 						if {_kanal} is set:
 							add "##%discord name of {_lul}%" to {_kurwa::*}
+			append "```"
+			reply with {_m}
+			KamilAPI add emote "green" to event-message of event-user
+			stop
 
 		set {_l::*} to configuration section "Config" get of "plugins/Bot/guildConfig.yml"
 		set {_id} to arg-2
