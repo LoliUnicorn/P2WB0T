@@ -22,7 +22,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			append line "```asciidoc"
 			append line "= Konfiguracja serwera ="
 			append line "Aby zmienić wartość wpisz %{bot::prefix}%config (set|remove|add) <ID> <wartość>"
-			append line "  - ID to liczba za kropką%nl%"
+			append line "  - ID to liczba przed kropką%nl%"
 			loop {_l::*}:
 				set {_name} to getGuildConfig("Config.%loop-value%.name")
 				set {_value} to getGuildConfig("Config.%loop-value%.value")
@@ -37,6 +37,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 						set {_lul} to channel with id "%loop-value-2%"
 						if {_kanal} is set:
 							add "##%discord name of {_lul}%" to {_kurwa::*}
+				append line "%loop-index%. %{_name}% :: %{_value}%"
 			append "```"
 			reply with {_m}
 			KamilAPI add emote "green" to event-message of event-user
