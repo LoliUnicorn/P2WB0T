@@ -17,7 +17,7 @@ discord command {@cmd} [<text>] [<text>]:
 		set {_xd} to getJSON("plugins/Skript/scripts/P2WB0T/Config/kary.json")
 		map json {_xd} to {_pun::*}
 		if {_pun::*} is not set:
-			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%shell cd plugins/Skript/scripts/P2WB0T && git stash -u && git pull && git stash pop`" to event-message
+			KamilAPI cmd error "Pun jest `null`. Zrób/poproś dewelopera o `%{bot::prefix}%shell cd plugins/Skript/scripts/P2WB0T && git stash -u && git pull`" to event-message
 
 		loop {_pun::list::*}:
 			add 1 to {_n}
