@@ -21,6 +21,7 @@ function checkUnmute():
 		if now > {_end}:
 			{_g}.removeRoleFromMember({_karany}, {_r}).complete()
 			modLog({_karany}.getUser().getId(), {_bot}.getId(), "Unmute", "Czas minął (ID: %{_r::id::%loop-index%}%)", getMcNick({_karany}.getUser().getId()))
+			send "Hey :wave:%nl%Twoje konto zostało właśnie odciszone!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_karany}.getUser() with {bot::name}
 			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
 			wait 40 tick
 

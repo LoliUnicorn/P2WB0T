@@ -15,6 +15,7 @@ function checkUnban():
 		if now > {_end}:
 			unban {_karany} from {_g} with {bot::name}
 			modLog({_karany}.getId(), {_bot}.getId(), "Unban", "Czas minął (ID: %{_r::id::%{_inx}%}%)", "-")
+			send "Hey :wave:%nl%Twoje konto zostało właśnie odbanowane!%nl%%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_karany}.getUser() with {bot::name}
 			execute "UPDATE akcje SET aktywna='Nie' WHERE id='%unsafe {_id}%'" in {bot::sql}
 
 every 2 minute:
