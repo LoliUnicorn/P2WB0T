@@ -31,7 +31,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set {_value} to "##%discord name of {_kanal}%"
 
 				if getGuildConfig("Config.%loop-value%.type") is "list":
-					replace all "[" and "]" with "" in {_value}
+					replace all "[" and "]" and " " with "" in {_value}
 					set {_v::*} to {_value} split at ","
 					loop {_v::*}:
 						set {_lul} to channel with id "%loop-value-2%"
