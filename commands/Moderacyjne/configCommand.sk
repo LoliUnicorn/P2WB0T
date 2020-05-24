@@ -36,7 +36,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					loop {_v::*}:
 						set {_lul} to channel with id "%loop-value-2%"
 						add "##%discord name of {_lul}%" to {_kurwa::*}
-						delete {_lul} # usuwanie zmiennych by linke
 					set {_value} to getList({_kurwa::*})
 				append line "%loop-index%. %{_name}% :: %{_value}%"
 			append "```"
