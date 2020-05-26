@@ -1,4 +1,4 @@
-function sendAction(user: user, msg: text, powod: msg):
+function sendAction(user: user, msg: text, powod: text):
 	{_c} is set
 	set {_g} to guild with id {bot::guild}
 	set {_a} to a new embed 
