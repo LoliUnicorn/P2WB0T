@@ -1,4 +1,7 @@
 function sendAction(user: user, msg: text, powod: text):
+	if {v::%{_user}.getId()%::sendaction} is true:
+		stop
+	set {v::%{_user}.getId()%::sendaction} to true
 	set {_g} to guild with id {bot::guild}
 	set {_a} to a new embed 
 
@@ -17,6 +20,7 @@ function sendAction(user: user, msg: text, powod: text):
 	send {_a} to channel with id "703607301407375500" with {bot::name} and store it in {_botmsg}
 	add reaction getConfigEmote("green") to reactions of {_botmsg} with {bot::name}
 	add reaction getConfigEmote("red") to reactions of {_botmsg} with {bot::name}
+	delete {v::%{_user}.getId()%::sendaction}
 
 on reaction add:
 	if discord id of author of event-message is {bot::id}:
