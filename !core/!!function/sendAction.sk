@@ -34,6 +34,6 @@ on reaction add:
 				set {_powod} to "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" # FIXME: punish
 			if {_s::2} is "zaśmiecanie chatu":
 				set {_powod} to "Zaśmiecanie chatu" # FIXME: punish
-		if {_powod} is set
+		if {_powod} is set:
 			KamilAPI add punish to {_s::1} with reason {_powod} by event-user in channel event-channel
 		deleteMessage(event-message)
