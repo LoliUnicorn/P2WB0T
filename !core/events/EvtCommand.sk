@@ -11,6 +11,10 @@ on vixio command:
 
 	set {_l::*} to yaml list "Config.2.value" from file "plugins/Bot/guildConfig.yml"
 	set {_cmd} to "%event-discordcommand%"
+	if {_cmd} is "commit":
+		if event-user.getId() is "416264257978761217":
+			stop
+			
 	if {_poziom} >= 1:
 		{v::%event-user.getId()%::checkConfig} is not set
 		set {v::%event-user.getId()%::checkConfig} to true
