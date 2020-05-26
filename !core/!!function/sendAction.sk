@@ -1,5 +1,4 @@
 function sendAction(user: user, msg: text, powod: text):
-	{_c} is set
 	set {_g} to guild with id {bot::guild}
 	set {_a} to a new embed 
 
@@ -14,8 +13,8 @@ function sendAction(user: user, msg: text, powod: text):
 		add split field named "Treść wiadomośći:" with value {_msg} to embed
 	
 		set the thumbnail of embed to "%avatar of {_user}%"
-	log("tak")
-	send "%{_a}%" to channel with id "683291621634211870" with {bot::name} and store it in {_botmsg}
+	
+	send {_a} to channel with id "683291621634211870" with {bot::name} and store it in {_botmsg}
 	add reaction getConfigEmote("green") to reactions of {_botmsg} with {bot::name}
 	add reaction getConfigEmote("red") to reactions of {_botmsg} with {bot::name}
 
