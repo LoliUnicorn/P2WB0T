@@ -378,7 +378,7 @@
 				"time": "5h"
 			}],
 			"tier_4": [{
-				"maxWarns": 3,
+				"maxWarns": 4,
 				"type": "Tempmute",
 				"time": "12h"
 			}]
