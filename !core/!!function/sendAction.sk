@@ -1,0 +1,40 @@
+function sendAction(user: user, msg: text, powod: msg):
+	{_c} is set
+	set {_g} to guild with id {bot::guild}
+	set {_a} to a new embed 
+
+	create embed {_a}:
+		set the title of embed to title with text "Wykryto nadużycie!"
+		set the colour of the embed to color of getColor({_user} in {_g})
+		set the timestamp of embed to now
+		set the footer of embed to footer with text "%{_user}.getId()% | %{_powod}%" and no icon
+	
+		add split field named "Osoba karana:" with value getFullName({_user}.getId()) to embed
+		add split field named "Powód:" with value {_powod} to embed
+		add split field named "Treść wiadomośći:" with value {_msg} to embed
+	
+		set the thumbnail of embed to "%avatar of {_user}%"
+
+	send {_a} to channel with id "683291621634211870" with event-bot and store it in {_msg}
+	add reactions getConfigEmote("green") to reactions of event-message
+	add reactions getConfigEmote("red") to reactions of event-message
+
+on reaction add:
+	log("test")
+	if discord id of author of event-message is {bot::id}:
+		log("test2")
+		discord id of event-channel is "683291621634211870"
+		log("test3")
+
+		set {_embed} to event-message.getEmbeds().get(0)
+		set {_fot} to {_embed}.getFooter()
+
+		reply with "%{_embed}%"
+		reply with "%{_fot}%"
+		
+		set {_e} to event-emote.getID()
+		if {_e} is getConfig("emote.green"):
+			# nic
+
+		deleteMessage(event-message)
+		delete {vv::%event-user.getId()%::pun::*}
