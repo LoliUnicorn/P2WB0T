@@ -20,4 +20,5 @@ on guild message receive:
 				{_up} is not 0
 				set {_procent} to ({_up} / size of {_s::*}) * 100
 				if {_procent} > 80:
+					sendAction(event-user, "%event-message%", "Caps")
 					deleteMessage(event-message)
