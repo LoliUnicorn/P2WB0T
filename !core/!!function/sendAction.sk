@@ -20,6 +20,7 @@ function sendAction(user: user, msg: text, powod: text):
 
 on reaction add:
 	if discord id of author of event-message is {bot::id}:
+		event-user.isBot() is false
 		log("test2")
 		discord id of event-channel is "683291621634211870"
 		log("test3")
