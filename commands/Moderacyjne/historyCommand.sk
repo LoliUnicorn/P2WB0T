@@ -76,7 +76,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		else:
 			if {_player} is true:
 				set {_m} to a message builder
-				append line "Liczba kar typu `%arg-3%`: %{_liczba::%arg-3%}%"
+				append line "tak Liczba kar typu `%arg-3%`: %{_liczba::%arg-3%}%"
 				append line "Więcej info pod komendą %{bot::prefix}%karainfo (ID kary)%nl%"
 				append line "Administrator | Powód | Czas kiedy nadano. | ID%nl%%nl%"
 				create embed:
