@@ -116,7 +116,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 			set {_time} to {_pun::list::%{_inx}%::1::tier_%{_tier::1}%::1::time}
 
 			if {_type} is not "Ban":
-				edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getUser({_u}.getUser().getId())%** na czas **%{_time}%**!"
+				edit {_msg} to show "Daje kare **%{_type}%** dla użytkownika **%getMcNick({_u}.getUser().getId(), false)%** na czas **%{_time}%**!"
 			if getPoziom({_u}.getUser().getId()) is 0:
 				KamilAPI remove 500 xp from {_u}.getUser().getId()
 				if {_type} is "Kick":

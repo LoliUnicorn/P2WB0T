@@ -131,7 +131,7 @@ discord command {@cmd} [<text>] [<text>]:
 					set the timestamp of embed to now
 					set the thumbnail of embed to "%avatar of {_member}%"
 
-					set the description of embed to "Chcesz ukarać **%getName({_member}.getUser().getId())%**.  Napisz odpowiedni numer, aby nadać karę użytkownikowi."
+					set the description of embed to "Chcesz ukarać **%getMcNick({_member}.getUser().getId(), false)%**. Napisz odpowiedni numer, aby nadać karę użytkownikowi."
 
 					add field named "Wybierz kare..." with value "Czekaj chwile lol" to embed
 					
@@ -228,7 +228,7 @@ discord command {@cmd} [<text>] [<text>]:
 					set {_inx} to loop-index parsed as number
 					if {_inx} is {_num}:
 						set {_name} to {_pun::list::%{_inx}%::1::name}
-						reply with "Czy chcesz ukarać %getName({_member}.getUser().getId())% za **%{_name}%**?" and store it in {_msg}
+						reply with "Czy chcesz ukarać %getMcNick({_member}.getUser().getId(), false)% za **%{_name}%**?" and store it in {_msg}
 						KamilAPI add emote "green" to {_msg}
 						KamilAPI add emote "red" to {_msg}
 						set {vv::%event-user.getId()%::pun::botmsg} to {_msg}
