@@ -91,4 +91,7 @@ function checkReboot():
 	set {_used} to ({_total} - {_free}) / 1024 / 1024
 	if {_ues} > 1800:
 		logout event-bot
-		stop server 
+		stop server
+
+every 10 minutes:
+	checkReboot()
