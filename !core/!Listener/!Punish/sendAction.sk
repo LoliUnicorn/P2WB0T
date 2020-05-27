@@ -32,7 +32,7 @@ on reaction add:
 		set {_fot} to {_embed}.getFooter()
 		log("%{_fot}%")
 		replace all " " with "" in {_fot}
-		set {_s::*} to "%{_fot}%" split at "|"
+		set {_s::*} to {_fot} split at "|"
 		
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
