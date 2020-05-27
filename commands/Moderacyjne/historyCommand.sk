@@ -20,6 +20,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 			set {_test} to new ArrayList()
 			{_test}.add("1")
 			{_test}.add("2")
+			Collections.reverse({_test})
 			reply with "%{_test}%"
 			stop
 		set {v::%event-user.getId()%::history::user} to event-user
