@@ -11,7 +11,7 @@ effect KamilAPI check double case of %text% with %message%:
 
 			remove {_d::1} from {_d::2}
 			set {_czas} to getTimespan("%{_d::2}%")
-			send "Zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika. Jeżeli uważasz, że naciśnij reakcje i jeszcze raz daj kare. **NIE NACISKAJ JAK TYP JUŻ DOSTAŁ KARE**" to channel with id "%{_msg}.getMessage().getChannel().getId()%" and store it in {_msg}  
+			send "Zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika. Jeżeli uważasz, że naciśnij reakcje i jeszcze raz daj kare. **NIE NACISKAJ JAK TYP JUŻ DOSTAŁ KARE**" to channel with id "%{_msg}.getMessage().getChannel().getId()%" with {bot::name} and store it in {_msg}  
 			add reaction getConfigEmote("green") to reactions of {_msg} with {bot::name}
 			set {v::%{_author}%::doublecase::botmsg} to {_msg}.getMessage().getId()
 			set {v::%{_author}%::doublecase::uid} to {_id}
