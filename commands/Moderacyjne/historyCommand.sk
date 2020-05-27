@@ -8,10 +8,18 @@ on script load:
 	set {command::{@cmd}::kategoria} to "Moderacyjne"
 	set {command::{@cmd}::uzycie} to "{@cmd} [<user>/player] [typ kary|<nick gracza>] [typ kary]"
 
+import:
+	java.util.Collections
+
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: modlogs, warny, warns, bany, bans
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
+		if arg-1 is "xd":
+			set {_test::*} to "1", "2", "3"
+			Collections.reverse({_test::*})
+			reply with "%{_test::*}%"
+			stop
 		set {v::%event-user.getId()%::history::user} to event-user
 		set {v::%event-user.getId()%::history::user} to getUser(arg-1)
 		
@@ -76,7 +84,8 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 
 					loop (size of {_warny::id::*}) times:
 						add 1 to {_beka}
-					loop (size of {_warny::id::*}) times:
+
+					loop {_warny::id::*}:
 						set {_id} to "%{_beka}%"
 						add 1 to {_zaduzo}
 						if {_zaduzo} > 10:

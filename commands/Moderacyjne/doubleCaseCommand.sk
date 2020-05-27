@@ -10,7 +10,7 @@ on script load:
 	set {command::{@cmd}::uzycie} to "doublecase <ID>"
 
 discord command {@cmd} [<text>]:
-	aliases: db
+	aliases: db, dc
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		set {_id} to arg-1
@@ -43,6 +43,5 @@ discord command {@cmd} [<text>]:
 				stop
 		
 		execute "UPDATE akcje SET karany='%unsafe {bot::id}%' WHERE id=%unsafe {_id}%" in {bot::sql}
-		log("UPDATE akcje SET karany=%unsafe {bot::id}% WHERE id=%unsafe {_id}%")
 		edit {_msg} to show "Pomyślnie usunięto karę ##%{_id}% z konta użytkownika"
 		KamilAPI add emote "green" to event-message of event-user
