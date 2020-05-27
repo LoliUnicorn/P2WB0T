@@ -17,7 +17,7 @@ function reloadCommands(typ: number=0, fot: text="", pwd: text="") :: embed:
 	set {_reload} to getConfigEmote("loading")
 
 	create embed {_e}:
-		set the colour of the embed to green
+		set the colour of the embed to yellow
 		set the timestamp of embed to now
 		if {_fot} is "":
 			set the footer of embed to footer with text "Reload" and no icon
@@ -27,12 +27,14 @@ function reloadCommands(typ: number=0, fot: text="", pwd: text="") :: embed:
 		if {_typ} is 0:
 			set the description of embed to "%{_reload}% Szukam pliku %nl%%{_red}% Unload %nl% %{_red}% Load"
 		if {_typ} is 1:
+			set the colour of the embed to red
 			set the description of embed to "%{_red}% Szukam pliku (nie znaleziono pliku) %nl%%{_red}% Unload %nl% %{_red}% Load"
 		if {_typ} is 2:
 			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_reload}% Unload %nl% %{_red}% Load"
 		if {_typ} is 3:
 			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_green}% Unload %nl% %{_reload}% Load"
 		if {_typ} is 4:
+			set the colour of the embed to green
 			set the description of embed to "%{_green}% Szukam pliku (%{_pwd}%) %nl%%{_green}% Unload %nl% %{_green}% Load"
 
 	return {_e}
