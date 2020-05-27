@@ -84,3 +84,11 @@ on vixio command:
 
 on guild message received:
 	add 1 to {v::wiadomosci}
+
+function checkReboot():
+	set {_total} to total memory
+	set {_free} to free memory
+	set {_used} to ({_total} - {_free}) / 1024 / 1024
+	if {_ues} > 1800:
+		logout event-bot
+		stop server 
