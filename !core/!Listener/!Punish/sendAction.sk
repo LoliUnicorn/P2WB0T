@@ -30,20 +30,15 @@ on reaction add:
 
 		set {_embed} to event-message.getMessage().getEmbeds().get(0)
 		set {_fot} to "%{_embed}.getFooter()%"
-		log("%{_fot}%")
 		replace all " " with "" in {_fot}
 		set {_s::*} to {_fot} split at "|"
 		
 		set {_e} to event-emote.getID()
 		if {_e} is getConfig("emote.green"):
-			log("tak")
-			log("%{_s::1}% || %{_s::2}%")
 			if {_s::2} is "flood" or "caps":
 				set {_powod} to "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" # FIXME: punish
 			if {_s::2} is "zaśmiecanie chatu":
 				set {_powod} to "Zaśmiecanie chatu" # FIXME: punish
-			log("%{_powod}%")
 		if {_powod} is set:
-			log("KamilAPI add pun to %{_s::1}% with reason %{_powod}% by %event-user% in channel %event-channel%")
-			#KamilAPI add pun to {_s::1} with reason {_powod} by event-user in channel event-channel
+			KamilAPI add pun to {_s::1} with reason {_powod} by event-user in channel event-channel
 		deleteMessage(event-message)
