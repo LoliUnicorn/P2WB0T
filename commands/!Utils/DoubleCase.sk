@@ -23,6 +23,7 @@ on reaction add:
 	set {_id} to event-user.getId()
 	if {v::%{_id}%::doublecase::botmsg} is event-message.getMessage().getId():
 		set {_uid} to {v::%{_id}%::doublecase::uid}
+		KamilAPI clear reaction from event-message
 		edit event-message to show "System anty-d... usunął gracza z systemu"
 		delete {vv::%{_uid}%::kara::cooldown}
-		KamilAPI clear reaction from event-message
+		delete {v::%{_id}%::doublecase::*}
