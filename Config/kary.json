@@ -383,5 +383,13 @@
 				"time": "12h"
 			}]
 		}]
+		"27": [{
+			"name": "Kara nadawana na potrzeby testów",
+			"tier_1": [{
+				"maxWarns": 1,
+				"type": "Tempmute",
+				"time": "1m"
+			}]
+		}]
 	}
 }
