@@ -80,26 +80,11 @@
 			}]
 		}],
 		"4": [{
-			"name": "Oznaczanie grup administracyjnych lub członków ekipy bez powodu, spam oznaczeniami utrudniający funkcjonowanie innym użytkownikom serwisu",
+			"name": "Niestosowanie się do wytycznych kanału #filmy",
 			"tier_1": [{
 				"maxWarns": 1,
-				"type": "Tempban",
-				"time": "1h"
-			}],
-			"tier_2": [{
-				"maxWarns": 2,
-				"type": "Tempban",
-				"time": "2h"
-			}],
-			"tier_3": [{
-				"maxWarns": 3,
-				"type": "Tempban",
+				"type": "Tempmute",
 				"time": "1d"
-			}],
-			"tier_4": [{
-				"maxWarns": 4,
-				"type": "Tempban",
-				"time": "5d"
 			}]
 		}],
 		"5": [{
@@ -218,11 +203,26 @@
 			}]
 		}],
 		"15": [{
-			"name": "Niestosowanie się do wytycznych kanału #filmy",
+			"name": "Oznaczanie grup administracyjnych lub członków ekipy bez powodu, spam oznaczeniami utrudniający funkcjonowanie innym użytkownikom serwisu",
 			"tier_1": [{
 				"maxWarns": 1,
-				"type": "Tempmute",
+				"type": "Tempban",
+				"time": "1h"
+			}],
+			"tier_2": [{
+				"maxWarns": 2,
+				"type": "Tempban",
+				"time": "2h"
+			}],
+			"tier_3": [{
+				"maxWarns": 3,
+				"type": "Tempban",
 				"time": "1d"
+			}],
+			"tier_4": [{
+				"maxWarns": 4,
+				"type": "Tempban",
+				"time": "5d"
 			}]
 		}],
 		"16": [{
