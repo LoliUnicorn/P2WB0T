@@ -85,11 +85,15 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set the timestamp of embed to now
 					set the footer of embed to footer with text arg-2 and icon "%avatar of event-bot%"
 
-					loop (size of {_warny::id::*}) times:
-						add 1 to {_beka}
-
+					set {_test} to new ArrayList()
 					loop {_warny::id::*}:
-						set {_id} to "%{_beka}%"
+						{_test}.add(loop-index)
+					Collections.reverse({_test})
+					set {_loop} to "%{_test}%"
+					replace all "[" and "]" and " " with "" in {_loop}
+					set {_split::*} to {_loop} split at ","
+					loop {_split}:
+						set {_id} to loop-value
 						add 1 to {_zaduzo}
 						if {_zaduzo} > 10:
 							stop loop
@@ -99,7 +103,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 							set {_now} to {_warny::now::%{_id}%}
 							set {_dobreID} to {_warny::id::%{_id}%}
 							append line "%getMention({_adm})% | %{_powod}% | %{_now}% | %{_dobreID}%"
-						remove 1 from {_beka}
 						
 					set the description of embed to "%{_m}%"
 			
