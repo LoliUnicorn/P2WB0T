@@ -92,7 +92,7 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 					set {_loop} to "%{_test}%"
 					replace all "[" and "]" and " " with "" in {_loop}
 					set {_split::*} to {_loop} split at ","
-					loop {_split}:
+					loop {_split::*}:
 						set {_id} to loop-value
 						add 1 to {_zaduzo}
 						if {_zaduzo} > 10:
