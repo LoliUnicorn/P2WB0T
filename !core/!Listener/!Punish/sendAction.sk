@@ -29,7 +29,7 @@ on reaction add:
 		discord id of event-channel is "703607301407375500"
 
 		set {_embed} to event-message.getMessage().getEmbeds().get(0)
-		set {_fot} to {_embed}.getFooter()
+		set {_fot} to "%{_embed}.getFooter()%"
 		log("%{_fot}%")
 		replace all " " with "" in {_fot}
 		set {_s::*} to {_fot} split at "|"
