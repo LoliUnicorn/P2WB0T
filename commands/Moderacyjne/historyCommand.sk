@@ -10,15 +10,17 @@ on script load:
 
 import:
 	java.util.Collections
+	java.util.ArrayList
 
 discord command {@cmd} [<text>] [<text>] [<text>]:
 	aliases: modlogs, warny, warns, bany, bans
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%"
 	trigger:
 		if arg-1 is "xd":
-			set {_test::*} to "1", "2", "3"
-			Collections.reverse({_test::*})
-			reply with "%{_test::*}%"
+			set {_test} to new ArrayList()
+			{_test}.add("1")
+			{_test}.add("2")
+			reply with "%{_test}%"
 			stop
 		set {v::%event-user.getId()%::history::user} to event-user
 		set {v::%event-user.getId()%::history::user} to getUser(arg-1)
