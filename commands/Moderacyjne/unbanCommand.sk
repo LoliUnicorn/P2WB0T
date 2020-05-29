@@ -12,9 +12,9 @@ on script load:
 discord command {@cmd} [<text>] [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
-		if getPoziom(event-user.getId()) < 10:
-			if event-user.getId() is not "416264257978761217":
-				KamilAPI cmd error "Tylko lider może podejmować taką akcje" to event-message
+		# if getPoziom(event-user.getId()) < 10:
+		# 	if event-user.getId() is not "416264257978761217":
+		# 		KamilAPI cmd error "Tylko lider może podejmować taką akcje" to event-message
 		set {_u} to getUser(arg-1)
 		set {_p} to getPowod(arg-2)
 
