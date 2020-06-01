@@ -2,7 +2,7 @@ options:
 	cmd: stats
 
 on script load:
-	set {command::{@cmd}::poziom} to 10
+	set {command::{@cmd}::poziom} to 0
 	set {command::{@cmd}::cooldown} to 30 seconds
 
 	set {command::{@cmd}::opis} to "Wyświetla statystyki"
@@ -56,14 +56,11 @@ discord command {@cmd} [<text>]:
 				set {_v::1} to loop-value
 			if difference between {_d} and {_end} < 7 day:
 				add loop-value to {_v::7}
-				#set {_v::7} to loop-value
 			if difference between {_d} and {_end} < 14 day:
 				add loop-value to {_v::14}
-				#set {_v::14} to loop-value
 			if difference between {_d} and {_end} < 30 day:
 				add loop-value to {_v::30}
-				#set {_v::30} to loop-value 
-		
+	
 		set {_now} to now
 		loop {_v::*}:
 			set {_timespan} to new Date({_now}.getTimestamp() + loop-value)
