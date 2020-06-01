@@ -30,17 +30,17 @@ discord command {@cmd} [<text>]:
 		loop {_r::messages::*}:
 			set {_d} to {_format}.parse("%loop-index%")
 			set {_d} to new Date({_d}.getTime())
-			set {_now} to now
+			set {_end} to now
 			
-			if difference between {_start} and {_end} < 1 day:
+			if difference between {_d} and {_end} < 1 day:
 				set {_msg::1} to loop-value
-			if difference between {_start} and {_end} < 7 day:
+			if difference between {_d} and {_end} < 7 day:
 				add loop-value to {_msg::7}
-			if difference between {_start} and {_end} < 14 day:
+			if difference between {_d} and {_end} < 14 day:
 				add loop-value to {_msg::14}
-			if difference between {_start} and {_end} < 30 day:
+			if difference between {_d} and {_end} < 30 day:
 				add loop-value to {_msg::30}
-				
+
 		set {_a} to a new embed
 		create embed {_a}:
 			set the title of embed to title with text "Statystyki"
