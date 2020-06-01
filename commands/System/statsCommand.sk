@@ -9,11 +9,27 @@ on script load:
 	set {command::{@cmd}::kategoria} to "System"
 	set {command::{@cmd}::uzycie} to "stats [osoba]"
 
+import:
+	java.text.SimpleDateFormat
+
 discord command {@cmd} [<text>]:
 	prefixes: "%{bot::prefix}%", "%{bot::helpmention}%" 
 	trigger:
 		set {_user} to event-user
 		set {_user} to getUser(arg-1)
+
+		send a request to "http://kamil0024.me:1234/api/supertajnytoken/stats/%{_user}.getId()%"
+		map json body of last http response to {_r::*}
+
+		set {_msg::1} to 0
+		set {_msg::14} to 0
+		set {_msg::30} to 0
+
+		set {_format} to new SimpleDateFormat("dd:MM:yyyy")
+		loop {_r::*}:
+				set {_d} to {_format}.parse("%loop-index%")
+				set {_d} to new Date({_d}.getTime())
+				log("%{_d}%")
 
 		set {_a} to a new embed
 		create embed {_a}:
@@ -30,8 +46,8 @@ discord command {@cmd} [<text>]:
 			add field named "Kanały tekstowe" with value "%{_m}%" to embed
 			set {_m} to a new message builder
 			append line "Dzisiejsza aktywność: **Brak!**"
-			append line "Dzisiejsza z 14 dni: **Brak!**"
-			append line "Dzisiejsza z 30 dni: **Brak!**"
+			append line "Aktywność z 14 dni: **Brak!**"
+			append line "Aktywność z 30 dni: **Brak!**"
 
 			add field named "Kanały głosowe" with value "%{_m}%" to embed
 		
