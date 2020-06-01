@@ -51,14 +51,18 @@ discord command {@cmd} [<text>]:
 			set {_d} to {_format}.parse("%loop-index%")
 			set {_d} to new Date({_d}.getTime())
 			
+			log("%loop-value%")
 			if difference between {_d} and {_end} < 1 day:
 				set {_v::1} to loop-value
 			if difference between {_d} and {_end} < 7 day:
-				add loop-value to {_v::7}
+				# add loop-value to {_v::7}
+				set {_v::7} to loop-value
 			if difference between {_d} and {_end} < 14 day:
-				add loop-value to {_v::14}
+				# add loop-value to {_v::14}
+				set {_v::14} to loop-value
 			if difference between {_d} and {_end} < 30 day:
-				add loop-value to {_v::30}
+				# add loop-value to {_v::30}
+				set {_v::30} to loop-value 
 		
 		set {_now} to now
 		loop {_v::*}:
@@ -81,7 +85,7 @@ discord command {@cmd} [<text>]:
 			add field named "Kanały tekstowe" with value "%{_m}%" to embed
 			set {_m} to a new message builder
 			append line "Dzisiejsza aktywność: **%{_v::1}%**"
-			append line "Aktywność z 7 dni: **%{_v::7}%***"
+			append line "Aktywność z 7 dni: **%{_v::7}%**"
 			append line "Aktywność z 14 dni: **%{_v::14}%**"
 			append line "Aktywność z 30 dni: **%{_v::30}%**"
 
