@@ -32,11 +32,11 @@ discord command {@cmd} [<text>]:
 		set {_v::14} to 0
 		set {_v::30} to 0
 
+		set {_end} to now
 		set {_format} to new SimpleDateFormat("dd:MM:yyyy")
 		loop {_r::messages::*}:
 			set {_d} to {_format}.parse("%loop-index%")
 			set {_d} to new Date({_d}.getTime())
-			set {_end} to now
 			
 			if difference between {_d} and {_end} < 1 day:
 				set {_msg::1} to loop-value
@@ -50,7 +50,6 @@ discord command {@cmd} [<text>]:
 		loop {_r::voiceTimespan::*}:
 			set {_d} to {_format}.parse("%loop-index%")
 			set {_d} to new Date({_d}.getTime())
-			set {_end} to now
 			
 			if difference between {_d} and {_end} < 1 day:
 				set {_v::1} to loop-value
@@ -61,10 +60,10 @@ discord command {@cmd} [<text>]:
 			if difference between {_d} and {_end} < 30 day:
 				add loop-value to {_v::30}
 		
-		set {_now} to now
-		loop {_v::*}:
-			set {_timespan} to new Date({_now}.getTime() + loop-value)
-			set {_v::%loop-index%} to getTimespan("%difference between {_now} and {_timespan}%")
+		# set {_now} to now
+		# loop {_v::*}:
+		# 	set {_timespan} to new Date({_now}.getTime() + loop-value)
+		# 	set {_v::%loop-index%} to getTimespan("%difference between {_now} and {_timespan}%")
 
 		set {_a} to a new embed
 		create embed {_a}:
