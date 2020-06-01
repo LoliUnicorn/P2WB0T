@@ -23,7 +23,7 @@ discord command {@cmd} [<text>]:
 		map json body of last http response to {_r::*}
 
 		set {_msg::1} to 0
-		set {_msg::7}
+		set {_msg::7} to 0
 		set {_msg::14} to 0
 		set {_msg::30} to 0
 
