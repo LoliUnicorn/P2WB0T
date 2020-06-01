@@ -23,8 +23,14 @@ discord command {@cmd} [<text>]:
 		map json body of last http response to {_r::*}
 
 		set {_msg::1} to 0
+		set {_msg::7}
 		set {_msg::14} to 0
 		set {_msg::30} to 0
+
+		set {_v::1} to 0
+		set {_v::7} to 0
+		set {_v::14} to 0
+		set {_v::30} to 0
 
 		set {_format} to new SimpleDateFormat("dd:MM:yyyy")
 		loop {_r::messages::*}:
@@ -32,7 +38,6 @@ discord command {@cmd} [<text>]:
 			set {_d} to new Date({_d}.getTime())
 			set {_end} to now
 			
-			log("% difference between {_d} and {_end}%")
 			if difference between {_d} and {_end} < 1 day:
 				set {_msg::1} to loop-value
 			if difference between {_d} and {_end} < 7 day:
@@ -41,13 +46,32 @@ discord command {@cmd} [<text>]:
 				add loop-value to {_msg::14}
 			if difference between {_d} and {_end} < 30 day:
 				add loop-value to {_msg::30}
+				
+		loop {_r::voiceTimespan::*}:
+			set {_d} to {_format}.parse("%loop-index%")
+			set {_d} to new Date({_d}.getTime())
+			set {_end} to now
+			
+			if difference between {_d} and {_end} < 1 day:
+				set {_v::1} to loop-value
+			if difference between {_d} and {_end} < 7 day:
+				add loop-value to {_v::7}
+			if difference between {_d} and {_end} < 14 day:
+				add loop-value to {_v::14}
+			if difference between {_d} and {_end} < 30 day:
+				add loop-value to {_v::30}
+		
+		set {_now} to now
+		loop {_v::*}:
+			set {_timespan} to {_now}.getTime() + loop-value
+			set {_v::%loop-index%} to getTimespan("%difference between {_now} and {_timespan}%")
 
 		set {_a} to a new embed
 		create embed {_a}:
 			set the title of embed to title with text "Statystyki"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the description of embed to "**!!UWAGA**!! Statystyki nie są w 100%% dokładne. Podawana przez nie wartość jest tylko szacowaną. Realnia mogą się różnić."
+			set the description of embed to "**!!UWAGA!!** Statystyki nie są w 100%% dokładne. Podawana przez nie wartość jest tylko szacowaną. Realnia mogą się różnić."
 			set the footer of embed to footer with text "Statystyki liczone od 02.06.2020" and no icon
 		
 			set {_m} to a new message builder
