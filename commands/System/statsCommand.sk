@@ -27,9 +27,9 @@ discord command {@cmd} [<text>]:
 
 		set {_format} to new SimpleDateFormat("dd:MM:yyyy")
 		loop {_r::*}:
-				set {_d} to {_format}.parse("%loop-index%")
-				set {_d} to new Date({_d}.getTime())
-				log("%{_d}%")
+			set {_d} to {_format}.parse("%loop-index%")
+			set {_d} to new Date({_d}.getTime())
+			log("%{_d}%")
 
 		set {_a} to a new embed
 		create embed {_a}:
