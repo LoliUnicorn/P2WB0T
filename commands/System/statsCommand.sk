@@ -63,7 +63,7 @@ discord command {@cmd} [<text>]:
 		
 		set {_now} to now
 		loop {_v::*}:
-			set {_timespan} to {_now}.getTime() + loop-value
+			set {_timespan} to new Date({_now}.getTime() + loop-value)
 			set {_v::%loop-index%} to getTimespan("%difference between {_now} and {_timespan}%")
 
 		set {_a} to a new embed
