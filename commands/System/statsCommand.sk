@@ -26,7 +26,7 @@ discord command {@cmd} [<text>]:
 		set {_msg::30} to 0
 
 		set {_format} to new SimpleDateFormat("dd:MM:yyyy")
-		loop {_r::*}:
+		loop {_r::message::*}:
 			set {_d} to {_format}.parse("%loop-index%")
 			set {_d} to new Date({_d}.getTime())
 			log("%{_d}%")
