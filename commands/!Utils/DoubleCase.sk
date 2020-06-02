@@ -1,9 +1,8 @@
-effect KamilAPI check double case of %text% with %message%:
+effect KamilAPI check double case of %text% [with %-message%]:
 	trigger:
 		delay the effect
 		set {_id} to expr-1
 		set {_msg} to expr-2
-		set {_author} to {_msg}.getMessage().getAuthor().getId()
 
 		set {_w} to difference between {vv::%{_id}%::kara::cooldown} and now
 		if {_w} is less than 1 hour:
