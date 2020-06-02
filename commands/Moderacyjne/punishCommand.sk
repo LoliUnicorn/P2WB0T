@@ -119,7 +119,7 @@ discord command {@cmd} [<text>] [<text>]:
 			set {vv::%event-user.getId()%::pun::msg} to event-message
 
 			if arg-2 is not set:
-				sync:
+				async:
 					set {_lul} to 1
 					set {_m::%{_lul}%} to a message builder
 					append line "0. Anuluj operacje."
