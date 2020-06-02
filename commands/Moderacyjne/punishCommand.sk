@@ -153,6 +153,8 @@ discord command {@cmd} [<text>] [<text>]:
 						set {_tier::*} to getTier({_n}, 1) split at "|"
 					set {vv::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
+					{_listaTierow::*} don't contain {_inx}
+					add {_inx} to {_listaTierow::*}
 					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
 					append line "—"
 					if {_m::%{_lul}%}.length() >= 850:
@@ -172,8 +174,7 @@ discord command {@cmd} [<text>] [<text>]:
 					loop {_m::*}:
 						"%loop-value%" is not "null"
 						"%loop-valie%".startsWith("18.") is false
-						log("%loop-value%")
-						add field named "wlo" with value "%loop-value%" to embed
+						add field named " " with value "%loop-value%" to embed
 				edit {_msg} to show {_e}
 
 				# ###################################################
