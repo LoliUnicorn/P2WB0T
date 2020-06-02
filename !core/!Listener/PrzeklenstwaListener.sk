@@ -74,7 +74,7 @@ on guild message receive:
 				if {_r::*} contains {_yt} or {_miniyt}:
 					# nic
 				else:
-					sendAction(event-user, "%event-message%", "Reklamowanie filmów/kanału", event-channel.getId())
+					sendAction(event-user, "%event-message%", "Reklamowanie_Filmów", event-channel.getId())
 					deleteMessage(event-message)
 					stop
 
