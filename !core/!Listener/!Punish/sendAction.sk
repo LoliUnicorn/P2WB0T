@@ -40,7 +40,7 @@ on reaction add:
 				set {_powod} to "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" # FIXME: punish
 			if {_s::2} is "zaśmiecanie chatu":
 				set {_powod} to "Zaśmiecanie chatu" # FIXME: punish
-			if {_s::3} is "Reklamowanie filmów/kanału":
+			if {_s::2} is "Reklamowanie filmów/kanału":
 				set {_powod} to "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl"
 		if {_powod} is set:
 			KamilAPI add pun to {_s::1} with reason {_powod} by event-user in channel event-channel
