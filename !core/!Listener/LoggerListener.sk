@@ -70,5 +70,3 @@ on message delete:
 #
 #	if ...{_m}.getMessage().getEmbeds() is set:
 #		send {_m} to channel with id getConfig("Config.logiWiadomosci") with event-bot
-		
-	{_m}.finalize()

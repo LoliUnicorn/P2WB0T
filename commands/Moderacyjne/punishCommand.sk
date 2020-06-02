@@ -119,60 +119,61 @@ discord command {@cmd} [<text>] [<text>]:
 			set {vv::%event-user.getId()%::pun::msg} to event-message
 
 			if arg-2 is not set:
-				set {_lul} to 1
-				set {_m::%{_lul}%} to a message builder
-				append line "0. Anuluj operacje."
-				set {_field} to true
+				sync:
+					set {_lul} to 1
+					set {_m::%{_lul}%} to a message builder
+					append line "0. Anuluj operacje."
+					set {_field} to true
 
-				set {_e} to a new embed
-				set {_val} to "Wybierz kare..."
-				create embed {_e}:
-					set the colour of the embed to color of getColor(event-member)
-					set the timestamp of embed to now
-					set the thumbnail of embed to "%avatar of {_member}%"
+					set {_e} to a new embed
+					set {_val} to "Wybierz kare..."
+					create embed {_e}:
+						set the colour of the embed to color of getColor(event-member)
+						set the timestamp of embed to now
+						set the thumbnail of embed to "%avatar of {_member}%"
 
-					set the description of embed to "Chcesz ukarać **%getMcNick({_member}.getUser().getId(), false)%**. Napisz odpowiedni numer, aby nadać karę użytkownikowi."
+						set the description of embed to "Chcesz ukarać **%getMcNick({_member}.getUser().getId(), false)%**. Napisz odpowiedni numer, aby nadać karę użytkownikowi."
 
-					add field named "Wybierz kare..." with value "Czekaj chwile lol" to embed
-					
-				edit {_msg} to show {_e}
-				edit {_msg} to show " "
-		
-				loop {_pun::list::*}:
-					add 1 to {_update}
-					set {_inx} to loop-index
-					set {_n} to {_pun::list::%{_inx}%::1::name}
+						add field named "Wybierz kare..." with value "Czekaj chwile lol" to embed
+						
+					edit {_msg} to show {_e}
+					edit {_msg} to show " "
+			
+					loop {_pun::list::*}:
+						add 1 to {_update}
+						set {_inx} to loop-index
+						set {_n} to {_pun::list::%{_inx}%::1::name}
 
-					set {_jegoWarny} to 0
-					set {_jegoWarny} to {_warny::powod::%{_n}%}
-					set {_tier::*} to getTier({_n}, {_jegoWarny}) split at "|"
+						set {_jegoWarny} to 0
+						set {_jegoWarny} to {_warny::powod::%{_n}%}
+						set {_tier::*} to getTier({_n}, {_jegoWarny}) split at "|"
 
-					if "%{_jegoWarny}%" = "%{_tier::2}%":
-						set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
-					if getTier({_n}, {_jegoWarny}) is not set:
-						set {_tier::*} to getTier({_n}, 1) split at "|"
-					set {vv::%event-user.getId()%::pun::%{_inx}%} to {_n}
+						if "%{_jegoWarny}%" = "%{_tier::2}%":
+							set {_tier::*} to getTier({_n}, {_jegoWarny}+1) split at "|"
+						if getTier({_n}, {_jegoWarny}) is not set:
+							set {_tier::*} to getTier({_n}, 1) split at "|"
+						set {vv::%event-user.getId()%::pun::%{_inx}%} to {_n}
 
-					append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
-					append line "—"
-					if {_m::%{_lul}%}.length() >= 850:
-						add 1 to {_lul}
-						set {_m::%{_lul}%} to a message builder
-					
-					if {_update} is 9:
-						set {_update} to 0
-						create embed {_e}:
-							loop {_m::*}:
-								"%loop-value-2%" is not "null"
-								add field named " " with value "%loop-value-2%" to embed
-						set {_lul} to 1
-						set {_m::%{_lul}%} to a message builder
-						edit {_msg} to show {_e}
-				create embed {_e}:
-					loop {_m::*}:
-						"%loop-value%" is not "null"
-						add field named " " with value "%loop-value%" to embed
-				edit {_msg} to show {_e}
+						append line "%{_inx}%. %{_n}%  `Tier ##%{_tier::1}%` | **%{_jegoWarny}% `/` %{_tier::2}%**"
+						append line "—"
+						if {_m::%{_lul}%}.length() >= 850:
+							add 1 to {_lul}
+							set {_m::%{_lul}%} to a message builder
+						
+						if {_update} is 9:
+							set {_update} to 0
+							create embed {_e}:
+								loop {_m::*}:
+									"%loop-value-2%" is not "null"
+									add field named " " with value "%loop-value-2%" to embed
+							set {_lul} to 1
+							set {_m::%{_lul}%} to a message builder
+							edit {_msg} to show {_e}
+					create embed {_e}:
+						loop {_m::*}:
+							"%loop-value%" is not "null"
+							add field named " " with value "%loop-value%" to embed
+					edit {_msg} to show {_e}
 
 				# ###################################################
 				# loop {_pun::list::*}:
@@ -212,9 +213,9 @@ discord command {@cmd} [<text>] [<text>]:
 					
 				# edit {_msg} to show {_e}
 				# edit {_msg} to show " "
-				set {vv::%event-user.getId()%::pun::botmsg} to {_msg}
-				KamilAPI add emote "green" to event-message of event-user
-				KamilAPI check delete event-message from event-user
+					set {vv::%event-user.getId()%::pun::botmsg} to {_msg}
+					KamilAPI add emote "green" to event-message of event-user
+					KamilAPI check delete event-message from event-user
 		
 			else:
 				deleteMessage({_msg})
