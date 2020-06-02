@@ -256,18 +256,24 @@ on guild message receive:
 		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
 		delete {vv::%{_karanyid}%::kara::cooldown}
 		delete {vv::%event-user.getId()%::pun::*}
+		delete {vv::%event-user.getId()%::kara::cooldown}
+		delete {v::%{_karanyid}%::doublecase::*}
 		stop
 		deleteMessage(event-message)
 	if {_msg} is "0":
 		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
 		delete {vv::%{_karanyid}%::kara::cooldown}
 		delete {vv::%event-user.getId()%::pun::*}
+		delete {vv::%event-user.getId()%::kara::cooldown}
+		delete {v::%{_karanyid}%::doublecase::*}
 		reply with "Anuluje operacje!"
 		stop
 	if {vv::%event-user.getId()%::pun::%{_msg}%} is not set:
 		deleteMessage({vv::%event-user.getId()%::pun::botmsg})
 		delete {vv::%{_karanyid}%::kara::cooldown}
 		delete {vv::%event-user.getId()%::pun::*}
+		delete {vv::%event-user.getId()%::kara::cooldown}
+		delete {v::%{_karanyid}%::doublecase::*}
 		reply with "Zły numer! Anuluje operacje."
 		stop
 	KamilAPI add punish to {vv::%event-user%::pun::karany} with reason {vv::%event-user.getId()%::pun::%{_msg}%} by event-user in channel event-channel and set message to {vv::%event-user.getId()%::pun::msg} and event event
