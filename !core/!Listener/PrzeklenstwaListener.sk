@@ -61,21 +61,22 @@ on guild message receive:
 		set {_flood} to regex replace all pattern "[0-9]*" with "" in {_flood}
 		set {_int} to checkFlood({_flood})
 		if {_int} >= 4:
-			sendAction(event-user, "%event-message%", "Flood")
+			sendAction(event-user, "%event-message%", "Flood", event-channel.getId(), event-channel.getId())
 			deleteMessage(event-message)
 			stop
 		
-		set {_r} to regex replace all pattern "(http(s)?\:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.be)\/\S+" with "kurwa" in "%event-message%"
-		if {_r} contains "kurwa":
-			set {_yt} to role with id "343467373417857025"
-			set {_miniyt} to role with id "425670776272715776"
-			set {_r::*} to roles of {_u}
-			if {_r::*} contains {_yt} or {_miniyt}:
-				# nic
-			else:
-				sendAction(event-user, "%event-message%", "Reklamowanie filmów/kanału")
-				deleteMessage(event-message)
-				stop
+		if discord id of event-channel is not "426864003562864641":
+			set {_r} to regex replace all pattern "(http(s)?\:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.be)\/\S+" with "kurwa" in "%event-message%"
+			if {_r} contains "kurwa":
+				set {_yt} to role with id "343467373417857025"
+				set {_miniyt} to role with id "425670776272715776"
+				set {_r::*} to roles of {_u}
+				if {_r::*} contains {_yt} or {_miniyt}:
+					# nic
+				else:
+					sendAction(event-user, "%event-message%", "Reklamowanie filmów/kanału", event-channel.getId())
+					deleteMessage(event-message)
+					stop
 
 		# set {_c} to "640906076774072320"
 
