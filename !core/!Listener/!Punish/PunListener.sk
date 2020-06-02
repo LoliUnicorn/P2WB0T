@@ -74,7 +74,7 @@ effect KamilAPI add (pun|punish) to %user/member/text% with reason %text% (with|
 
 			remove {_d::1} from {_d::2}
 			set {_czas} to getTimespan("%{_d::2}%")
-			edit {_msg} to show "Zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika. Jeżeli uważasz, że naciśnij reakcje i jeszcze raz daj kare. **NIE NACISKAJ JAK TYP JUŻ DOSTAŁ KARE**" to channel with id "%{_msg}.getMessage().getChannel().getId()%"
+			edit {_msg} to show "Zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika. Jeżeli uważasz, że naciśnij reakcje i jeszcze raz daj kare. **NIE NACISKAJ JAK TYP JUŻ DOSTAŁ KARE**"
 			add reaction getConfigEmote("green") to reactions of {_msg} with {bot::name}
 			set {v::%{_kurwa}%::doublecase::botmsg} to {_msg}.getMessage().getId()
 			set {v::%{_kurwa}%::doublecase::uid} to {_xd}
