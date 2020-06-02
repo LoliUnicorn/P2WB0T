@@ -159,7 +159,7 @@ discord command {@cmd} [<text>] [<text>]:
 						add 1 to {_lul}
 						set {_m::%{_lul}%} to a message builder
 					
-					if {_update} is 9:
+					if {_update} is 8:
 						set {_update} to 0
 						create embed {_e}:
 							loop {_m::*}:
