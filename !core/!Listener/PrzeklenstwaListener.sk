@@ -61,7 +61,7 @@ on guild message receive:
 		set {_flood} to regex replace all pattern "[0-9]*" with "" in {_flood}
 		set {_int} to checkFlood({_flood})
 		if {_int} >= 4:
-			sendAction(event-user, "%event-message%", "Flood", event-channel.getId(), event-channel.getId())
+			sendAction(event-user, "%event-message%", "Flood", event-channel.getId())
 			deleteMessage(event-message)
 			stop
 		
