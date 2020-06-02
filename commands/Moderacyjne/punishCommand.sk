@@ -166,12 +166,12 @@ discord command {@cmd} [<text>] [<text>]:
 								"%loop-value-2%" is not "null"
 								add field named " " with value "%loop-value-2%" to embed
 						set {_lul} to 1
-						delete {_m::*}
 						set {_m::%{_lul}%} to a message builder
 						edit {_msg} to show {_e}
 				create embed {_e}:
 					loop {_m::*}:
 						"%loop-value%" is not "null"
+						"%loop-valie%".startsWith("18.") is false
 						add field named " " with value "%loop-value%" to embed
 				edit {_msg} to show {_e}
 
