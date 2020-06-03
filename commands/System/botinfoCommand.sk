@@ -89,7 +89,7 @@ function checkReboot():
 	set {_total} to total memory
 	set {_free} to free memory
 	set {_used} to ({_total} - {_free}) / 1024 / 1024
-	if {_ues} > 1800:
+	if {_used} > 1750:
 		logout {bot::name}
 		stop server
 
