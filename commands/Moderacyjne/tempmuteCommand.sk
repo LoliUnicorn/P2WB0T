@@ -38,6 +38,6 @@ discord command {@cmd} [<text>] [<text>] [<text>]:
 		if {_error} is set:
 			KamilAPI cmd error "Wystąpił błąd! `%{_error}%`" to event-message
 		else:
-			send "Hey :wave:%nl%Właśnie zostałeś(-aś) tymczasowo wyciszony za: **%{_powod}%** na czas **%arg-2%**%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_m} with {bot::name}
+			send "Hey :wave:%nl%Właśnie zostałeś(-aś) tymczasowo wyciszony za: **%{_p}%** na czas **%arg-2%**%nl%Czas nadania: **%now%**%nl%--------------------------------------------------" to {_m} with {bot::name}
 			reply with "Pomyślnie wyciszono użytkownika **%getName({_m}.getUser().getId())%** z powodem **%getRegex({_p})%** na czas **%arg-2%**"
 			KamilAPI check delete event-message from event-user
