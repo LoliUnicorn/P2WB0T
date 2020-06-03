@@ -171,7 +171,7 @@ discord command {@cmd} [<text>] [<text>]:
 				create embed {_e}:
 					loop {_m::*}:
 						"%loop-value%" is not "null"
-						"%loop-valie%".startsWith("18.") is false
+						"%loop-value%".startsWith("18.") is false
 						add field named " " with value "%loop-value%" to embed
 				edit {_msg} to show {_e}
 
