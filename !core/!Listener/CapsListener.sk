@@ -2,6 +2,7 @@ import:
 	java.lang.Character
 
 on guild message receive:
+	event-channel.getId() is not "426809411378479105"
 	getPoziom(event-user.getId()) is 0
 	set {_msg} to content of event-message
 	replace all " " with "" in {_msg}
