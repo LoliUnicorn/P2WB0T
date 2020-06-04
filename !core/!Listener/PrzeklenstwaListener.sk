@@ -21,6 +21,7 @@ function checkFlood(msg: text) :: number:
 	return 0
 
 on guild message receive:
+	event-channel.getId() is not "426809411378479105"
 	set {_message} to "%event-message%"
 		
 	set {_r::1::a} to "ą"
