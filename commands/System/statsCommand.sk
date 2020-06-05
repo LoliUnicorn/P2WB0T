@@ -72,7 +72,7 @@ discord command {@cmd} [<text>]:
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
 			set the description of embed to "**!!UWAGA!!** Statystyki nie są w 100%% dokładne. Podawana przez nie wartość jest tylko szacowaną. Realia mogą się różnić.%nl%Postaraj się używać ID użytkownika zamiast @oznaczenia ;3"
-			set the footer of embed to footer with text "Statystyki liczone od 02.06.2020" and no icon
+			set the footer of embed to footer with text "Statystyki liczone od 05.06.2020" and no icon
 		
 			add field named "Statystyki użytkownika" with value "%getFullName({_user}.getId())%" to embed
 
