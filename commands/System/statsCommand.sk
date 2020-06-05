@@ -3,7 +3,7 @@ options:
 
 on script load:
 	set {command::{@cmd}::poziom} to 0
-	set {command::{@cmd}::cooldown} to 30 seconds
+	set {command::{@cmd}::cooldown} to 60 seconds
 
 	set {command::{@cmd}::opis} to "Wyświetla statystyki"
 	set {command::{@cmd}::kategoria} to "System"
@@ -71,9 +71,11 @@ discord command {@cmd} [<text>]:
 			set the title of embed to title with text "Statystyki"
 			set the colour of the embed to color of getColor(event-member)
 			set the timestamp of embed to now
-			set the description of embed to "**!!UWAGA!!** Statystyki nie są w 100%% dokładne. Podawana przez nie wartość jest tylko szacowaną. Realia mogą się różnić."
+			set the description of embed to "**!!UWAGA!!** Statystyki nie są w 100%% dokładne. Podawana przez nie wartość jest tylko szacowaną. Realia mogą się różnić.%nl%Postaraj się używać ID użytkownika zamiast @oznaczenia ;3"
 			set the footer of embed to footer with text "Statystyki liczone od 02.06.2020" and no icon
 		
+			add field named "Statystyki użytkownika" with value "%getFullName({_user}.getId())%" to embed
+
 			set {_m} to a new message builder
 			append line "Wiadomości dzisiaj: **%{_msg::1}%**"
 			append line "Wiadomości z 7 dni: **%{_msg::7}%**"
