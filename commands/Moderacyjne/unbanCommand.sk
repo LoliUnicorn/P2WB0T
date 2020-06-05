@@ -26,7 +26,7 @@ discord command {@cmd} [<text>] [<text>]:
 		
 		if {_t} is not set:
 			KamilAPI cmd error "Taki użytkownik nie ma bana!" to event-message
-		
+		delete {vv::%{_u}.getId()%::kara::cooldown}
 		unban {_u} from event-guild with event-bot
 		set {_e} to last vixio error
 		if {_e} is set:
