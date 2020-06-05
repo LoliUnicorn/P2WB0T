@@ -19,7 +19,8 @@ discord command {@cmd} [<text>] [<text>]:
 		set {_m} to getUser(arg-1) in event-guild
 		if {_m} is not set:
 			KamilAPI cmd error "Takiego użytkownika nie ma na serwerze." to event-message
-		delete {vv::%{_m}.getUser().getId()%::kara::cooldown}
+		set {_karany} to {_m}.getUser().getId()
+		delete {vv::%{_karany}%::kara::cooldown}
 		reply with "%getConfigEmote(""loading"")% Pracuje..." and store it in {_msg}
 		
 		event-guild.removeRoleFromMember({_m}, {_r}).complete()
