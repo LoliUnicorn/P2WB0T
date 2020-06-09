@@ -26,5 +26,7 @@ discord command {@cmd} [<text>] [<text>]:
 		event-guild.removeRoleFromMember({_m}, {_r}).complete()
 		modLog({_m}.getUser().getId(), event-user.getId(), "Unmute", getPowod(arg-2), getMcNick({_m}.getUser().getId()))
 		edit {_msg} to show "Pomyślnie odciszono **%getName({_m}.getUser().getId())%** z powodem **%getPowod(arg-2)%**"
+		set {_id} to {_u.}.getUser().getId()
+		delete {vv::%{_id}%::kara::cooldown}
 		KamilAPI check delete event-message from event-user
 		execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_m}.getUser().getId()%' AND aktywna='Tak' AND (Typ='Tempmute' OR Typ='Mute')" in {bot::sql}

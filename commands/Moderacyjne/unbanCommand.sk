@@ -35,5 +35,7 @@ discord command {@cmd} [<text>] [<text>]:
 		else:
 			execute "UPDATE akcje SET aktywna='Nie' WHERE karany='%unsafe {_u}.getId()%' AND aktywna='Tak' AND (Typ='Tempban' OR Typ='Ban')" in {bot::sql}
 			reply with "Pomyślnie dano unbana dla **%getName({_u}.getId())%** z powodem **%{_p}%**"
+			set {_id} to {_u}.getId()
+			delete {vv::%{_id}%::kara::cooldown}
 			modLog({_u}.getId(), event-user.getId(), "Unban", {_p}, getMcNick({_u}.getId()))
 			KamilAPI check delete event-message from event-user

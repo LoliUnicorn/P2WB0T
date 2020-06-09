@@ -45,7 +45,6 @@ on reaction add:
 				set {_czas} to getTimespan("%{_d::2}%")
 				set {_double} to true
 				send "%getMention(event-user.getId())%, zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika." to event-channel with {bot::name}
-				stop
 			
 			if {_double} is not set:
 				set {vv::%{_s::1}%::kara::cooldown} to now
