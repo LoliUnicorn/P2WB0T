@@ -43,16 +43,19 @@ on reaction add:
 
 				remove {_d::1} from {_d::2}
 				set {_czas} to getTimespan("%{_d::2}%")
+				set {_double} to true
 				send "%getMention(event-user.getId())%, zabezpieczenie anty-d... wykryło, że próbujesz zdublować karę użytkownikowi, a mi się nie chce później bazy czyścić. Przeszukaj logi i poczekaj **%{_czas}%** przed następnym ukaraniem użytkownika." to event-channel with {bot::name}
 				stop
-			set {vv::%{_s::1}%::kara::cooldown} to now
+			
+			if {_double} is not set:
+				set {vv::%{_s::1}%::kara::cooldown} to now
 
-			if {_s::2} is "flood" or "caps":
-				set {_powod} to "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" # FIXME: punish
-			if {_s::2} is "zaśmiecanie chatu":
-				set {_powod} to "Zaśmiecanie chatu" # FIXME: punish
-			if {_s::2} is "Reklamowanie_Filmów":
-				set {_powod} to "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl"
-		if {_powod} is set:
-			KamilAPI add pun to {_s::1} with reason {_powod} by event-user in channel event-channel
+				if {_s::2} is "flood" or "caps":
+					set {_powod} to "Nadmierny spam, flood lub caps lock wiadomościami lub emotikonami" # FIXME: punish
+				if {_s::2} is "zaśmiecanie chatu":
+					set {_powod} to "Zaśmiecanie chatu" # FIXME: punish
+				if {_s::2} is "Reklamowanie_Filmów":
+					set {_powod} to "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl"
+			if {_powod} is set:
+				KamilAPI add pun to {_s::1} with reason {_powod} by event-user in channel event-channel
 		deleteMessage(event-message)
