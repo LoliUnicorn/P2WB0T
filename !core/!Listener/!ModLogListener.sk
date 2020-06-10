@@ -24,8 +24,8 @@ function modLog(karany: text, adm: text, typ: text, powod: text, nick: text, cza
 			set the footer of embed to footer with text "%{_typ}% | %{_karainfo}%" and icon "%avatar of {_b}%"
 		
 			add field named "Osoba karana:" with value {_embed::karany} to embed
-			# add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
-			add field named "Administrator:" with value "null(null)" to embed
+			add field named "Administrator:" with value "%getMention({_adm}.getId())%(%getName({_adm}.getId())%)" to embed
+			#add field named "Administrator:" with value "null(null)" to embed
 			add field named "Powód:" with value getPowod({_powod}) to embed
 			if {_czas} != "null":
 				set {_now} to now
