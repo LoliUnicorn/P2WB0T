@@ -115,6 +115,7 @@ public class CommandExecute extends ListenerAdapter {
         } catch (Exception omegalul) {
             omegalul.printStackTrace();
             Log.newError("`%s` uzyl komendy %s (%s) ale wystapil blad: %s", e.getAuthor().getName(), c.getName(), c.getClass().getName(), omegalul);
+            Log.newError(omegalul);
             e.getTextChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
         if (udaloSie && UserUtil.getPermLevel(e.getAuthor()).getNumer() < 10) setCooldown(e.getAuthor(), c);

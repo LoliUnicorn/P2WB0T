@@ -27,26 +27,27 @@ public class Log {
 
     public static void newError(Throwable e) {
         StringWriter er = new StringWriter();
-        e.getCause().printStackTrace(new PrintWriter(er));
+        e.printStackTrace(new PrintWriter(er));
 
-        List<String> pages = new ArrayList<>();
-
+        boolean strona = false;
         StringBuilder sb = new StringBuilder();
-        sb.append("```");
+        WebhookUtil web = new WebhookUtil();
+        web.setType(WebhookUtil.LogType.ERROR);
+        sb.append("```\n");
         for (String s : er.toString().split("\n")) {
             sb.append(s);
-            if (s.length() >= 1800) {
-                sb.append("```");
-                pages.add(sb.toString());
+            if (s.toLowerCase().length() >= 1800) {
+                sb.append("\n```");
+                web.setMessage(sb.toString().replaceAll(" {4}at ", ""));
+                web.send();
                 sb = new StringBuilder();
-                sb.append("```");
+                strona = true;
             }
         }
-
-        for (String page : pages) {
-            Log.newError(page);
+        if (!strona) {
+            web.setMessage(sb.toString().replaceAll(" {4}at ", "") + "\n```");
+            web.send();
         }
-
     }
 
     public static void info(String msg, @Nullable Object... args) {
