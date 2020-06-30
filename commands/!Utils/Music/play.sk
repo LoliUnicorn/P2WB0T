@@ -1,9 +1,0 @@
-function play(xd: text) :: boolean:
-	set {_g} to getGuild()
-	set {_b} to {bot::name} parsed as bot
-	loop queue of {_b} in {_g}:
-		if url of loop-value is "%{_xd}%":
-			return false
-			stop
-	play "%{_xd}%" in {_g} with {bot::name}
-	return true

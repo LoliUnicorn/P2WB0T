@@ -1,9 +1,0 @@
-function getJSON(file: text) :: text:
-	set {_kek::*} to lines from file {_file}
-	loop {_kek::*}:
-		if {_xd} is not set:
-			set {_xd} to "%loop-value%"
-		else:
-			set {_xd} to "%{_xd}%%nl%%loop-value%"
-	replace all nl and "	" with "" in {_xd}
-	return {_xd}

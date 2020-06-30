@@ -1,7 +1,0 @@
-function getUser(m: text) :: user:
-	set {_u::1} to user with id {_m}
-	retrieve user with id "%{_m}%" and store them in {_u::2}
-	set {_u::3} to {_m} parsed as user
-	loop {_u::*}:
-		if loop-value is set:
-			return loop-value

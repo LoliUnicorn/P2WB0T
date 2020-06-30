@@ -1,8 +1,0 @@
-import:
-	me.iblitzkriegi.vixio.util.UpdatingMessage as Updessage
-
-effect KamilAPI clear reaction[s] (from|for) %message%:
-	trigger:
-		set {_m} to Updessage.convert(expr-1)
-		{_m} is set
-		{_m}.clearReactions().queue()

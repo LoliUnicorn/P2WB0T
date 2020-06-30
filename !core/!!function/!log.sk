@@ -1,2 +1,0 @@
-function log(t: text):
-  send "&2[BOT] &r%colored {_t}%" to console

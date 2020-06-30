@@ -1,7 +1,0 @@
-function getConfigEmote(e: text) :: text:
-	set {_g} to getGuild()
-	loop emote of {_g}:
-		set {_l} to loop-value
-		if "%{_l}.getID()%" is getConfig("emote.%{_e}%"):
-			set {_emote} to loop-value
-	return "%{_emote}%"

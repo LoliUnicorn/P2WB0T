@@ -1,5 +1,0 @@
-function getRegex(t: text) :: text:
-	set {_test} to regex replace all pattern "\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:[^\s/]*))*" with "[URL]" in {_t}
-	set {_xd} to regex replace all pattern "@" with "`<ping>`" in {_test}
-	set {_beka} to regex replace all pattern "(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]" with "[INVITE]" in {_xd}
-	return {_beka}

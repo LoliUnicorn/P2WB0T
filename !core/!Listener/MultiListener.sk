@@ -1,9 +1,0 @@
-on member join guild:
-	wait 50 tick
-	set {_m} to event-member
-	set {_id} to {_m}.getUser().getId()
-	set {_nick} to getMcNick({_id})
-	if {_nick} contains "-":
-		set {_nick} to "%event-member.getUser()%"
-	set {_now} to "%now%"
-	execute "INSERT INTO `multi` (id,nick,now) VALUES('%unsafe {_id}%', '%unsafe {_nick}%', '%unsafe {_now}%')" in {bot::sql}

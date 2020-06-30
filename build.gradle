@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
+
+group 'pl.kamil0024'
+def versionObj = new Version(major: 2, minor: 0, revision: 0, dopisek: "")
+version = "$versionObj".toString()
+mainClassName = 'pl.kamil0024.core.Main'
+
+def jdaVersion = '4.0.0_50'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+dependencies {
+    compile 'net.dv8tion:JDA:' + jdaVersion
+    compile 'com.intellij:annotations:+@jar'
+    compile 'com.google.code.gson:gson:2.8.6'
+    compile 'com.google.inject:guice:4.2.2'
+    compile 'org.jsoup:jsoup:1.12.1'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compile 'com.github.queer:async-postgres-jsonb-orm:e348e109f8'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile("club.minnced:discord-webhooks:0.2.0")
+    compile group: 'org.json', name: 'json', version: '20090211'
+    implementation 'com.github.KAMIL0024:Bdate:-SNAPSHOT'
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.4'
+    compile 'com.kcthota:emoji4j:5.0'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+build.dependsOn jar
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+artifacts {
+    archives shadowJar
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+shadowJar {
+    manifest {
+        attributes 'Implementation-Title': 'P2WB0T', 'Implementation-Version': version
+        attributes 'Main-Class': 'pl.kamil0024.core.Main'
+    }
+    mergeServiceFiles()
+    mergeGroovyExtensionModules()
+}
+
+class Version {
+    String major, minor, revision, dopisek
+
+    static String getBuild() {
+        System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?:
+                System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?:"DEV"
+    }
+
+    String toString() {
+        "$major.$minor"
+    }
+}
+
+compileJava.options.encoding = 'UTF-8'

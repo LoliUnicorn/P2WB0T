@@ -1,3 +1,0 @@
-function getGuild(t: text="") :: object:
-	set {_g} to guild with id getConfig("Config.guild")
-	return {_g}

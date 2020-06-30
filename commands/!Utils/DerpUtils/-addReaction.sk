@@ -1,6 +1,0 @@
-on guild message receive:
-	if event-channel.getId() == "638072300184403970":
-		event-user.isBot() is false
-		getPoziom(event-user.getId()) < 1
-		loop "green", "red":
-			KamilAPI add emote "%loop-value%" to event-message

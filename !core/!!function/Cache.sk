@@ -1,5 +1,0 @@
-function setCache(id: text, typ: text, value: text):
-	set {v::%{_id}%::cache::%{_typ}%} to {_value}
-
-function getCache(id: text, typ: text) :: text:
-	return {v::%{_id}%::cache::%{_typ}%}

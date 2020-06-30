@@ -1,5 +1,0 @@
-function getColor(m: member) :: role:
-	set {_r::*} to roles of {_m}
-	loop {_r::*}:
-		if color of loop-value is set:
-			return loop-value

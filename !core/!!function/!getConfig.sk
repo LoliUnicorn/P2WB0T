@@ -1,3 +1,0 @@
-function getConfig(msg: text) :: text:
-  set {_inp} to yml value "%{_msg}%" from file "plugins/Bot/config.yml"
-  return {_inp}
