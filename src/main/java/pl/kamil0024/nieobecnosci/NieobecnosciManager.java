@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.database.NieobecnosciDao;
@@ -25,10 +26,10 @@ import java.util.concurrent.TimeUnit;
 
 public class NieobecnosciManager {
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
     @Inject private NieobecnosciDao nieobecnosciDao;
 
-    public NieobecnosciManager(JDA api, NieobecnosciDao nieobecnosciDao) {
+    public NieobecnosciManager(ShardManager api, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
@@ -93,7 +94,7 @@ public class NieobecnosciManager {
 
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
             Message msg = txt.retrieveMessageById(nb.getMsgId()).complete();
-            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).getMemberById(nb.getUserId());
+            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(nb.getUserId()).complete();
             if (mem == null) {
                 Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności");
                 continue;

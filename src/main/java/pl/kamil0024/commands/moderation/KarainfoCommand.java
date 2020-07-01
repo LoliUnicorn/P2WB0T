@@ -32,7 +32,7 @@ public class KarainfoCommand extends Command {
             context.send("Nie ma takiego ID!").queue();
             return false;
         }
-        context.send(ModLog.getEmbed(cc.getKara(), context.getJDA()).build()).queue();
+        context.send(ModLog.getEmbed(cc.getKara(), context.getShardManager()).build()).queue();
         return true;
     }
 

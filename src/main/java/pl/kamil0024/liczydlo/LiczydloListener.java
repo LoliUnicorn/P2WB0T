@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 
 import javax.annotation.Nonnull;
@@ -17,11 +18,11 @@ import java.util.stream.Collectors;
 
 public class LiczydloListener extends ListenerAdapter {
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
 
     TextChannel txt = null;
 
-    public LiczydloListener(JDA api) {
+    public LiczydloListener(ShardManager api) {
         this.api = api;
         txt = api.getTextChannelById(Ustawienia.instance.channel.liczek);
         if (txt == null) api.removeEventListener(this);

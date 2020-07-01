@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.util.BLanguage;
+import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.TempbanCommand;
 import pl.kamil0024.commands.moderation.TempmuteCommand;
 import pl.kamil0024.core.Ustawienia;
@@ -29,11 +31,11 @@ import java.util.concurrent.TimeUnit;
 
 public class ModLog extends ListenerAdapter {
 
-    private final JDA api;
+    private final ShardManager api;
     private final TextChannel modlog;
     private CaseDao caseDao;
 
-    public ModLog(JDA api, CaseDao caseDao) {
+    public ModLog(ShardManager api, CaseDao caseDao) {
         this.api = api;
         this.modlog = api.getTextChannelById(Ustawienia.instance.channel.modlog);
         if (modlog == null) {
@@ -126,10 +128,16 @@ public class ModLog extends ListenerAdapter {
                     try {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
                         if (u == null) continue;
-                        Member m = g.getMember(u);
+                        Member m = g.retrieveMember(u).complete();
 
-                        if (typ == KaryEnum.TEMPBAN) g.unban(aCase.getKaranyId()).complete();
-                        if (typ == KaryEnum.TEMPMUTE) if (m != null) g.removeRoleFromMember(m, muteRole).complete();
+                        if (typ == KaryEnum.TEMPBAN) {
+                            g.unban(aCase.getKaranyId()).complete();
+                        }
+                        if (typ == KaryEnum.TEMPMUTE) {
+                            if (m != null) {
+                                g.removeRoleFromMember(m, muteRole).complete();
+                            }
+                        }
 
                         Kara kara = new Kara();
                         kara.setKaranyId(aCase.getKaranyId());
@@ -148,6 +156,15 @@ public class ModLog extends ListenerAdapter {
                         e.printStackTrace();
                         String msg = "Nie udało się dać kary %s dla %s (ID: %s) bo: %s";
                         Log.newError(String.format(msg, typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE, aCase.getKaranyId(), aCase.getKaraId(), e.getMessage()));
+                    }
+                    if (typ == KaryEnum.TEMPMUTE) {
+                        User u = api.retrieveUserById(aCase.getKaranyId()).complete();
+                        if (u != null) {
+                            Member m = g.retrieveMember(u).complete();
+                            if (MuteCommand.hasMute(m)) {
+                                Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!");
+                            }
+                        }
                     }
                 }
             }
@@ -169,17 +186,16 @@ public class ModLog extends ListenerAdapter {
         }
     }
 
-    public static EmbedBuilder getEmbed(Kara kara, JDA api) {
+    public static EmbedBuilder getEmbed(Kara kara, ShardManager api) {
         return getEmbed(kara, api, false);
     }
 
     @SuppressWarnings("ConstantConditions")
-    private static EmbedBuilder getEmbed(Kara kara, JDA api, Boolean bol) {
+    private static EmbedBuilder getEmbed(Kara kara, ShardManager api, Boolean bol) {
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         EmbedBuilder eb = new EmbedBuilder();
-
         User u = api.retrieveUserById(kara.getKaranyId()).complete();
-        Member mem = api.getGuildById(Ustawienia.instance.bot.guildId).getMemberById(kara.getAdmId());
+        Member mem = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(kara.getAdmId()).complete();
         if (mem != null) eb.setColor(UserUtil.getColor(mem));
         eb.addField("Osoba karana", UserUtil.getFullName(u), false);
         eb.addField("Nick w mc", kara.getMcNick(), false);

@@ -84,7 +84,7 @@ public class HistoryCommand extends Command {
 
         List<EmbedBuilder> historiaKar = new ArrayList<>();
         for (CaseConfig kara : kary) {
-            EmbedBuilder ebb = ModLog.getEmbed(kara.getKara(), context.getJDA());
+            EmbedBuilder ebb = ModLog.getEmbed(kara.getKara(), context.getShardManager());
             boolean aktywna = kara.getKara().getAktywna() == null ? false : kara.getKara().getAktywna();
             ebb.addField("Aktywna?", aktywna ? "Tak" : "Nie", false);
             historiaKar.add(ebb);

@@ -2,13 +2,14 @@ package pl.kamil0024.nieobecnosci;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.nieobecnosci.listeners.NieobecnosciListener;
 
 public class NieobecnosciModule implements Modul {
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
     @Inject private NieobecnosciDao nieobecnosciDao;
 
     private boolean start = false;
@@ -16,7 +17,7 @@ public class NieobecnosciModule implements Modul {
     private NieobecnosciListener nieobecnosciListener;
     private NieobecnosciManager nieobecnosciManager;
 
-    public NieobecnosciModule(JDA api, NieobecnosciDao nieobecnosciDao) {
+    public NieobecnosciModule(ShardManager api, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
     }

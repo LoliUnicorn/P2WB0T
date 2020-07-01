@@ -2,16 +2,18 @@ package pl.kamil0024.liczydlo;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 
 public class LiczydloModule implements Modul {
 
-    @Inject JDA api;
+    @Inject
+    ShardManager api;
 
     private boolean start = false;
     private LiczydloListener liczydloListener;
 
-    public LiczydloModule(JDA api) {
+    public LiczydloModule(ShardManager api) {
         this.api = api;
     }
 

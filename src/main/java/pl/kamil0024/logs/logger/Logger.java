@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
@@ -25,9 +26,9 @@ import java.util.TimerTask;
 public class Logger extends ListenerAdapter {
 
     private final MessageManager manager;
-    private final JDA jda;
+    private final ShardManager jda;
 
-    public Logger(MessageManager manager, JDA jda) {
+    public Logger(MessageManager manager, ShardManager jda) {
         this.manager = manager;
         this.jda = jda;
     }
@@ -83,7 +84,7 @@ public class Logger extends ListenerAdapter {
     private EmbedBuilder getLogMessage(Action action, FakeMessage message, @Nullable User deletedBy) {
         EmbedBuilder eb = new EmbedBuilder();
 
-        User user = jda.getUserById(message.getAuthor());
+        User user = jda.retrieveUserById(message.getAuthor()).complete();
         TextChannel kanal = jda.getTextChannelById(message.getChannel());
 
         eb.setFooter(action.getSlownie());

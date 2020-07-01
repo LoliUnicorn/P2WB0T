@@ -1,6 +1,7 @@
 package pl.kamil0024.status;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.status.listeners.ChangeNickname;
 import pl.kamil0024.status.statusy.CheckMute;
@@ -13,10 +14,10 @@ public class StatusModule implements Modul {
     private boolean start = false;
     private ChangeNickname changeNickname;
 
-    private final JDA api;
+    private final ShardManager api;
 
 
-    public StatusModule(JDA api) {
+    public StatusModule(ShardManager api) {
         this.api = api;
     }
 

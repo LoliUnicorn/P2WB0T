@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.dews.EvalCommand;
 import pl.kamil0024.commands.dews.ModulesCommand;
 import pl.kamil0024.commands.moderation.*;
@@ -33,7 +34,7 @@ public class CommandsModule implements Modul {
 
     @Inject CommandManager commandManager;
     @Inject Tlumaczenia tlumaczenia;
-    @Inject JDA api;
+    @Inject ShardManager api;
     @Inject EventWaiter eventWaiter;
     @Inject KaryJSON karyJSON;
     @Inject CaseDao caseDao;
@@ -46,7 +47,7 @@ public class CommandsModule implements Modul {
     private boolean start = false;
     private ModLog modLog;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, JDA api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;

@@ -8,7 +8,7 @@ public class Error {
 
     public static void usageError(CommandContext context) {
         EmbedBuilder eb = HelpCommand.getUsage(context);
-        context.getEvent().getTextChannel().sendMessage(eb.build()).queue();
+        context.getEvent().getChannel().sendMessage(eb.build()).queue();
     }
 
     public static EmbedBuilder getUsageEmbed(CommandContext context) {

@@ -1,23 +1,21 @@
 package pl.kamil0024.status.statusy;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
 
 import java.util.List;
 import java.util.TimerTask;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class CheckUnmute extends TimerTask {
 
-    private final JDA api;
+    private final ShardManager api;
 
-    public CheckUnmute(JDA api) {
+    public CheckUnmute(ShardManager api) {
         this.api = api;
     }
 

@@ -31,13 +31,13 @@ public class Log {
 
         boolean strona = false;
         StringBuilder sb = new StringBuilder();
-        WebhookUtil web = new WebhookUtil();
-        web.setType(WebhookUtil.LogType.ERROR);
         sb.append("```\n");
         for (String s : er.toString().split("\n")) {
             sb.append(s);
-            if (s.toLowerCase().length() >= 1800) {
+            if (sb.toString().toLowerCase().length() >= 1800) {
                 sb.append("\n```");
+                WebhookUtil web = new WebhookUtil();
+                web.setType(WebhookUtil.LogType.ERROR);
                 web.setMessage(sb.toString().replaceAll(" {4}at ", ""));
                 web.send();
                 sb = new StringBuilder();
@@ -45,6 +45,8 @@ public class Log {
             }
         }
         if (!strona) {
+            WebhookUtil web = new WebhookUtil();
+            web.setType(WebhookUtil.LogType.ERROR);
             web.setMessage(sb.toString().replaceAll(" {4}at ", "") + "\n```");
             web.send();
         }

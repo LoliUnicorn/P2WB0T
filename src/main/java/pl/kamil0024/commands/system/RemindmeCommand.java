@@ -6,6 +6,7 @@ import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
@@ -94,7 +95,7 @@ public class RemindmeCommand extends Command {
         return eb;
     }
 
-    public static void check(RemindDao remindDao, JDA api) {
+    public static void check(RemindDao remindDao, ShardManager api) {
         long teraz = new Date().getTime();
         for (RemindConfig remind : remindDao.getAll()) {
             assert remind.getCzas() - teraz <= 0;

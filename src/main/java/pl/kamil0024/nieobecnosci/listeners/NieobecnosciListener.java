@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.config.NieobecnosciConfig;
@@ -17,11 +18,11 @@ import java.util.concurrent.TimeUnit;
 
 public class NieobecnosciListener extends ListenerAdapter {
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
     @Inject private NieobecnosciDao nieobecnosciDao;
     @Inject private NieobecnosciManager nieobecnosciManager;
 
-    public NieobecnosciListener(JDA api, NieobecnosciDao nieobecnosciDao, NieobecnosciManager nieobecnosciManager) {
+    public NieobecnosciListener(ShardManager api, NieobecnosciDao nieobecnosciDao, NieobecnosciManager nieobecnosciManager) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
         this.nieobecnosciManager = nieobecnosciManager;

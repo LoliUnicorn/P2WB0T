@@ -23,7 +23,12 @@ public class UserUtil {
     public static PermLevel getPermLevel(User user) {
         Guild g = user.getJDA().getGuildById(Ustawienia.instance.bot.guildId);
         if (g == null) throw new IllegalArgumentException("Ustawienia.instance.bot.guildId == null");
-        return getPermLevel(g.getMemberById(user.getId()));
+        try {
+            Member mem = g.retrieveMemberById(user.getId()).complete();
+            return getPermLevel(mem);
+        } catch (Exception e) {
+            return PermLevel.MEMBER;
+        }
     }
 
     public static PermLevel getPermLevel(@Nullable Member member) {
@@ -51,7 +56,7 @@ public class UserUtil {
     }
 
     public static String getName(JDA jda, String id) {
-        User u = jda.getUserById(id);
+        User u = jda.retrieveUserById(id).complete();
         if (u == null) return null;
         return getName(u);
     }
@@ -61,7 +66,7 @@ public class UserUtil {
     }
 
     public static String getFullName(JDA jda, String id) {
-        User u = jda.getUserById(id);
+        User u = jda.retrieveUserById(id).complete();
         if (u == null) return null;
         return getFullName(u);
     }

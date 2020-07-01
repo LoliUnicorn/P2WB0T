@@ -2,6 +2,7 @@ package pl.kamil0024.chat;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.chat.listener.ChatListener;
 import pl.kamil0024.chat.listener.KaryListener;
 import pl.kamil0024.commands.ModLog;
@@ -11,7 +12,7 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 
 public class ChatModule implements Modul {
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
     @Inject private KaryJSON karyJSON;
     @Inject private CaseDao caseDao;
     @Inject private ModLog modLog;
@@ -20,7 +21,7 @@ public class ChatModule implements Modul {
     private ChatListener chatListener;
     private KaryListener karyListener;
 
-    public ChatModule(JDA api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+    public ChatModule(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;

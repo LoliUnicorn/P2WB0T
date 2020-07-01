@@ -6,7 +6,9 @@ import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.arguments.Args;
 import pl.kamil0024.core.arguments.ArgumentManager;
@@ -21,7 +23,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unused", "UnusedReturnValue", "StringBufferMayBeStringBuilder"})
 public class CommandContext {
 
-    @Getter private final MessageReceivedEvent event;
+    @Getter private final GuildMessageReceivedEvent event;
     @Getter private final String prefix;
     @Getter private final HashMap<Integer, String> args;
 
@@ -33,7 +35,7 @@ public class CommandContext {
             "[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?://(?:www\\.|(?!www))[a-zA-Z0-9]" +
             "\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]\\.[^\\s]{2,})");
 
-    public CommandContext(MessageReceivedEvent event, String prefix, @Nullable HashMap<Integer, String> args, Tlumaczenia tlumaczenia, ArgumentManager argumentManager, Command cmd) {
+    public CommandContext(GuildMessageReceivedEvent event, String prefix, @Nullable HashMap<Integer, String> args, Tlumaczenia tlumaczenia, ArgumentManager argumentManager, Command cmd) {
         this.event = event;
         this.prefix = prefix;
         this.args = args;
@@ -78,11 +80,11 @@ public class CommandContext {
     }
 
     public TextChannel getChannel() {
-        return event.getTextChannel();
+        return event.getChannel();
     }
 
     public Guild getGuild() {
-        return event.isFromGuild() ? event.getGuild() : null;
+        return event.getGuild();
     }
 
     public MessageAction send(String msg) {
@@ -146,6 +148,10 @@ public class CommandContext {
 
     public JDA getJDA() {
         return event.getJDA();
+    }
+
+    public ShardManager getShardManager() {
+        return event.getJDA().getShardManager();
     }
 
     @Override

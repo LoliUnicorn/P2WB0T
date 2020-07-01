@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
@@ -40,14 +41,14 @@ public class ChatListener extends ListenerAdapter {
 
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
 
-    @Inject private JDA api;
+    @Inject private ShardManager api;
     @Inject private KaryJSON karyJSON;
     @Inject private CaseDao caseDao;
     @Inject private ModLog modLog;
 
     List<String> przeklenstwa;
 
-    public ChatListener(JDA api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+    public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
@@ -57,7 +58,8 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+        if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);

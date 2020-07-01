@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
@@ -16,9 +17,9 @@ import java.util.TimerTask;
 
 public class CheckMute extends TimerTask {
 
-    private final JDA api;
+    private final ShardManager api;
 
-    public CheckMute(JDA api) {
+    public CheckMute(ShardManager api) {
         this.api = api;
     }
 

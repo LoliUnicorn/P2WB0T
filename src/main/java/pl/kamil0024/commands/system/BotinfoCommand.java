@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import pl.kamil0024.bdate.BDate;
+import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandManager;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class BotinfoCommand extends Command {
@@ -49,6 +52,7 @@ public class BotinfoCommand extends Command {
 
         fields.add(new MessageEmbed.Field("Zużycie ramu", format, false));
         fields.add(new MessageEmbed.Field("Zużycie CPU", calcCPU(startCPUTime, start, cpuCount) + "%", false));
+        fields.add(new MessageEmbed.Field("Uptime", new BDate(Statyczne.startDate.getTime(), ModLog.getLang()).difference(new Date().getTime()), false));
         fields.add(new MessageEmbed.Field("Wersja JDA", JDAInfo.VERSION, false));
         fields.add(new MessageEmbed.Field("Wersja Cora", Statyczne.WERSJA, false));
         fields.add(new MessageEmbed.Field("Wersja JRE", System.getProperty("java.version"), false));

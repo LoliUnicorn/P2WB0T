@@ -44,7 +44,7 @@ public class KaryListener extends ListenerAdapter {
             for (Map.Entry<String, Action.ListaKar> entry : getEmbedy().entrySet()) {
                 String[] tak = entry.getKey().split("-");
                 if (!tak[0].equals(event.getMessageId())) continue;
-                Member mem = event.getGuild().getMemberById(tak[1]);
+                Member mem = event.getGuild().retrieveMemberById(tak[1]).complete();
                 if (mem == null) {
                     event.getChannel().sendMessage("Użytkownik wyszedł z serwera??").queue();
                     continue;

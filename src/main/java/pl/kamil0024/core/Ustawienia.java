@@ -16,6 +16,7 @@ public class Ustawienia {
     public String language = "pl";
     public String muteRole = def;
     public List<String> devs = Arrays.asList("343467373417857025");
+    public List<String> disabledCommand = Arrays.asList("647904617811804202");
 
     public Roles roles = new Roles();
     public Bot bot = new Bot();

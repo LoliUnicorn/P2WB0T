@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ public class CommandExecute extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent e) {
+    public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
                 e.getMessage().getContentRaw().isEmpty()) return;
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
@@ -77,6 +78,12 @@ public class CommandExecute extends ListenerAdapter {
 
         if (c == null) { return; }
 
+        if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
+            assert UserUtil.getPermLevel(e.getAuthor()).getNumer() == PermLevel.MEMBER.getNumer();
+            zareaguj(e.getMessage(), e.getAuthor(), false);
+            return;
+        }
+
         e.getChannel().sendTyping().queue();
 
         if (c.getPermLevel().getNumer() > UserUtil.getPermLevel(e.getAuthor()).getNumer()) {
@@ -84,7 +91,7 @@ public class CommandExecute extends ListenerAdapter {
             String wymaga = tlumaczenia.get(c.getPermLevel().getTranlsateKey());
             String ma = tlumaczenia.get(plvl.getTranlsateKey());
 
-            e.getTextChannel().sendMessage(tlumaczenia.get("generic.noperm", wymaga, c.getPermLevel().getNumer(),
+            e.getChannel().sendMessage(tlumaczenia.get("generic.noperm", wymaga, c.getPermLevel().getNumer(),
                     ma, plvl.getNumer())).queue();
 
             zareaguj(e.getMessage(), e.getAuthor(), false);
@@ -92,7 +99,7 @@ public class CommandExecute extends ListenerAdapter {
         }
 
         if (haveCooldown(e.getAuthor(), c) != 0) {
-            e.getTextChannel().sendMessage(tlumaczenia.get("generic.cooldown", haveCooldown(e.getAuthor(), c))).queue();
+            e.getChannel().sendMessage(tlumaczenia.get("generic.cooldown", haveCooldown(e.getAuthor(), c))).queue();
             zareaguj(e.getMessage(), e.getAuthor(), false);
             return;
         }
@@ -116,7 +123,7 @@ public class CommandExecute extends ListenerAdapter {
             omegalul.printStackTrace();
             Log.newError("`%s` uzyl komendy %s (%s) ale wystapil blad: %s", e.getAuthor().getName(), c.getName(), c.getClass().getName(), omegalul);
             Log.newError(omegalul);
-            e.getTextChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
+            e.getChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
         if (udaloSie && UserUtil.getPermLevel(e.getAuthor()).getNumer() < 10) setCooldown(e.getAuthor(), c);
         zareaguj(e.getMessage(), e.getAuthor(), udaloSie);

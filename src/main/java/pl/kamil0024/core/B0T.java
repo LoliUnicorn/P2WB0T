@@ -5,9 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
 import pl.kamil0024.commands.ModLog;
@@ -15,7 +20,6 @@ import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.*;
-import pl.kamil0024.core.database.config.UserConfig;
 import pl.kamil0024.core.listener.ExceptionListener;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
@@ -27,7 +31,6 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
-import pl.kamil0024.status.StatusModule;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -35,7 +38,10 @@ import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
 
@@ -100,17 +106,50 @@ public class B0T {
         tlumaczenia.setLang(Ustawienia.instance.language);
         tlumaczenia.load();
 
-        JDA api = null;
+        ShardManager api = null;
         try {
-            api = new JDABuilder(token).
-                    setActivity(Activity.playing(tlumaczenia.get("status.starting")))
-                    .setStatus(OnlineStatus.DO_NOT_DISTURB).addEventListeners(eventWaiter, new ExceptionListener())
-                    .build().awaitReady();
+            DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token,
+                    GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_VOICE_STATES,
+                    GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS,
+                    GatewayIntent.GUILD_PRESENCES);
+            builder.setShardsTotal(1);
+            builder.setShards(0, 0);
+            builder.setEnableShutdownHook(false);
+            builder.setAutoReconnect(true);
+            builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
+            builder.setActivity(Activity.playing(tlumaczenia.get("status.starting")));
+            builder.addEventListeners(eventWaiter, new ExceptionListener());
+            builder.setBulkDeleteSplittingEnabled(false);
+            builder.setCallbackPool(Executors.newFixedThreadPool(4));
+            builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY);
+            MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
+            api = builder.build();
+            Thread.sleep(1000);
+            while (api.getShards().stream().noneMatch(s -> {
+                try {
+                    s.getSelfUser();
+                } catch (IllegalStateException e) {
+                    return false;
+                }
+                return true;
+            })) {
+                Thread.sleep(400);
+            }
         } catch (LoginException | InterruptedException e) {
             Log.error("Nie udalo sie zalogowac!");
             e.printStackTrace();
             System.exit(1);
         }
+
+        Optional<JDA> shard = api.getShards().stream().filter(s -> {
+            try {
+                s.getSelfUser();
+            } catch (IllegalStateException e) {
+                return false;
+            }
+            return true;
+        }).findAny();
 
         databaseManager = new DatabaseManager();
         databaseManager.load();
@@ -159,9 +198,10 @@ public class B0T {
             }
         }
 
-        api.getSelfUser().getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
-        api.getSelfUser().getJDA().getPresence().setActivity(Activity.playing(tlumaczenia.get("status.hi", WERSJA)));
-        Log.info("Zalogowano jako %s", api.getSelfUser().getName());
+
+        api.setStatus(OnlineStatus.ONLINE);
+        api.setActivity(Activity.playing(tlumaczenia.get("status.hi", WERSJA)));
+        Log.info("Zalogowano jako %s", shard.get().getSelfUser());
 
         if (api.getGuildById(Ustawienia.instance.bot.guildId) == null) {
             api.shutdown();

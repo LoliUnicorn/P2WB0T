@@ -1,6 +1,7 @@
 package pl.kamil0024.logs;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.logs.logger.Logger;
 import pl.kamil0024.logs.logger.MessageManager;
@@ -9,14 +10,14 @@ import javax.inject.Inject;
 
 public class LogsModule implements Modul {
     
-    @Inject JDA api;
+    @Inject ShardManager api;
 
     private boolean start = false;
 
     private MessageManager messageManager;
     private Logger logger;
 
-    public LogsModule(JDA api) {
+    public LogsModule(ShardManager api) {
         this.api = api;
     }
     

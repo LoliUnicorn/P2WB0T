@@ -14,7 +14,7 @@ public class ChangeNickname extends ListenerAdapter {
         Guild g = e.getJDA().getGuildById(Ustawienia.instance.bot.guildId);
         if (g == null) throw new NullPointerException("gilda jest nullem");
 
-        Member mem = g.getMemberById(e.getUser().getId());
+        Member mem = g.retrieveMemberById(e.getUser().getId()).complete();
         if (mem == null) return;
 
         if (mem.getNickname() == null) {
