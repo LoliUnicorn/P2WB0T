@@ -2,11 +2,13 @@ package pl.kamil0024.nieobecnosci;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.bdate.Timespan;
+import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.system.CytujCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.database.NieobecnosciDao;
@@ -17,14 +19,12 @@ import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class NieobecnosciManager {
+public class NieobecnosciManager extends TimerTask {
 
     @Inject private ShardManager api;
     @Inject private NieobecnosciDao nieobecnosciDao;
@@ -32,8 +32,8 @@ public class NieobecnosciManager {
     public NieobecnosciManager(ShardManager api, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
-        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::tak, 0, 15, TimeUnit.MINUTES);
+        Timer tim = new Timer();
+        tim.schedule(this, 0, 120000);
     }
 
     public synchronized void put(Message msg, long start, String powod, long end) {
@@ -68,7 +68,7 @@ public class NieobecnosciManager {
         EmbedBuilder eb = new EmbedBuilder();
 
         eb.setColor(UserUtil.getColor(member));
-        eb.setAuthor(UserUtil.getName(member.getUser()), null, member.getUser().getAvatarUrl());
+        eb.setAuthor(UserUtil.getMcNick(member), null, member.getUser().getAvatarUrl());
         eb.setThumbnail(member.getUser().getAvatarUrl());
 
         eb.addField("Osoba zgłaszająca", UserUtil.getFullNameMc(member), false);
@@ -76,13 +76,17 @@ public class NieobecnosciManager {
         eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
         eb.addField("Powód", nieobecnosc.getPowod(), false);
         eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+        eb.addField("Pozostało", new Timespan(new Date().getTime(), ModLog.getLang()).difference(nieobecnosc.getEnd()), false);
         eb.setFooter("ID: " + nieobecnosc.getId() + " | Ostatnia aktualizacja:");
         eb.setTimestamp(Instant.now());
 
         return eb;
     }
 
-    public void tak() { update(); }
+    @Override
+    public void run() {
+        update();
+    }
 
     public void update() {
         TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
@@ -93,7 +97,8 @@ public class NieobecnosciManager {
         }
 
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
-            Message msg = txt.retrieveMessageById(nb.getMsgId()).complete();
+            long now = new Date().getTime();
+            Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
             Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(nb.getUserId()).complete();
             if (mem == null) {
                 Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności");
@@ -105,7 +110,7 @@ public class NieobecnosciManager {
                 continue;
             }
 
-            if (nb.getEnd() - nb.getStart() <= 0) {
+            if (nb.getEnd() - now <= 0) {
                 try {
                     NieobecnosciConfig nbc = nieobecnosciDao.get(nb.getUserId());
                     msg.delete().queue();
@@ -118,9 +123,7 @@ public class NieobecnosciManager {
                 } catch (Exception ignored) {}
                 continue;
             }
-
             msg.editMessage(getEmbed(nb, mem).build()).queue();
         }
-
     }
 }

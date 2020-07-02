@@ -91,6 +91,7 @@ public class CommandsModule implements Modul {
         cmd.add(new UnmuteCommand(caseDao, modLog));
         cmd.add(new TempmuteCommand(caseDao, modLog));
         cmd.add(new ClearCommand());
+        cmd.add(new CytujCommand());
         cmd.add(new KarainfoCommand(caseDao));
 
         cmd.forEach(commandManager::registerCommand);

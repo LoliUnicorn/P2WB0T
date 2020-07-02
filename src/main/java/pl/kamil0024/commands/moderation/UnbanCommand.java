@@ -40,8 +40,11 @@ public class UnbanCommand extends Command {
             return false;
         }
 
-        String powod = context.getArgs().get(1);
-        if (powod == null) powod = context.getTranslate("modlog.none");
+        String powod = context.getArgsToString(2);
+        if (powod == null) {
+            context.send("Musisz podać powód!").queue();
+            return false;
+        }
 
         try {
             boolean jest = false;

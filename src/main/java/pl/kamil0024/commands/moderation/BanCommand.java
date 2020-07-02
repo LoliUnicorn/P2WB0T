@@ -41,9 +41,9 @@ public class BanCommand extends Command {
             context.sendTranslate("kick.badmember");
             return false;
         }
-        String powod = context.getArgs().get(1);
+        String powod = context.getArgsToString(1);
         if (powod == null) powod = context.getTranslate("modlog.none");
-
+        context.send("xd").mentionUsers(context.getUser().getId()).queue();
         String check = check(context, mem);
         if (check != null) {
             context.send(check).queue();

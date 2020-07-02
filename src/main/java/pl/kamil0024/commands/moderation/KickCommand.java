@@ -40,7 +40,7 @@ public class KickCommand extends Command {
             context.sendTranslate("kick.badmember");
             return false;
         }
-        String powod = context.getArgs().get(1);
+        String powod = context.getArgsToString(1);
         if (powod == null) powod = context.getTranslate("modlog.none");
 
         String check = check(context, mem.getUser());

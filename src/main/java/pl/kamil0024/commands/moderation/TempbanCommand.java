@@ -43,7 +43,7 @@ public class TempbanCommand extends Command {
             return false;
         }
         String duration = context.getArgs().get(1);
-        String powod = context.getArgs().get(2);
+        String powod = context.getArgsToString(2);
         if (duration == null) {
             context.send("Podaj czas!").queue();
             return false;

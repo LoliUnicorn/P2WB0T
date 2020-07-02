@@ -41,7 +41,7 @@ public class MuteCommand extends Command {
         }
         Role role = context.getGuild().getRoleById(Ustawienia.instance.muteRole);
         if (role == null) throw new NullPointerException("Rola muteRole jest nullem");
-        String powod = context.getArgs().get(1);
+        String powod = context.getArgsToString(1);
         if (powod == null) powod = context.getTranslate("modlog.none");
 
         if (hasMute(mem)) {

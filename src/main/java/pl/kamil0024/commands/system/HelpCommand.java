@@ -46,11 +46,16 @@ public class HelpCommand extends Command {
             return true;
         }
 
-        Command cmd = commandManager.getCommands().get(arg.toLowerCase());
+        Command cmd = commandManager.getCommands().getOrDefault(arg.toLowerCase(), null);
+
         if (cmd == null) {
             for (Map.Entry<String, Command> alias : commandManager.getAliases().entrySet()) {
                 if (alias.getKey().toLowerCase().equals(arg.toLowerCase())) { cmd = alias.getValue(); }
             }
+        }
+        if (cmd == null) {
+            context.send("Nie ma takiej komendy!").queue();
+            return false;
         }
         if (cmd.getPermLevel().getNumer() > UserUtil.getPermLevel(context.getMember()).getNumer()) cmd = null;
         if (cmd == null) {

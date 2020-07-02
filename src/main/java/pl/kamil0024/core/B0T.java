@@ -30,6 +30,7 @@ import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
+import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 
 import javax.security.auth.login.LoginException;
@@ -154,11 +155,14 @@ public class B0T {
         databaseManager = new DatabaseManager();
         databaseManager.load();
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ignored) {}
+
         CaseDao caseDao = new CaseDao(databaseManager);
         UserDao userDao = new UserDao(databaseManager);
         NieobecnosciDao nieobecnosciDao = new NieobecnosciDao(databaseManager);
         RemindDao remindDao = new RemindDao(databaseManager);
-
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
         listeners.add(commandExecute);
@@ -166,12 +170,13 @@ public class B0T {
 
         ModulManager modulManager = new ModulManager();
         ModLog modLog = new ModLog(api, caseDao);
+        NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
         modulManager.getModules().add(new LogsModule(api));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog));
 //        modulManager.getModules().add(new StatusModule(api));
-        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao));
+        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao));
 

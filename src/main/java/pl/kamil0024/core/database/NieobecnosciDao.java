@@ -46,8 +46,7 @@ public class NieobecnosciDao implements Dao<NieobecnosciConfig> {
         ArrayList<Nieobecnosc> xd = new ArrayList<>();
         for (NieobecnosciConfig conf : getAll()) {
             for (Nieobecnosc nieobecnosc : conf.getNieobecnosc()) {
-                assert nieobecnosc.isAktywna();
-                xd.add(nieobecnosc);
+                if (nieobecnosc.isAktywna()) xd.add(nieobecnosc);
             }
         }
         return xd;

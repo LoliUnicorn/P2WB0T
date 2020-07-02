@@ -2,13 +2,18 @@ package pl.kamil0024.nieobecnosci.listeners;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.commands.system.CytujCommand;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.config.NieobecnosciConfig;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 
@@ -93,7 +98,30 @@ public class NieobecnosciListener extends ListenerAdapter {
         }
 
         nieobecnosciManager.put(e.getMessage(), start, powod, end);
+    }
 
+    @Override
+    public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent e) {
+        synchronized (e.getGuild().getId()) {
+            if (!e.getChannel().getId().equals(Ustawienia.instance.channel.nieobecnosci)) return;
 
+            if (e.getReactionEmote().isEmoji() || !e.getReactionEmote().getEmote().getId().equals(Ustawienia.instance.emote.red)) return;
+
+            for (Nieobecnosc nieobecnosc : nieobecnosciDao.getAllAktywne()) {
+                if (nieobecnosc.getMsgId().equals(e.getMessageId())) {
+                    if (nieobecnosc.getUserId().equals(e.getMember().getId()) || UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.ADMINISTRATOR.getNumer()) {
+                        NieobecnosciConfig nbc = nieobecnosciDao.get(nieobecnosc.getUserId());
+                        nbc.getNieobecnosc().remove(nieobecnosc);
+                        nieobecnosc.setAktywna(false);
+                        nbc.getNieobecnosc().add(nieobecnosc);
+                        nieobecnosciDao.save(nbc);
+                        Message msg = CytujCommand.kurwaJDA(e.getChannel(), e.getMessageId());
+                        if (msg == null) continue;
+                        msg.delete().queue();
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

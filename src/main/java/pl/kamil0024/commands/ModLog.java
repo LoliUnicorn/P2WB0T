@@ -35,6 +35,8 @@ public class ModLog extends ListenerAdapter {
     private final TextChannel modlog;
     private CaseDao caseDao;
 
+    private ScheduledExecutorService executorSche;
+
     public ModLog(ShardManager api, CaseDao caseDao) {
         this.api = api;
         this.modlog = api.getTextChannelById(Ustawienia.instance.channel.modlog);
@@ -42,9 +44,9 @@ public class ModLog extends ListenerAdapter {
             Log.newError("Kanał do modlogów jest nullem");
             throw new UnsupportedOperationException("Kanał do modlogów jest nullem");
         }
-        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::tak, 0, 2, TimeUnit.MINUTES);
         this.caseDao = caseDao;
+        executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::tak, 0, 2, TimeUnit.MINUTES);
     }
 
     @SneakyThrows
@@ -57,9 +59,11 @@ public class ModLog extends ListenerAdapter {
         List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
         String nick = UserUtil.getMcNick(event.getMember());
 
-        if (!nick.equals("-")) cc.addAll(caseDao.getNickAktywne(nick));
-        if (cc.isEmpty()) return;
+        checkKara(event, false, cc);
+        checkKara(event, true, caseDao.getNickAktywne(nick));
+    }
 
+    private boolean checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
         Member user = event.getMember();
         for (CaseConfig config : cc) {
             Kara k = config.getKara();
@@ -91,7 +95,7 @@ public class ModLog extends ListenerAdapter {
             kara.setKaranyId(user.getId());
             kara.setMcNick(UserUtil.getMcNick(user));
             kara.setAdmId(k.getAdmId());
-            kara.setPowod(powod + " (" + k.getPowod() + ") [ID: " + k.getKaraId()+ "]");
+            kara.setPowod(powod + " (" + k.getPowod() + ") [ID: " + k.getKaraId() + "]");
             kara.setTimestamp(new Date().getTime());
             kara.setTypKary(k.getTypKary());
             kara.setAktywna(false);
@@ -100,11 +104,27 @@ public class ModLog extends ListenerAdapter {
                 kara.setEnd(config.getKara().getEnd());
                 kara.setDuration(config.getKara().getDuration());
             } catch (Exception ignored) { }
+
+            if (nick) {
+                kara.setAktywna(true);
+                CaseConfig caseconfig = new CaseConfig(user.getId());
+                caseconfig.setKara(kara);
+                caseDao.save(caseconfig);
+
+                for (CaseConfig ccase : caseDao.getAktywe(user.getId())) {
+                    ccase.getKara().setAktywna(false);
+                    caseDao.save(ccase);
+                }
+
+            }
             sendModlog(kara, true);
         }
+        return true;
     }
 
-    private void tak() { check(); } // inaczej executorSche nie działa lol
+    private void tak() {
+        check();
+    } // inaczej executorSche nie działa lol
 
     private synchronized void check() {
         Date data = new Date();

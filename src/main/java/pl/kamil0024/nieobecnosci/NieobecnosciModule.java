@@ -17,14 +17,14 @@ public class NieobecnosciModule implements Modul {
     private NieobecnosciListener nieobecnosciListener;
     private NieobecnosciManager nieobecnosciManager;
 
-    public NieobecnosciModule(ShardManager api, NieobecnosciDao nieobecnosciDao) {
+    public NieobecnosciModule(ShardManager api, NieobecnosciDao nieobecnosciDao, NieobecnosciManager nieobecnosciManager) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
+        this.nieobecnosciManager = nieobecnosciManager;
     }
 
     @Override
     public boolean startUp() {
-        this.nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         this.nieobecnosciListener = new NieobecnosciListener(api, nieobecnosciDao, nieobecnosciManager);
         api.addEventListener(nieobecnosciListener);
         setStart(true);

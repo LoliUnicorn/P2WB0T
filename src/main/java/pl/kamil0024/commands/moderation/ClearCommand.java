@@ -42,12 +42,10 @@ public class ClearCommand extends Command {
         }
         if (kanal == null) kanal = context.getChannel();
 
-        if (liczba == null || liczba > 99 || liczba <= 1) {
-             context.send("Liczba wiadomości do usunięcia musi być między 2-99").queue();
+        if (liczba == null || liczba > 100 || liczba <= 1) {
+             context.send("Liczba wiadomości do usunięcia musi być między 2-100").queue();
              return true;
         }
-        liczba += 1;
-
         CompletableFuture<MessageHistory> historia;
         if (user == null) historia = kanal.getHistoryBefore(context.getMessage(), liczba).submit();
         else historia = kanal.getHistoryBefore(context.getMessage(), 100).submit();
@@ -56,6 +54,7 @@ public class ClearCommand extends Command {
         List<Message> wiadomosciWszystkie = new ArrayList<>();
         List<Message> wiadomosci = historia.join().getRetrievedHistory();
 
+        context.getMessage().delete().queue();
         for (Message msg : wiadomosci) {
             if (wiadomosciWszystkie.size() != liczba) {
                 if (msg.getIdLong() > dwaTygodnieTemu) {

@@ -44,8 +44,11 @@ public class UnmuteCommand extends Command {
             return false;
         }
         Role r = mem.getGuild().getRoleById(Ustawienia.instance.muteRole);
-        String powod = context.getArgs().get(1);
-        if (powod == null) powod = context.getTranslate("modlog.none");
+        String powod = context.getArgsToString(1);
+        if (powod == null) {
+            context.send("Musisz podać powód!").queue();
+            return false;
+        }
         try {
             context.getGuild().removeRoleFromMember(mem, Objects.requireNonNull(r)).complete();
             context.sendTranslate("unmute.succes", UserUtil.getName(mem.getUser()), powod).queue();
