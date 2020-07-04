@@ -80,7 +80,12 @@ public class TempmuteCommand extends Command {
 
         Role r = user.getGuild().getRoleById(Ustawienia.instance.muteRole);
 
-        user.getGuild().addRoleToMember(user, Objects.requireNonNull(r)).complete();
+        try {
+            user.getGuild().addRoleToMember(user, Objects.requireNonNull(r)).complete();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Nie udalo sie dac muta";
+        }
         try {
             user.getGuild().kickVoiceMember(user).queue();
         } catch (Exception ignored) {}

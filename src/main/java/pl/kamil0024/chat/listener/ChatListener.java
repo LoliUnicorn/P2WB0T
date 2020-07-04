@@ -101,13 +101,9 @@ public class ChatListener extends ListenerAdapter {
                             member.getGuild().getSelfMember(),
                             msg.getTextChannel(),
                             caseDao, modLog);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ignored) {}
                 }
                 return;
             }
-
             if (containsLink(msgRaw.split(" ")) != null) {
                 action.setKara(Action.ListaKar.LINK);
                 action.send();
@@ -133,7 +129,8 @@ public class ChatListener extends ListenerAdapter {
 
             if (flood > 4 || caps >= 80 || emote > 3) {
                 Log.debug("---------------------------");
-                Log.debug("Msg: " + msgRaw);
+                Log.debug("user: " + msg.getAuthor().getId());
+                Log.debug("msg: " + msgRaw);
                 Log.debug("int flooda: " + flood);
                 Log.debug("procent capsa " + caps);
                 Log.debug("int emotek: " + emote);
