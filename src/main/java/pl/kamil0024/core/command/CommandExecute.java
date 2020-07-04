@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -179,12 +178,13 @@ public class CommandExecute extends ListenerAdapter {
         for (Map.Entry<Integer, String> m : context.getArgs().entrySet()) { b.append(m.getValue()).append(",");}
 
         msg = String.format(msg, UserUtil.getLogName(context.getUser()),
-                context.getCommand(), b, context.getGuild(), context.getGuild().getId());
+                context.getCommand(), b, context.getGuild(), context.getGuild().getId()).replaceAll("@", "@\u200b$1");
 
         WebhookUtil web = new WebhookUtil();
         web.setMessage(msg);
         web.setType(WebhookUtil.LogType.CMD);
         web.send();
+        Log.debug(msg);
     }
 
     public void reloadConfig() {
