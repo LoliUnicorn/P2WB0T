@@ -23,7 +23,7 @@ public class ForumCommand extends Command {
         StringBuilder sb = new StringBuilder();
         String oj = "[%s](%s)";
         eb.setColor(UserUtil.getColor(context.getMember()));
-        eb.setTitle("Kategorie z forum");
+        eb.setTitle(context.getTranslate("forum.cate"));
         eb.setFooter("Forum", "https://images-ext-1.discordapp.net/external/nEimyViUHXsLUA2ltyosXai_uLaOdc0eeWhcINuYGrM/https/derpmc.pl/assets/images/DerpMC/header_logo.png");
         eb.setTimestamp(Instant.now());
 

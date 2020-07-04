@@ -19,7 +19,6 @@ import pl.kamil0024.core.util.kary.KaryEnum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HistoryCommand extends Command {
 
@@ -70,16 +69,17 @@ public class HistoryCommand extends Command {
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setThumbnail(u.getAvatarUrl());
-        eb.setDescription("Historia kar użytkownika " + UserUtil.getLogName(u));
+
+        eb.setDescription(context.getTranslate("history.history", UserUtil.getLogName(u)));
         eb.setColor(UserUtil.getColor(context.getMember()));
 
-        eb.addField("Tempbanów", tempbanow + "", true);
-        eb.addField("Banów", banow + "", true);
-        eb.addField("Unbanów", unbanow + "", true);
-        eb.addField("Mutów", mutow + "", false);
-        eb.addField("Tempmutów", tempmutow + "", true);
-        eb.addField("Unmutów", unmutow + "", true);
-        eb.addField("Kicków", kickow + "", true);
+        eb.addField(context.getTranslate("history.tempban"), tempbanow + "", true);
+        eb.addField(context.getTranslate("history.ban"), banow + "", true);
+        eb.addField(context.getTranslate("history.unban"), unbanow + "", true);
+        eb.addField(context.getTranslate("history.mute"), mutow + "", false);
+        eb.addField(context.getTranslate("history.tempmute"), tempmutow + "", true);
+        eb.addField(context.getTranslate("history.unmute"), unmutow + "", true);
+        eb.addField(context.getTranslate("history.kick"), kickow + "", true);
         pages.add(eb);
 
         List<EmbedBuilder> historiaKar = new ArrayList<>();

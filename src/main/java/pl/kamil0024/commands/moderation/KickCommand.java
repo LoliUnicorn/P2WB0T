@@ -49,7 +49,7 @@ public class KickCommand extends Command {
             return false;
         }
 
-        Message msg = context.send("Ładuje...").complete();
+        Message msg = context.send(context.getTranslate("kick.loading")).complete();
         String nick = UserUtil.getMcNick(mem);
         try {
             context.getGuild().kick(mem, powod).complete();

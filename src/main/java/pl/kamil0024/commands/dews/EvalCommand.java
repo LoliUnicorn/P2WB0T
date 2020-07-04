@@ -16,7 +16,6 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.RemindDao;
 import pl.kamil0024.core.database.UserDao;
-import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;

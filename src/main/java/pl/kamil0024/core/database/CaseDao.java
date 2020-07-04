@@ -55,4 +55,8 @@ public class CaseDao implements Dao<CaseConfig> {
         return mapper.getAllPunAktywne(id);
     }
 
+    public List<CaseConfig> getAll(String userId) {
+        return mapper.getAll(userId);
+    }
+
 }

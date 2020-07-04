@@ -9,7 +9,6 @@ import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandManager;
-import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.Statyczne;
 import pl.kamil0024.core.util.UserUtil;
@@ -20,7 +19,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class BotinfoCommand extends Command {
 
@@ -50,18 +48,19 @@ public class BotinfoCommand extends Command {
         long start = System.nanoTime();
         int cpuCount = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
 
-        fields.add(new MessageEmbed.Field("Zużycie ramu", format, false));
-        fields.add(new MessageEmbed.Field("Zużycie CPU", calcCPU(startCPUTime, start, cpuCount) + "%", false));
-        fields.add(new MessageEmbed.Field("Uptime", new BDate(Statyczne.startDate.getTime(), ModLog.getLang()).difference(new Date().getTime()), false));
-        fields.add(new MessageEmbed.Field("Wersja JDA", JDAInfo.VERSION, false));
-        fields.add(new MessageEmbed.Field("Wersja Cora", Statyczne.WERSJA, false));
-        fields.add(new MessageEmbed.Field("Wersja JRE", System.getProperty("java.version"), false));
-        fields.add(new MessageEmbed.Field("OS", System.getProperty("os.name"), false));
-        fields.add(new MessageEmbed.Field("Użytkowników", String.valueOf(context.getJDA().getUsers().size()),
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.ram"), format, false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cpu"), calcCPU(startCPUTime, start, cpuCount) + "%", false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.uptime"), new BDate(Statyczne.START_DATE.getTime(), ModLog.getLang()).difference(new Date().getTime()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.jda"), JDAInfo.VERSION, false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.shard"), String.format("[ %s / %s ]", context.getJDA().getShardInfo().getShardId(), context.getJDA().getShardInfo().getShardTotal()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.core"), Statyczne.WERSJA, false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.jre"), System.getProperty("java.version"), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.os"), System.getProperty("os.name"), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.users"), String.valueOf(context.getJDA().getUsers().size()),
                 false));
-        fields.add(new MessageEmbed.Field("Nazwa bota", UserUtil.getFullName(context.getBot()), false));
-        fields.add(new MessageEmbed.Field("Ilość komend", String.valueOf(commandManager.getCommands().size()), false));
-        fields.add(new MessageEmbed.Field("Ilość modułów", String.valueOf(modulManager.getModules().size()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.name"), UserUtil.getFullName(context.getBot()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cmd"), String.valueOf(commandManager.getCommands().size()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.modules"), String.valueOf(modulManager.getModules().size()), false));
 
         eb.setColor(UserUtil.getColor(context.getMember()));
 

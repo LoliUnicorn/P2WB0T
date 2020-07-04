@@ -1,10 +1,7 @@
 package pl.kamil0024.commands.system;
 
 import com.google.inject.Inject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.BDate;
@@ -31,11 +28,8 @@ public class RemindmeCommand extends Command {
         name = "remind";
         aliases.add("remindme");
         permLevel = PermLevel.HELPER;
-
         this.remindDao = remindDao;
         this.eventWaiter = eventWaiter;
-
-
     }
 
     @Override
@@ -47,7 +41,7 @@ public class RemindmeCommand extends Command {
             List<RemindConfig> rc = remindDao.getAll();
             rc.removeIf(m -> !m.getUserId().equals(context.getUser().getId()));
             if (rc.isEmpty()) {
-                context.send("Nie masz żadnych przypomnień!").queue();
+                context.send(context.getTranslate("remind.remindlist")).queue();
                 return false;
             }
             ArrayList<EmbedBuilder> pages = new ArrayList<>();
@@ -61,13 +55,13 @@ public class RemindmeCommand extends Command {
 
         Long dur = new Duration().parseLong(arg);
         if (dur == null) {
-            context.send("Zły czas!").queue();
+            context.send(context.getTranslate("cytuj.badtime")).queue();
             return false;
         }
 
         String tresc = context.getArgs().get(1);
         if (tresc == null) {
-            context.send("Treść jest pusta!").queue();
+            context.send(context.getTranslate("remind.blank")).queue();
             return false;
         }
 
@@ -77,11 +71,9 @@ public class RemindmeCommand extends Command {
         rc.setTresc(tresc);
         rc.setMsg(context.getMessage().getJumpUrl());
         remindDao.save(rc);
-        context.send("Przypomnienie zapisane!").queue();
-
+        context.send(context.getTranslate("remind.save")).queue();
         return true;
     }
-
 
     private EmbedBuilder getEmbed(RemindConfig remind) {
         long dzisiaj = new Date().getTime();

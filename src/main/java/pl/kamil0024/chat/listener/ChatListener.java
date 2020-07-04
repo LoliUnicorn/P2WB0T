@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.fasterxml.jackson.core.JsonPointer.SEPARATOR;
-
 public class ChatListener extends ListenerAdapter {
 
     private static final File FILE = new File("res/przeklenstwa.api");
@@ -77,22 +75,23 @@ public class ChatListener extends ListenerAdapter {
         synchronized (msg.getAuthor().getId()) {
             if (MuteCommand.hasMute(member)) return;
 
-            String msgRaw = msg.getContentRaw();
+            String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "");
             Action action = new Action(karyJSON);
             action.setMsg(msg);
 
-            String przeklenstwa = msgRaw.replaceAll("[^\\w\\s]*", "");
-            String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
+            String przeklenstwa = msgRaw;
 
+            String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
             for (String s : tak) {
                 String[] kurwa = s.split(";");
                 przeklenstwa = przeklenstwa.replaceAll(kurwa[1], kurwa[0]);
             }
+            przeklenstwa = przeklenstwa.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "");
 
             if (containsSwear(przeklenstwa.split(" ")) != null) {
                 msg.delete().queue();
 //                msg.getChannel().sendMessage(String.format("<@%s>, ładnie to tak przeklinać?", msg.getAuthor().getId())).queue();
-
+                
                 KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
                 if (kara == null) {
                     Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem");
@@ -122,16 +121,39 @@ public class ChatListener extends ListenerAdapter {
                 return;
             }
 
-            int flood = containsFlood(msgRaw.replaceAll("<@!?([0-9])*>", "").replaceAll("[^\\w\\s]*", ""));
-            if (flood > 4 || containsCaps(msgRaw.replaceAll("[^\\w\\s]*", "")) > 5 || emoteCount(msg.getContentRaw(), msg.getJDA()) > 3) {
+            int emote = emoteCount(msgRaw, msg.getJDA());
+
+            int caps = 0;
+            String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
+            try {
+                caps = (containsCaps(capsMsg) / capsMsg.length()) * 100;
+            } catch (Exception ignored) {}
+
+            int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
+
+            if (flood > 4 || caps >= 80 || emote > 3) {
+                Log.debug("---------------------------");
+                Log.debug("Msg: " + msgRaw);
+                Log.debug("int flooda: " + flood);
+                Log.debug("procent capsa " + caps);
+                Log.debug("int emotek: " + emote);
+                Log.debug("---------------------------");
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();
             }
 
             // Może to nie być w 100% prawdziwe
-            if (containsSwear(new String[] {msg.getContentRaw()}) != null) {
+            action.setPewnosc(false);
+            action.setDeleted(false);
+            if (containsSwear(new String[] {przeklenstwa}) != null ||
+                    containsSwear(new String[] {przeklenstwa.replaceAll(" ", "")}) != null) {
                 action.setKara(Action.ListaKar.ZACHOWANIE);
+                action.send();
+            }
+
+            if (skrotyCount(msgRaw)) {
+                action.setKara(Action.ListaKar.SKROTY);
                 action.send();
             }
         }
@@ -203,7 +225,6 @@ public class ChatListener extends ListenerAdapter {
                 tak++;
             } catch (Exception ignored) {}
         }
-
         return flood;
     }
 
@@ -236,5 +257,9 @@ public class ChatListener extends ListenerAdapter {
         return count;
     }
 
+    public static boolean skrotyCount(String msg) {
+        Pattern pattern = Pattern.compile("[jJ][ ]?[a-z-A-Z]{1,2}");
+        return msg.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").contains(pattern.toString());
+    }
 
 }

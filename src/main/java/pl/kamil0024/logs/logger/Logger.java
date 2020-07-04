@@ -20,6 +20,7 @@ import pl.kamil0024.core.util.UserUtil;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,32 +39,24 @@ public class Logger extends ListenerAdapter {
         FakeMessage msg = manager.get(event.getMessageId());
         if (msg == null) return;
 
-        event.getGuild().retrieveAuditLogs().type(ActionType.MESSAGE_DELETE).queue(
-                audiologi -> {
-                    User deletedBy = null;
-                    for (AuditLogEntry log : audiologi) {
-                        if (log.getType() == ActionType.MESSAGE_DELETE
-                                && log.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1))
-                                && event.getChannel().getId().equals(log.getOption(AuditLogOption.CHANNEL))
-                                && msg.getAuthor().equals(log.getTargetId())) {
-                            deletedBy = log.getUser();
-                            break;
-                        }
-                    }
-                    EmbedBuilder eb = getLogMessage(Action.DELETED, msg, deletedBy);
-                    String content = msg.getContent();
-                    if (content.length() > 1024) { content = content.substring(0, 1024); }
-                    eb.addField("Treść wiadomości:", content, false);
-                    sendLog(eb);
-                    TimerTask tt = new TimerTask() {
-                        @Override
-                        public void run() {
-                            manager.getMap().remove(event.getMessageId());
-                        }
-                    };
-                    new Timer().schedule(tt, 10000);
-                }
-        );
+        List<AuditLogEntry> audit = event.getGuild().retrieveAuditLogs().type(ActionType.MESSAGE_DELETE).complete();
+
+        User deletedBy = null;
+        for (AuditLogEntry auditlog : audit) {
+            if (auditlog.getType() == ActionType.MESSAGE_DELETE
+                    && auditlog.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1))
+                    && event.getChannel().getId().equals(auditlog.getOption(AuditLogOption.CHANNEL))
+                    && msg.getAuthor().equals(auditlog.getTargetId())) {
+                deletedBy = auditlog.getUser();
+                break;
+            }
+        }
+        EmbedBuilder eb = getLogMessage(Action.DELETED, msg, deletedBy);
+        String content = msg.getContent();
+        if (content.length() > 1024) { content = content.substring(0, 1024); }
+        eb.addField("Treść wiadomości:", content, false);
+        sendLog(eb);
+        manager.getMap().remove(event.getMessageId());
     }
 
     @Override
@@ -93,7 +86,7 @@ public class Logger extends ListenerAdapter {
 
         eb.addField("Autor wiadomości:", UserUtil.getLogName(user), false);
         if (action == Action.DELETED && deletedBy != null) {
-            eb.addField("Usunięte przez", deletedBy.getAsMention() + " " + UserUtil.getLogName(deletedBy), false);
+            eb.addField("Usunięte przez", UserUtil.getLogName(deletedBy), false);
         }
         eb.addField("Kanał:", String.format("%s (%s) [%s]",
                 kanal.getAsMention(), "#" + kanal.getName(), kanal.getId()), false);

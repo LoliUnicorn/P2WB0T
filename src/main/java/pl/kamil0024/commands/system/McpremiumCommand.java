@@ -61,18 +61,18 @@ public class McpremiumCommand extends Command {
         } catch (JSONException | IOException ignored) { }
 
         if (name == null || uuid == null) {
-            context.send("Taki użytkownik nie posiada minecraft premium!").queue();
+            context.send(context.getTranslate("mcpremium.alex")).queue();
             return false;
         }
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(UserUtil.getColor(context.getMember()));
-        eb.addField("**Nazwa**","`" +  name + "`", false);
-        eb.addField("**UUID**", formatUuid(Objects.requireNonNull(uuid)), false);
-        eb.addField("**Porifl na NameMc**", "[namemc.com](https://namemc.com/profile/" + uuid + ")", false);
-        eb.setFooter("Informacje o nicku:" + name);
+        eb.addField(context.getTranslate("mcpremium.name"),"`" +  name + "`", false);
+        eb.addField(context.getTranslate("mcpremium.uuid"), formatUuid(Objects.requireNonNull(uuid)), false);
+        eb.addField(context.getTranslate("mcpremium.namemc"), "[namemc.com](https://namemc.com/profile/" + uuid + ")", false);
+        eb.setFooter(context.getTranslate("mcpremium.info") + " " + name);
         if (listaNazw.size() > 1)
-            eb.addField("**Historia nicków**", String.join("\n", listaNazw),
+            eb.addField(context.getTranslate("mcpremium.nick"), String.join("\n", listaNazw),
                     false);
         eb.setThumbnail("https://minotar.net/helm/" + name + "/2048.png");
         eb.setImage("https://minotar.net/armor/body/" + name + "/124.png");

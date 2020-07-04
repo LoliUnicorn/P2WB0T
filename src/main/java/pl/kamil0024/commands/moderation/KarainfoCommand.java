@@ -29,7 +29,7 @@ public class KarainfoCommand extends Command {
 
         CaseConfig cc = caseDao.get(id);
         if (cc.getKara() == null) {
-            context.send("Nie ma takiego ID!").queue();
+            context.send(context.getTranslate("karainfo.invalid")).queue();
             return false;
         }
         context.send(ModLog.getEmbed(cc.getKara(), context.getShardManager()).build()).queue();

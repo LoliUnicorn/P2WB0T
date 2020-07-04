@@ -43,7 +43,7 @@ public class ClearCommand extends Command {
         if (kanal == null) kanal = context.getChannel();
 
         if (liczba == null || liczba > 100 || liczba <= 1) {
-             context.send("Liczba wiadomości do usunięcia musi być między 2-100").queue();
+             context.send(context.getTranslate("clear.toolong")).queue();
              return true;
         }
         CompletableFuture<MessageHistory> historia;

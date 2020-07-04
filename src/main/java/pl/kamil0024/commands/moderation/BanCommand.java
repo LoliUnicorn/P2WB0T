@@ -3,8 +3,6 @@ package pl.kamil0024.commands.moderation;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -55,7 +53,7 @@ public class BanCommand extends Command {
 
         Member m = context.getGuild().getMember(mem);
         if (m != null && context.getGuild().getSelfMember().canInteract(m)) {
-            msg.editMessage("Nie mogę zbanować tej osoby :(").queue();
+            msg.editMessage(context.getTranslate("ban.error")).queue();
             return false;
         }
 

@@ -46,7 +46,7 @@ public class TempmuteCommand extends Command {
         String duration = context.getArgs().get(1);
         String powod = context.getArgsToString(2);
         if (duration == null) {
-            context.send("Podaj czas!").queue();
+            context.send(context.getTranslate("tempban.badtime")).queue();
             return false;
         }
         if (powod == null) powod = context.getTranslate("modlog.none");

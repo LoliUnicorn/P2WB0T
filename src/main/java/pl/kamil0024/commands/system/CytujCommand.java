@@ -2,7 +2,6 @@ package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -46,22 +45,22 @@ public class CytujCommand extends Command {
         }
 
         if (msg == null) {
-            context.send("Złe ID wiadomości!").queue();
+            context.send(context.getTranslate("cytuj.ivalid")).queue();
             return false;
         }
 
         if (msg.getContentRaw().length() >= MessageEmbed.VALUE_MAX_LENGTH) {
-            context.send("Treść wiadomości jest za długa!").queue();
+            context.send(context.getTranslate("cytuj.toolong")).queue();
             return false;
         }
-        String takEmbed = msg.getEmbeds().isEmpty() ? "" : "Zawiera embed, patrz poniżej";
+        String takEmbed = msg.getEmbeds().isEmpty() ? "" : context.getTranslate("cytuj.containsembed");
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(UserUtil.getColor(context.getMember()));
         eb.setFooter("Cytuj");
         eb.setAuthor(UserUtil.getName(msg.getAuthor()), null, msg.getAuthor().getAvatarUrl());
-        eb.setDescription(msg.getContentRaw().isEmpty() ? " Wiadomość pusta. " + takEmbed : msg.getContentRaw());
-        eb.addField("Kolega prosi o linka?", String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
+        eb.setDescription(msg.getContentRaw().isEmpty() ? context.getTranslate("Wiadomość pusta.") + " " + takEmbed : msg.getContentRaw());
+        eb.addField(context.getTranslate("cytuj.kolega"), String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
         eb.setTimestamp(msg.getTimeCreated());
 
         MessageBuilder mb = new MessageBuilder();

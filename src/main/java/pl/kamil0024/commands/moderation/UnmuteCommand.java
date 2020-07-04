@@ -46,7 +46,7 @@ public class UnmuteCommand extends Command {
         Role r = mem.getGuild().getRoleById(Ustawienia.instance.muteRole);
         String powod = context.getArgsToString(1);
         if (powod == null) {
-            context.send("Musisz podać powód!").queue();
+            context.send(context.getTranslate("unban.reason")).queue();
             return false;
         }
         try {

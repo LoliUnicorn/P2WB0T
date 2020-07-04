@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -105,13 +106,15 @@ public class EmbedPageintaor {
         message.addReaction(LAST_EMOJI).queue();
         message.addReaction(STOP_EMOJI).queue();
     }
+
     private void clearReactions() {
         if (!isPun) {
             try {
-                botMsg.clearReactions().queue();
+                botMsg.clearReactions().complete();
             } catch (Exception ignored) {/*lul*/}
         }
     }
+
     private boolean checkReaction(MessageReactionAddEvent event) {
         if (event.getMessageIdLong() == botMsgId && !event.getReactionEmote().isEmote()) {
             switch (event.getReactionEmote().getName()) {

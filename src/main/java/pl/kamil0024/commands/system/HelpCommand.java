@@ -54,14 +54,10 @@ public class HelpCommand extends Command {
             }
         }
         if (cmd == null) {
-            context.send("Nie ma takiej komendy!").queue();
-            return false;
-        }
-        if (cmd.getPermLevel().getNumer() > UserUtil.getPermLevel(context.getMember()).getNumer()) cmd = null;
-        if (cmd == null) {
             context.sendTranslate("help.command.doesntexist").queue();
             return false;
         }
+        if (cmd.getPermLevel().getNumer() > UserUtil.getPermLevel(context.getMember()).getNumer()) cmd = null;
 
         EmbedBuilder eb = getUsage(context, cmd);
         context.send(eb.build()).queue();
@@ -103,7 +99,7 @@ public class HelpCommand extends Command {
         String key = cmd.getName() + ".pomoc";
         String dodatkowaPomoc = context.getTranslate(key);
         if (!dodatkowaPomoc.equals(".")) {
-            eb.addField("Dodatkowa pomoc", "```\n" + dodatkowaPomoc + "```", false);
+            eb.addField(context.getTranslate("help.addpomoc"), "```\n" + dodatkowaPomoc + "```", false);
         }
 
         desc.append("```");

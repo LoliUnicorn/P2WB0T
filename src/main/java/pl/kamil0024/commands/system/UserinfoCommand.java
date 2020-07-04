@@ -3,20 +3,16 @@ package pl.kamil0024.commands.system;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.ClientType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import pl.kamil0024.bdate.BDate;
-import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
-import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.util.Duration;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.text.SimpleDateFormat;
@@ -47,9 +43,6 @@ public class UserinfoCommand extends Command {
             member = context.getGuild().retrieveMemberById(user.getId()).complete();;
         } catch (ErrorResponseException ignored) {}
 
-        Log.debug(user.getId());
-        Log.debug(String.valueOf(member));
-
         eb.setColor(UserUtil.getColor(context.getMember()));
         eb.setFooter("Userinfo");
         eb.setTimestamp(Instant.now());
@@ -61,21 +54,21 @@ public class UserinfoCommand extends Command {
         long date = new BDate().getTimestamp();
 
         Date discord = new Date(user.getTimeCreated().toInstant().toEpochMilli());
-        eb.addField("Dołączył na Discorda", sfd.format(discord), false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
+        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord), false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
 
         if (member != null) {
             Date serwer = new Date(member.getTimeJoined().toInstant().toEpochMilli());
             long lonk2 = member.getTimeJoined().toInstant().toEpochMilli();
-            eb.addField("Dołączył na Serwer", sfd.format(serwer), false); // + " `" + new BDate(lonk2, ModLog.getLang()).difference(date) + "` temu"
-            eb.addField("Status", translateStatus(member.getOnlineStatus()), false);
+            eb.addField(context.getTranslate("userinfo.serverjoin"), sfd.format(serwer), false); // + " `" + new BDate(lonk2, ModLog.getLang()).difference(date) + "` temu"
+            eb.addField(context.getTranslate("userinfo.status"), translateStatus(member.getOnlineStatus()), false);
             try {
-                eb.addField("Gra w", member.getActivities().get(0).getName(), false);
+                eb.addField(context.getTranslate("userinfo.game"), member.getActivities().get(0).getName(), false);
             } catch (Exception ignored) {}
         }
         PermLevel pm = UserUtil.getPermLevel(user);
-        eb.addField("Poziom uprawnień", context.getTranslate(pm.getTranlsateKey()) + " (" + pm.getNumer() + ")", false);
+        eb.addField(context.getTranslate("userinfo.permlvl"), context.getTranslate(pm.getTranlsateKey()) + " (" + pm.getNumer() + ")", false);
         if (!user.getFlags().isEmpty()) {
-            eb.addField("Odznaki profilowe", formatFlags(user.getFlags(), context.getJDA()), false);
+            eb.addField(context.getTranslate("userinfo.bagnes"), formatFlags(user.getFlags(), context.getJDA()), false);
         }
         context.send(eb.build()).queue();
         return true;

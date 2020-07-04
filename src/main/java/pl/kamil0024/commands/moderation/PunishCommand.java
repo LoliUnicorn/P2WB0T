@@ -1,6 +1,5 @@
 package pl.kamil0024.commands.moderation;
 
-import com.google.gson.Gson;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Member;
@@ -20,13 +19,15 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 import pl.kamil0024.core.util.kary.KaryJSON;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -250,7 +251,7 @@ public class PunishCommand extends Command {
                     assert !kurwaBylaAkcja.get();
                     try {
                         msg.getChannel().sendMessage(String.format("<@%s>, twój czas na odpowiedź minął!", context.getUser().getId())).queue();
-                        msg.delete().queue();
+                        msg.delete().complete();
                     } catch (Exception ignored) { }
                 }
         );
@@ -262,7 +263,6 @@ public class PunishCommand extends Command {
     public static List<EmbedBuilder> getKaraList(KaryJSON karyJSON, Member mem, @Nullable ArrayList<Member> osoby) {
         List<EmbedBuilder> pages = new ArrayList<>();
         BetterStringBuilder sb = new BetterStringBuilder();
-
 
         if (osoby != null && !osoby.isEmpty()) {
             sb.append("Chcesz ukarać: ");

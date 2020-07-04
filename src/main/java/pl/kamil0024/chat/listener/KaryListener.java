@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.CommandsModule;
 import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.PunishCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
@@ -40,32 +41,38 @@ public class KaryListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals(Ustawienia.instance.channel.moddc)) return;
         if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
 
-        try {
-            for (Map.Entry<String, Action.ListaKar> entry : getEmbedy().entrySet()) {
-                String[] tak = entry.getKey().split("-");
-                if (!tak[0].equals(event.getMessageId())) continue;
-                Member mem = event.getGuild().retrieveMemberById(tak[1]).complete();
-                if (mem == null) {
-                    event.getChannel().sendMessage("Użytkownik wyszedł z serwera??").queue();
-                    continue;
-                }
-                Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-                if (event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
+        synchronized (event.getGuild().getId()) {
+            try {
+                for (Map.Entry<String, Action.ListaKar> entry : getEmbedy().entrySet()) {
+                    String[] tak = entry.getKey().split("-");
+                    if (!tak[0].equals(event.getMessageId())) continue;
+                    Member mem = event.getGuild().retrieveMemberById(tak[1]).complete();
+                    if (mem == null) {
+                        event.getChannel().sendMessage("Użytkownik wyszedł z serwera??").queue();
+                        continue;
+                    }
+                    if (MuteCommand.hasMute(mem)) {
+                        event.getChannel().sendMessage("Użytkownik jest wyciszony!").queue();
+                        continue;
+                    }
+                    Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+                    if (event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
+                        getEmbedy().remove(entry.getKey());
+                        msg.delete().queue();
+                        return;
+                    }
+                    KaryJSON.Kara kara = karyJSON.getByName(entry.getValue().getPowod());
+                    if (kara == null) {
+                        event.getChannel().sendMessage("Kara `" + entry.getValue().getPowod() + "` jest źle wpisana!").queue();
+                        continue;
+                    }
+                    PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog);
                     getEmbedy().remove(entry.getKey());
                     msg.delete().queue();
-                    return;
                 }
-                KaryJSON.Kara kara = karyJSON.getByName(entry.getValue().getPowod());
-                if (kara == null) {
-                    event.getChannel().sendMessage("Kara `" + entry.getValue().getPowod() + "` jest źle wpisana!").queue();
-                    continue;
-                }
-                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog);
-                getEmbedy().remove(entry.getKey());
-                msg.delete().queue();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

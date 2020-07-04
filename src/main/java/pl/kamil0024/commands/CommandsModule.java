@@ -3,7 +3,6 @@ package pl.kamil0024.commands;
 import com.google.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.dews.EvalCommand;
 import pl.kamil0024.commands.dews.ModulesCommand;
@@ -23,7 +22,6 @@ import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -77,9 +75,17 @@ public class CommandsModule implements Modul {
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());
-        cmd.add(new StatusCommand(eventWaiter));
         cmd.add(new RemindmeCommand(remindDao, eventWaiter));
+        cmd.add(new ModulesCommand(modulManager));
+        cmd.add(new ClearCommand());
+        cmd.add(new CytujCommand());
+        cmd.add(new CheckCommand(caseDao));
 
+        // Moderacyjne:
+        cmd.add(new StatusCommand(eventWaiter));
+        cmd.add(new KarainfoCommand(caseDao));
+        cmd.add(new UnmuteCommand(caseDao, modLog));
+        cmd.add(new TempmuteCommand(caseDao, modLog));
         cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog));
         cmd.add(new KickCommand(caseDao, modLog));
         cmd.add(new BanCommand(caseDao, modLog));
@@ -87,13 +93,6 @@ public class CommandsModule implements Modul {
         cmd.add(new UnbanCommand(caseDao, modLog));
         cmd.add(new MuteCommand(caseDao, modLog));
         cmd.add(new HistoryCommand(caseDao, eventWaiter));
-        cmd.add(new ModulesCommand(modulManager));
-        cmd.add(new UnmuteCommand(caseDao, modLog));
-        cmd.add(new TempmuteCommand(caseDao, modLog));
-        cmd.add(new ClearCommand());
-        cmd.add(new CytujCommand());
-        cmd.add(new KarainfoCommand(caseDao));
-
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
         return true;

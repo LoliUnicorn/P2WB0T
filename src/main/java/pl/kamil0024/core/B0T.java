@@ -135,7 +135,7 @@ public class B0T {
                 }
                 return true;
             })) {
-                Thread.sleep(400);
+                Thread.sleep(600);
             }
         } catch (LoginException | InterruptedException e) {
             Log.error("Nie udalo sie zalogowac!");
@@ -156,13 +156,14 @@ public class B0T {
         databaseManager.load();
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
         CaseDao caseDao = new CaseDao(databaseManager);
         UserDao userDao = new UserDao(databaseManager);
         NieobecnosciDao nieobecnosciDao = new NieobecnosciDao(databaseManager);
         RemindDao remindDao = new RemindDao(databaseManager);
+
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
         listeners.add(commandExecute);

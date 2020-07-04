@@ -10,7 +10,7 @@ public class Statyczne {
 
     public static final String CORE_VERSION;
 
-    public static final Date startDate;
+    public static final Date START_DATE;
 
     static {
         String version = Statyczne.class.getPackage().getImplementationVersion();
@@ -22,7 +22,7 @@ public class Statyczne {
 
         CORE_VERSION = WERSJA;
 
-        startDate = new Date();
+        START_DATE = new Date();
     }
 
 }

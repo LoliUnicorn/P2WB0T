@@ -23,7 +23,6 @@ public class StatusCommand extends Command {
     public StatusCommand(EventWaiter eventWaiter) {
         name = "status";
         permLevel = PermLevel.ADMINISTRATOR;
-
         this.eventWaiter = eventWaiter;
     }
 

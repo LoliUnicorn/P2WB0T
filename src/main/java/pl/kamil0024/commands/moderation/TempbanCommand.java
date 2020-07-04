@@ -3,8 +3,6 @@ package pl.kamil0024.commands.moderation;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
@@ -45,7 +43,7 @@ public class TempbanCommand extends Command {
         String duration = context.getArgs().get(1);
         String powod = context.getArgsToString(2);
         if (duration == null) {
-            context.send("Podaj czas!").queue();
+            context.send(context.getTranslate("tempban.badtime")).queue();
             return false;
         }
         if (powod == null) powod = context.getTranslate("modlog.none");

@@ -16,7 +16,6 @@ import pl.kamil0024.core.util.kary.KaryEnum;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("DuplicatedCode")
 public class UnbanCommand extends Command {
@@ -42,7 +41,7 @@ public class UnbanCommand extends Command {
 
         String powod = context.getArgsToString(2);
         if (powod == null) {
-            context.send("Musisz podać powód!").queue();
+            context.send(context.getTranslate("unban.reason")).queue();
             return false;
         }
 

@@ -63,7 +63,7 @@ public class ModLog extends ListenerAdapter {
         checkKara(event, true, caseDao.getNickAktywne(nick));
     }
 
-    private boolean checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
+    private synchronized void checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
         Member user = event.getMember();
         for (CaseConfig config : cc) {
             Kara k = config.getKara();
@@ -119,7 +119,6 @@ public class ModLog extends ListenerAdapter {
             }
             sendModlog(kara, true);
         }
-        return true;
     }
 
     private void tak() {
@@ -197,7 +196,7 @@ public class ModLog extends ListenerAdapter {
 
     public synchronized void sendModlog(Kara kara, boolean sendDm) {
         Message msg = modlog.sendMessage(getEmbed(kara, api, sendDm).build()).complete();
-        String url = msg.getJumpUrl().replace("https://discordapp.com/channels/", "");
+        String url = msg.getJumpUrl().replaceAll("https://discord(app)?.com/channels/", "");
 
         CaseConfig cc = caseDao.get(kara.getKaraId());
         if (cc.getKara() != null) {
