@@ -157,6 +157,7 @@ public class PunishCommand extends Command {
                 if (event.getReactionEmote().getId().equals(green.getId())) {
                     putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog);
                 }
+                msg.clearReactions().complete();
             } catch (Exception ignored) {}
             },
                 30, TimeUnit.SECONDS,
@@ -273,6 +274,7 @@ public class PunishCommand extends Command {
         }
 
         sb.appendLine("```md");
+        sb.appendLine("0. Anuluj akcje");
         for (KaryJSON.Kara kara : karyJSON.getKary()) {
             sb.appendLine(kara.getId() + ". " + kara.getPowod());
             if (sb.toString().length() >= 950) {

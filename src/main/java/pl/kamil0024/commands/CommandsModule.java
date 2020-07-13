@@ -6,15 +6,13 @@ import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.dews.EvalCommand;
 import pl.kamil0024.commands.dews.ModulesCommand;
+import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.moderation.*;
 import pl.kamil0024.commands.system.*;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
-import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.database.NieobecnosciDao;
-import pl.kamil0024.core.database.RemindDao;
-import pl.kamil0024.core.database.UserDao;
+import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
@@ -41,11 +39,12 @@ public class CommandsModule implements Modul {
     @Inject UserDao userDao;
     @Inject NieobecnosciDao nieobecnosciDao;
     @Inject RemindDao remindDao;
+    @Inject GiveawayDao giveawayDao;
 
     private boolean start = false;
     private ModLog modLog;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -58,6 +57,7 @@ public class CommandsModule implements Modul {
         this.modLog = modLog;
         this.nieobecnosciDao = nieobecnosciDao;
         this.remindDao = remindDao;
+        this.giveawayDao = giveawayDao;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -65,13 +65,15 @@ public class CommandsModule implements Modul {
 
     @Override
     public boolean startUp() {
+        GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
+
         cmd = new ArrayList<>();
 
         cmd.add(new PingCommand());
         cmd.add(new BotinfoCommand(commandManager, modulManager));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
-        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager));
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao));
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());
@@ -80,6 +82,7 @@ public class CommandsModule implements Modul {
         cmd.add(new ClearCommand());
         cmd.add(new CytujCommand());
         cmd.add(new CheckCommand(caseDao));
+        cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
 
         // Moderacyjne:
         cmd.add(new StatusCommand(eventWaiter));

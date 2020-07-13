@@ -60,7 +60,7 @@ public class UserinfoCommand extends Command {
             Date serwer = new Date(member.getTimeJoined().toInstant().toEpochMilli());
             long lonk2 = member.getTimeJoined().toInstant().toEpochMilli();
             eb.addField(context.getTranslate("userinfo.serverjoin"), sfd.format(serwer), false); // + " `" + new BDate(lonk2, ModLog.getLang()).difference(date) + "` temu"
-            eb.addField(context.getTranslate("userinfo.status"), translateStatus(member.getOnlineStatus()), false);
+//            eb.addField(context.getTranslate("userinfo.status"), translateStatus(member), false);
             try {
                 eb.addField(context.getTranslate("userinfo.game"), member.getActivities().get(0).getName(), false);
             } catch (Exception ignored) {}

@@ -5,6 +5,7 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -12,10 +13,7 @@ import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.database.NieobecnosciDao;
-import pl.kamil0024.core.database.RemindDao;
-import pl.kamil0024.core.database.UserDao;
+import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
@@ -36,8 +34,10 @@ public class EvalCommand extends Command {
     @Inject private final NieobecnosciDao nieobecnosciDao;
     @Inject private final RemindDao remindDao;
     @Inject private final ModulManager modulManager;
+    @Inject private final GiveawayListener giveawayListener;
+    @Inject private final GiveawayDao giveawayDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -53,6 +53,8 @@ public class EvalCommand extends Command {
         this.nieobecnosciDao = nieobecnosciDao;
         this.remindDao = remindDao;
         this.modulManager = modulManager;
+        this.giveawayListener = giveawayListener;
+        this.giveawayDao = giveawayDao;
     }
 
     @Override
@@ -78,6 +80,8 @@ public class EvalCommand extends Command {
         shell.setVariable("nieobecnosciDao", nieobecnosciDao);
         shell.setVariable("remindDao", remindDao);
         shell.setVariable("modulManager", modulManager);
+        shell.setVariable("giveawayListener", giveawayListener);
+        shell.setVariable("giveawayDao", giveawayDao);
 
         Object value;
         boolean error = false;

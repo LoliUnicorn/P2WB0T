@@ -173,12 +173,12 @@ public class CommandExecute extends ListenerAdapter {
     public void onExecuteEvent(@Nullable CommandContext context) {
         if (context == null) return;
         String msg = "`%s` użył komendy %s(%s) na serwerze %s[%s]";
-        StringBuilder b = new StringBuilder();
+        StringBuilder b = new StringBuilder(" ");
 
         for (Map.Entry<Integer, String> m : context.getArgs().entrySet()) { b.append(m.getValue()).append(",");}
 
         msg = String.format(msg, UserUtil.getLogName(context.getUser()),
-                context.getCommand(), b, context.getGuild(), context.getGuild().getId()).replaceAll("@", "@\u200b$1");
+                context.getCommand(), b.toString().replaceAll("@", "@\u200b$1"), context.getGuild(), context.getGuild().getId());
 
         WebhookUtil web = new WebhookUtil();
         web.setMessage(msg);

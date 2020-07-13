@@ -163,6 +163,7 @@ public class B0T {
         UserDao userDao = new UserDao(databaseManager);
         NieobecnosciDao nieobecnosciDao = new NieobecnosciDao(databaseManager);
         RemindDao remindDao = new RemindDao(databaseManager);
+        GiveawayDao giveawayDao = new GiveawayDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -179,7 +180,7 @@ public class B0T {
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao));
 
         for (Modul modul : modulManager.getModules()) {
             try {

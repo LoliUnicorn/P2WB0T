@@ -23,6 +23,7 @@ public class Action {
 
     private boolean pewnosc = true;
     private boolean isDeleted = true;
+    private String botMsg = null;
 
     public Action(KaryJSON karyJSON) {
         this.karyJSON = karyJSON;
@@ -48,14 +49,15 @@ public class Action {
         if (!pewnosc) {
             eb.addField("!UWAGA!", "Zgłoszenie może ukazać się fałszywe. Radze zajrzeć do kontekstu prowadzonej rozmowy", false);
         }
-        if (!isDeleted) eb.addField("Link do wiadomości", msg.getJumpUrl(), false);
+        if (!isDeleted) eb.addField("Link do wiadomości", String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
 
         TextChannel txt = msg.getJDA().getTextChannelById(Ustawienia.instance.channel.moddc);
         if (txt == null) throw new NullPointerException("Kanał do modów dc jest nullem");
         txt.sendMessage(eb.build()).queue(m -> {
                 m.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
                 m.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
-                KaryListener.getEmbedy().put(m.getId() + "-" + msg.getMember().getId(), getKara());
+                setBotMsg(m.getId());
+                KaryListener.getEmbedy().add(this);
         });
     }
 

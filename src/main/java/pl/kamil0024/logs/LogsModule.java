@@ -3,10 +3,12 @@ package pl.kamil0024.logs;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
+import pl.kamil0024.logs.logger.ClearCache;
 import pl.kamil0024.logs.logger.Logger;
 import pl.kamil0024.logs.logger.MessageManager;
 
 import javax.inject.Inject;
+import java.util.Timer;
 
 public class LogsModule implements Modul {
     
@@ -26,6 +28,8 @@ public class LogsModule implements Modul {
         messageManager = new MessageManager();
         logger = new Logger(messageManager, api);
         api.addEventListener(messageManager, logger);
+        Timer t = new Timer();
+        t.schedule(new ClearCache(messageManager), 10000);
         setStart(true);
         return true;
     }

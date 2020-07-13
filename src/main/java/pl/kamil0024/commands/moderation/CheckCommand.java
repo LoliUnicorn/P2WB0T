@@ -62,5 +62,4 @@ public class CheckCommand extends Command {
         context.send(eb.build()).queue();
         return true;
     }
-
 }

@@ -60,6 +60,7 @@ public class ChatListener extends ListenerAdapter {
 
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
+
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
 
@@ -149,7 +150,7 @@ public class ChatListener extends ListenerAdapter {
                 action.send();
             }
 
-            if (skrotyCount(msgRaw)) {
+            if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
                 action.setKara(Action.ListaKar.SKROTY);
                 action.send();
             }
@@ -254,9 +255,25 @@ public class ChatListener extends ListenerAdapter {
         return count;
     }
 
-    public static boolean skrotyCount(String msg) {
-        Pattern pattern = Pattern.compile("[jJ][ ]?[a-z-A-Z]{1,2}");
-        return msg.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").contains(pattern.toString());
+    public static boolean skrotyCount(String[] msg) {
+        ArrayList<String> whiteList = new ArrayList<>();
+        whiteList.add("jj");
+        whiteList.add("jak");
+        whiteList.add("juz");
+        whiteList.add("ja");
+        for (String s : msg) {
+            boolean con = true;
+            for (String white : whiteList) {
+                assert white.equals(s);
+                con = false;
+                break;
+            }
+            if (!con) continue;
+            s = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "");
+            String pat = s.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa");
+            if (pat.equals("kurwa")) return true;
+        }
+        return false;
     }
 
 }
