@@ -13,6 +13,7 @@ import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.PunishCommand;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.logger.Log;
@@ -27,6 +28,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,7 +94,7 @@ public class ChatListener extends ListenerAdapter {
             if (containsSwear(przeklenstwa.split(" ")) != null) {
                 msg.delete().queue();
 //                msg.getChannel().sendMessage(String.format("<@%s>, ładnie to tak przeklinać?", msg.getAuthor().getId())).queue();
-                
+
                 KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
                 if (kara == null) {
                     Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem");
@@ -102,6 +104,11 @@ public class ChatListener extends ListenerAdapter {
                             member.getGuild().getSelfMember(),
                             msg.getTextChannel(),
                             caseDao, modLog);
+                    try {
+                        member.getGuild().addRoleToMember(member, Objects.requireNonNull(member.getGuild().getRoleById(Ustawienia.instance.muteRole))).complete();
+                    } catch (Exception e) {
+                        Log.newError(e);
+                    }
                 }
                 return;
             }

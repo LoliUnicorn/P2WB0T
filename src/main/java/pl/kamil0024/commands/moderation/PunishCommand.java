@@ -19,6 +19,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
@@ -196,8 +197,10 @@ public class PunishCommand extends Command {
             }
 
             if (!member.getId().equals(Ustawienia.instance.bot.botId)) {
-                String msg = "Daje karę **%s** dla **%s** za **%s** na czas **%s**";
-                txt.sendMessage(String.format(msg, KaryEnum.getName(jegoTier.getType()), UserUtil.getMcNick(osoba), kara.getPowod(), jegoTier.getDuration())).queue();
+                if (!txt.getId().equals(Ustawienia.instance.channel.moddc)) {
+                    String msg = "Daje karę **%s** dla **%s** za **%s** na czas **%s**";
+                    txt.sendMessage(String.format(msg, KaryEnum.getName(jegoTier.getType()), UserUtil.getMcNick(osoba), kara.getPowod(), jegoTier.getDuration())).queue();
+                }
             }
 
             Kara karaBuilder = new Kara();
@@ -227,7 +230,8 @@ public class PunishCommand extends Command {
                     TempbanCommand.tempban(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
                     break;
                 case TEMPMUTE:
-                    TempmuteCommand.tempmute(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
+                    String mute = TempmuteCommand.tempmute(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
+                    if (mute != null) Log.newError(mute);
                     break;
             }
         }
