@@ -5,6 +5,7 @@ import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.UserConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CaseDao implements Dao<CaseConfig> {
@@ -40,6 +41,7 @@ public class CaseDao implements Dao<CaseConfig> {
     }
 
     public List<CaseConfig> getNickAktywne(String nick) {
+        if (nick.equals("-")) return new ArrayList<>();
         return mapper.getMcAktywne(nick);
     }
 
