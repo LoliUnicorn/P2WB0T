@@ -2,7 +2,6 @@ package pl.kamil0024.commands;
 
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -149,10 +148,11 @@ public class ModLog extends ListenerAdapter {
                 if (end - data.getTime() <= 0) {
                     try {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
+
                         if (u == null) continue;
                         Member m = null;
                         try {
-                            m = g.retrieveMember(u).complete();
+                            m = g.retrieveMemberById(u.getId()).complete();
                         } catch (ErrorResponseException ignored) {}
 
                         if (typ == KaryEnum.TEMPBAN) {
@@ -185,10 +185,12 @@ public class ModLog extends ListenerAdapter {
                     if (typ == KaryEnum.TEMPMUTE) {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
                         if (u != null) {
-                            Member m = g.retrieveMember(u).complete();
-                            if (MuteCommand.hasMute(m)) {
-                                Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!");
-                            }
+                            try {
+                                Member m = g.retrieveMember(u).complete();
+                                if (MuteCommand.hasMute(m)) {
+                                    Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!");
+                                }
+                            } catch (ErrorResponseException ignored) {}
                         }
                     }
                 }
