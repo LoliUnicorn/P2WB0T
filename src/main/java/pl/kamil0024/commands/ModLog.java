@@ -177,6 +177,8 @@ public class ModLog extends ListenerAdapter {
                         CaseConfig kurwa = new CaseConfig(String.valueOf(aCase.getKaraId()));
                         kurwa.setKara(aCase);
                         caseDao.save(kurwa);
+                        a.getKara().setAktywna(false);
+                        caseDao.save(a);
                     } catch (Exception e) {
                         e.printStackTrace();
                         String msg = "Nie udało się dać kary %s dla %s (ID: %s) bo: %s";
