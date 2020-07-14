@@ -38,6 +38,8 @@ public class KaryListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals(Ustawienia.instance.channel.moddc)) return;
         if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
         if (event.getMember().getUser().isBot()) return;
+
+        
         check(event);
     }
 
