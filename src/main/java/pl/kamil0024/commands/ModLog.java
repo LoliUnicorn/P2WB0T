@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.util.BLanguage;
@@ -60,7 +61,7 @@ public class ModLog extends ListenerAdapter {
         String nick = UserUtil.getMcNick(event.getMember());
 
         checkKara(event, false, cc);
-        checkKara(event, true, caseDao.getNickAktywne(nick));
+//        checkKara(event, true, caseDao.getNickAktywne(nick));
     }
 
     private synchronized void checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
@@ -105,19 +106,22 @@ public class ModLog extends ListenerAdapter {
                 kara.setDuration(config.getKara().getDuration());
             } catch (Exception ignored) { }
 
-            if (nick) {
-                kara.setAktywna(true);
-                CaseConfig caseconfig = new CaseConfig(user.getId());
-                caseconfig.setKara(kara);
-                caseDao.save(caseconfig);
+            //noinspection ConstantConditions
+            if (!powod.contains("Te konto jest") && kara.getKaraId() != 0) {
+                if (nick) {
+                    kara.setAktywna(true);
+                    CaseConfig caseconfig = new CaseConfig(user.getId());
+                    caseconfig.setKara(kara);
+                    caseDao.save(caseconfig);
 
-                for (CaseConfig ccase : caseDao.getAktywe(user.getId())) {
-                    ccase.getKara().setAktywna(false);
-                    caseDao.save(ccase);
+                    for (CaseConfig ccase : caseDao.getAktywe(user.getId())) {
+                        ccase.getKara().setAktywna(false);
+                            caseDao.save(ccase);
+                    }
                 }
-
+                sendModlog(kara, true);
+                return;
             }
-            sendModlog(kara, true);
         }
     }
 
@@ -147,7 +151,10 @@ public class ModLog extends ListenerAdapter {
                     try {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
                         if (u == null) continue;
-                        Member m = g.retrieveMember(u).complete();
+                        Member m = null;
+                        try {
+                            m = g.retrieveMember(u).complete();
+                        } catch (ErrorResponseException ignored) {}
 
                         if (typ == KaryEnum.TEMPBAN) {
                             g.unban(aCase.getKaranyId()).complete();

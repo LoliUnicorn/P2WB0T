@@ -34,6 +34,7 @@ public class UserUtil {
     public static PermLevel getPermLevel(@Nullable Member member) {
         if (member == null) return PermLevel.MEMBER;
         if (isOwner(member.getUser())) return PermLevel.DEVELOPER;
+        if (member.getId().equals(Ustawienia.instance.bot.botId)) return PermLevel.ADMINISTRATOR;
         PermLevel lvl = PermLevel.MEMBER;
         for (Role rol : member.getRoles()) {
             if (rol.getId().equals(Ustawienia.instance.roles.adminRole)) return PermLevel.ADMINISTRATOR;
