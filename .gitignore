@@ -70,3 +70,4 @@ build
 **/build
 plugins
 start.sh
+log.api
