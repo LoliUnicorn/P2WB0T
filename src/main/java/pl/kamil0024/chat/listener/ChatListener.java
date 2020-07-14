@@ -270,6 +270,7 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("ja");
         whiteList.add("jem");
         whiteList.add("jez");
+        whiteList.add("jej");
         for (String s : msg) {
             if (whiteList.contains(s)) {
                 continue;

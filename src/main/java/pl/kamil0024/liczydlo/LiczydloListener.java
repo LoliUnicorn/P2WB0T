@@ -1,7 +1,6 @@
 package pl.kamil0024.liczydlo;
 
 import com.google.inject.Inject;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -10,6 +9,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.logger.Log;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ public class LiczydloListener extends ListenerAdapter {
         this.api = api;
         txt = api.getTextChannelById(Ustawienia.instance.channel.liczek);
         if (txt == null) api.removeEventListener(this);
+        Log.newError("Kanał do liczenia jest nullem");
     }
 
     @Override
