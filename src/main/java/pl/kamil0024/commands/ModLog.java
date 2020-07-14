@@ -105,9 +105,8 @@ public class ModLog extends ListenerAdapter {
                 kara.setEnd(config.getKara().getEnd());
                 kara.setDuration(config.getKara().getDuration());
             } catch (Exception ignored) { }
-
-            //noinspection ConstantConditions
-            if (!powod.contains("Te konto jest") && kara.getKaraId() != 0) {
+            
+            if (!k.getPowod().contains("Te konto jest") && kara.getKaraId() != 0) {
                 if (nick) {
                     kara.setAktywna(true);
                     CaseConfig caseconfig = new CaseConfig(user.getId());
