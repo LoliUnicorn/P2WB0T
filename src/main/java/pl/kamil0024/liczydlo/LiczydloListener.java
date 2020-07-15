@@ -20,13 +20,8 @@ public class LiczydloListener extends ListenerAdapter {
 
     @Inject private ShardManager api;
 
-    TextChannel txt = null;
-
     public LiczydloListener(ShardManager api) {
         this.api = api;
-        txt = api.getTextChannelById(Ustawienia.instance.channel.liczek);
-        if (txt == null) api.removeEventListener(this);
-        Log.newError("Kanał do liczenia jest nullem");
     }
 
     @Override
