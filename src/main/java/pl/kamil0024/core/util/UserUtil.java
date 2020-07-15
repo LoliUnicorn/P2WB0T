@@ -42,11 +42,8 @@ public class UserUtil {
             if (rol.getId().equals(Ustawienia.instance.roles.moderatorRole)) {
                 if (PermLevel.MODERATOR.getNumer() > lvl.getNumer()) lvl = PermLevel.MODERATOR;
             }
-            if (rol.getId().equals(Ustawienia.instance.roles.helperRole)) {
+            if (rol.getId().equals(Ustawienia.instance.roles.helperRole) || rol.getId().equals(Ustawienia.instance.roles.chatMod)) {
                 if (PermLevel.HELPER.getNumer() > lvl.getNumer()) lvl = PermLevel.HELPER;
-            }
-            if (rol.getId().equals(Ustawienia.instance.roles.chatMod)) {
-                if (PermLevel.CHATMOD.getNumer() > lvl.getNumer()) lvl = PermLevel.CHATMOD;
             }
         }
         return lvl;

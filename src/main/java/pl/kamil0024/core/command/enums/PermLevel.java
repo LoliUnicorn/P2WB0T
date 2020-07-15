@@ -7,7 +7,6 @@ public enum PermLevel {
 
     MEMBER(0, "permlvl.member"),
     HELPER(1, "permlvl.helper"),
-    CHATMOD(1, "permlvl.chatmod"),
     MODERATOR(2, "permlvl.mod"),
     ADMINISTRATOR(3, "permlvl.adm"),
     DEVELOPER(10, "permlvl.dev");
