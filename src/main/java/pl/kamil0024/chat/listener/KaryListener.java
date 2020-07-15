@@ -39,7 +39,7 @@ public class KaryListener extends ListenerAdapter {
         if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
         if (event.getMember().getUser().isBot()) return;
 
-        
+
         check(event);
     }
 

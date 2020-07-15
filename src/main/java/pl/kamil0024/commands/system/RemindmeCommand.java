@@ -59,19 +59,19 @@ public class RemindmeCommand extends Command {
             return false;
         }
 
-        String tresc = context.getArgs().get(1);
+        String tresc = context.getArgsToString(1);
         if (tresc == null) {
             context.send(context.getTranslate("remind.blank")).queue();
             return false;
         }
-
         RemindConfig rc = remindDao.get(remindDao.getNextId());
         rc.setUserId(context.getUser().getId());
         rc.setCzas(dur);
         rc.setTresc(tresc);
         rc.setMsg(context.getMessage().getJumpUrl());
         remindDao.save(rc);
-        context.send(context.getTranslate("remind.save")).queue();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
+        context.send(context.getTranslate("remind.save", sdf.format(new Date(dur)))).queue();
         return true;
     }
 

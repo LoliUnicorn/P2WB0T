@@ -41,7 +41,6 @@ public class BanCommand extends Command {
         }
         String powod = context.getArgsToString(1);
         if (powod == null) powod = context.getTranslate("modlog.none");
-        context.send("xd").mentionUsers(context.getUser().getId()).queue();
         String check = check(context, mem);
         if (check != null) {
             context.send(check).queue();
@@ -52,7 +51,7 @@ public class BanCommand extends Command {
         String nick = UserUtil.getMcNick(context.getGuild().getMember(mem));
 
         Member m = context.getGuild().getMember(mem);
-        if (m != null && context.getGuild().getSelfMember().canInteract(m)) {
+        if (m != null && !context.getGuild().getSelfMember().canInteract(m)) {
             msg.editMessage(context.getTranslate("ban.error")).queue();
             return false;
         }
