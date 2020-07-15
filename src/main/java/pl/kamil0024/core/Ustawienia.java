@@ -30,6 +30,7 @@ public class Ustawienia {
         public String helperRole = def;
         public String moderatorRole = def;
         public String adminRole = def;
+        public String chatMod = def;
     }
 
     public static class Bot {
