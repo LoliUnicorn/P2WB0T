@@ -31,7 +31,7 @@ public class PlayCommand extends Command {
             return false;
         }
         
-        if (hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {
+        if (!hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {
             context.send("Nie mam wystarczających uprawnień do dołączenia na serwer!").queue();
             return false;
         }

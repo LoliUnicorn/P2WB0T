@@ -56,7 +56,7 @@ public class MusicModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new PlayCommand(this));
-        
+
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
         return true;
