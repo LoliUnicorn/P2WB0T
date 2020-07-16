@@ -18,6 +18,7 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
+import pl.kamil0024.music.commands.PlayCommand;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class MusicModule implements Modul {
     private ArrayList<Command> cmd;
 
     @Inject CommandManager commandManager;
-    @Inject Tlumaczenia tlumaczenia;
     @Inject ShardManager api;
     @Inject EventWaiter eventWaiter;
 
@@ -55,7 +55,8 @@ public class MusicModule implements Modul {
     public boolean startUp() {
         cmd = new ArrayList<>();
 
-
+        cmd.add(new PlayCommand(this));
+        
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
         return true;
