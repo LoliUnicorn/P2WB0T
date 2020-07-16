@@ -30,6 +30,7 @@ import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
+import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 
@@ -178,9 +179,10 @@ public class B0T {
         modulManager.getModules().add(new LogsModule(api));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog));
 //        modulManager.getModules().add(new StatusModule(api));
-        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
+//        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao));
+        modulManager.getModules().add(new MusicModule(commandManager, api, eventWaiter));
 
         for (Modul modul : modulManager.getModules()) {
             try {

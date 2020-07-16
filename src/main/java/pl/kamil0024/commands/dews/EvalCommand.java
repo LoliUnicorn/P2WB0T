@@ -101,7 +101,6 @@ public class EvalCommand extends Command {
         eb.addField("\ud83d\udce4 INPUT", codeBlock("java", kod), false);
         eb.addField("\ud83d\udce5 OUTPUT", codeBlock("java", value), false);
         context.getChannel().sendMessage(eb.build()).queue();
-        context.getMember().getVoiceState()
         return true;
     }
 

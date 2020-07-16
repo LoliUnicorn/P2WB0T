@@ -39,9 +39,8 @@ public class MusicModule implements Modul {
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
 
-    public MusicModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter) {
+    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
         this.commandManager = commandManager;
-        this.tlumaczenia = tlumaczenia;
         this.api = api;
         this.eventWaiter = eventWaiter;
 
