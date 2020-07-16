@@ -24,7 +24,7 @@ public class PlayCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String url = context.getArgsToString(0);
+        String url = context.getArgs(0);
         
         if (!isVoice(context.getMember())) {
             context.send("Musisz być połączony z kanałem głosowym!").queue();
