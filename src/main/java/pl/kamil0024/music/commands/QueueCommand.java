@@ -1,6 +1,7 @@
 package pl.kamil0024.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.joda.time.Duration;
 import pl.kamil0024.core.command.Command;
@@ -12,10 +13,15 @@ import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.musicmanager.entity.TrackScheduler;
 
 import java.awt.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
 
 public class QueueCommand extends Command {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private MusicModule musicModule;
     private EventWaiter eventWaiter;
@@ -37,22 +43,32 @@ public class QueueCommand extends Command {
         }
 
         ArrayList<EmbedBuilder> pages = new ArrayList<>();
-        for (AudioTrack audioTrack : trackScheduler.getQueue()) {
-            pages.add(getEmbed(audioTrack));
+        if (trackScheduler.getAktualnaPiosenka() != null) {
+            pages.add(getEmbed(trackScheduler.getAktualnaPiosenka(), true));
         }
+        for (AudioTrack audioTrack : trackScheduler.getQueue()) {
+            pages.add(getEmbed(audioTrack, false));
+        }
+
         new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
         return true;
     }
 
-    public static EmbedBuilder getEmbed(AudioTrack audioTrack) {
+    public static EmbedBuilder getEmbed(AudioTrack audioTrack, boolean aktualnieGrana) {
         EmbedBuilder eb = new EmbedBuilder();
+        AudioTrackInfo info = audioTrack.getInfo();
+
         eb.setColor(Color.cyan);
         eb.setImage(getImageUrl(audioTrack));
 
-        eb.addField("Tytuł", audioTrack.getInfo().title, false);
-        eb.addField("Autor", audioTrack.getInfo().author, false);
+        eb.addField("Tytuł", String.format("[%s](%s)", info.title, getYtLink(audioTrack)), false);
+        eb.addField("Autor", info.author, false);
 
-        eb.addField("Długość", longToTimespan(audioTrack.getDuration()), false);
+        if (!aktualnieGrana) {
+            eb.addField("Długość", info.isStream ? "To jest stream ;p" : longToTimespan(info.length), false);
+        } else {
+            eb.addField("Długość", audioTrack.getPosition() + " - " + longToTimespan(info.length), false);
+        }
 
         return eb;
     }
@@ -61,16 +77,12 @@ public class QueueCommand extends Command {
         return String.format("https://i.ytimg.com/vi_webp/%s/sddefault.webp", audtioTrack.getIdentifier());
     }
 
-    public static String longToTimespan(long lonk) {
-        Duration dur = new Duration(lonk);
-        StringBuilder sb = new StringBuilder();
+    public static String getYtLink(AudioTrack audioTrack) {
+        return String.format("https://www.youtube.com/watch?v=%s", audioTrack.getIdentifier());
+    }
 
-        if (dur.getStandardDays() != 0) sb.append(dur.getStandardDays()).append(" d. ");
-        if (dur.getStandardHours() != 0) sb.append(dur.getStandardDays()).append(" godz. ");
-        if (dur.getStandardMinutes() != 0) sb.append(dur.getStandardDays()).append(" min. ");
-        if (dur.getStandardSeconds() != 0) sb.append(dur.getStandardDays()).append(" sek. ");
-
-        return sb.toString();
+    public static String longToTimespan(Number milins) {
+        return FORMATTER.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(milins.longValue()), ZoneId.of("GMT")));
     }
 
 }
