@@ -1,6 +1,7 @@
 package pl.kamil0024.chat.listener;
 
 import com.google.inject.Inject;
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -46,14 +47,22 @@ public class ChatListener extends ListenerAdapter {
     @Inject private CaseDao caseDao;
     @Inject private ModLog modLog;
 
-    List<String> przeklenstwa;
+    @Getter private List<String> przeklenstwa;
 
     public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
+
         this.przeklenstwa = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) { przeklenstwa.add(line); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (przeklenstwa.isEmpty()) Log.newError("Lista przeklenstw jest nullem!");
     }
 
     @Override
@@ -74,114 +83,94 @@ public class ChatListener extends ListenerAdapter {
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
 
-    public static void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
-        synchronized (msg.getAuthor().getId()) {
-            if (MuteCommand.hasMute(member)) return;
+    public void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+        if (MuteCommand.hasMute(member)) return;
 
-            String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "");
-            Action action = new Action(karyJSON);
-            action.setMsg(msg);
+        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "");
+        Action action = new Action(karyJSON);
+        action.setMsg(msg);
 
-            String przeklenstwa = msgRaw;
+        String przeklenstwa = msgRaw;
 
-            String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
-            for (String s : tak) {
-                String[] kurwa = s.split(";");
-                przeklenstwa = przeklenstwa.replaceAll(kurwa[1], kurwa[0]);
-            }
-            przeklenstwa = przeklenstwa.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "");
+        String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
+        for (String s : tak) {
+            String[] kurwa = s.split(";");
+            przeklenstwa = przeklenstwa.replaceAll(kurwa[1], kurwa[0]);
+        }
+        przeklenstwa = przeklenstwa.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "");
 
-            if (containsSwear(przeklenstwa.split(" ")) != null) {
-                msg.delete().queue();
+        if (containsSwear(przeklenstwa.split(" ")) != null) {
+            msg.delete().queue();
 //                msg.getChannel().sendMessage(String.format("<@%s>, ładnie to tak przeklinać?", msg.getAuthor().getId())).queue();
 
-                KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
-                if (kara == null) {
-                    Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem");
-                } else {
-                    PunishCommand.putPun(kara,
-                            Collections.singletonList(member),
-                            member.getGuild().getSelfMember(),
-                            msg.getTextChannel(),
-                            caseDao, modLog);
-                    try {
-                        member.getGuild().addRoleToMember(member, Objects.requireNonNull(member.getGuild().getRoleById(Ustawienia.instance.muteRole))).complete();
-                    } catch (Exception e) {
-                        Log.newError(e);
-                    }
-                }
-                return;
+            KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
+            if (kara == null) {
+                Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem");
+            } else {
+                PunishCommand.putPun(kara,
+                        Collections.singletonList(member),
+                        member.getGuild().getSelfMember(),
+                        msg.getTextChannel(),
+                        caseDao, modLog);
             }
-            if (containsLink(msgRaw.split(" ")) != null) {
-                action.setKara(Action.ListaKar.LINK);
-                action.send();
-                return;
-            }
-
-            if (containsInvite(msgRaw.split(" "))) {
-                msg.delete().queue();
-                action.setKara(Action.ListaKar.LINK);
-                action.send();
-                return;
-            }
-
-            int emote = emoteCount(msgRaw, msg.getJDA());
-
-            int caps = 0;
-            String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
-            try {
-                caps = (containsCaps(capsMsg) / capsMsg.length()) * 100;
-            } catch (Exception ignored) {}
-
-            int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
-
-            if (flood > 4 || caps >= 80 || emote > 3) {
-                Log.debug("---------------------------");
-                Log.debug("user: " + msg.getAuthor().getId());
-                Log.debug("msg: " + msgRaw);
-                Log.debug("int flooda: " + flood);
-                Log.debug("procent capsa " + caps);
-                Log.debug("int emotek: " + emote);
-                Log.debug("---------------------------");
-                msg.delete().queue();
-                action.setKara(Action.ListaKar.FLOOD);
-                action.send();
-            }
-
-            // Może to nie być w 100% prawdziwe
-            action.setPewnosc(false);
-            action.setDeleted(false);
-            if (containsSwear(new String[] {przeklenstwa}) != null ||
-                    containsSwear(new String[] {przeklenstwa.replaceAll(" ", "")}) != null) {
-                action.setKara(Action.ListaKar.ZACHOWANIE);
-                action.send();
-            }
-
-            if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
-                action.setKara(Action.ListaKar.SKROTY);
-                action.send();
-            }
+            return;
         }
+        if (containsLink(msgRaw.split(" ")) != null) {
+            action.setKara(Action.ListaKar.LINK);
+            action.send();
+            return;
+        }
+
+        if (containsInvite(msgRaw.split(" "))) {
+            msg.delete().queue();
+            action.setKara(Action.ListaKar.LINK);
+            action.send();
+            return;
+        }
+
+        int emote = emoteCount(msgRaw, msg.getJDA());
+
+        int caps = 0;
+        String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
+        try {
+            caps = (containsCaps(capsMsg) / capsMsg.length()) * 100;
+        } catch (Exception ignored) {}
+
+        int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
+
+        if (flood > 4 || caps >= 80 || emote > 3) {
+            Log.debug("---------------------------");
+            Log.debug("user: " + msg.getAuthor().getId());
+            Log.debug("msg: " + msgRaw);
+            Log.debug("int flooda: " + flood);
+            Log.debug("procent capsa " + caps);
+            Log.debug("int emotek: " + emote);
+            Log.debug("---------------------------");
+            msg.delete().queue();
+            action.setKara(Action.ListaKar.FLOOD);
+            action.send();
+        }
+
+        // Może to nie być w 100% prawdziwe
+        action.setPewnosc(false);
+        action.setDeleted(false);
+        if (containsSwear(new String[] {przeklenstwa}) != null ||
+                containsSwear(new String[] {przeklenstwa.replaceAll(" ", "")}) != null) {
+            action.setKara(Action.ListaKar.ZACHOWANIE);
+            action.send();
+        }
+        if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
+            action.setKara(Action.ListaKar.SKROTY);
+            action.send();
+        }
+
     }
 
     @Nullable
-    public static String containsSwear(String[] list) {
-        File file = FILE;
-        if (!file.exists()) {
-            Log.error("Plik do przeklenstw nie istnieje! FIle=" + file);
-            return null;
-        }
-        List<String> przeklenstwa = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) { przeklenstwa.add(line); }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public String containsSwear(String[] list) {
         for (String s : list) {
             if (s != null && !s.isEmpty()) {
-                if (przeklenstwa.contains(s.toLowerCase())) return s.toLowerCase();
+                if (getPrzeklenstwa().contains(s.toLowerCase())) return s.toLowerCase();
             }
         }
         return null;

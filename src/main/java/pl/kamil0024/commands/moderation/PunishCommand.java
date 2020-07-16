@@ -216,7 +216,6 @@ public class PunishCommand extends Command {
                 karaBuilder.setEnd(dur);
                 karaBuilder.setDuration(jegoTier.getDuration());
             }
-            Kara.put(caseDao, karaBuilder, modLog);
 
             switch (jegoTier.getType()) {
                 case KICK:
@@ -231,9 +230,13 @@ public class PunishCommand extends Command {
                     break;
                 case TEMPMUTE:
                     String mute = TempmuteCommand.tempmute(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
-                    if (mute != null) Log.newError(mute);
+                    if (mute != null) {
+                        Log.newError(mute);
+                        return;
+                    }
                     break;
             }
+            Kara.put(caseDao, karaBuilder, modLog);
         }
     }
 
