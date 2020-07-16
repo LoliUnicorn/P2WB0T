@@ -36,7 +36,7 @@ public class PlayCommand extends Command {
             return false;
         }
 
-        return musicModule.loadAndPlay(context.getChannel(), url);
+        return musicModule.loadAndPlay(context.getChannel(), url, getVc(context.getMember()));
     }
     
     public static boolean isVoice(Member member) {
