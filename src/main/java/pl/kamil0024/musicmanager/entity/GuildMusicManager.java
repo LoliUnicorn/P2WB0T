@@ -2,10 +2,12 @@ package pl.kamil0024.musicmanager.entity;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import lombok.Data;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
  */
+@Data
 public class GuildMusicManager {
     /**
      * Audio player for the guild.

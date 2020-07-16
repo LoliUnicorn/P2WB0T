@@ -4,10 +4,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.internal.entities.VoiceChannelImpl;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 
@@ -19,6 +19,7 @@ public class PlayCommand extends Command {
 
     public PlayCommand(MusicModule musicModule) {
         name = "play";
+        permLevel = PermLevel.HELPER;
 
         this.musicModule = musicModule;
     }

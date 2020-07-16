@@ -19,6 +19,7 @@ import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.music.commands.PlayCommand;
+import pl.kamil0024.music.commands.QueueCommand;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class MusicModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new PlayCommand(this));
+        cmd.add(new QueueCommand(this, eventWaiter));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
