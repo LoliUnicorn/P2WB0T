@@ -32,7 +32,7 @@ public class PlayCommand extends Command {
         }
         
         if (!hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {
-            context.send("Nie mam wystarczających uprawnień do dołączenia na serwer!").queue();
+            context.send("Nie mam wystarczających uprawnień do dołączenia na kanal!").queue();
             return false;
         }
 

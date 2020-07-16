@@ -99,7 +99,7 @@ public class MusicModule implements Modul {
         return musicManager;
     }
 
-    public boolean loadAndPlay(final TextChannel channel, final String trackUrl) {
+    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         AtomicBoolean error = new AtomicBoolean(false);
 
@@ -107,7 +107,7 @@ public class MusicModule implements Modul {
             @Override
             public void trackLoaded(AudioTrack track) {
                 channel.sendMessage("Dodaje do kolejki " + track.getInfo().title).queue();
-                play(channel.getGuild(), musicManager, track);
+                play(channel.getGuild(), musicManager, track, vc);
             }
 
             @Override
@@ -120,7 +120,7 @@ public class MusicModule implements Modul {
 
                 channel.sendMessage("Dodaje do kolejki " + firstTrack.getInfo().title + " (pierwsza piosenka w playliscie " + playlist.getName() + ")").queue();
 
-                play(channel.getGuild(), musicManager, firstTrack);
+                play(channel.getGuild(), musicManager, firstTrack, vc);
             }
 
             @Override
@@ -138,8 +138,8 @@ public class MusicModule implements Modul {
         return !error.get();
     }
 
-    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track) {
-        connectToFirstVoiceChannel(guild.getAudioManager());
+    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, VoiceChannel vc) {
+        connectToFirstVoiceChannel(guild.getAudioManager(), vc);
 
         musicManager.scheduler.queue(track);
     }
@@ -151,13 +151,8 @@ public class MusicModule implements Modul {
         channel.sendMessage("Puszczam nastęoną piosenkę").queue();
     }
 
-    public static void connectToFirstVoiceChannel(AudioManager audioManager) {
-        if (!audioManager.isConnected()) {
-            for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-                audioManager.openAudioConnection(voiceChannel);
-                break;
-            }
-        }
+    public static void connectToFirstVoiceChannel(AudioManager audioManager, VoiceChannel vc) {
+        audioManager.openAudioConnection(vc);
     }
 
 }
