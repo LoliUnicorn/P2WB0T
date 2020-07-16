@@ -18,6 +18,8 @@ import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.musicmanager.MusicManager;
+import pl.kamil0024.musicmanager.impl.MusicManagerImpl;
 
 import java.awt.*;
 
@@ -99,6 +101,7 @@ public class EvalCommand extends Command {
         eb.addField("\ud83d\udce4 INPUT", codeBlock("java", kod), false);
         eb.addField("\ud83d\udce5 OUTPUT", codeBlock("java", value), false);
         context.getChannel().sendMessage(eb.build()).queue();
+        context.getMember().getVoiceState()
         return true;
     }
 
