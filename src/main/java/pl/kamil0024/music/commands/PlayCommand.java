@@ -8,6 +8,7 @@ import net.dv8tion.jda.internal.entities.VoiceChannelImpl;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 
 import java.util.Objects;
@@ -24,7 +25,8 @@ public class PlayCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String url = context.getArgs(0);
+        String url = context.getArgs().get(0);
+        if (url == null) throw new UsageException();
         
         if (!isVoice(context.getMember())) {
             context.send("Musisz być połączony z kanałem głosowym!").queue();
