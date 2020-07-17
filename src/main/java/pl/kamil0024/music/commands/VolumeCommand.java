@@ -2,6 +2,7 @@ package pl.kamil0024.music.commands;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
@@ -14,6 +15,7 @@ public class VolumeCommand extends Command {
     public VolumeCommand(MusicModule musicModule) {
         name = "volume";
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;
     }

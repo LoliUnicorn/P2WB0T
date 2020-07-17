@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.EventWaiter;
@@ -26,6 +27,8 @@ public class YouTubeCommand extends Command {
         name = "youtube";
         aliases.add("yt");
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MUSIC;
+
         this.musicModule = musicModule;
         this.eventWaiter = eventWaiter;
     }

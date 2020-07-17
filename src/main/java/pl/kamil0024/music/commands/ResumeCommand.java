@@ -2,6 +2,7 @@ package pl.kamil0024.music.commands;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
@@ -16,6 +17,8 @@ public class ResumeCommand extends Command {
         aliases.add("stop");
 
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MUSIC;
+
         this.musicModule = musicModule;
     }
 

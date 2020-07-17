@@ -159,7 +159,11 @@ public class ChatListener extends ListenerAdapter {
             action.setKara(Action.ListaKar.ZACHOWANIE);
             action.send();
         }
-        if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
+
+        if (skrotyCount(msgRaw.toLowerCase().split(" "))
+                || skrotyCount(msgRaw.toLowerCase().replaceAll("[^\\w\\s]*", "").split(" "))
+                || skrotyCount(new String[] {msgRaw.toLowerCase()})
+                || skrotyCount(new String[] {msgRaw.replaceAll("[^\\w\\s]*", "").toLowerCase()})) {
             action.setKara(Action.ListaKar.SKROTY);
             action.send();
         }
@@ -265,8 +269,8 @@ public class ChatListener extends ListenerAdapter {
             if (whiteList.contains(s)) {
                 continue;
             }
-            s = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "");
-            String pat = s.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa");
+
+            String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa");
             if (pat.equals("kurwa")) return true;
         }
         return false;

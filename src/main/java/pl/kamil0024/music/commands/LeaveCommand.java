@@ -2,6 +2,7 @@ package pl.kamil0024.music.commands;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
@@ -13,6 +14,7 @@ public class LeaveCommand extends Command {
     public LeaveCommand(MusicModule musicModule) {
         name = "leave";
         aliases.add("opusc");
+        category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;
     }

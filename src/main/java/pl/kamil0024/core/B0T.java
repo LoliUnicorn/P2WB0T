@@ -33,6 +33,7 @@ import pl.kamil0024.logs.LogsModule;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
+import pl.kamil0024.stats.StatsModule;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -165,6 +166,7 @@ public class B0T {
         NieobecnosciDao nieobecnosciDao = new NieobecnosciDao(databaseManager);
         RemindDao remindDao = new RemindDao(databaseManager);
         GiveawayDao giveawayDao = new GiveawayDao(databaseManager);
+        StatsDao statsDao = new StatsDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -183,6 +185,7 @@ public class B0T {
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao));
         modulManager.getModules().add(new MusicModule(commandManager, api, eventWaiter));
+        modulManager.getModules().add(new StatsModule(commandManager, api, eventWaiter, statsDao));
 
         for (Modul modul : modulManager.getModules()) {
             try {

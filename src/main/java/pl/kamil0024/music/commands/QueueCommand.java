@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.joda.time.Duration;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
@@ -29,6 +30,7 @@ public class QueueCommand extends Command {
     public QueueCommand(MusicModule musicModule, EventWaiter eventWaiter) {
         name = "queue";
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;
         this.eventWaiter = eventWaiter;
