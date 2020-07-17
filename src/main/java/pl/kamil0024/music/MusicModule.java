@@ -59,7 +59,7 @@ public class MusicModule implements Modul {
 
         this.playerManager = new DefaultAudioPlayerManager();
         this.musicManagers = new HashMap<>();
-        this.youtubeSourceManager = new YoutubeAudioSourceManager(true)
+        this.youtubeSourceManager = new YoutubeAudioSourceManager(true);
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
