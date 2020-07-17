@@ -37,7 +37,7 @@ public class QueueCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         TrackScheduler trackScheduler = musicModule.getGuildAudioPlayer(context.getGuild()).getScheduler();
-        if (trackScheduler == null || trackScheduler.getQueue().isEmpty()) {
+        if (trackScheduler == null) {
             context.send("Nic nie gram!").queue();
             return false;
         }
@@ -49,6 +49,11 @@ public class QueueCommand extends Command {
 
         for (AudioTrack audioTrack : trackScheduler.getQueue()) {
             pages.add(getEmbed(audioTrack, false));
+        }
+
+        if (pages.isEmpty()) {
+            context.send("Nic nie gram!").queue();
+            return false;
         }
 
         new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
@@ -66,9 +71,9 @@ public class QueueCommand extends Command {
         eb.addField("Autor", info.author, false);
 
         if (!aktualnieGrana) {
-            eb.addField("Długość", info.isStream ? "To jest stream ;p" : longToTimespan(info.length), false);
+            eb.addField("Długość", info.isStream ? "To jest stream ;p" : longToTimespan(info.length), true);
         } else {
-            eb.addField("Długość", longToTimespan(audioTrack.getPosition()) + " - " + longToTimespan(info.length), false);
+            eb.addField("Długość", "Pozostało" + longToTimespan(info.length - audioTrack.getPosition()) + " z " + longToTimespan(info.length), true);
         }
 
         return eb;

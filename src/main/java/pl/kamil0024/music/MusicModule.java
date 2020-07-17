@@ -144,6 +144,10 @@ public class MusicModule implements Modul {
         connectToFirstVoiceChannel(guild.getAudioManager(), vc);
 
         musicManager.scheduler.queue(track);
+
+        if (musicManager.scheduler.getAktualnaPiosenka() == null) {
+            musicManager.scheduler.setAktualnaPiosenka(track);
+        }
     }
 
     public void skipTrack(TextChannel channel) {
