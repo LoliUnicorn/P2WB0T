@@ -9,10 +9,9 @@ import net.dv8tion.jda.api.managers.AudioManager;
 @Data
 public class GuildMusicManager {
 
-    public final AudioPlayer player;
-    public final TrackScheduler scheduler;
-    public final AudioManager audioManager;
-
+    public AudioPlayer player;
+    public TrackScheduler scheduler;
+    public AudioManager audioManager;
 
     public GuildMusicManager(AudioPlayerManager manager, AudioManager audioManager) {
         this.audioManager = audioManager;
