@@ -42,7 +42,7 @@ public class StatsCache {
             StatsConfig sc = statsDao.get(entry.getKey());
 
             Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), new BDate().getDateTime().getDayOfYear());
-            if (dzisiaj == null) {
+            if (dzisiaj == null || dzisiaj.getDay() != new BDate().getDateTime().getDayOfYear()) {
                 sc.getStats().add(entry.getValue());
             } else {
                 dzisiaj.setNapisanychWiadomosci(entry.getValue().getNapisanychWiadomosci() + dzisiaj.getNapisanychWiadomosci());
