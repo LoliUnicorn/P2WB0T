@@ -18,6 +18,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class TrackScheduler extends AudioEventAdapter {
+    // haha @Data robi brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+
     @Getter private AudioPlayer player;
     @Getter private GuildMusicManager guildMusicManager;
 
@@ -27,9 +29,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Getter @Setter public AudioTrack aktualnaPiosenka = null;
 
-    public TrackScheduler(AudioPlayer player, AudioManager audioManager, GuildMusicManager guildMusicManager) {
+    @Getter @Setter public Boolean destroy = false;
+
+    public TrackScheduler(AudioPlayer player, AudioManager audioManager) {
         this.player = player;
-        this.guildMusicManager = guildMusicManager;
         this.audioManager = audioManager;
         this.queue = new LinkedBlockingQueue<>();
     }
@@ -47,6 +50,8 @@ public class TrackScheduler extends AudioEventAdapter {
             setAktualnaPiosenka(next);
         } else {
             Log.debug("nastepny track jest nullem");
+            setDestroy(true);
+            getPlayer().destroy();
             getPlayer().removeListener(this);
             getAudioManager().closeAudioConnection();
             setAktualnaPiosenka(null);

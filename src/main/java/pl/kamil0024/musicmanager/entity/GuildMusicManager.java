@@ -16,7 +16,7 @@ public class GuildMusicManager {
     public GuildMusicManager(AudioPlayerManager manager, AudioManager audioManager) {
         this.audioManager = audioManager;
         player = manager.createPlayer();
-        scheduler = new TrackScheduler(player, audioManager, this);
+        scheduler = new TrackScheduler(player, audioManager);
         player.addListener(scheduler);
     }
 

@@ -111,7 +111,7 @@ public class MusicModule implements Modul {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
-        if (musicManager == null || musicManager.getPlayer() == null) {
+        if (musicManager == null || musicManager.getPlayer() == null || musicManager.getScheduler().getDestroy()) {
             musicManager = new GuildMusicManager(playerManager, guild.getAudioManager());
             musicManagers.put(guildId, musicManager);
         }
