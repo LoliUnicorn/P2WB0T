@@ -42,7 +42,6 @@ public class TrackScheduler extends AudioEventAdapter {
             player.startTrack(next, false);
             setAktualnaPiosenka(next);
         } else {
-            getAudioManager().closeAudioConnection();
             setAktualnaPiosenka(null);
         }
     }
