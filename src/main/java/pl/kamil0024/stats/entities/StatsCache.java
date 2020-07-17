@@ -6,6 +6,7 @@ import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.stats.commands.StatsCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class StatsCache {
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
             Log.debug("tak " + entry.getValue().getDay());
-            Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay());
+            Statystyka dzisiaj = StatsCommand.getStatsOfDayMinus(sc.getStats(), 0);
             if (dzisiaj == null) {
                 Log.debug("dzisiaj jest nullem");
                 sc.getStats().add(entry.getValue());
