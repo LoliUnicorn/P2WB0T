@@ -47,9 +47,7 @@ public class TrackScheduler extends AudioEventAdapter {
         } else {
             Log.debug("nastepny track jest nullem");
             getPlayer().removeListener(this);
-            getPlayer().destroy();
             getAudioManager().closeAudioConnection();
-            getGuildMusicManager().setDestroy(true);
             setAktualnaPiosenka(null);
         }
     }
