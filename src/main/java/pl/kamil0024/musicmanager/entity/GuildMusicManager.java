@@ -13,13 +13,14 @@ public class GuildMusicManager {
     public final TrackScheduler scheduler;
     public final AudioManager audioManager;
 
-    public boolean destroy = false;
+    public Boolean destroy;
 
     public GuildMusicManager(AudioPlayerManager manager, AudioManager audioManager) {
         this.audioManager = audioManager;
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player, audioManager, this);
         player.addListener(scheduler);
+        destroy = false;
     }
 
     public AudioPlayerSendHandler getSendHandler() {
