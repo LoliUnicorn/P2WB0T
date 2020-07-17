@@ -1,5 +1,6 @@
 package pl.kamil0024.music.commands;
 
+import com.google.gson.Gson;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -24,8 +25,8 @@ public class YouTubeCommand extends Command {
     public boolean execute(CommandContext context) {
         String tytul = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
-        
-        context.send(musicModule.search(tytul) +  " ").queue();
+
+        context.send(new Gson().toJson(musicModule.search(tytul))).queue();
 
         return true;
     }
