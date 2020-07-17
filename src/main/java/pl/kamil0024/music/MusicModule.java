@@ -5,6 +5,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
@@ -45,7 +49,8 @@ public class MusicModule implements Modul {
     private final Map<Long, GuildMusicManager> musicManagers;
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
-    public static YoutubeAudioSourceManager youtubeSourceManager = new YoutubeAudioSourceManager();
+
+    public static YoutubeAudioSourceManager youtubeSourceManager;
 
     public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
         this.commandManager = commandManager;
@@ -57,6 +62,11 @@ public class MusicModule implements Modul {
 
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
+
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true));
+        playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
+        playerManager.registerSourceManager(new VimeoAudioSourceManager());
+        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
     }
 
     @Override
