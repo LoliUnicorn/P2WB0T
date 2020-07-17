@@ -4,6 +4,7 @@ import lombok.Data;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,16 +43,17 @@ public class StatsCache {
             StatsConfig sc = statsDao.get(entry.getKey());
 
             Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), new BDate().getDateTime().getDayOfYear());
-            if (dzisiaj == null || dzisiaj.getDay() != new BDate().getDateTime().getDayOfYear()) {
+            if (dzisiaj == null) {
+                Log.debug("statsCache 1");
                 sc.getStats().add(entry.getValue());
-            } else {
+            } else if (dzisiaj.getDay() != new BDate().getDateTime().getDayOfYear()) {
+                Log.debug("statsCache 2");
                 dzisiaj.setNapisanychWiadomosci(entry.getValue().getNapisanychWiadomosci() + dzisiaj.getNapisanychWiadomosci());
                 dzisiaj.setUsunietychWiadomosci(entry.getValue().getUsunietychWiadomosci() + dzisiaj.getUsunietychWiadomosci());
                 dzisiaj.setZbanowanych(entry.getValue().getZbanowanych() + dzisiaj.getZbanowanych());
                 dzisiaj.setZmutowanych(entry.getValue().getZmutowanych() + dzisiaj.getZmutowanych());
                 sc.getStats().add(dzisiaj);
             }
-
             statsDao.save(sc);
         }
     }
