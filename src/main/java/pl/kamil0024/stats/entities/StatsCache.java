@@ -40,9 +40,9 @@ public class StatsCache {
     public synchronized void databaseSave() {
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
+            sc.getStats().remove(StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay()));
             sc.getStats().add(entry.getValue());
             statsDao.save(sc);
-            save(entry.getKey(), entry.getValue());
         }
     }
 
