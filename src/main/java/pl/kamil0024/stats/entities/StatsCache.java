@@ -49,6 +49,7 @@ public class StatsCache {
                 dzisiaj.setUsunietychWiadomosci(entry.getValue().getUsunietychWiadomosci() + dzisiaj.getUsunietychWiadomosci());
                 dzisiaj.setZbanowanych(entry.getValue().getZbanowanych() + dzisiaj.getZbanowanych());
                 dzisiaj.setZmutowanych(entry.getValue().getZmutowanych() + dzisiaj.getZmutowanych());
+                sc.getStats().add(dzisiaj);
             }
 
             statsDao.save(sc);
