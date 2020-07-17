@@ -18,6 +18,7 @@ import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -41,11 +42,12 @@ implements Modul {
         @Inject NieobecnosciDao nieobecnosciDao;
         @Inject RemindDao remindDao;
         @Inject GiveawayDao giveawayDao;
+        @Inject StatsModule statsModule;
 
         private boolean start = false;
         private ModLog modLog;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule) {
             this.commandManager = commandManager;
             this.tlumaczenia = tlumaczenia;
             this.api = api;
@@ -59,6 +61,7 @@ implements Modul {
             this.nieobecnosciDao = nieobecnosciDao;
             this.remindDao = remindDao;
             this.giveawayDao = giveawayDao;
+            this.statsModule = statsModule;
 
             ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
             executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -74,7 +77,7 @@ implements Modul {
             cmd.add(new BotinfoCommand(commandManager, modulManager));
             cmd.add(new HelpCommand(commandManager));
             cmd.add(new PoziomCommand());
-            cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao));
+            cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule));
             cmd.add(new ForumCommand());
             cmd.add(new UserinfoCommand());
             cmd.add(new McpremiumCommand());

@@ -178,14 +178,16 @@ public class B0T {
         NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
+        StatsModule sm = new StatsModule(commandManager, api, eventWaiter, statsDao);
+
         modulManager.getModules().add(new LogsModule(api));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog));
 //        modulManager.getModules().add(new StatusModule(api));
 //        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, sm));
         modulManager.getModules().add(new MusicModule(commandManager, api, eventWaiter));
-        modulManager.getModules().add(new StatsModule(commandManager, api, eventWaiter, statsDao));
+        modulManager.getModules().add(sm);
 
         for (Modul modul : modulManager.getModules()) {
             try {

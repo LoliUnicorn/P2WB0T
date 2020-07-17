@@ -20,6 +20,7 @@ import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.musicmanager.MusicManager;
 import pl.kamil0024.musicmanager.impl.MusicManagerImpl;
+import pl.kamil0024.stats.StatsModule;
 
 import java.awt.*;
 
@@ -38,8 +39,9 @@ public class EvalCommand extends Command {
     @Inject private final ModulManager modulManager;
     @Inject private final GiveawayListener giveawayListener;
     @Inject private final GiveawayDao giveawayDao;
+    @Inject private final StatsModule statsModule;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -57,6 +59,7 @@ public class EvalCommand extends Command {
         this.modulManager = modulManager;
         this.giveawayListener = giveawayListener;
         this.giveawayDao = giveawayDao;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -84,6 +87,7 @@ public class EvalCommand extends Command {
         shell.setVariable("modulManager", modulManager);
         shell.setVariable("giveawayListener", giveawayListener);
         shell.setVariable("giveawayDao", giveawayDao);
+        shell.setVariable("statsModule", statsModule);
 
         Object value;
         boolean error = false;
