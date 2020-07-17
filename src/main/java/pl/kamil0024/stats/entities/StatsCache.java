@@ -1,9 +1,11 @@
 package pl.kamil0024.stats.entities;
 
+import com.google.gson.Gson;
 import lombok.Data;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +42,17 @@ public class StatsCache {
     public synchronized void databaseSave() {
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
-            sc.getStats().remove(StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay()));
-            sc.getStats().add(entry.getValue());
+            Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay());
+            if (dzisiaj == null) {
+                Log.debug("dzisiaj jest nullem");
+                sc.getStats().add(entry.getValue());
+            } else {
+                Log.debug("chyj kurwa");
+                Log.debug(new Gson().toJson(entry.getValue()));
+                Log.debug(new Gson().toJson(dzisiaj);
+                sc.getStats().remove(dzisiaj);
+                sc.getStats().add(entry.getValue());
+            }
             statsDao.save(sc);
         }
     }
