@@ -38,7 +38,7 @@ public class QueueCommand extends Command {
     public boolean execute(CommandContext context) {
         TrackScheduler trackScheduler = musicModule.getGuildAudioPlayer(context.getGuild()).getScheduler();
         if (trackScheduler == null) {
-            context.send("Nic nie gram!").queue();
+            context.send("trackScheduler jest nullem").queue();
             return false;
         }
 
@@ -52,7 +52,7 @@ public class QueueCommand extends Command {
         }
 
         if (pages.isEmpty()) {
-            context.send("Nic nie gram!").queue();
+            context.send("Kolejka jest pusta!").queue();
             return false;
         }
 
