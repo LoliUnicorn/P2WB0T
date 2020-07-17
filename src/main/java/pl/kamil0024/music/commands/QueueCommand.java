@@ -46,6 +46,7 @@ public class QueueCommand extends Command {
         if (trackScheduler.getAktualnaPiosenka() != null) {
             pages.add(getEmbed(trackScheduler.getAktualnaPiosenka(), true));
         }
+
         for (AudioTrack audioTrack : trackScheduler.getQueue()) {
             pages.add(getEmbed(audioTrack, false));
         }
@@ -67,7 +68,7 @@ public class QueueCommand extends Command {
         if (!aktualnieGrana) {
             eb.addField("Długość", info.isStream ? "To jest stream ;p" : longToTimespan(info.length), false);
         } else {
-            eb.addField("Długość", audioTrack.getPosition() + " - " + longToTimespan(info.length), false);
+            eb.addField("Długość", longToTimespan(audioTrack.getPosition()) + " - " + longToTimespan(info.length), false);
         }
 
         return eb;
