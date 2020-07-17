@@ -42,6 +42,7 @@ public class StatsCache {
     public synchronized void databaseSave() {
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
+            Log.debug("tak " + entry.getValue().getDay());
             Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay());
             if (dzisiaj == null) {
                 Log.debug("dzisiaj jest nullem");
