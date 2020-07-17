@@ -7,6 +7,8 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 
+import java.util.Arrays;
+
 public class YouTubeCommand extends Command {
 
     private MusicModule musicModule;
@@ -24,7 +26,7 @@ public class YouTubeCommand extends Command {
         if (context.getArgs().get(0) == null) throw new UsageException();
 
         AudioTrack[] traki = musicModule.search(tytul);
-        context.send(traki.length + "").queue();
+        context.send(Arrays.toString(traki) +  " ").queue();
 
         return true;
     }
