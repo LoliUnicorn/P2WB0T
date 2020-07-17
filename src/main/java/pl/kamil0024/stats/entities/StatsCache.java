@@ -61,25 +61,25 @@ public class StatsCache {
         }
     }
 
-    public void addZmutowanych(String id, int liczba) {
+    public synchronized void addZmutowanych(String id, int liczba) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
         statystyka.setZmutowanych(liczba + statystyka.getZmutowanych());
         save(id, statystyka);
     }
 
-    public void addZbanowanych(String id, int liczba) {
+    public synchronized void addZbanowanych(String id, int liczba) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
         statystyka.setZbanowanych(liczba + statystyka.getZbanowanych());
         save(id, statystyka);
     }
 
-    public void addUsunietychWiadomosci(String id, int liczba) {
+    public synchronized void addUsunietychWiadomosci(String id, int liczba) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
         statystyka.setUsunietychWiadomosci(liczba + statystyka.getUsunietychWiadomosci());
         save(id, statystyka);
     }
 
-    public void addNapisanychWiadomosci(String id, int liczba) {
+    public synchronized void addNapisanychWiadomosci(String id, int liczba) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
         statystyka.setNapisanychWiadomosci(liczba + statystyka.getNapisanychWiadomosci());
         save(id, statystyka);
