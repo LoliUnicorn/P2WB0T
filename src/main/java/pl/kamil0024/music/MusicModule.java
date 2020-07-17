@@ -45,7 +45,7 @@ public class MusicModule implements Modul {
     private final Map<Long, GuildMusicManager> musicManagers;
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
-    public static YoutubeAudioSourceManager youtubeSourceManager;
+    public static YoutubeAudioSourceManager youtubeSourceManager = new YoutubeAudioSourceManager();
 
     public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
         this.commandManager = commandManager;
