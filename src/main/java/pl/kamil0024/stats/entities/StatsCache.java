@@ -30,13 +30,12 @@ public class StatsCache {
 
     public void add(String id, Statystyka stats) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
-        Log.debug(new Gson().toJson(statystyka));
 
         statystyka.setNapisanychWiadomosci(stats.getNapisanychWiadomosci() + statystyka.getNapisanychWiadomosci());
         statystyka.setUsunietychWiadomosci(stats.getUsunietychWiadomosci() + statystyka.getUsunietychWiadomosci());
         statystyka.setZbanowanych(stats.getZbanowanych() + statystyka.getZbanowanych());
         statystyka.setZmutowanych(stats.getZmutowanych() + statystyka.getZmutowanych());
-        Log.debug(new Gson().toJson(statystyka));
+        
         save(id, stats);
     }
 
@@ -58,6 +57,7 @@ public class StatsCache {
                 sc.getStats().add(dzisiaj);
             }
             statsDao.save(sc);
+            save(entry.getKey(), entry.getValue());
         }
     }
 
