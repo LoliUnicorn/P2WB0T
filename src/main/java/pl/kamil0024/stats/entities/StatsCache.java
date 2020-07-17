@@ -21,6 +21,8 @@ public class StatsCache {
     }
 
     public void save(String id, Statystyka stats) {
+        Statystyka stat = stats;
+        stat.setDay(new BDate().getDateTime().getDayOfYear());
         getStatystykaMap().put(id, stats);
     }
 
