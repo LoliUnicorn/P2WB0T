@@ -41,10 +41,10 @@ public class ResumeCommand extends Command {
         String tak = " piosenkę";
 
         if (audio.getPlayer().isPaused()) {
-            tak = "Wznawiam";
+            tak = "Wznawiam" + tak;
             audio.getPlayer().setPaused(false);
         } else {
-            tak = "Zatrzymuje";
+            tak = "Zatrzymuje" + tak;
             audio.getPlayer().setPaused(true);
         }
         context.send(tak).queue();

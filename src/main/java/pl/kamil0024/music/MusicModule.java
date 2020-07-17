@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.commands.*;
@@ -91,7 +92,7 @@ public class MusicModule implements Modul {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
-        if (musicManager == null) {
+        if (musicManager == null || musicManager.getPlayer() == null) {
             musicManager = new GuildMusicManager(playerManager);
             musicManagers.put(guildId, musicManager);
         }
@@ -114,15 +115,10 @@ public class MusicModule implements Modul {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                AudioTrack firstTrack = playlist.getSelectedTrack();
-
-                if (firstTrack == null) {
-                    firstTrack = playlist.getTracks().get(0);
+                for (AudioTrack track : playlist.getTracks()) {
+                    play(channel.getGuild(), musicManager, track, vc);
                 }
 
-                channel.sendMessage("Dodaje do kolejki " + firstTrack.getInfo().title + " (pierwsza piosenka w playliscie " + playlist.getName() + ")").queue();
-
-                play(channel.getGuild(), musicManager, firstTrack, vc);
             }
 
             @Override
