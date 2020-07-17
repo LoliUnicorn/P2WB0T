@@ -45,17 +45,9 @@ public class StatsCache {
 
             Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), new BDate().getTimestamp());
             if (dzisiaj == null) {
-                Log.debug("statsCache 1");
                 sc.getStats().add(entry.getValue());
-            } else if (dzisiaj.getDay() == new BDate().getDateTime().getDayOfYear()) {
-                Log.debug("statsCache 2");
-                sc.getStats().remove(dzisiaj);
-                dzisiaj.setNapisanychWiadomosci(entry.getValue().getNapisanychWiadomosci() + dzisiaj.getNapisanychWiadomosci());
-                dzisiaj.setUsunietychWiadomosci(entry.getValue().getUsunietychWiadomosci() + dzisiaj.getUsunietychWiadomosci());
-                dzisiaj.setZbanowanych(entry.getValue().getZbanowanych() + dzisiaj.getZbanowanych());
-                dzisiaj.setZmutowanych(entry.getValue().getZmutowanych() + dzisiaj.getZmutowanych());
-                sc.getStats().add(dzisiaj);
             }
+            
             statsDao.save(sc);
             save(entry.getKey(), entry.getValue());
         }

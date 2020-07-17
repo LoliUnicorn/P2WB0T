@@ -43,17 +43,6 @@ public class StatsModule implements Modul {
             statsCache.save(statsConfig.getId(), s);
         }
 
-        test();
-        test();
-    }
-
-    private void test() {
-        Log.debug(" = Symulacja = ");
-        getStatsCache().addNapisanychWiadomosci("343467373417857025", 1);
-        getStatsCache().addZmutowanych("343467373417857025", 2);
-        getStatsCache().addZbanowanych("343467373417857025", 3);
-
-        getStatsCache().databaseSave();
     }
 
     @Override
