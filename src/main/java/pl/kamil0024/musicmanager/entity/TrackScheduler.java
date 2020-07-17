@@ -46,8 +46,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void nextTrack() {
         AudioTrack next = queue.poll();
         if (next != null) {
-            player.startTrack(next, false);
-            setAktualnaPiosenka(next);
+            if (!getDestroy()) {
+                player.startTrack(next, false);
+                setAktualnaPiosenka(next);
+            }
         } else {
             destroy();
         }
