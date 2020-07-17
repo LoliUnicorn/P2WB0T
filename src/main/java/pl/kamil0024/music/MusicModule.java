@@ -50,7 +50,7 @@ public class MusicModule implements Modul {
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
 
-    public static YoutubeAudioSourceManager youtubeSourceManager;
+    public YoutubeAudioSourceManager youtubeSourceManager;
 
     public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
         this.commandManager = commandManager;
@@ -59,14 +59,11 @@ public class MusicModule implements Modul {
 
         this.playerManager = new DefaultAudioPlayerManager();
         this.musicManagers = new HashMap<>();
-
+        this.youtubeSourceManager = new YoutubeAudioSourceManager(true)
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true));
-        playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
-        playerManager.registerSourceManager(new VimeoAudioSourceManager());
-        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
+        playerManager.registerSourceManager(youtubeSourceManager);
     }
 
     @Override
