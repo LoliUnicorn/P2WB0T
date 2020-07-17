@@ -42,7 +42,7 @@ public class StatsCache {
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
 
-            Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), new BDate().getDateTime().getDayOfYear());
+            Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), new BDate().getTimestamp());
             if (dzisiaj == null) {
                 Log.debug("statsCache 1");
                 sc.getStats().add(entry.getValue());

@@ -37,7 +37,7 @@ public class StatsModule implements Modul {
         this.statsCache = new StatsCache(statsDao);
 
         for (StatsConfig statsConfig : statsDao.getAll()) {
-            statsCache.save(statsConfig.getId(), StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getDateTime().getDayOfYear()));
+            statsCache.save(statsConfig.getId(), StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getTimestamp()));
         }
 
         new Thread(() -> {
