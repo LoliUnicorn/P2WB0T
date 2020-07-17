@@ -46,7 +46,7 @@ public class StatsCache {
             if (dzisiaj == null) {
                 Log.debug("statsCache 1");
                 sc.getStats().add(entry.getValue());
-            } else if (dzisiaj.getDay() != new BDate().getDateTime().getDayOfYear()) {
+            } else if (dzisiaj.getDay() == new BDate().getDateTime().getDayOfYear()) {
                 Log.debug("statsCache 2");
                 dzisiaj.setNapisanychWiadomosci(entry.getValue().getNapisanychWiadomosci() + dzisiaj.getNapisanychWiadomosci());
                 dzisiaj.setUsunietychWiadomosci(entry.getValue().getUsunietychWiadomosci() + dzisiaj.getUsunietychWiadomosci());
@@ -58,25 +58,25 @@ public class StatsCache {
         }
     }
 
-    public void addZmutowanych(String id, int liczba) {
+    public synchronized void addZmutowanych(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setZmutowanych(liczba);
         add(id, statystyka);
     }
 
-    public void addZbanowanych(String id, int liczba) {
+    public synchronized void addZbanowanych(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setZmutowanych(liczba);
         add(id, statystyka);
     }
 
-    public void addUsunietychWiadomosci(String id, int liczba) {
+    public synchronized void addUsunietychWiadomosci(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setUsunietychWiadomosci(liczba);
         add(id, statystyka);
     }
 
-    public void addNapisanychWiadomosci(String id, int liczba) {
+    public synchronized void addNapisanychWiadomosci(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setNapisanychWiadomosci(liczba);
         add(id, statystyka);
