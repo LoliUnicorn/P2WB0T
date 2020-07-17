@@ -49,13 +49,16 @@ public class TrackScheduler extends AudioEventAdapter {
             player.startTrack(next, false);
             setAktualnaPiosenka(next);
         } else {
-            Log.debug("nastepny track jest nullem");
-            setDestroy(true);
-            getPlayer().destroy();
-            getPlayer().removeListener(this);
-            getAudioManager().closeAudioConnection();
-            setAktualnaPiosenka(null);
+            destroy();
         }
+    }
+
+    public void destroy() {
+        setDestroy(true);
+        getPlayer().destroy();
+        getPlayer().removeListener(this);
+        getAudioManager().closeAudioConnection();
+        setAktualnaPiosenka(null);
     }
 
     @Override
