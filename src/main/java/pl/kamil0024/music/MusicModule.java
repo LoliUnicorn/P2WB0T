@@ -17,6 +17,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioReference;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -47,7 +48,7 @@ public class MusicModule implements Modul {
     private boolean start = false;
 
     private final AudioPlayerManager playerManager;
-    private final Map<Long, GuildMusicManager> musicManagers;
+    @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
 
@@ -110,7 +111,7 @@ public class MusicModule implements Modul {
         long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
-        if (musicManager == null || musicManager.getPlayer() == null) {
+        if (musicManager == null || musicManager.getPlayer() == null || musicManager.isDestroy()) {
             musicManager = new GuildMusicManager(playerManager, guild.getAudioManager());
             musicManagers.put(guildId, musicManager);
         }
