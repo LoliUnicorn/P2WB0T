@@ -120,14 +120,14 @@ public class MusicModule implements Modul {
         return musicManager;
     }
 
-    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc) {
+    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc, boolean sendMsg) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         AtomicBoolean error = new AtomicBoolean(false);
 
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                channel.sendMessage("Dodaje do kolejki " + track.getInfo().title).queue();
+                if (sendMsg) channel.sendMessage("Dodaje do kolejki " + track.getInfo().title).queue();
                 play(channel.getGuild(), musicManager, track, vc);
             }
 
@@ -136,12 +136,11 @@ public class MusicModule implements Modul {
                 for (AudioTrack track : playlist.getTracks()) {
                     play(channel.getGuild(), musicManager, track, vc);
                 }
-
             }
 
             @Override
             public void noMatches() {
-                channel.sendMessage("Nic nie znaleziono pod " + trackUrl).queue();
+                if (sendMsg) channel.sendMessage("Nic nie znaleziono pod " + trackUrl).queue();
                 error.set(true);
             }
 
@@ -154,14 +153,24 @@ public class MusicModule implements Modul {
         return !error.get();
     }
 
-    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, VoiceChannel vc) {
-        connectToFirstVoiceChannel(guild.getAudioManager(), vc);
+    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc) {
+        return loadAndPlay(channel, trackUrl, vc, true);
+    }
 
+    public synchronized void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, VoiceChannel vc) {
+        for (AudioTrack audioTrack : musicManager.scheduler.getQueue()) {
+            if (audioTrack.getIdentifier().equals(track.getIdentifier())) {
+                return;
+            }
+        }
+
+        connectToFirstVoiceChannel(guild.getAudioManager(), vc);
         musicManager.scheduler.queue(track);
 
         if (musicManager.scheduler.getAktualnaPiosenka() == null) {
             musicManager.scheduler.setAktualnaPiosenka(track);
         }
+
     }
 
     public static void connectToFirstVoiceChannel(AudioManager audioManager, VoiceChannel vc) {

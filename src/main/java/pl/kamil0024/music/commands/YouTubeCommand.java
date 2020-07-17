@@ -69,12 +69,12 @@ public class YouTubeCommand extends Command {
                         lista.add(i);
                     }
                     if (lista.isEmpty()) {
-                        msg.delete().queue();
+                        msg.delete().complete();
                         return;
                     }
-                    msg.delete().queue();
+                    msg.delete().complete();
                     lista.forEach(i -> musicModule.loadAndPlay(context.getChannel(), QueueCommand.getYtLink(mapa.get(i)), PlayCommand.getVc(context.getMember())));
-                    context.send("Dodano " + lista.size() + " utworów do kolejki!");
+                    context.send("Dodano " + lista.size() + " utworów do kolejki!").queue();
                 }, 30, TimeUnit.SECONDS, () -> msg.delete().queue());
 
         return true;
