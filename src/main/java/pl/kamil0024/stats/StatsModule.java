@@ -50,9 +50,9 @@ public class StatsModule implements Modul {
     private void test() {
         Log.debug(" = Symulacja = ");
         getStatsCache().addNapisanychWiadomosci("343467373417857025", 1);
-        getStatsCache().addZmutowanych("343467373417857025", 1);
-        getStatsCache().addZbanowanych("343467373417857025", 1);
-        getStatsCache().addUsunietychWiadomosci("343467373417857025", 1);
+        getStatsCache().addZmutowanych("343467373417857025", 2);
+        getStatsCache().addZbanowanych("343467373417857025", 3);
+        getStatsCache().addUsunietychWiadomosci("343467373417857025", 4);
 
         getStatsCache().databaseSave();
     }
