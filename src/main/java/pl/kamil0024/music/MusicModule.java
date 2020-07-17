@@ -167,7 +167,7 @@ public class MusicModule implements Modul {
         audioManager.openAudioConnection(vc);
     }
 
-    public AudioTrack[] search(String tytul) {
+    public AudioItem search(String tytul) {
         List<AudioTrack> results = new ArrayList<>();
         AudioItem playlist = null;
 
@@ -177,8 +177,7 @@ public class MusicModule implements Modul {
             results.addAll(((AudioPlaylist) playlist).getTracks());
         }
 
-        return results.isEmpty() ? null :
-                results.toArray(new AudioTrack[results.size()]);
+        return playlist;
     }
 
 }

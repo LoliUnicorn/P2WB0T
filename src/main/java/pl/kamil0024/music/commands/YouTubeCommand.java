@@ -24,9 +24,8 @@ public class YouTubeCommand extends Command {
     public boolean execute(CommandContext context) {
         String tytul = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
-
-        AudioTrack[] traki = musicModule.search(tytul);
-        context.send(Arrays.toString(traki) +  " ").queue();
+        
+        context.send(musicModule.search(tytul) +  " ").queue();
 
         return true;
     }
