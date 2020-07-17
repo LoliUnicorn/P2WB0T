@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.dv8tion.jda.api.managers.AudioManager;
 import pl.kamil0024.core.logger.Log;
 
 import java.util.concurrent.BlockingQueue;
@@ -17,12 +18,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Data
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
+    private AudioManager audioManager;
+
     public final BlockingQueue<AudioTrack> queue;
 
     public AudioTrack aktualnaPiosenka = null;
 
-    public TrackScheduler(AudioPlayer player) {
+    public TrackScheduler(AudioPlayer player, AudioManager audioManager) {
         this.player = player;
+        this.audioManager = audioManager;
         this.queue = new LinkedBlockingQueue<>();
     }
 
@@ -37,6 +41,9 @@ public class TrackScheduler extends AudioEventAdapter {
         if (next != null) {
             player.startTrack(next, false);
             setAktualnaPiosenka(next);
+        } else {
+            getAudioManager().closeAudioConnection();
+            setAktualnaPiosenka(null);
         }
     }
 

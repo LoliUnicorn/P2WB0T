@@ -11,6 +11,7 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.RemindDao;
 import pl.kamil0024.core.database.config.RemindConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 
 import java.awt.*;
@@ -90,19 +91,23 @@ public class RemindmeCommand extends Command {
     public static void check(RemindDao remindDao, ShardManager api) {
         long teraz = new Date().getTime();
         for (RemindConfig remind : remindDao.getAll()) {
-            assert remind.getCzas() - teraz <= 0;
+            if (remind.getCzas() - teraz <= 0) {
+                Log.debug("remind");
+                Log.debug(remind.getCzas() + "");
+                Log.debug(teraz + "");
+                Log.debug("remind");
+                BetterStringBuilder sb = new BetterStringBuilder();
+                sb.appendLine("⏰ **Przypomnienie**: " + remind.getTresc());
+                sb.appendLine("Przypomnienie ustawione w tej wiadomości:");
+                sb.append(remind.getMsg());
 
-            BetterStringBuilder sb = new BetterStringBuilder();
-            sb.appendLine("⏰ **Przypomnienie**: " + remind.getTresc());
-            sb.appendLine("Przypomnienie ustawione w tej wiadomości:");
-            sb.append(remind.getMsg());
+                try {
+                    User u = api.retrieveUserById(remind.getUserId()).complete();
+                    u.openPrivateChannel().complete().sendMessage(sb.build()).queue();
+                } catch (Exception ignored) {}
 
-            try {
-                User u = api.retrieveUserById(remind.getUserId()).complete();
-                u.openPrivateChannel().complete().sendMessage(sb.build()).queue();
-            } catch (Exception ignored) {}
-
-            remindDao.remove(remind);
+                remindDao.remove(remind);
+            }
         }
 
     }

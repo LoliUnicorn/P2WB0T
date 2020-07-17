@@ -111,7 +111,7 @@ public class MusicModule implements Modul {
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null || musicManager.getPlayer() == null) {
-            musicManager = new GuildMusicManager(playerManager);
+            musicManager = new GuildMusicManager(playerManager, guild.getAudioManager());
             musicManagers.put(guildId, musicManager);
         }
 
@@ -133,6 +133,7 @@ public class MusicModule implements Modul {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
+                if (sendMsg) channel.sendMessage("Dodaje do kolejki " +  playlist.getTracks() + "piosenek").queue();
                 for (AudioTrack track : playlist.getTracks()) {
                     play(channel.getGuild(), musicManager, track, vc);
                 }
@@ -140,7 +141,7 @@ public class MusicModule implements Modul {
 
             @Override
             public void noMatches() {
-                if (sendMsg) channel.sendMessage("Nic nie znaleziono pod " + trackUrl).queue();
+                if (sendMsg) channel.sendMessage("Nie znaleziono dopasowań!").queue();
                 error.set(true);
             }
 

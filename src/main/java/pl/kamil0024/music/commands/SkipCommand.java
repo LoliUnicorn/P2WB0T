@@ -37,7 +37,7 @@ public class SkipCommand extends Command {
             return false;
         }
         context.send("Puszczam następną piosenkę").queue();
-        musicManager.scheduler.nextTrack();
+        musicManager.getScheduler().nextTrack();
         return true;
     }
 
