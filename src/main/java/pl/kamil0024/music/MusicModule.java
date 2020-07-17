@@ -15,6 +15,7 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioReference;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -167,7 +168,7 @@ public class MusicModule implements Modul {
         audioManager.openAudioConnection(vc);
     }
 
-    public AudioItem search(String tytul) {
+    public AudioReference search(String tytul) {
         List<AudioTrack> results = new ArrayList<>();
         AudioItem playlist = null;
 
@@ -177,7 +178,7 @@ public class MusicModule implements Modul {
             results.addAll(((AudioPlaylist) playlist).getTracks());
         }
 
-        return playlist;
+        return (AudioReference) playlist;
     }
 
 }
