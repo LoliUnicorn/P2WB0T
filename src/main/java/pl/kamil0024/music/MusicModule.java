@@ -17,9 +17,7 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.core.util.Tlumaczenia;
-import pl.kamil0024.music.commands.PlayCommand;
-import pl.kamil0024.music.commands.QueueCommand;
+import pl.kamil0024.music.commands.*;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
@@ -58,6 +56,8 @@ public class MusicModule implements Modul {
 
         cmd.add(new PlayCommand(this));
         cmd.add(new QueueCommand(this, eventWaiter));
+        cmd.add(new VolumeCommand(this));
+        cmd.add(new ResumeCommand(this));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);

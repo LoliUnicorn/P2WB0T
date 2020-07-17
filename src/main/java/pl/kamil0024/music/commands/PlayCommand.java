@@ -33,9 +33,15 @@ public class PlayCommand extends Command {
             context.send("Musisz być połączony z kanałem głosowym!").queue();
             return false;
         }
+
+        if (isVoice(context.getGuild().getSelfMember())) {
+            assert !getVc(context.getGuild().getSelfMember()).getId().equals(getVc(context.getMember()).getId());
+            context.send("Musisz być połączony z tym samym kanałem co bot!").queue();
+            return false;
+        }
         
         if (!hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {
-            context.send("Nie mam wystarczających uprawnień do dołączenia na kanal!").queue();
+            context.send("Nie mam wystarczających uprawnień żeby dołaczyć na ten kanał!").queue();
             return false;
         }
 
@@ -55,6 +61,13 @@ public class PlayCommand extends Command {
     
     public static boolean hasPermission(Member mem, VoiceChannel vc) {
         return mem.hasPermission(vc, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK);
+    }
+
+    public static boolean isSameChannel(Member bot, Member mem) {
+        if (!PlayCommand.isVoice(bot)) {
+            return false;
+        }
+        return PlayCommand.isVoice(mem) && getVc(mem).getId().equals(getVc(bot).getId());
     }
 
 }
