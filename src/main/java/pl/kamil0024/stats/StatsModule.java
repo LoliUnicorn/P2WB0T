@@ -52,7 +52,6 @@ public class StatsModule implements Modul {
         getStatsCache().addNapisanychWiadomosci("343467373417857025", 1);
         getStatsCache().addZmutowanych("343467373417857025", 2);
         getStatsCache().addZbanowanych("343467373417857025", 3);
-        getStatsCache().addUsunietychWiadomosci("343467373417857025", 4);
 
         getStatsCache().databaseSave();
     }
