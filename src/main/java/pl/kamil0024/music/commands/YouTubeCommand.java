@@ -9,6 +9,7 @@ import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class YouTubeCommand extends Command {
 
@@ -26,7 +27,10 @@ public class YouTubeCommand extends Command {
         String tytul = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
 
-        context.send(new Gson().toJson(musicModule.search(tytul))).queue();
+        List<AudioTrack> audioTrackList = musicModule.search(tytul);
+
+        context.send(audioTrackList.size() + "").queue();
+        context.send(audioTrackList.get(0).getInfo().title + "").queue();
 
         return true;
     }

@@ -168,23 +168,15 @@ public class MusicModule implements Modul {
         audioManager.openAudioConnection(vc);
     }
 
-    public AudioItem search(String tytul) {
+    public List<AudioTrack> search(String tytul) {
         List<AudioTrack> results = new ArrayList<>();
-        AudioItem playlist = null;
-
-        playlist = youtubeSearchProvider.loadSearchResult(tytul, info -> new YoutubeAudioTrack(info, youtubeSourceManager));
+        AudioItem playlist = youtubeSearchProvider.loadSearchResult(tytul, info -> new YoutubeAudioTrack(info, youtubeSourceManager));
 
         if (playlist instanceof AudioPlaylist) {
             results.addAll(((AudioPlaylist) playlist).getTracks());
-            Log.debug("tak");
         }
 
-        Log.debug(playlist + "");
-        if (playlist instanceof AudioTrack) {
-            Log.debug("track");
-        }
-
-        return playlist;
+        return results;
     }
 
 }
