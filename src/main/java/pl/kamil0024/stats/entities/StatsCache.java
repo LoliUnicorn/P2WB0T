@@ -48,6 +48,7 @@ public class StatsCache {
                 sc.getStats().add(entry.getValue());
             } else if (dzisiaj.getDay() == new BDate().getDateTime().getDayOfYear()) {
                 Log.debug("statsCache 2");
+                sc.getStats().remove(dzisiaj);
                 dzisiaj.setNapisanychWiadomosci(entry.getValue().getNapisanychWiadomosci() + dzisiaj.getNapisanychWiadomosci());
                 dzisiaj.setUsunietychWiadomosci(entry.getValue().getUsunietychWiadomosci() + dzisiaj.getUsunietychWiadomosci());
                 dzisiaj.setZbanowanych(entry.getValue().getZbanowanych() + dzisiaj.getZbanowanych());
