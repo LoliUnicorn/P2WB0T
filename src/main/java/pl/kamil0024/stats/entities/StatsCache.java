@@ -35,7 +35,7 @@ public class StatsCache {
         statystyka.setUsunietychWiadomosci(stats.getUsunietychWiadomosci() + statystyka.getUsunietychWiadomosci());
         statystyka.setZbanowanych(stats.getZbanowanych() + statystyka.getZbanowanych());
         statystyka.setZmutowanych(stats.getZmutowanych() + statystyka.getZmutowanych());
-        
+
         save(id, stats);
     }
 
@@ -62,27 +62,27 @@ public class StatsCache {
     }
 
     public void addZmutowanych(String id, int liczba) {
-        Statystyka statystyka = new Statystyka();
-        statystyka.setZmutowanych(liczba);
-        add(id, statystyka);
+        Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
+        statystyka.setZmutowanych(liczba + statystyka.getZmutowanych());
+        save(id, statystyka);
     }
 
     public void addZbanowanych(String id, int liczba) {
-        Statystyka statystyka = new Statystyka();
-        statystyka.setZmutowanych(liczba);
-        add(id, statystyka);
+        Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
+        statystyka.setZbanowanych(liczba + statystyka.getZbanowanych());
+        save(id, statystyka);
     }
 
     public void addUsunietychWiadomosci(String id, int liczba) {
-        Statystyka statystyka = new Statystyka();
-        statystyka.setUsunietychWiadomosci(liczba);
-        add(id, statystyka);
+        Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
+        statystyka.setUsunietychWiadomosci(liczba + statystyka.getUsunietychWiadomosci());
+        save(id, statystyka);
     }
 
     public void addNapisanychWiadomosci(String id, int liczba) {
-        Statystyka statystyka = new Statystyka();
-        statystyka.setNapisanychWiadomosci(liczba);
-        add(id, statystyka);
+        Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
+        statystyka.setNapisanychWiadomosci(liczba + statystyka.getNapisanychWiadomosci());
+        save(id, statystyka);
     }
 
 }
