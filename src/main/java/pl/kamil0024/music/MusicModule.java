@@ -5,7 +5,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
@@ -23,6 +27,7 @@ import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,6 +43,9 @@ public class MusicModule implements Modul {
 
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
+
+    private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
+    public static YoutubeAudioSourceManager youtubeSourceManager;
 
     public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
         this.commandManager = commandManager;
@@ -59,6 +67,8 @@ public class MusicModule implements Modul {
         cmd.add(new QueueCommand(this, eventWaiter));
         cmd.add(new VolumeCommand(this));
         cmd.add(new ResumeCommand(this));
+        cmd.add(new SkipCommand(this));
+        cmd.add(new YouTubeCommand(this));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
@@ -146,15 +156,22 @@ public class MusicModule implements Modul {
         }
     }
 
-    public void skipTrack(TextChannel channel) {
-        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
-        musicManager.scheduler.nextTrack();
-
-        channel.sendMessage("Puszczam nastęoną piosenkę").queue();
-    }
-
     public static void connectToFirstVoiceChannel(AudioManager audioManager, VoiceChannel vc) {
         audioManager.openAudioConnection(vc);
+    }
+
+    public AudioTrack[] search(String tytul) {
+        List<AudioTrack> results = new ArrayList<>();
+        AudioItem playlist = null;
+
+        playlist = youtubeSearchProvider.loadSearchResult(tytul, info -> new YoutubeAudioTrack(info, youtubeSourceManager));
+
+        if (playlist instanceof AudioPlaylist) {
+            results.addAll(((AudioPlaylist) playlist).getTracks());
+        }
+
+        return results.isEmpty() ? null :
+                results.toArray(new AudioTrack[results.size()]);
     }
 
 }
