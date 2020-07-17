@@ -59,25 +59,25 @@ public class StatsCache {
         }
     }
 
-    public synchronized void addZmutowanych(String id, int liczba) {
+    public void addZmutowanych(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setZmutowanych(liczba);
         add(id, statystyka);
     }
 
-    public synchronized void addZbanowanych(String id, int liczba) {
+    public void addZbanowanych(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setZmutowanych(liczba);
         add(id, statystyka);
     }
 
-    public synchronized void addUsunietychWiadomosci(String id, int liczba) {
+    public void addUsunietychWiadomosci(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setUsunietychWiadomosci(liczba);
         add(id, statystyka);
     }
 
-    public synchronized void addNapisanychWiadomosci(String id, int liczba) {
+    public void addNapisanychWiadomosci(String id, int liczba) {
         Statystyka statystyka = new Statystyka();
         statystyka.setNapisanychWiadomosci(liczba);
         add(id, statystyka);
