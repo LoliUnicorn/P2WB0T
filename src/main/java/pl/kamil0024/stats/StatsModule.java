@@ -13,6 +13,7 @@ import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.entities.StatsCache;
+import pl.kamil0024.stats.entities.Statystyka;
 
 import java.util.ArrayList;
 
@@ -37,17 +38,13 @@ public class StatsModule implements Modul {
         this.statsCache = new StatsCache(statsDao);
 
         for (StatsConfig statsConfig : statsDao.getAll()) {
-            statsCache.save(statsConfig.getId(), StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getTimestamp()));
+            Statystyka s = StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getTimestamp());
+            if (s == null) continue;
+            statsCache.save(statsConfig.getId(), s);
         }
 
-        new Thread(() -> {
-            test();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException ignored) { }
-            test();
-        }).start();
-
+        test();
+        test();
     }
 
     private void test() {
