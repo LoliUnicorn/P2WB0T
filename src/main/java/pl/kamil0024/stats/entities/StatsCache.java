@@ -49,7 +49,7 @@ public class StatsCache {
             } else {
                 Log.debug("chyj kurwa");
                 Log.debug(new Gson().toJson(entry.getValue()));
-                Log.debug(new Gson().toJson(dzisiaj);
+                Log.debug(new Gson().toJson(dzisiaj));
                 sc.getStats().remove(dzisiaj);
                 sc.getStats().add(entry.getValue());
             }
