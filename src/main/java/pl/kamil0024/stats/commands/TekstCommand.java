@@ -52,9 +52,9 @@ public class TekstCommand extends Command {
             StringBuilder sb = new StringBuilder();
             EmbedBuilder tekst = new EmbedBuilder();
             tekst.setTimestamp(Instant.now());
-            for (String s : lyrics.split("\n\n")) {
+            for (String s : lyrics.split("\n")) {
                 sb.append(s);
-                if (sb.length() >= 700) {
+                if (sb.length() >= 900) {
                     tekst.addField(" ", sb.toString(), false);
                     sb = new StringBuilder();
                 }
