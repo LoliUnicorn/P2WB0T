@@ -69,7 +69,7 @@ class Version {
     static String getBuild() {
         def proc = 'git rev-list --count HEAD'.execute()
         proc.waitFor()
-        return proc.text.replaceAll("\\?", "")
+        return String.valueOf(proc.text)
     }
 
     String toString() {
