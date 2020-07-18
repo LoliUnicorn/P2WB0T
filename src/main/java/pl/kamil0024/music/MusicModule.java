@@ -23,8 +23,11 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.database.VoiceStateDao;
+import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
@@ -44,6 +47,7 @@ public class MusicModule implements Modul {
     @Inject CommandManager commandManager;
     @Inject ShardManager api;
     @Inject EventWaiter eventWaiter;
+    @Inject VoiceStateDao voiceStateDao;
 
     private boolean start = false;
 
@@ -54,10 +58,11 @@ public class MusicModule implements Modul {
 
     public YoutubeAudioSourceManager youtubeSourceManager;
 
-    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter) {
+    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao) {
         this.commandManager = commandManager;
         this.api = api;
         this.eventWaiter = eventWaiter;
+        this.voiceStateDao = voiceStateDao;
 
         this.playerManager = new DefaultAudioPlayerManager();
         this.musicManagers = new HashMap<>();
@@ -66,6 +71,17 @@ public class MusicModule implements Modul {
         AudioSourceManagers.registerLocalSource(playerManager);
 
         playerManager.registerSourceManager(youtubeSourceManager);
+
+        VoiceStateConfig vsc = voiceStateDao.get("1");
+        if (vsc != null && vsc.getVoiceChannel() != null) {
+            vsc.getVoiceChannel().getGuild().getAudioManager().openAudioConnection(vsc.getVoiceChannel());
+            musicManagers.putAll(vsc.getMusicManagers());
+            for (Map.Entry<Long, GuildMusicManager> entry : musicManagers.entrySet()) {
+                entry.getValue().getPlayer().setPaused(false);
+            }
+            voiceStateDao.delete();
+        }
+
     }
 
     @Override
@@ -191,4 +207,13 @@ public class MusicModule implements Modul {
         return results;
     }
 
+    public void load() {
+        Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+        if (g == null) return;
+        
+        VoiceStateConfig vsc = new VoiceStateConfig("1");
+        vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
+        vsc.setMusicManagers(getMusicManagers());
+        voiceStateDao.save(vsc);
+    }
 }

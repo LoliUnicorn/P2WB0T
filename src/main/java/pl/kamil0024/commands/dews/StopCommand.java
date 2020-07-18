@@ -8,24 +8,26 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
+import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.StatsModule;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StopCommand extends Command {
 
     private ModulManager modulManager;
     private StatsModule statsModule;
     private EventWaiter eventWaiter;
+    private MusicModule musicModule;
 
-    public StopCommand(ModulManager modulManager, StatsModule statsModule, EventWaiter eventWaiter) {
+    public StopCommand(ModulManager modulManager, StatsModule statsModule, EventWaiter eventWaiter, MusicModule musicModule) {
         name = "stop";
         permLevel = PermLevel.DEVELOPER;
 
         this.statsModule = statsModule;
         this.modulManager = modulManager;
         this.eventWaiter = eventWaiter;
+        this.musicModule = musicModule;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class StopCommand extends Command {
         context.getShardManager().setActivity(Activity.playing("Wyłącznie bota w toku..."));
 
         modulManager.disableAll();
-
+        musicModule.load();
         statsModule.getStatsCache().databaseSave();
 
         context.send("Zrobić builda? (y/n)").queue();

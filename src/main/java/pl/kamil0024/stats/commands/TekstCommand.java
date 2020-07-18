@@ -1,5 +1,6 @@
 package pl.kamil0024.stats.commands;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.json.JSONObject;
 import pl.kamil0024.core.command.Command;
@@ -7,6 +8,7 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.*;
+import pl.kamil0024.music.MusicModule;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,20 +17,26 @@ import java.util.Objects;
 public class TekstCommand extends Command {
 
     private EventWaiter eventWaiter;
+    private MusicModule musicModule;
 
-    public TekstCommand(EventWaiter eventWaiter) {
+    public TekstCommand(EventWaiter eventWaiter, MusicModule musicModule) {
         name = "tekst";
         aliases.add("lyrics");
         category = CommandCategory.MUSIC;
         permLevel = PermLevel.HELPER;
 
         this.eventWaiter = eventWaiter;
+        this.musicModule = musicModule;
     }
 
     @Override
     public boolean execute(CommandContext context) {
-        String arg = context.getArgsToString(0);
-        if (context.getArgs().get(0) == null) throw new UsageException();
+        String arg;
+        AudioTrack track = musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack();
+        if (musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() == null) {
+            arg = context.getArgsToString(0);
+            if (context.getArgs().get(0) == null) throw new UsageException();
+        } else arg = track.getInfo().title;
 
         try {
             JSONObject job = NetworkUtil.getJson("https://some-random-api.ml/lyrics?title=" + NetworkUtil.encodeURIComponent(arg));

@@ -171,6 +171,7 @@ public class B0T {
         RemindDao remindDao = new RemindDao(databaseManager);
         GiveawayDao giveawayDao = new GiveawayDao(databaseManager);
         StatsDao statsDao = new StatsDao(databaseManager);
+        VoiceStateDao voiceStateDao = new VoiceStateDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -182,7 +183,8 @@ public class B0T {
         NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
-        this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao);
+        MusicModule musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao);
+        this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
@@ -190,7 +192,7 @@ public class B0T {
 //        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule));
-        modulManager.getModules().add(new MusicModule(commandManager, api, eventWaiter));
+        modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
 
         for (Modul modul : modulManager.getModules()) {

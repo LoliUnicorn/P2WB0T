@@ -11,6 +11,7 @@ import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
+import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.commands.TekstCommand;
 import pl.kamil0024.stats.commands.TopCommand;
@@ -28,6 +29,7 @@ public class StatsModule implements Modul {
     @Inject ShardManager api;
     @Inject EventWaiter eventWaiter;
     @Inject StatsDao statsDao;
+    @Inject MusicModule musicModule;
 
     private boolean start = false;
 
@@ -35,12 +37,13 @@ public class StatsModule implements Modul {
 
     StatsListener statsListener;
 
-    public StatsModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, StatsDao statsDao) {
+    public StatsModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, StatsDao statsDao, MusicModule musicModule) {
         this.commandManager = commandManager;
         this.api = api;
         this.eventWaiter = eventWaiter;
         this.statsDao = statsDao;
         this.statsCache = new StatsCache(statsDao);
+        this.musicModule = musicModule;
 
         for (StatsConfig statsConfig : statsDao.getAll()) {
             Statystyka s = StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getDateTime().getDayOfYear());
@@ -58,7 +61,7 @@ public class StatsModule implements Modul {
 
         cmd.add(new StatsCommand(statsDao));
         cmd.add(new TopCommand(statsDao, eventWaiter));
-        cmd.add(new TekstCommand(eventWaiter));
+        cmd.add(new TekstCommand(eventWaiter, musicModule));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
