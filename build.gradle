@@ -6,7 +6,7 @@ plugins {
 
 group 'pl.kamil0024'
 
-def versionObj = new Version(major: 2, minor: 0, revision: 0, dopisek: "")
+def versionObj = new Version(major: 2, minor: 0)
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 
@@ -63,12 +63,12 @@ shadowJar {
 }
 
 class Version {
-    String major, minor, revision, dopisek
+    String major, minor
 
     static String getBuild() {
         def proc = 'git rev-list --count HEAD'.execute()
         proc.waitFor()
-        return proc.text
+        return proc.toString()
     }
 
     String toString() {
