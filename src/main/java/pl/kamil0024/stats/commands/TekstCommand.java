@@ -44,11 +44,24 @@ public class TekstCommand extends Command {
 
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(UserUtil.getColor(context.getMember()));
-            eb.addField("Tytuł", String.format("[%s](%s)", tytul, links.getString("genius")), false);
-            eb.addField("Autor", author, false);
+            eb.addField("Autor", author, true);
+            eb.addField("Tytuł", String.format("[%s](%s)", tytul, links.getString("genius")), true);
             eb.setTimestamp(Instant.now());
             eb.setImage(thumbnail.getString("genius"));
+
+            StringBuilder sb = new StringBuilder();
+            EmbedBuilder tekst = new EmbedBuilder();
+            tekst.setTimestamp(Instant.now());
+            for (String s : lyrics.split("\n\n")) {
+                sb.append(s);
+                if (sb.length() >= 800) {
+                    tekst.addField(" ", sb.toString(), false);
+                    sb = new StringBuilder();
+                }
+            }
+
             pages.add(eb);
+            pages.add(tekst);
 
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
 
