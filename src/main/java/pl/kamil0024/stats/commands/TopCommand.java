@@ -8,11 +8,13 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
+import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.stats.entities.Statystyka;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class TopCommand extends Command {
@@ -50,10 +52,7 @@ public class TopCommand extends Command {
         for (StatsConfig statsConfig : staty) {
             int suma = 0;
             Statystyka statyZParuDni = StatsCommand.getStatsOfDayMinus(statsConfig.getStats(), dni);
-            suma += (statyZParuDni.getNapisanychWiadomosci() +
-                    statyZParuDni.getUsunietychWiadomosci() +
-
-                    statyZParuDni.getWyrzuconych() +
+            suma += (statyZParuDni.getWyrzuconych() +
                     statyZParuDni.getZbanowanych() +
                     statyZParuDni.getZmutowanych());
 
@@ -65,9 +64,18 @@ public class TopCommand extends Command {
         }
         top = sortByValue(top);
 
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setColor(UserUtil.getColor(context.getMember()));
+        ArrayList<EmbedBuilder> pages = new ArrayList<>();
 
+        int rank = 1;
+        for (Map.Entry<String, Integer> entry : top.entrySet()) {
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setColor(UserUtil.getColor(context.getMember()));
+            eb.setTitle("Miejsce #" + rank);
+            eb.setDescription(StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()));
+            pages.add(eb);
+            rank++;
+        }
+        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 240).create(context.getChannel());
         return true;
     }
 

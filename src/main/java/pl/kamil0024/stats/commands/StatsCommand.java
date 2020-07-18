@@ -73,6 +73,7 @@ public class StatsCommand extends Command {
         StringBuilder sb = new StringBuilder();
         sb.append("Zmutowane osoby: ").append(statystyka.getZmutowanych()).append("\n");
         sb.append("Zbanowane osoby: ").append(statystyka.getZbanowanych()).append("\n");
+        sb.append("Wyrzucone osoby: ").append(statystyka.getWyrzuconych()).append("\n");
         sb.append("Usunięte wiadomości: ").append(statystyka.getUsunietychWiadomosci()).append("\n");
         sb.append("Napisane wiadomości: ").append(statystyka.getNapisanychWiadomosci());
         return sb;

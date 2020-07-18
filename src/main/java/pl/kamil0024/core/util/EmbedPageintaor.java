@@ -32,11 +32,22 @@ public class EmbedPageintaor {
 
     private long userId;
 
+    private int secound;
+
+    public EmbedPageintaor(List<EmbedBuilder> pages, User user, EventWaiter eventWaiter, JDA api, int secound) {
+        this.eventWaiter = eventWaiter;
+        this.pages = pages;
+        this.userId = user.getIdLong();
+        this.api = api;
+        this.secound = secound;
+    }
+
     public EmbedPageintaor(List<EmbedBuilder> pages, User user, EventWaiter eventWaiter, JDA api) {
         this.eventWaiter = eventWaiter;
         this.pages = pages;
         this.userId = user.getIdLong();
         this.api = api;
+        this.secound = 60;
     }
 
     public EmbedPageintaor create(MessageChannel channel) {
@@ -65,7 +76,7 @@ public class EmbedPageintaor {
 
     private void waitForReaction() {
         eventWaiter.waitForEvent(MessageReactionAddEvent.class, this::checkReaction,
-                this::onMessageReactionAdd, 60, TimeUnit.SECONDS, this::clearReactions);
+                this::onMessageReactionAdd, secound, TimeUnit.SECONDS, this::clearReactions);
     }
 
     private void onMessageReactionAdd(MessageReactionAddEvent event) {

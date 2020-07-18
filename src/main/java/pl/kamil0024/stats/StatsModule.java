@@ -12,6 +12,7 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.stats.commands.StatsCommand;
+import pl.kamil0024.stats.commands.TopCommand;
 import pl.kamil0024.stats.entities.StatsCache;
 import pl.kamil0024.stats.entities.Statystyka;
 
@@ -50,6 +51,7 @@ public class StatsModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new StatsCommand(statsDao));
+        cmd.add(new TopCommand(statsDao, eventWaiter));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
