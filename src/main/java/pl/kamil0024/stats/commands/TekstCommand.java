@@ -54,7 +54,7 @@ public class TekstCommand extends Command {
             tekst.setTimestamp(Instant.now());
             for (String s : lyrics.split("\n\n")) {
                 sb.append(s);
-                if (sb.length() >= 800) {
+                if (sb.length() >= 700) {
                     tekst.addField(" ", sb.toString(), false);
                     sb = new StringBuilder();
                 }
@@ -66,7 +66,9 @@ public class TekstCommand extends Command {
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
 
             return true;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         context.send("Wstąpił zewnętrzny błąd z API (lub nie znaleziono piosenki)!").queue();
         return false;
