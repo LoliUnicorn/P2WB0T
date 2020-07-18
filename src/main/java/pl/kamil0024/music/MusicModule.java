@@ -74,8 +74,9 @@ public class MusicModule implements Modul {
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
             Log.debug("tak");
-            loadAndPlay(null, vsc.getAktualnaPiosenka(), vsc.getVoiceChannel(), false);
-            vsc.getQueue().forEach(p -> loadAndPlay(null, p, vsc.getVoiceChannel(), false));
+            VoiceChannel vc = api.getVoiceChannelById(vsc.getVoiceChannel());
+            loadAndPlay(null, vsc.getAktualnaPiosenka(), vc, false);
+            vsc.getQueue().forEach(p -> loadAndPlay(null, p, vc, false));
             //voiceStateDao.delete();
         }
 
@@ -210,7 +211,7 @@ public class MusicModule implements Modul {
         if (g == null) return;
 
         VoiceStateConfig vsc = new VoiceStateConfig("1");
-        vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
+        vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel().getId());
 
         ArrayList<String> linki = new ArrayList<>();
         for (AudioTrack audioTrack : getMusicManagers().get(g.getIdLong()).getScheduler().getQueue()) {

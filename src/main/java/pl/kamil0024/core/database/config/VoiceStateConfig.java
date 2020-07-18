@@ -25,7 +25,7 @@ public class VoiceStateConfig {
     @PrimaryKey
     private String id;
 
-    private VoiceChannel voiceChannel = null;
+    private String voiceChannel = null;
     ArrayList<String> queue = null;
     String aktualnaPiosenka = null;
 
