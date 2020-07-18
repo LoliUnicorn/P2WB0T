@@ -37,20 +37,21 @@ public class TekstCommand extends Command {
             String tytul = Objects.requireNonNull(job).getString("title");
             String author = Objects.requireNonNull(job).getString("author");
             String lyrics = Objects.requireNonNull(job).getString("lyrics");
+            JSONObject thumbnail = job.getJSONObject("thumbnail");
+            JSONObject links = job.getJSONObject("links");
 
             ArrayList<EmbedBuilder> pages = new ArrayList<>();
 
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(UserUtil.getColor(context.getMember()));
-            eb.addField("Tytuł", tytul, false);
+            eb.addField("Tytuł", String.format("[%s](%s)", tytul, links.getString("genius")), false);
             eb.addField("Autor", author, false);
             eb.setTimestamp(Instant.now());
+            eb.setImage(thumbnail.getString("genius"));
             pages.add(eb);
 
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
 
-            JSONObject thumbnail = job.getJSONObject("thumbnail");
-            Log.debug(new Gson().toJson(thumbnail));
             return true;
         } catch (Exception ignored) {}
 
