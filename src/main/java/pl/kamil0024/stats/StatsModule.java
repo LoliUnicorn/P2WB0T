@@ -15,6 +15,7 @@ import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.commands.TopCommand;
 import pl.kamil0024.stats.entities.StatsCache;
 import pl.kamil0024.stats.entities.Statystyka;
+import pl.kamil0024.stats.listener.StatsListener;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,8 @@ public class StatsModule implements Modul {
     private boolean start = false;
 
     @Getter public StatsCache statsCache;
+
+    StatsListener statsListener;
 
     public StatsModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, StatsDao statsDao) {
         this.commandManager = commandManager;
@@ -48,6 +51,8 @@ public class StatsModule implements Modul {
 
     @Override
     public boolean startUp() {
+        this.statsListener = new StatsListener(this);
+        api.addEventListener(statsListener);
         cmd = new ArrayList<>();
 
         cmd.add(new StatsCommand(statsDao));
@@ -61,6 +66,7 @@ public class StatsModule implements Modul {
     @Override
     public boolean shutDown() {
         commandManager.unregisterCommands(cmd);
+        api.removeEventListener(statsListener);
         setStart(false);
         return true;
     }

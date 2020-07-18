@@ -9,6 +9,7 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,15 @@ import static java.util.concurrent.TimeUnit.DAYS;
 
 public class ClearCommand extends Command {
 
-    public ClearCommand() {
+    private StatsModule statsModule;
+
+    public ClearCommand(StatsModule statsModule) {
         name = "clear";
         aliases.add("purge");
         permLevel = PermLevel.HELPER;
         category = CommandCategory.MODERATION;
+
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -64,6 +69,7 @@ public class ClearCommand extends Command {
                 }
             }
         }
+        statsModule.getStatsCache().addUsunietychWiadomosci(context.getUser().getId(), wiadomosciWszystkie.size());
         kanal.purgeMessages(wiadomosciWszystkie);
         return true;
     }

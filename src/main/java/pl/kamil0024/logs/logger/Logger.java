@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.stats.StatsModule;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -28,10 +29,12 @@ public class Logger extends ListenerAdapter {
 
     private final MessageManager manager;
     private final ShardManager jda;
+    private final StatsModule statsModule;
 
-    public Logger(MessageManager manager, ShardManager jda) {
+    public Logger(MessageManager manager, ShardManager jda, StatsModule statsModule) {
         this.manager = manager;
         this.jda = jda;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class Logger extends ListenerAdapter {
                 break;
             }
         }
+        if (deletedBy != null) statsModule.getStatsCache().addUsunietychWiadomosci(deletedBy.getId(), 1);
         EmbedBuilder eb = getLogMessage(Action.DELETED, msg, deletedBy);
         String content = msg.getContent();
         if (content.length() > 1024) { content = content.substring(0, 1024); }

@@ -62,6 +62,10 @@ public class B0T {
     private Ustawienia ustawienia;
     private Tlumaczenia tlumaczenia;
 
+    private StatsModule statsModule;
+    private ShardManager api;
+    private ModulManager modulManager;
+
     public B0T(String token) {
         moduls = new HashMap<>();
         tlumaczenia = new Tlumaczenia();
@@ -109,7 +113,7 @@ public class B0T {
         tlumaczenia.setLang(Ustawienia.instance.language);
         tlumaczenia.load();
 
-        ShardManager api = null;
+        this.api = null;
         try {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token,
                     GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_VOICE_STATES,
@@ -127,7 +131,7 @@ public class B0T {
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
             builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
-            api = builder.build();
+            this.api = builder.build();
             Thread.sleep(1000);
             while (api.getShards().stream().noneMatch(s -> {
                 try {
@@ -173,21 +177,21 @@ public class B0T {
         listeners.add(commandExecute);
         listeners.forEach(api::addEventListener);
 
-        ModulManager modulManager = new ModulManager();
+        this.modulManager = new ModulManager();
         ModLog modLog = new ModLog(api, caseDao);
         NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
-        StatsModule sm = new StatsModule(commandManager, api, eventWaiter, statsDao);
+        this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao);
 
-        modulManager.getModules().add(new LogsModule(api));
-        modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, sm));
+        modulManager.getModules().add(new LogsModule(api, statsModule));
+        modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
 //        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, sm));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule));
         modulManager.getModules().add(new MusicModule(commandManager, api, eventWaiter));
-        modulManager.getModules().add(sm);
+        modulManager.getModules().add(statsModule);
 
         for (Modul modul : modulManager.getModules()) {
             try {
@@ -222,6 +226,7 @@ public class B0T {
             Log.newError("Nie ma bota na serwerze docelowym");
             System.exit(1);
         }
-
     }
+
+
 }

@@ -263,6 +263,7 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("jj");
         whiteList.add("jak");
         whiteList.add("juz");
+        whiteList.add("już");
         whiteList.add("ja");
         whiteList.add("jem");
         whiteList.add("jez");

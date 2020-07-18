@@ -6,6 +6,7 @@ import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.dews.EvalCommand;
 import pl.kamil0024.commands.dews.ModulesCommand;
+import pl.kamil0024.commands.dews.StopCommand;
 import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.moderation.*;
 import pl.kamil0024.commands.system.*;
@@ -83,10 +84,11 @@ implements Modul {
             cmd.add(new McpremiumCommand());
             cmd.add(new RemindmeCommand(remindDao, eventWaiter));
             cmd.add(new ModulesCommand(modulManager));
-            cmd.add(new ClearCommand());
+            cmd.add(new ClearCommand(statsModule));
             cmd.add(new CytujCommand());
             cmd.add(new CheckCommand(caseDao));
             cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
+            cmd.add(new StopCommand(modulManager, statsModule));
 
             // Moderacyjne:
             cmd.add(new StatusCommand(eventWaiter));
