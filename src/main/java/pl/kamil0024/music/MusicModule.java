@@ -35,10 +35,7 @@ import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.commands.*;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MusicModule implements Modul {
@@ -77,7 +74,9 @@ public class MusicModule implements Modul {
         if (vsc != null && vsc.getVoiceChannel() != null) {
             Log.debug("tak");
             vsc.getVoiceChannel().getGuild().getAudioManager().openAudioConnection(vsc.getVoiceChannel());
-            musicManagers.put(Long.valueOf(Ustawienia.instance.bot.guildId), vsc.getGuildMusicManager());
+            GuildMusicManager gmm = getGuildAudioPlayer(Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)));
+            gmm.getScheduler().queue(vsc.getAktualnaPiosenka());
+            vsc.getQueue().forEach(t -> gmm.getScheduler().queue(t));
             //voiceStateDao.delete();
         }
 
@@ -213,7 +212,8 @@ public class MusicModule implements Modul {
 
         VoiceStateConfig vsc = new VoiceStateConfig("1");
         vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
-        vsc.setGuildMusicManager(getMusicManagers().get(g.getIdLong()));
+        vsc.setQueue(getMusicManagers().get(g.getIdLong()).getScheduler().getQueue());
+        vsc.setAktualnaPiosenka(getMusicManagers().get(g.getIdLong()).getPlayer().getPlayingTrack());
         voiceStateDao.save(vsc);
     }
 }

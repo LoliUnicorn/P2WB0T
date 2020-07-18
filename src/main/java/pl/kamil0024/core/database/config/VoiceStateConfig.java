@@ -1,15 +1,14 @@
 package pl.kamil0024.core.database.config;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import gg.amy.pgorm.annotations.GIndex;
 import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 @Table("voicestate")
 @GIndex({"id"})
@@ -26,6 +25,7 @@ public class VoiceStateConfig {
     private String id;
 
     private VoiceChannel voiceChannel = null;
-    GuildMusicManager guildMusicManager = null;
+    BlockingQueue<AudioTrack> queue = null;
+    AudioTrack aktualnaPiosenka = null;
 
 }
