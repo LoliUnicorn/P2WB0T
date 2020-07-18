@@ -77,7 +77,7 @@ public class MusicModule implements Modul {
             TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.moddc);
             loadAndPlay(txt, vsc.getAktualnaPiosenka(), vc, false);
             vsc.getQueue().forEach(p -> loadAndPlay(txt, p, vc, false));
-            //voiceStateDao.delete();
+            voiceStateDao.delete();
         }
 
     }
