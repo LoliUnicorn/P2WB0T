@@ -14,7 +14,6 @@ import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.stats.entities.Statystyka;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class TopCommand extends Command {
@@ -23,7 +22,7 @@ public class TopCommand extends Command {
     private EventWaiter eventWaiter;
 
     public TopCommand(StatsDao statsDao, EventWaiter eventWaiter) {
-        name = "statsDao";
+        name = "top";
         permLevel = PermLevel.MODERATOR;
         this.statsDao = statsDao;
         this.eventWaiter = eventWaiter;
