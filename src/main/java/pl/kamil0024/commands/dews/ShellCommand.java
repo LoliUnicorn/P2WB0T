@@ -20,8 +20,8 @@ public class ShellCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String arg = context.getArgs().get(0);
-        if (arg == null) throw new UsageException();
+        String arg = context.getArgsToString(0);
+        if (context.getArgs().get(0) == null) throw new UsageException();
 
         String result = shell(arg);
         if (result == null) {
