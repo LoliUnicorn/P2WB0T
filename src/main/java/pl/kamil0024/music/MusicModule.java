@@ -206,20 +206,21 @@ public class MusicModule implements Modul {
     }
 
     public void load() {
-        Log.debug("zapisuje");
-        Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
-        if (g == null) return;
+        try {
+            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+            if (g == null) return;
 
-        VoiceStateConfig vsc = new VoiceStateConfig("1");
-        vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel().getId());
+            VoiceStateConfig vsc = new VoiceStateConfig("1");
+            vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel().getId());
 
-        ArrayList<String> linki = new ArrayList<>();
-        for (AudioTrack audioTrack : getMusicManagers().get(g.getIdLong()).getScheduler().getQueue()) {
-            linki.add(QueueCommand.getYtLink(audioTrack));
-        }
+            ArrayList<String> linki = new ArrayList<>();
+            for (AudioTrack audioTrack : getMusicManagers().get(g.getIdLong()).getScheduler().getQueue()) {
+                linki.add(QueueCommand.getYtLink(audioTrack));
+            }
 
-        vsc.setQueue(linki);
-        vsc.setAktualnaPiosenka(QueueCommand.getYtLink(getMusicManagers().get(g.getIdLong()).getPlayer().getPlayingTrack()));
-        voiceStateDao.save(vsc);
+            vsc.setQueue(linki);
+            vsc.setAktualnaPiosenka(QueueCommand.getYtLink(getMusicManagers().get(g.getIdLong()).getPlayer().getPlayingTrack()));
+            voiceStateDao.save(vsc);
+        } catch (Exception ignored) {}
     }
 }
