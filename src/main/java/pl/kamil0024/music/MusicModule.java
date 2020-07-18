@@ -1,5 +1,6 @@
 package pl.kamil0024.music;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -74,12 +75,13 @@ public class MusicModule implements Modul {
 
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
+            Log.debug("tak");
             vsc.getVoiceChannel().getGuild().getAudioManager().openAudioConnection(vsc.getVoiceChannel());
             musicManagers.putAll(vsc.getMusicManagers());
             for (Map.Entry<Long, GuildMusicManager> entry : musicManagers.entrySet()) {
                 entry.getValue().getPlayer().setPaused(false);
             }
-            voiceStateDao.delete();
+            //voiceStateDao.delete();
         }
 
     }
