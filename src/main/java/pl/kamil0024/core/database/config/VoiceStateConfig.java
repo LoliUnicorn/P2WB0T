@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
 @Table("voicestate")
@@ -25,7 +26,7 @@ public class VoiceStateConfig {
     private String id;
 
     private VoiceChannel voiceChannel = null;
-    BlockingQueue<AudioTrack> queue = null;
-    AudioTrack aktualnaPiosenka = null;
+    ArrayList<String> queue = null;
+    String aktualnaPiosenka = null;
 
 }

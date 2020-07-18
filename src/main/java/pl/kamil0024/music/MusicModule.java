@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
@@ -73,10 +74,8 @@ public class MusicModule implements Modul {
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
             Log.debug("tak");
-            vsc.getVoiceChannel().getGuild().getAudioManager().openAudioConnection(vsc.getVoiceChannel());
-            GuildMusicManager gmm = getGuildAudioPlayer(Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)));
-            gmm.getScheduler().queue(vsc.getAktualnaPiosenka());
-            vsc.getQueue().forEach(t -> gmm.getScheduler().queue(t));
+            loadAndPlay(null, vsc.getAktualnaPiosenka(), vsc.getVoiceChannel(), false);
+            vsc.getQueue().forEach(p -> loadAndPlay(null, p, vsc.getVoiceChannel(), false));
             //voiceStateDao.delete();
         }
 
@@ -136,7 +135,7 @@ public class MusicModule implements Modul {
         return musicManager;
     }
 
-    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc, boolean sendMsg) {
+    public boolean loadAndPlay(@Nullable final TextChannel channel, final String trackUrl, VoiceChannel vc, boolean sendMsg) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         AtomicBoolean error = new AtomicBoolean(false);
 
@@ -212,8 +211,14 @@ public class MusicModule implements Modul {
 
         VoiceStateConfig vsc = new VoiceStateConfig("1");
         vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
-        vsc.setQueue(getMusicManagers().get(g.getIdLong()).getScheduler().getQueue());
-        vsc.setAktualnaPiosenka(getMusicManagers().get(g.getIdLong()).getPlayer().getPlayingTrack());
+
+        ArrayList<String> linki = new ArrayList<>();
+        for (AudioTrack audioTrack : getMusicManagers().get(g.getIdLong()).getScheduler().getQueue()) {
+            linki.add(QueueCommand.getYtLink(audioTrack));
+        }
+
+        vsc.setQueue(linki);
+        vsc.setAktualnaPiosenka(QueueCommand.getYtLink(getMusicManagers().get(g.getIdLong()).getPlayer().getPlayingTrack()));
         voiceStateDao.save(vsc);
     }
 }
