@@ -6,13 +6,10 @@ plugins {
 
 group 'pl.kamil0024'
 
-def git = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-list', '--count', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString()
+def git = {
+    def proc = 'git rev-list --count HEAD'.execute()
+    proc.waitFor()
+    return proc.text
 }
 
 def versionObj = new Version(major: 2, minor: 0, revision: git, dopisek: "")
