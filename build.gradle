@@ -69,7 +69,7 @@ class Version {
     static String getBuild() {
         def proc = 'git rev-list --count HEAD'.execute()
         proc.waitFor()
-        return String.valueOf(proc.text)
+        return String.valueOf(proc.text.trim())
     }
 
     String toString() {
