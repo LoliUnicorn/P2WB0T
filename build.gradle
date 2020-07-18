@@ -11,6 +11,15 @@ mainClassName = 'pl.kamil0024.core.Main'
 
 def jdaVersion = '4.2.0_168'
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -70,7 +79,7 @@ class Version {
     }
 
     String toString() {
-        "$major.$minor.$revision." + System.getenv("GIT_COMMIT")
+        "$major.$minor." + getGitHash
     }
 }
 
