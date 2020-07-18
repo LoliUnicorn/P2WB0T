@@ -6,13 +6,7 @@ plugins {
 
 group 'pl.kamil0024'
 
-def git = {
-    def proc = 'git rev-list --count HEAD'.execute()
-    proc.waitFor()
-    return proc.text
-}
-
-def versionObj = new Version(major: 2, minor: 0, revision: git, dopisek: "")
+def versionObj = new Version(major: 2, minor: 0, revision: 0, dopisek: "")
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 
@@ -72,12 +66,13 @@ class Version {
     String major, minor, revision, dopisek
 
     static String getBuild() {
-        System.getenv("BUILD_NUMBER") ?: System.getProperty("BUILD_NUMBER") ?:
-                System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?:"DEV"
+        def proc = 'git rev-list --count HEAD'.execute()
+        proc.waitFor()
+        return proc.text
     }
 
     String toString() {
-        "$major.$minor.$revision"
+        "$major.$minor." + getBuild()
     }
 }
 
