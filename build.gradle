@@ -65,10 +65,10 @@ shadowJar {
 class Version {
     String major, minor
 
-    static String getBuild() {
+    static Integer getBuild() {
         def proc = 'git rev-list --count HEAD'.execute()
         proc.waitFor()
-        return proc.toString().trim()
+        return proc as Integer
     }
 
     String toString() {
