@@ -3,6 +3,7 @@ package pl.kamil0024.stats.commands;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
@@ -28,6 +29,7 @@ public class TopCommand extends Command {
         this.eventWaiter = eventWaiter;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean execute(CommandContext context) {
 
@@ -61,16 +63,19 @@ public class TopCommand extends Command {
         for (Map.Entry<String, Suma> entry : mapa.entrySet()) {
             top.put(entry.getKey(), entry.getValue().getNadaneKary());
         }
-        top = sortByValue(top);
 
         ArrayList<EmbedBuilder> pages = new ArrayList<>();
 
         int rank = 1;
-        for (Map.Entry<String, Integer> entry : top.entrySet()) {
+        for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
             EmbedBuilder eb = new EmbedBuilder();
+            User user = context.getParsed().getUser(entry.getKey());
+
             eb.setColor(UserUtil.getColor(context.getMember()));
             eb.setTitle("Miejsce #" + rank);
-            eb.setDescription(StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()));
+            eb.setThumbnail(user.getAvatarUrl());
+            eb.setDescription(UserUtil.getFullName(user) + "\n" +
+                    StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()));
             pages.add(eb);
             rank++;
         }
