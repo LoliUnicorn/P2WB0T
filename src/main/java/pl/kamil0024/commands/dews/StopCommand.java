@@ -24,7 +24,7 @@ public class StopCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(CommandContext context) throws InterruptedException {
         context.send("Wyłączam...").complete();
 
         context.getShardManager().setStatus(OnlineStatus.DO_NOT_DISTURB);
@@ -35,6 +35,7 @@ public class StopCommand extends Command {
 
         context.getShardManager().shutdown();
 
+        Thread.sleep(8000);
         System.exit(0);
         return true;
     }
