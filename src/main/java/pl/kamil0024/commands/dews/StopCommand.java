@@ -50,7 +50,6 @@ public class StopCommand extends Command {
                         context.getShardManager().shutdown();
                         System.exit(0);
                     }
-
                 }, 1, TimeUnit.MINUTES, () -> {}
         );
         return true;
