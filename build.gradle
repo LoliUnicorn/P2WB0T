@@ -11,15 +11,6 @@ mainClassName = 'pl.kamil0024.core.Main'
 
 def jdaVersion = '4.2.0_168'
 
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-list', '--count'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -78,8 +69,17 @@ class Version {
                 System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?:"DEV"
     }
 
+    def getGitHash = { ->
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--count'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
+
     String toString() {
-        "$major.$minor." + getGitHash
+        "$major.$minor.$getGitHash"
     }
 }
 
