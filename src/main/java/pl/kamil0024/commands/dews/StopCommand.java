@@ -38,8 +38,6 @@ public class StopCommand extends Command {
         modulManager.disableAll();
         statsModule.getStatsCache().databaseSave();
 
-        context.getShardManager().shutdown();
-
         context.send("Zrobić builda? (y/n)").queue();
 
         AtomicBoolean build = new AtomicBoolean(false);
@@ -70,7 +68,7 @@ public class StopCommand extends Command {
 
                 }, 1, TimeUnit.MINUTES, () -> {}
         );
-
+        context.getShardManager().shutdown();
         System.exit(0);
         return true;
     }
