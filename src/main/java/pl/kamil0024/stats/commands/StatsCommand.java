@@ -8,7 +8,6 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
-import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.stats.entities.Statystyka;
 

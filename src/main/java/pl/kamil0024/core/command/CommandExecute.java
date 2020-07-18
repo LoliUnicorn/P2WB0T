@@ -78,9 +78,10 @@ public class CommandExecute extends ListenerAdapter {
         if (c == null) { return; }
 
         if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
-            assert UserUtil.getPermLevel(e.getAuthor()).getNumer() == PermLevel.MEMBER.getNumer();
-            zareaguj(e.getMessage(), e.getAuthor(), false);
-            return;
+            if (UserUtil.getPermLevel(e.getAuthor()).getNumer() == PermLevel.MEMBER.getNumer()) {
+                zareaguj(e.getMessage(), e.getAuthor(), false);
+                return;
+            }
         }
 
         e.getChannel().sendTyping().queue();
