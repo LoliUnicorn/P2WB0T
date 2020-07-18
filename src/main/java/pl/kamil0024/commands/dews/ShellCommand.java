@@ -37,7 +37,7 @@ public class ShellCommand extends Command {
     public static String shell(String code) {
         try {
             Process process = new ProcessBuilder
-                    (Arrays.asList(System.getenv("SHELL"), "-c", code))
+                    (Arrays.asList(System.getenv("SHELL"), "-c", String.join(" ", code)))
                     .redirectErrorStream(true).start();
             process.waitFor(5, TimeUnit.MINUTES);
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -48,8 +48,7 @@ public class ShellCommand extends Command {
                 reader.close();
             }
             process.destroyForcibly();
-            String result = builder.toString();
-            return result;
+            return builder.toString();
         } catch (Exception e) {
             Log.newError(e);
         }
