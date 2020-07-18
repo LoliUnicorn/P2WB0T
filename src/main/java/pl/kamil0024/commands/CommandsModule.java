@@ -4,22 +4,20 @@ import com.google.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.commands.dews.EvalCommand;
-import pl.kamil0024.commands.dews.ModulesCommand;
-import pl.kamil0024.commands.dews.StopCommand;
 import pl.kamil0024.commands.listener.GiveawayListener;
-import pl.kamil0024.commands.moderation.*;
-import pl.kamil0024.commands.system.*;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
-import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
+import pl.kamil0024.commands.dews.*;
+import pl.kamil0024.commands.moderation.*;
+import pl.kamil0024.commands.system.*;
+import pl.kamil0024.core.database.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -88,7 +86,8 @@ implements Modul {
             cmd.add(new CytujCommand());
             cmd.add(new CheckCommand(caseDao));
             cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
-            cmd.add(new StopCommand(modulManager, statsModule));
+            cmd.add(new StopCommand(modulManager, statsModule, eventWaiter));
+            cmd.add(new ShellCommand());
 
             // Moderacyjne:
             cmd.add(new StatusCommand(eventWaiter));

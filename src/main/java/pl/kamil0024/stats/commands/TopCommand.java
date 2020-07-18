@@ -74,7 +74,7 @@ public class TopCommand extends Command {
             eb.setColor(UserUtil.getColor(context.getMember()));
             eb.setTitle("Miejsce #" + rank);
             eb.setThumbnail(user.getAvatarUrl());
-            eb.setDescription(UserUtil.getFullName(user) + "\n" +
+            eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
                     StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()));
             pages.add(eb);
             rank++;
