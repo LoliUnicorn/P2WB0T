@@ -3,6 +3,7 @@ package pl.kamil0024.commands.dews;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UsageException;
 
 import java.io.BufferedReader;
@@ -49,7 +50,9 @@ public class ShellCommand extends Command {
             process.destroyForcibly();
             String result = builder.toString();
             return result;
-        } catch (Exception ignored) { }
+        } catch (Exception e) {
+            Log.newError(e);
+        }
         return null;
     }
 
