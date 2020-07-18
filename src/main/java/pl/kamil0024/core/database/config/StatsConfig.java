@@ -29,15 +29,23 @@ public class StatsConfig {
     public ArrayList<Statystyka> stats = new ArrayList<>();
 
     @Nullable
-    public static Statystyka getStatsFromDay(ArrayList<Statystyka> stats, long date) {
+    public static Statystyka getStatsFromDate(ArrayList<Statystyka> stats, long date) {
         int bDate = new BDate(date).getDateTime().getDayOfYear();
-
         for (Statystyka stat : stats) {
             if (stat.getDay() == bDate) {
                 return stat;
             }
         }
+        return null;
+    }
 
+    @Nullable
+    public static Statystyka getStatsFromDay(ArrayList<Statystyka> stats, long date) {
+        for (Statystyka stat : stats) {
+            if (stat.getDay() == date) {
+                return stat;
+            }
+        }
         return null;
     }
 
