@@ -13,6 +13,7 @@ import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.commands.dews.*;
 import pl.kamil0024.commands.moderation.*;
@@ -42,11 +43,12 @@ implements Modul {
         @Inject RemindDao remindDao;
         @Inject GiveawayDao giveawayDao;
         @Inject StatsModule statsModule;
+        @Inject MusicModule musicModule;
 
         private boolean start = false;
         private ModLog modLog;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule) {
             this.commandManager = commandManager;
             this.tlumaczenia = tlumaczenia;
             this.api = api;
@@ -61,6 +63,7 @@ implements Modul {
             this.remindDao = remindDao;
             this.giveawayDao = giveawayDao;
             this.statsModule = statsModule;
+            this.musicModule = musicModule;
 
             ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
             executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -86,7 +89,7 @@ implements Modul {
             cmd.add(new CytujCommand());
             cmd.add(new CheckCommand(caseDao));
             cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
-            cmd.add(new StopCommand(modulManager, statsModule, eventWaiter));
+            cmd.add(new StopCommand(modulManager, statsModule, eventWaiter, musicModule));
             cmd.add(new ShellCommand());
 
             // Moderacyjne:

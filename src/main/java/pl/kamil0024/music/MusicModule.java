@@ -210,7 +210,7 @@ public class MusicModule implements Modul {
     public void load() {
         Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (g == null) return;
-        
+
         VoiceStateConfig vsc = new VoiceStateConfig("1");
         vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
         vsc.setMusicManagers(getMusicManagers());
