@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'pl.kamil0024'
-def versionObj = new Version(major: 2, minor: 0, revision: 0, dopisek: "")
+def versionObj = new Version(major: 2, minor: 0, revision: 850, dopisek: "")
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 
@@ -70,7 +70,7 @@ class Version {
     }
 
     String toString() {
-        "$major.$minor\\_850"
+        "$major.$minor\\_$revision"
     }
 }
 
