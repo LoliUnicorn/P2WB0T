@@ -73,10 +73,10 @@ public class MusicModule implements Modul {
 
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
-            Log.debug("tak");
             VoiceChannel vc = api.getVoiceChannelById(vsc.getVoiceChannel());
-            loadAndPlay(null, vsc.getAktualnaPiosenka(), vc, false);
-            vsc.getQueue().forEach(p -> loadAndPlay(null, p, vc, false));
+            TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.moddc);
+            loadAndPlay(txt, vsc.getAktualnaPiosenka(), vc, false);
+            vsc.getQueue().forEach(p -> loadAndPlay(txt, p, vc, false));
             //voiceStateDao.delete();
         }
 
@@ -136,7 +136,7 @@ public class MusicModule implements Modul {
         return musicManager;
     }
 
-    public boolean loadAndPlay(@Nullable final TextChannel channel, final String trackUrl, VoiceChannel vc, boolean sendMsg) {
+    public boolean loadAndPlay(final TextChannel channel, final String trackUrl, VoiceChannel vc, boolean sendMsg) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         AtomicBoolean error = new AtomicBoolean(false);
 
