@@ -37,8 +37,8 @@ public class StopCommand extends Command {
         context.getShardManager().setStatus(OnlineStatus.DO_NOT_DISTURB);
         context.getShardManager().setActivity(Activity.playing("Wyłącznie bota w toku..."));
 
-        modulManager.disableAll();
         musicModule.load();
+        modulManager.disableAll();
         statsModule.getStatsCache().databaseSave();
 
         context.send("Zrobić builda? (y/n)").queue();

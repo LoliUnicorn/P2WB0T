@@ -207,6 +207,7 @@ public class MusicModule implements Modul {
     }
 
     public void load() {
+        Log.debug("zapisuje");
         Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (g == null) return;
 
