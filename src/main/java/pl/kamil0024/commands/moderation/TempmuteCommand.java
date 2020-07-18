@@ -15,6 +15,7 @@ import pl.kamil0024.core.util.Duration;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.Date;
 import java.util.Objects;
@@ -26,13 +27,15 @@ public class TempmuteCommand extends Command {
 
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
-    public TempmuteCommand(CaseDao caseDao, ModLog modLog) {
+    public TempmuteCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "tempmute";
         permLevel = PermLevel.HELPER;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -62,6 +65,7 @@ public class TempmuteCommand extends Command {
             return false;
         }
         context.sendTranslate("tempmute.succes", UserUtil.getLogName(mem), powod, duration).queue();
+        statsModule.getStatsCache().addZmutowanych(context.getUser().getId(), 1);
         return true;
     }
 

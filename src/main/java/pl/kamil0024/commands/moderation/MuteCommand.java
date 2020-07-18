@@ -15,6 +15,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.Date;
 
@@ -23,12 +24,14 @@ public class MuteCommand extends Command {
 
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
-    public MuteCommand(CaseDao caseDao, ModLog modLog) {
+    public MuteCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "mute";
         permLevel = PermLevel.HELPER;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
         category = CommandCategory.MODERATION;
     }
 
@@ -63,6 +66,7 @@ public class MuteCommand extends Command {
             kara.setTimestamp(new Date().getTime());
             kara.setTypKary(KaryEnum.MUTE);
             Kara.put(caseDao, kara, modLog);
+            statsModule.getStatsCache().addZmutowanych(context.getUser().getId(), 1);
             return true;
         } catch (InsufficientPermissionException e) {
             context.send("Nie mam odpowiednich permisji: " + e.getPermission().getName()).queue();

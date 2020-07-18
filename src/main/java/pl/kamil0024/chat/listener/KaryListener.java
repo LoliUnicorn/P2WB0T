@@ -14,6 +14,7 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.stats.StatsModule;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -24,13 +25,15 @@ public class KaryListener extends ListenerAdapter {
     private final KaryJSON karyJSON;
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
     @Getter private static final ArrayList<Action> embedy = new ArrayList<>();
 
-    public KaryListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+    public KaryListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.karyJSON = karyJSON;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class KaryListener extends ListenerAdapter {
                     continue;
                 }
 
-                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog);
+                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule);
                 getEmbedy().remove(entry);
                 msg.delete().queue();
             }

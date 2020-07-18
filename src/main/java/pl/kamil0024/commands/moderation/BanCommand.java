@@ -12,6 +12,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.Date;
 
@@ -22,14 +23,16 @@ public class BanCommand extends Command {
 
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
-    public BanCommand(CaseDao caseDao, ModLog modLog) {
+    public BanCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "ban";
         aliases.add("akysz");
         permLevel = PermLevel.HELPER;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -68,6 +71,7 @@ public class BanCommand extends Command {
         Kara.put(caseDao, kara, modLog);
 
         context.getGuild().ban(mem, 0, powod).complete();
+        statsModule.getStatsCache().addZbanowanych(context.getUser().getId(), 1);
         return true;
     }
 

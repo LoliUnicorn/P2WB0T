@@ -13,6 +13,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.Date;
 
@@ -23,14 +24,16 @@ public class KickCommand extends Command {
 
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
-    public KickCommand(CaseDao caseDao, ModLog modLog) {
+    public KickCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "kick";
         aliases.add("wyrzuc");
         permLevel = PermLevel.HELPER;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -53,6 +56,7 @@ public class KickCommand extends Command {
         String nick = UserUtil.getMcNick(mem);
         try {
             context.getGuild().kick(mem, powod).complete();
+            statsModule.getStatsCache().addWyrzuconych(context.getUser().getId(), 1);
         } catch (InsufficientPermissionException e) {
             msg.editMessage(context.getTranslate("kick.permex")).queue();
             return false;

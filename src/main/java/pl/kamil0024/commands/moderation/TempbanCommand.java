@@ -14,6 +14,7 @@ import pl.kamil0024.core.util.Duration;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class TempbanCommand extends Command {
     private final CaseDao caseDao;
     private final ModLog modLog;
 
-    public TempbanCommand(CaseDao caseDao, ModLog modLog) {
+    public TempbanCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "tempban";
         permLevel = PermLevel.HELPER;
         category = CommandCategory.MODERATION;

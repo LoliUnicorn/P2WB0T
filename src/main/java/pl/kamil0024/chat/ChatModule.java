@@ -9,6 +9,7 @@ import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.stats.StatsModule;
 
 public class ChatModule implements Modul {
 
@@ -16,22 +17,24 @@ public class ChatModule implements Modul {
     @Inject private KaryJSON karyJSON;
     @Inject private CaseDao caseDao;
     @Inject private ModLog modLog;
+    @Inject private StatsModule statsModule;
 
     private boolean start = false;
     private ChatListener chatListener;
     private KaryListener karyListener;
 
-    public ChatModule(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+    public ChatModule(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
+        this.statsModule = statsModule;
     }
 
     @Override
     public boolean startUp() {
-        this.chatListener = new ChatListener(api, karyJSON, caseDao, modLog);
-        this.karyListener = new KaryListener(karyJSON, caseDao, modLog);
+        this.chatListener = new ChatListener(api, karyJSON, caseDao, modLog, statsModule);
+        this.karyListener = new KaryListener(karyJSON, caseDao, modLog, statsModule);
         api.addEventListener(chatListener, karyListener);
         setStart(true);
         return true;

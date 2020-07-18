@@ -21,6 +21,7 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Emoji;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.stats.StatsModule;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -46,14 +47,16 @@ public class ChatListener extends ListenerAdapter {
     @Inject private KaryJSON karyJSON;
     @Inject private CaseDao caseDao;
     @Inject private ModLog modLog;
+    @Inject private StatsModule statsModule;
 
     @Getter private List<String> przeklenstwa;
 
-    public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
+    public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
+        this.statsModule = statsModule;
 
         this.przeklenstwa = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
@@ -111,7 +114,7 @@ public class ChatListener extends ListenerAdapter {
                         Collections.singletonList(member),
                         member.getGuild().getSelfMember(),
                         msg.getTextChannel(),
-                        caseDao, modLog);
+                        caseDao, modLog, statsModule);
             }
             return;
         }

@@ -10,6 +10,7 @@ public class Statystyka {
 
     public int zmutowanych = 0;
     public int zbanowanych = 0;
+    public int wyrzuconych = 0;
 
     public int usunietychWiadomosci = 0;
     public int napisanychWiadomosci = 0;

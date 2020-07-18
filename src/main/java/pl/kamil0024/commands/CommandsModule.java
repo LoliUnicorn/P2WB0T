@@ -92,13 +92,13 @@ implements Modul {
             cmd.add(new StatusCommand(eventWaiter));
             cmd.add(new KarainfoCommand(caseDao));
             cmd.add(new UnmuteCommand(caseDao, modLog));
-            cmd.add(new TempmuteCommand(caseDao, modLog));
-            cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog));
-            cmd.add(new KickCommand(caseDao, modLog));
-            cmd.add(new BanCommand(caseDao, modLog));
-            cmd.add(new TempbanCommand(caseDao, modLog));
+            cmd.add(new TempmuteCommand(caseDao, modLog, statsModule));
+            cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog, statsModule));
+            cmd.add(new KickCommand(caseDao, modLog, statsModule));
+            cmd.add(new BanCommand(caseDao, modLog, statsModule));
+            cmd.add(new TempbanCommand(caseDao, modLog, statsModule));
             cmd.add(new UnbanCommand(caseDao, modLog));
-            cmd.add(new MuteCommand(caseDao, modLog));
+            cmd.add(new MuteCommand(caseDao, modLog, statsModule));
             cmd.add(new HistoryCommand(caseDao, eventWaiter));
 
             cmd.forEach(commandManager::registerCommand);

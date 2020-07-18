@@ -181,7 +181,7 @@ public class B0T {
         StatsModule sm = new StatsModule(commandManager, api, eventWaiter, statsDao);
 
         modulManager.getModules().add(new LogsModule(api));
-        modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog));
+        modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, sm));
 //        modulManager.getModules().add(new StatusModule(api));
 //        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));

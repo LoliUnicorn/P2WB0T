@@ -24,6 +24,7 @@ import pl.kamil0024.core.util.*;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.stats.StatsModule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +39,9 @@ public class PunishCommand extends Command {
     private final EventWaiter eventWaiter;
     private final CaseDao caseDao;
     private final ModLog modLog;
+    private final StatsModule statsModule;
 
-    public PunishCommand(KaryJSON karyJSON, EventWaiter eventWaiter, CaseDao caseDao, ModLog modLog) {
+    public PunishCommand(KaryJSON karyJSON, EventWaiter eventWaiter, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "punish";
         aliases.add("pun");
         permLevel = PermLevel.HELPER;
@@ -48,6 +50,7 @@ public class PunishCommand extends Command {
         this.eventWaiter = eventWaiter;
         this.caseDao = caseDao;
         this.modLog = modLog;
+        this.statsModule = statsModule;
     }
 
     @Override
@@ -156,7 +159,7 @@ public class PunishCommand extends Command {
             try {
                 if (event.getReactionEmote().getId().equals(red.getId())) return;
                 if (event.getReactionEmote().getId().equals(green.getId())) {
-                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog);
+                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
                 }
                 msg.clearReactions().complete();
             } catch (Exception ignored) {}
@@ -175,7 +178,7 @@ public class PunishCommand extends Command {
         return Kara.check(context, osoba.getUser()) == null && !MuteCommand.hasMute(osoba);
     }
 
-    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog) {
+    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
             List<CaseConfig> cc = caseDao.getAllPunAktywne(osoba.getId());
@@ -220,15 +223,22 @@ public class PunishCommand extends Command {
             switch (jegoTier.getType()) {
                 case KICK:
                     member.getGuild().kick(osoba, kara.getPowod()).queue();
+                    statsModule.getStatsCache().addWyrzuconych(member.getId(), 1);
+                    break;
                 case BAN:
                     member.getGuild().ban(osoba, 0, kara.getPowod()).queue();
+                    statsModule.getStatsCache().addZbanowanych(member.getId(), 1);
+                    break;
                 case MUTE:
                     member.getGuild().addRoleToMember(osoba, Objects.requireNonNull(member.getGuild().getRoleById(Ustawienia.instance.muteRole))).queue();
+                    statsModule.getStatsCache().addZmutowanych(member.getId(), 1);
                     break;
                 case TEMPBAN:
                     TempbanCommand.tempban(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
+                    statsModule.getStatsCache().addZbanowanych(member.getId(), 1);
                     break;
                 case TEMPMUTE:
+                    statsModule.getStatsCache().addZmutowanych(member.getId(), 1);
                     String mute = TempmuteCommand.tempmute(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
                     if (mute != null) {
                         Log.newError(mute);
@@ -252,7 +262,7 @@ public class PunishCommand extends Command {
                     msg.delete().queue();
                     if (liczba == null || liczba - 1 > karyJSON.getKary().size() || liczba <= 0) return;
                     KaryJSON.Kara kara = karyJSON.getKary().get(liczba - 1);
-                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog);
+                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
                 },
                 30, TimeUnit.SECONDS,
                 () -> {

@@ -1,15 +1,16 @@
 package pl.kamil0024.stats.entities;
 
-import com.google.gson.Gson;
 import lombok.Data;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.stats.commands.StatsCommand;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Data
 public class StatsCache {
@@ -21,6 +22,9 @@ public class StatsCache {
     public StatsCache(StatsDao statsDao) {
         this.statystykaMap = new HashMap<>();
         this.statsDao = statsDao;
+
+        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
     }
 
     public void save(String id, Statystyka stats) {
@@ -36,21 +40,23 @@ public class StatsCache {
         statystyka.setUsunietychWiadomosci(stats.getUsunietychWiadomosci() + statystyka.getUsunietychWiadomosci());
         statystyka.setZbanowanych(stats.getZbanowanych() + statystyka.getZbanowanych());
         statystyka.setZmutowanych(stats.getZmutowanych() + statystyka.getZmutowanych());
+        statystyka.setWyrzuconych(stats.getWyrzuconych() + statystyka.getWyrzuconych());
 
         save(id, stats);
     }
 
+    public void tak() {
+        databaseSave();
+    }
+
     public synchronized void databaseSave() {
+        Log.debug("Zapisuje statystyki adminów...");
         for (Map.Entry<String, Statystyka> entry : getStatystykaMap().entrySet()) {
             StatsConfig sc = statsDao.get(entry.getKey());
             Statystyka dzisiaj = StatsConfig.getStatsFromDay(sc.getStats(), entry.getValue().getDay());
             if (dzisiaj == null) {
-                Log.debug("dzisiaj jest nullem");
                 sc.getStats().add(entry.getValue());
             } else {
-                Log.debug("chyj kurwa");
-                Log.debug(new Gson().toJson(entry.getValue()));
-                Log.debug(new Gson().toJson(dzisiaj));
                 sc.getStats().remove(dzisiaj);
                 sc.getStats().add(entry.getValue());
             }
@@ -79,6 +85,12 @@ public class StatsCache {
     public synchronized void addNapisanychWiadomosci(String id, int liczba) {
         Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
         statystyka.setNapisanychWiadomosci(liczba + statystyka.getNapisanychWiadomosci());
+        save(id, statystyka);
+    }
+
+    public synchronized void addWyrzuconych(String id, int liczba) {
+        Statystyka statystyka = getStatystykaMap().getOrDefault(id, new Statystyka());
+        statystyka.setWyrzuconych(liczba + statystyka.getWyrzuconych());
         save(id, statystyka);
     }
 
