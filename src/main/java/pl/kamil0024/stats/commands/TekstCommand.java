@@ -1,12 +1,11 @@
 package pl.kamil0024.stats.commands;
 
-import com.google.gson.Gson;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.json.JSONObject;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 
 import java.time.Instant;
@@ -20,7 +19,7 @@ public class TekstCommand extends Command {
     public TekstCommand(EventWaiter eventWaiter) {
         name = "tekst";
         aliases.add("lyrics");
-
+        category = CommandCategory.MUSIC;
         permLevel = PermLevel.HELPER;
 
         this.eventWaiter = eventWaiter;
@@ -52,8 +51,9 @@ public class TekstCommand extends Command {
             StringBuilder sb = new StringBuilder();
             EmbedBuilder tekst = new EmbedBuilder();
             tekst.setTimestamp(Instant.now());
+            tekst.setColor(UserUtil.getColor(context.getMember()));
             for (String s : lyrics.split("\n")) {
-                sb.append(s);
+                sb.append(s).append("\n");
                 if (sb.length() >= 900) {
                     tekst.addField(" ", sb.toString(), false);
                     sb = new StringBuilder();
