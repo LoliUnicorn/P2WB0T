@@ -73,7 +73,7 @@ class Version {
     }
 
     String toString() {
-        "$major.$minor." + getBuild()
+        "$major.$minor\\_" + getBuild()
     }
 }
 
