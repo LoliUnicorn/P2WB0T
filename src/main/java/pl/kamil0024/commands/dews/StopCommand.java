@@ -47,7 +47,7 @@ public class StopCommand extends Command {
                         context.send("Robię builda...").queue();
                         context.getShardManager().shutdown();
                         statsModule.getStatsCache().databaseSave();
-                        ShellCommand.shell("cd /home/debian/P2WB0T && screen -dmS ./start.sh");
+                        ShellCommand.shell("cd /home/debian/P2WB0T && screen -dmS Tak ./start.sh");
                     } else System.exit(0);
 
                 }, 1, TimeUnit.MINUTES, () -> {}
