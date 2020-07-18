@@ -62,13 +62,14 @@ shadowJar {
     mergeGroovyExtensionModules()
 }
 
+
 class Version {
     String major, minor
 
     static String getBuild() {
         def proc = 'git rev-list --count HEAD'.execute()
         proc.waitFor()
-        return proc
+        return proc.text
     }
 
     String toString() {
