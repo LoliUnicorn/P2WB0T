@@ -12,7 +12,7 @@ def git = { ->
         commandLine 'git', 'rev-list', '--count', 'HEAD'
         standardOutput = stdout
     }
-    return stdout.toString().trim()
+    return stdout.toString()
 }
 
 def versionObj = new Version(major: 2, minor: 0, revision: git, dopisek: "")
