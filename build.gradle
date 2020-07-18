@@ -70,7 +70,7 @@ class Version {
     }
 
     String toString() {
-        "$major.$minor_850"
+        "$major.$minor\\_850"
     }
 }
 
