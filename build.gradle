@@ -70,7 +70,7 @@ class Version {
     }
 
     String toString() {
-        "$major.$minor.$revision"
+        "$major.$minor.$revision." + System.getenv("GIT_COMMIT")
     }
 }
 
