@@ -5,7 +5,17 @@ plugins {
 }
 
 group 'pl.kamil0024'
-def versionObj = new Version(major: 2, minor: 0, revision: 850, dopisek: "")
+
+def git = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+def versionObj = new Version(major: 2, minor: 0, revision: git, dopisek: "")
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 
@@ -69,17 +79,8 @@ class Version {
                 System.getenv("GIT_COMMIT")?.substring(0, 7) ?: System.getProperty("GIT_COMMIT")?.substring(0, 7) ?:"DEV"
     }
 
-    def getGitHash = { ->
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--count'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-
     String toString() {
-        "$major.$minor.$getGitHash"
+        "$major.$minor.$revision"
     }
 }
 
