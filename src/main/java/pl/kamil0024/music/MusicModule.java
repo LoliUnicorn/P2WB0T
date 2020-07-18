@@ -77,10 +77,7 @@ public class MusicModule implements Modul {
         if (vsc != null && vsc.getVoiceChannel() != null) {
             Log.debug("tak");
             vsc.getVoiceChannel().getGuild().getAudioManager().openAudioConnection(vsc.getVoiceChannel());
-            musicManagers.putAll(vsc.getMusicManagers());
-            for (Map.Entry<Long, GuildMusicManager> entry : musicManagers.entrySet()) {
-                entry.getValue().getPlayer().setPaused(false);
-            }
+            musicManagers.put(Long.valueOf(Ustawienia.instance.bot.guildId), vsc.getGuildMusicManager());
             //voiceStateDao.delete();
         }
 
@@ -215,7 +212,7 @@ public class MusicModule implements Modul {
 
         VoiceStateConfig vsc = new VoiceStateConfig("1");
         vsc.setVoiceChannel(g.getAudioManager().getConnectedChannel());
-        vsc.setMusicManagers(getMusicManagers());
+        vsc.setGuildMusicManager(getMusicManagers().get(g.getIdLong()));
         voiceStateDao.save(vsc);
     }
 }

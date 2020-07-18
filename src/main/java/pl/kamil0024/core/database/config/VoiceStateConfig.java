@@ -26,6 +26,6 @@ public class VoiceStateConfig {
     private String id;
 
     private VoiceChannel voiceChannel = null;
-    Map<Long, GuildMusicManager> musicManagers = new HashMap<>();
+    GuildMusicManager guildMusicManager = null;
 
 }
