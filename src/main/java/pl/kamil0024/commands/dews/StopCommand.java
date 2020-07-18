@@ -62,14 +62,13 @@ public class StopCommand extends Command {
                                     context.send("Restartuje bota...").complete();
                                     ShellCommand.shell("cd /home/debian/core && ./start.sh");
                                 }
-
+                                context.getShardManager().shutdown();
+                                System.exit(0);
                             }, 1, TimeUnit.MINUTES, () -> {}
                     );
 
                 }, 1, TimeUnit.MINUTES, () -> {}
         );
-        context.getShardManager().shutdown();
-        System.exit(0);
         return true;
     }
 
