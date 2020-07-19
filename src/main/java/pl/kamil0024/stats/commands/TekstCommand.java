@@ -72,14 +72,14 @@ public class TekstCommand extends Command {
                     tekst.addField(" ", sb.toString(), false);
                     sumLenght += sb.length();
                     sb = new StringBuilder();
-                }
 
-                if (sumLenght > 5700) {
-                    teksty.add(tekst);
-                    tekst = new EmbedBuilder();
-                    tekst.setTimestamp(Instant.now());
-                    tekst.setColor(UserUtil.getColor(context.getMember()));
-                    sumLenght = 0;
+                    if (sumLenght > 5600) {
+                        teksty.add(tekst);
+                        tekst = new EmbedBuilder();
+                        tekst.setTimestamp(Instant.now());
+                        tekst.setColor(UserUtil.getColor(context.getMember()));
+                        sumLenght = 0;
+                    }
                 }
             }
 
