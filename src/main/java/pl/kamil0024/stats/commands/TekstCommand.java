@@ -36,10 +36,12 @@ public class TekstCommand extends Command {
         String arg;
         AudioTrack track = musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack();
 
-        if (context.getArgs().get(0) == null && musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() != null) {
+        String arg0 = context.getArgs().get(0);
+        if (arg0 == null && musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() != null) {
             arg = track.getInfo().title;
         } else {
             arg = context.getArgsToString(0);
+            if (arg0 == null) throw new NullPointerException();
         }
 
         try {
@@ -75,7 +77,6 @@ public class TekstCommand extends Command {
                     sb = new StringBuilder();
 
                     if (tekst.length() > 5600) {
-                        Log.debug("nowa strona " + tekst.length());
                         teksty.add(tekst);
                         tekst = new EmbedBuilder();
                         tekst.setTimestamp(Instant.now());

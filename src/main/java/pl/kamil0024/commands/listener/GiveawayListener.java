@@ -105,9 +105,8 @@ public class GiveawayListener {
         xd();
     }
 
-    private void xd() {
+    private synchronized void xd() {
         List<GiveawayConfig> kc = giveawayDao.getAll();
-
         kc.removeIf(k -> !k.isAktywna());
 
         for (GiveawayConfig config : kc) {
@@ -131,28 +130,36 @@ public class GiveawayListener {
             }
 
             if (msg != null && end) {
-                List<String> mozeWygraja = new ArrayList<>();
+                ArrayList<String> mozeWygraja = new ArrayList<>();
+                ArrayList<String> wygrani = new ArrayList<>();
 
                 for (MessageReaction rec : msg.getReactions()) {
-                    if (rec.getReactionEmote().getEmoji().equals(TADA)) {
+                    if (rec.getReactionEmote().isEmoji() && rec.getReactionEmote().getEmoji().equals(TADA)) {
                         for (User user : rec.retrieveUsers().complete()) {
                             if (!user.isBot()) mozeWygraja.add(user.getId());
                         }
                     }
                 }
-                Log.debug(new Gson().toJson(mozeWygraja));
-                List<String> wygrani = new ArrayList<>();
+
+                Log.debug("Może wygrają: " + new Gson().toJson(mozeWygraja));
                 int i = 1;
+                Log.debug("losuje " + config.getWygranychOsob() + " wygranych");
+
                 while (i < config.getWygranychOsob()) {
+                    Log.debug("Losowanko...");
                     try {
-                        Random rand = new Random();
-                        String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1));
-                        Log.debug("Wygral prawie: " + wygral);
-                        wygrani.add(wygral);
-                        mozeWygraja.remove(wygral);
+                        if (!mozeWygraja.isEmpty()) {
+                            Random rand = new Random();
+                            String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1));
+                            Log.debug("Jeden z wygranych: " + wygral);
+                            wygrani.add(wygral);
+                            mozeWygraja.remove(wygral);
+                        }
                     } catch (Exception e) { e.printStackTrace(); }
                     i++;
+                    Log.debug("Koniec losowanka");
                 }
+
                 Log.debug("Wygrali: " + new Gson().toJson(wygrani));
                 config.setWinners(wygrani);
                 giveawayDao.save(config);

@@ -156,7 +156,6 @@ public class GiveawayCommand extends Command {
         );
     }
 
-
     @AllArgsConstructor
     @Data
     private class KonkursBuilder {

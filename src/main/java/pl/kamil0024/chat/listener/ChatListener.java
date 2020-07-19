@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,7 +15,6 @@ import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.PunishCommand;
-import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.logger.Log;
@@ -27,18 +27,18 @@ import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatListener extends ListenerAdapter {
 
     private static final File FILE = new File("res/przeklenstwa.api");
-    private static final String HTTPS = "\\w+:\\/{2}[\\d\\w-]+(\\.[\\d\\w-]+)*(?:(?:[^\\s/]*))*";
-    private static final String HTTP = "([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)";
+    private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
     private static final String DISCORD_INVITE = "(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]";
 
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
@@ -118,7 +118,7 @@ public class ChatListener extends ListenerAdapter {
             }
             return;
         }
-        if (containsLink(msgRaw.split(" ")) != null) {
+        if (containsLink(msgRaw.split(" "))) {
             action.setKara(Action.ListaKar.LINK);
             action.send();
             return;
@@ -129,6 +129,22 @@ public class ChatListener extends ListenerAdapter {
             action.setKara(Action.ListaKar.LINK);
             action.send();
             return;
+        }
+
+        if (msgRaw.replaceAll("(http(s)?://)?(www\\.)?(m\\.)?(youtube\\.com|youtu\\.be)/\\S+", "kurwa").contains("kurwa")) {
+            if (!msg.getChannel().getId().equals("426864003562864641")) {
+                Role miniyt = member.getGuild().getRoleById("425670776272715776");
+                Role yt = member.getGuild().getRoleById("425670600049295360");
+                if (miniyt == null || yt == null) {
+                    Log.newError("Rola miniyt/yt w " + this.getClass().toString() + " jest nullem");
+                    return;
+                }
+                if (!member.getRoles().contains(miniyt) || !member.getRoles().contains(yt)) {
+                    msg.delete().queue();
+                    action.setKara(Action.ListaKar.LINK);
+                    action.send();
+                }
+            }
         }
 
         int emote = emoteCount(msgRaw, msg.getJDA());
@@ -183,25 +199,17 @@ public class ChatListener extends ListenerAdapter {
         return null;
     }
 
-    @SuppressWarnings("DuplicatedCode")
-    @Nullable
-    public static String containsLink(String[] list) {
+    public static boolean containsLink(String[] list) {
         for (String s : list) {
-            if (s != null && !s.isEmpty() && !s.toLowerCase().contains("gram na")) {
-                s = s.toLowerCase().replaceAll("derpmc.pl", "tak")
-                        .replaceAll("feerko.pl", "tak")
-                        .replaceAll("hajsmc.pl", "tak")
-                        .replaceAll("roizy.pl", "tak")
-                        .replaceAll("hypixel\\.net", "tak")
-                        .replaceAll("blazingpack\\.pl", "tak");
-                String xd = s.replaceAll(HTTP, "CzemuTutajJestJakisJebanyInvite");
-                String xdd = s.replaceAll(HTTPS, "CzemuTutajJestJakisJebanyInvite");
-                if (xd.equals("CzemuTutajJestJakisJebanyInvite") || xdd.equals("CzemuTutajJestJakisJebanyInvite")) {
-                    return s;
-                }
+            try {
+                new URL(s);
+                return true;
+            } catch (MalformedURLException e) {
+                Matcher mat = HTTP.matcher(s);
+                if (mat.matches()) return true;
             }
         }
-        return null;
+        return false;
     }
 
     public static boolean containsInvite(String[] list) {
@@ -268,14 +276,14 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("ja");
         whiteList.add("jem");
         whiteList.add("jez");
-
         whiteList.add("jej");
+        whiteList.add("joł");
+
         for (String s : msg) {
-            if (whiteList.contains(s)) {
+            if (whiteList.contains(s.toLowerCase())) {
                 continue;
             }
-
-            String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa");
+            String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "").replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa");
             if (pat.equals("kurwa")) return true;
         }
         return false;
