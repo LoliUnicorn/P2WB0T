@@ -2,10 +2,7 @@ package pl.kamil0024.nieobecnosci;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.Timespan;
 import pl.kamil0024.commands.ModLog;
@@ -59,7 +56,7 @@ public class NieobecnosciManager {
         }
 
         MessageEmbed eb = getEmbed(nb, msg.getMember()).build();
-        
+
         Message botmsg = txt.sendMessage(eb).complete();
         botmsg.addReaction(Objects.requireNonNull(CommandExecute.getReaction(msg.getAuthor(), false))).queue();
 
@@ -115,6 +112,9 @@ public class NieobecnosciManager {
                 continue;
             }
 
+            Log.debug("Nieobecnosci");
+            Log.debug(nb.getEnd() + "");
+            Log.debug(now + "");
             if (nb.getEnd() - now <= 0) {
                 try {
                     NieobecnosciConfig nbc = nieobecnosciDao.get(nb.getUserId());
@@ -123,8 +123,8 @@ public class NieobecnosciManager {
                     nb.setAktywna(false);
                     nbc.getNieobecnosc().add(nb);
                     nieobecnosciDao.save(nbc);
-                    mem.getUser().openPrivateChannel().queue(m ->
-                            m.sendMessage("Twój urlop się właśnie zakończy").queue());
+                    PrivateChannel pv = mem.getUser().openPrivateChannel().complete();
+                    pv.sendMessage("Twój urlop właśnie się zakończył!").complete();
                 } catch (Exception ignored) {}
                 continue;
             }
