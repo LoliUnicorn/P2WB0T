@@ -104,7 +104,7 @@ public class NieobecnosciListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent e) {
         synchronized (e.getGuild().getId()) {
-            if (!e.getChannel().getId().equals(Ustawienia.instance.channel.nieobecnosci)) return;
+            if (!e.getChannel().getId().equals(Ustawienia.instance.channel.nieobecnosci) || e.getMember().getUser().isBot()) return;
 
             if (e.getReactionEmote().isEmoji() || !e.getReactionEmote().getEmote().getId().equals(Ustawienia.instance.emote.red)) return;
 

@@ -112,9 +112,6 @@ public class NieobecnosciManager {
                 continue;
             }
 
-            Log.debug("Nieobecnosci");
-            Log.debug(nb.getEnd() + "");
-            Log.debug(now + "");
             if (nb.getEnd() - now <= 0) {
                 try {
                     NieobecnosciConfig nbc = nieobecnosciDao.get(nb.getUserId());
