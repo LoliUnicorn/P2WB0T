@@ -59,9 +59,10 @@ public class StatusCommand extends Command {
 
         if (botMsg == null) {
             for (Message message : history.getRetrievedHistory()) {
-                assert message.getAuthor().getId().equals(context.getBot().getId());
-                botMsg = message;
-                break;
+                if (message.getAuthor().getId().equals(Ustawienia.instance.bot.botId)) {
+                    botMsg = message;
+                    break;
+                }
             }
         }
         if (botMsg == null) throw new NullPointerException("Nie udało się znaleźć wiadomości bota");
@@ -72,10 +73,9 @@ public class StatusCommand extends Command {
         if (roizy != null) sb.append("roizy, ");
 
         final Message waitMsg = context.send("Na jaki status chcesz zmienić serwer(-y) " + sb.toString() + " ?").complete();
-        waitMsg.addReaction(Emote.ONLINE.getUnicode()).queue();
-        waitMsg.addReaction(Emote.WARN.getUnicode()).queue();
-        waitMsg.addReaction(Emote.OFF.getUnicode()).queue();
-        waitMsg.addReaction(Emote.RESTART.getUnicode()).queue();
+        for (Emote value : Emote.values()) {
+            waitMsg.addReaction(value.getUnicode()).queue();
+        }
 
         Boolean finalDerp = derp;
         Boolean finalRoizy = roizy;
@@ -103,15 +103,18 @@ public class StatusCommand extends Command {
 
     @Getter
     private enum Emote {
-        ONLINE("\u2705"),
-        WARN("\u26A0"),
-        OFF("\uD83D\uDED1"),
-        RESTART("\uD83D\uDD04");
+        ONLINE("\u2705", "Serwer chodzi sprawnie, bądź nie wiemy o problemie"),
+        WARN("\u26A0", "Występują problemy na serwerze, sprawdzamy przyczynę"),
+        OFF("\uD83D\uDED1", "Awaria serwera"),
+        PRZERWA("\uD83D\uDEE0️", "Serwer ma przerwę techniczną"),
+        RESTART("\uD83D\uDD04", "Serwer jest restartowany");
 
         public String unicode;
+        public String opis;
 
-        Emote(String unicode) {
+        Emote(String unicode, String opis) {
             this.unicode = unicode;
+            this.opis = opis;
         }
 
         @Nullable
@@ -151,10 +154,10 @@ public class StatusCommand extends Command {
         sb.appendLine("RoiZy.PL -> " + roizy.getUnicode() + "\n");
 
         sb.appendLine("Legenda:");
-        sb.appendLine(Emote.ONLINE.getUnicode() + " Serwer chodzi sprawnie, bądź nie wiemy o problemie");
-        sb.appendLine(Emote.WARN.getUnicode() + " Występują problemy na serwerze, sprawdzamy przyczynę");
-        sb.appendLine(Emote.OFF.getUnicode() + " Awaria serwera");
-        sb.appendLine(Emote.RESTART.getUnicode() + " Serwer jest restartowany");
+
+        for (Emote value : Emote.values()) {
+            sb.appendLine(value.getUnicode() + " " + value.getOpis());
+        }
 
         return sb.toString();
     }

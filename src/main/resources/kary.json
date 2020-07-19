@@ -57,6 +57,29 @@
       }
     },
     "3": {
+      "name": "Umieszczanie zdjęć zawierających wulgarne napisy na kanale #obrazki",
+      "tier_1": {
+        "maxWarns": 1,
+        "type": "Tempmute",
+        "time": "2h"
+      },
+      "tier_2": {
+        "maxWarns": 2,
+        "type": "Tempmute",
+        "time": "4h"
+      },
+      "tier_3": {
+        "maxWarns": 3,
+        "type": "Tempban",
+        "time": "12h"
+      },
+      "tier_4": {
+        "maxWarns": 4,
+        "type": "Tempban",
+        "time": "1d"
+      }
+    },
+    "4": {
       "name": "Niestosowanie się do wytycznych kanałów",
       "tier_1": {
         "maxWarns": 1,
@@ -79,7 +102,7 @@
         "time": "1d"
       }
     },
-    "4": {
+    "5": {
       "name": "Niestosowanie się do wytycznych kanału #filmy",
       "tier_1": {
         "maxWarns": 1,
@@ -87,7 +110,7 @@
         "time": "1d"
       }
     },
-    "5": {
+    "6": {
       "name": "Wulgaryzmy kierowane do czlonków administracji",
       "tier_1": {
         "maxWarns": 1,
@@ -115,7 +138,7 @@
         "time": "5d"
       }
     },
-    "6": {
+    "7": {
       "name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szeroko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem.",
       "tier_1": {
         "maxWarns": 1,
@@ -123,7 +146,7 @@
         "time": "24h"
       }
     },
-    "7": {
+    "8": {
       "name": "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -131,7 +154,7 @@
         "time": "7d"
       }
     },
-    "8": {
+    "9": {
       "name": "Rozpowszechnianie danych osobowych, adresów zamieszkania i innych wrażliwych informacji",
       "tier_1": {
         "maxWarns": 1,
@@ -139,7 +162,7 @@
         "time": "-"
       }
     },
-    "9": {
+    "10": {
       "name": "Działanie na szkodę sieci serwerów P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -147,7 +170,7 @@
         "time": "-"
       }
     },
-    "10": {
+    "11": {
       "name": "Podszywanie się pod graczy lub członków ekipy P2W",
       "tier_1": {
         "maxWarns": 1,
@@ -155,7 +178,7 @@
         "time": "3d"
       }
     },
-    "11": {
+    "12": {
       "name": "Proszenie o przywileje, bonusy lub rangi",
       "tier_1": {
         "maxWarns": 1,
@@ -163,7 +186,7 @@
         "time": "2h"
       }
     },
-    "12": {
+    "13": {
       "name": "Wulgarny i/lub nieodpowiedni nickname (z połączonego konta Minecraft)",
       "tier_1": {
         "maxWarns": 1,
@@ -171,7 +194,7 @@
         "time": "-"
       }
     },
-    "13": {
+    "14": {
       "name": "Wulgarny, nieodpowiedni lub reklamujący serwery gry Minecraft/strony powiązane z tą tematyką awatar, status, aktualnie włączona gra na Discord",
       "tier_1": {
         "maxWarns": 1,
@@ -194,7 +217,7 @@
         "time": "3h"
       }
     },
-    "14": {
+    "15": {
       "name": "Rozsyłanie scamlinków na kanałach tekstowych",
       "tier_1": {
         "maxWarns": 1,
@@ -202,7 +225,7 @@
         "time": "3d"
       }
     },
-    "15": {
+    "16": {
       "name": "Oznaczanie grup administracyjnych lub członków ekipy bez powodu, spam oznaczeniami utrudniający funkcjonowanie innym użytkownikom serwisu",
       "tier_1": {
         "maxWarns": 1,
@@ -225,7 +248,7 @@
         "time": "5d"
       }
     },
-    "16": {
+    "17": {
       "name": "Pisanie obraźliwych lub nieetycznych skrótów (w zależności od sytuacji i kontekstu)",
       "tier_1": {
         "maxWarns": 1,
@@ -243,7 +266,7 @@
         "time": "5h"
       }
     },
-    "17": {
+    "18": {
       "name": "Brak kultury na publicznych lub prywatnych kanałach głosowych",
       "tier_1": {
         "maxWarns": 1,
@@ -251,7 +274,7 @@
         "time": "3h"
       }
     },
-    "18": {
+    "19": {
       "name": "Celowe utrudnianie rozmowy na publicznych lub prywatnych kanałach głosowych, wliczając w to puszczanie muzyki, bindów lub dmuchanie w mikrofon",
       "tier_1": {
         "maxWarns": 1,
@@ -259,7 +282,7 @@
         "time": "3h"
       }
     },
-    "19": {
+    "20": {
       "name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
       "tier_1": {
         "maxWarns": 1,
@@ -267,7 +290,7 @@
         "time": "5h"
       }
     },
-    "20": {
+    "21": {
       "name": "Wulgarna lub nieodpowiednia nazwa kanału głosowego",
       "tier_1": {
         "maxWarns": 1,
@@ -275,7 +298,7 @@
         "time": "3h"
       }
     },
-    "21": {
+    "22": {
       "name": "Używanie modulatorów głosu i programów podobnych",
       "tier_1": {
         "maxWarns": 1,
@@ -283,7 +306,7 @@
         "time": "3h"
       }
     },
-    "22": {
+    "23": {
       "name": "Dublowanie kont przebywających na serwisie Discord",
       "tier_1": {
         "maxWarns": 1,
@@ -306,7 +329,7 @@
         "time": "8h"
       }
     },
-    "23": {
+    "24": {
       "name": "Reklamowanie serwerów w żaden sposób niepowiązanych z siecią serwerów P2W.pl w wiadomości prywatnej",
       "tier_1": {
         "maxWarns": 1,
@@ -324,7 +347,7 @@
         "time": "7d"
       }
     },
-    "24": {
+    "25": {
       "name": "Niestosowne, niecenzuralne oraz nieprzyzwoite nazewnictwo sieci, jak i samych serwerów P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -342,7 +365,7 @@
         "time": "3d"
       }
     },
-    "25": {
+    "26": {
       "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
       "tier_1": {
         "maxWarns": 1,
@@ -360,7 +383,7 @@
         "time": "2d"
       }
     },
-    "26": {
+    "27": {
       "name": "Zaśmiecanie chatu",
       "tier_1": {
         "maxWarns": 1,

@@ -2,6 +2,7 @@ package pl.kamil0024.commands.dews;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UsageException;
@@ -15,6 +16,7 @@ public class ShellCommand extends Command {
 
     public ShellCommand() {
         name = "shell";
+        category = CommandCategory.DEVS;
         permLevel = PermLevel.DEVELOPER;
     }
 

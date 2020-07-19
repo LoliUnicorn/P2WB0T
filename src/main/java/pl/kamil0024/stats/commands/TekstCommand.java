@@ -12,6 +12,7 @@ import pl.kamil0024.music.MusicModule;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class TekstCommand extends Command {
@@ -56,20 +57,36 @@ public class TekstCommand extends Command {
             eb.setTimestamp(Instant.now());
             eb.setImage(thumbnail.getString("genius"));
 
+            int sumLenght = 0;
             StringBuilder sb = new StringBuilder();
+
+            List<EmbedBuilder> teksty = new ArrayList<>();
             EmbedBuilder tekst = new EmbedBuilder();
+
             tekst.setTimestamp(Instant.now());
             tekst.setColor(UserUtil.getColor(context.getMember()));
+
             for (String s : lyrics.split("\n")) {
                 sb.append(s).append("\n");
                 if (sb.length() >= 900) {
                     tekst.addField(" ", sb.toString(), false);
+                    sumLenght += sb.length();
                     sb = new StringBuilder();
+                }
+
+                if (sumLenght > 7700) {
+                    teksty.add(tekst);
+                    tekst = new EmbedBuilder();
+                    tekst.setTimestamp(Instant.now());
+                    tekst.setColor(UserUtil.getColor(context.getMember()));
+                    sumLenght = 0;
                 }
             }
 
             pages.add(eb);
-            pages.add(tekst);
+            if (!teksty.isEmpty()) {
+                pages.addAll(teksty);
+            } else pages.add(tekst);
 
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
 
