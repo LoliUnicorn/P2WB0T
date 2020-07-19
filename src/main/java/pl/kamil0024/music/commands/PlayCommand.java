@@ -37,9 +37,10 @@ public class PlayCommand extends Command {
         }
 
         if (isVoice(context.getGuild().getSelfMember()) && !isSameChannel(context.getGuild().getSelfMember(), context.getMember())) {
-            assert !getVc(context.getGuild().getSelfMember()).getId().equals(getVc(context.getMember()).getId());
-            context.send("Musisz być połączony z tym samym kanałem co bot!").queue();
-            return false;
+            if (!getVc(context.getGuild().getSelfMember()).getId().equals(getVc(context.getMember()).getId())) {
+                context.send("Musisz być połączony z tym samym kanałem co bot!").queue();
+                return false;
+            }
         }
         
         if (!hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {

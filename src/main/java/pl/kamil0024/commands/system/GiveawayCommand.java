@@ -149,8 +149,9 @@ public class GiveawayCommand extends Command {
                 2, TimeUnit.MINUTES,
                 () -> {
                     TextChannel txt = api.getTextChannelById(channelId);
-                    assert getKonkurs().get(String.valueOf(userId)) != null;
-                    txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
+                    if (getKonkurs().get(String.valueOf(userId)) != null) {
+                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
+                    }
                 }
         );
     }

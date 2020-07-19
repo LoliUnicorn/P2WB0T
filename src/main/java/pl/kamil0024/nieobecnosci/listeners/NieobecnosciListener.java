@@ -47,10 +47,11 @@ public class NieobecnosciListener extends ListenerAdapter {
         if (e.getMessage().getContentRaw().contains("Przedłużam:")) {
             Nieobecnosc xd = null;
             for (Nieobecnosc nieobecnosc : nbc.getNieobecnosc()) {
-                assert nieobecnosc.isAktywna();
-                xd = nieobecnosc;
-                nbc.getNieobecnosc().remove(nieobecnosc);
-                break;
+                if (nieobecnosc.isAktywna()) {
+                    xd = nieobecnosc;
+                    nbc.getNieobecnosc().remove(nieobecnosc);
+                    break;
+                }
             }
             if (xd == null) {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + " nie masz aktywnej nieobecnosci").

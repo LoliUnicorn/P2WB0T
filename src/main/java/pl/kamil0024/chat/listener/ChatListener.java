@@ -237,8 +237,9 @@ public class ChatListener extends ListenerAdapter {
         if (split.length < 5) return 0;
 
         for (char s : split) {
-            assert !String.valueOf(s).equals("");
-            if (Character.isUpperCase(s)) caps++;
+            if (!String.valueOf(s).equals("")) {
+                if (Character.isUpperCase(s)) caps++;
+            }
         }
 
         return caps;

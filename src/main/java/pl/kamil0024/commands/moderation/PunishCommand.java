@@ -266,11 +266,12 @@ public class PunishCommand extends Command {
                 },
                 30, TimeUnit.SECONDS,
                 () -> {
-                    assert !kurwaBylaAkcja.get();
-                    try {
-                        msg.getChannel().sendMessage(String.format("<@%s>, twój czas na odpowiedź minął!", context.getUser().getId())).queue();
-                        msg.delete().complete();
-                    } catch (Exception ignored) { }
+                    if (!kurwaBylaAkcja.get()) {
+                        try {
+                            msg.getChannel().sendMessage(String.format("<@%s>, twój czas na odpowiedź minął!", context.getUser().getId())).queue();
+                            msg.delete().complete();
+                        } catch (Exception ignored) { }
+                    }
                 }
         );
     }

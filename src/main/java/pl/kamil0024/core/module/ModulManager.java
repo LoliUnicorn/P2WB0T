@@ -25,8 +25,9 @@ public class ModulManager {
     }
 
     public void start(Modul modul) {
-        assert !modul.isStart();
-        modul.startUp();
+        if (!modul.isStart()) {
+            modul.startUp();
+        }
     }
 
     public void reload(Modul modul) {
