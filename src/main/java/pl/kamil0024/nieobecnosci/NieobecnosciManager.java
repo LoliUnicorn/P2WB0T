@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.Timespan;
@@ -49,6 +50,7 @@ public class NieobecnosciManager {
         nb.setStart(start);
         nb.setPowod(powod);
         nb.setEnd(end);
+        nb.setAktywna(true);
 
         TextChannel txt = msg.getGuild().getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
         if (txt == null) {
@@ -56,7 +58,9 @@ public class NieobecnosciManager {
             return;
         }
 
-        Message botmsg = txt.sendMessage(getEmbed(nb, msg.getMember()).build()).complete();
+        MessageEmbed eb = getEmbed(nb, msg.getMember()).build();
+        
+        Message botmsg = txt.sendMessage(eb).complete();
         botmsg.addReaction(Objects.requireNonNull(CommandExecute.getReaction(msg.getAuthor(), false))).queue();
 
         nb.setMsgId(botmsg.getId());

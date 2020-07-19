@@ -1,7 +1,6 @@
 package pl.kamil0024.core;
 
 import com.google.gson.annotations.SerializedName;
-import net.dv8tion.jda.api.entities.Activity;
 
 import java.util.Arrays;
 import java.util.List;
