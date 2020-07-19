@@ -150,7 +150,7 @@ public class GiveawayListener {
                     try {
                         if (!mozeWygraja.isEmpty()) {
                             Random rand = new Random();
-                            String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1));
+                            String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1 == 0 ? 1 : mozeWygraja.size() - 1));
                             Log.debug("Jeden z wygranych: " + wygral);
                             wygrani.add(wygral);
                             mozeWygraja.remove(wygral);
