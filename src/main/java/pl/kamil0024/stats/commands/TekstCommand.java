@@ -35,10 +35,12 @@ public class TekstCommand extends Command {
     public boolean execute(CommandContext context) {
         String arg;
         AudioTrack track = musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack();
-        if (musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() == null) {
+
+        if (context.getArgs().get(0) == null && musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() != null) {
+            arg = track.getInfo().title;
+        } else {
             arg = context.getArgsToString(0);
-            if (context.getArgs().get(0) == null) throw new UsageException();
-        } else arg = track.getInfo().title;
+        }
 
         try {
             JSONObject job = NetworkUtil.getJson("https://some-random-api.ml/lyrics?title=" + NetworkUtil.encodeURIComponent(arg));
@@ -73,7 +75,7 @@ public class TekstCommand extends Command {
                     sb = new StringBuilder();
 
                     if (tekst.length() > 5600) {
-                        Log.debug("nowa strona");
+                        Log.debug("nowa strona " + tekst.length());
                         teksty.add(tekst);
                         tekst = new EmbedBuilder();
                         tekst.setTimestamp(Instant.now());
