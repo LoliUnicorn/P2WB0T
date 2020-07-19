@@ -74,7 +74,7 @@ public class TekstCommand extends Command {
                     sb = new StringBuilder();
                 }
 
-                if (sumLenght > 7700) {
+                if (sumLenght > 5700) {
                     teksty.add(tekst);
                     tekst = new EmbedBuilder();
                     tekst.setTimestamp(Instant.now());
