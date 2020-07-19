@@ -77,8 +77,10 @@ public class CommandExecute extends ListenerAdapter {
 
         if (c == null) { return; }
 
+        PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
+
         if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
-            if (UserUtil.getPermLevel(e.getAuthor()).getNumer() == PermLevel.MEMBER.getNumer()) {
+            if (jegoPerm.getNumer() == PermLevel.MEMBER.getNumer() && c.getPermLevel().getNumer() < jegoPerm.getNumer()) {
                 zareaguj(e.getMessage(), e.getAuthor(), false);
                 return;
             }
@@ -86,13 +88,12 @@ public class CommandExecute extends ListenerAdapter {
 
         e.getChannel().sendTyping().queue();
 
-        if (c.getPermLevel().getNumer() > UserUtil.getPermLevel(e.getAuthor()).getNumer()) {
-            PermLevel plvl = UserUtil.getPermLevel(e.getAuthor());
+        if (c.getPermLevel().getNumer() > jegoPerm.getNumer()) {
             String wymaga = tlumaczenia.get(c.getPermLevel().getTranlsateKey());
-            String ma = tlumaczenia.get(plvl.getTranlsateKey());
+            String ma = tlumaczenia.get(jegoPerm.getTranlsateKey());
 
             e.getChannel().sendMessage(tlumaczenia.get("generic.noperm", wymaga, c.getPermLevel().getNumer(),
-                    ma, plvl.getNumer())).queue();
+                    ma, jegoPerm.getNumer())).queue();
 
             zareaguj(e.getMessage(), e.getAuthor(), false);
             return;
@@ -125,9 +126,12 @@ public class CommandExecute extends ListenerAdapter {
             Log.newError(omegalul);
             e.getChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
-        if (udaloSie && UserUtil.getPermLevel(e.getAuthor()).getNumer() < 10) setCooldown(e.getAuthor(), c);
+        if (udaloSie && jegoPerm.getNumer() < 10) setCooldown(e.getAuthor(), c);
         zareaguj(e.getMessage(), e.getAuthor(), udaloSie);
-        onExecuteEvent(cmdc);
+
+        try {
+            onExecuteEvent(cmdc);
+        } catch (Exception ignored) {}
     }
 
     public static Emote getReaction(User user, boolean bol) {

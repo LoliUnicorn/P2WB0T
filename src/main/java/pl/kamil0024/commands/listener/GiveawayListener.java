@@ -142,7 +142,7 @@ public class GiveawayListener {
                 }
 
                 Log.debug("Może wygrają: " + new Gson().toJson(mozeWygraja));
-                int i = 1;
+                int i = 0;
                 Log.debug("losuje " + config.getWygranychOsob() + " wygranych");
 
                 while (i < config.getWygranychOsob()) {
