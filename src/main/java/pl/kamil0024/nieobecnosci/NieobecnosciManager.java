@@ -23,8 +23,11 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class NieobecnosciManager extends TimerTask {
+public class NieobecnosciManager {
 
     @Inject private ShardManager api;
     @Inject private NieobecnosciDao nieobecnosciDao;
@@ -32,8 +35,9 @@ public class NieobecnosciManager extends TimerTask {
     public NieobecnosciManager(ShardManager api, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
         this.nieobecnosciDao = nieobecnosciDao;
-        Timer tim = new Timer();
-        tim.schedule(this, 0, 120000);
+
+        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::xd, 0, 30, TimeUnit.SECONDS);
     }
 
     public synchronized void put(Message msg, long start, String powod, long end) {
@@ -83,12 +87,9 @@ public class NieobecnosciManager extends TimerTask {
         return eb;
     }
 
-    @Override
-    public void run() {
-        update();
-    }
+    public void xd() { update(); }
 
-    public void update() {
+    public synchronized void update() {
         TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
 
         if (txt == null) {

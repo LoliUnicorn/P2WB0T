@@ -172,10 +172,11 @@ public class GiveawayListener {
                 for (String winner : config.getWinners()) {
                     sb.append(String.format(f, winner)).append("`,` ");
                 }
-                msg.getChannel().sendMessage(TADA + " Gratulacje dla tych osób:" + sb.toString() +
+                msg.getChannel().sendMessage(TADA + " Gratulacje dla tych osób: " + sb.toString() +
                         "\nWygrali: " + config.getNagroda() +
-                        "\n\n" + link).queue();
+                        "\n\n" + link).allowedMentions(Collections.singleton(Message.MentionType.USER)).queue();
             }
+
             if (msg != null) msg.editMessage(createEmbed(config).build()).queue();
 
         }

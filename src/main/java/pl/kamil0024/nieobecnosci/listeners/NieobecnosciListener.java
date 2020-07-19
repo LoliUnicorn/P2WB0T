@@ -123,6 +123,7 @@ public class NieobecnosciListener extends ListenerAdapter {
                     }
                 }
             }
+
         }
     }
 }

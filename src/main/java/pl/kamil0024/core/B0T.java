@@ -189,7 +189,7 @@ public class B0T {
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
-//        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
+        modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule));
         modulManager.getModules().add(musicModule);
