@@ -71,10 +71,7 @@ public class ChatListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
 
-        if (!e.getAuthor().getId().equals("343467373417857025")) {
-            if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
-        }
-
+        if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
 
@@ -184,15 +181,15 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (member.getId().equals("343467373417857025")) {
-            Log.debug("1");
             if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
                 action.setKara(Action.ListaKar.SKROTY);
                 action.send();
+                return;
             }
-            Log.debug("2");
             if (skrotyCount(new String[] {msgRaw.toLowerCase()})) {
                 action.setKara(Action.ListaKar.SKROTY);
                 action.send();
+                return;
             }
         }
 
@@ -291,10 +288,6 @@ public class ChatListener extends ListenerAdapter {
 
         for (String s : msg) {
             String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
-            Log.debug(" = chatlistener = ");
-            Log.debug("Wiadomosc: " + s);
-            Log.debug("Po replace: " + pat);
-            Log.debug(" = chatlistener = ");
             if (whiteList.contains(s.toLowerCase()) || whiteList.contains(pat)) {
                 continue;
             }
