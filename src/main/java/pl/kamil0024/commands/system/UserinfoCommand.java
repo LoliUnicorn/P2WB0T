@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import pl.kamil0024.bdate.BDate;
+import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -53,8 +54,8 @@ public class UserinfoCommand extends Command {
         long lonk = context.getUser().getTimeCreated().toInstant().toEpochMilli();
         long date = new BDate().getTimestamp();
 
-        Date discord = new Date(user.getTimeCreated().toInstant().toEpochMilli());
-        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord), false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
+        BDate discord = new BDate(user.getTimeCreated().toInstant().toEpochMilli(), ModLog.getLang());
+        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord) + "`" + discord.difference(new BDate()) + "` temu", false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
 
         if (member != null) {
             Date serwer = new Date(member.getTimeJoined().toInstant().toEpochMilli());

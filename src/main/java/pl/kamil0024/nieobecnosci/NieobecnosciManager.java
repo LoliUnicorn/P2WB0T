@@ -35,7 +35,7 @@ public class NieobecnosciManager {
         this.nieobecnosciDao = nieobecnosciDao;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::xd, 0, 30, TimeUnit.SECONDS);
+        executorSche.scheduleAtFixedRate(this::xd, 0, 30, TimeUnit.MINUTES);
     }
 
     public synchronized void put(Message msg, long start, String powod, long end) {
@@ -79,7 +79,6 @@ public class NieobecnosciManager {
         eb.addField("Osoba zgłaszająca", UserUtil.getFullNameMc(member), false);
         eb.addField("Powód", nieobecnosc.getPowod(), false);
         eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
-        eb.addField("Powód", nieobecnosc.getPowod(), false);
         eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
         eb.addField("Pozostało", new Timespan(new Date().getTime(), ModLog.getLang()).difference(nieobecnosc.getEnd()), false);
         eb.setFooter("ID: " + nieobecnosc.getId() + " | Ostatnia aktualizacja:");
