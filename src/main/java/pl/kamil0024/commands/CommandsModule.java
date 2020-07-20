@@ -6,6 +6,7 @@ import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.listener.MultiListener;
+import pl.kamil0024.commands.zabawa.PogodaCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
@@ -103,7 +104,7 @@ implements Modul {
             cmd.add(new ArchiwizujCommand());
             cmd.add(new MultiCommand(multiDao, eventWaiter));
 //            cmd.add(new SerweryCommand());
-            cmd.add(new StaffCommand());
+            cmd.add(new PogodaCommand());
 
             // Moderacyjne:
             cmd.add(new StatusCommand(eventWaiter));

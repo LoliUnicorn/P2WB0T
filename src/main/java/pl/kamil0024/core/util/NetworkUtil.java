@@ -56,4 +56,17 @@ public class NetworkUtil {
         return result;
     }
 
+    private static Response downloadResponse(String url) throws IOException {
+        Request req = new Request.Builder()
+                .header(UA, USER_AGENT)
+                .url(url)
+                .build();
+        return client.newCall(req).execute();
+    }
+
+    public static byte[] download(String url) throws IOException {
+        Response res = downloadResponse(url);
+        return res.body() == null ? new byte[0] : res.body().bytes();
+    }
+
 }
