@@ -293,9 +293,10 @@ public class PunishCommand extends Command {
 
         sb.appendLine("```md");
         sb.appendLine("0. Anuluj akcje");
+        int size = 1;
         for (KaryJSON.Kara kara : karyJSON.getKary()) {
             sb.appendLine(kara.getId() + ". " + kara.getPowod());
-            if (sb.toString().length() >= 950) {
+            if (sb.toString().length() >= 950 || karyJSON.getKary().size() == size) {
                 sb.appendLine("```");
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setColor(UserUtil.getColor(mem));
@@ -304,6 +305,7 @@ public class PunishCommand extends Command {
                 sb = new BetterStringBuilder();
                 sb.appendLine("```md");
             }
+            size++;
         }
         return pages;
     }
