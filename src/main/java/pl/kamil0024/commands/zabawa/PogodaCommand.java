@@ -4,17 +4,17 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.jsoup.Jsoup;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.util.NetworkUtil;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.UserUtil;
-
-import java.awt.*;
 
 public class PogodaCommand extends Command {
 
     public PogodaCommand() {
         name = "pogoda";
         aliases.add("weather");
+        category = CommandCategory.ZABAWA;
         cooldown = 30;
     }
 

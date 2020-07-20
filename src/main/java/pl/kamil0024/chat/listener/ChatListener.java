@@ -120,9 +120,11 @@ public class ChatListener extends ListenerAdapter {
         }
 
         if (containsLink(msgRaw.split(" "))) {
-            action.setKara(Action.ListaKar.LINK);
-            action.send();
-            return;
+            if (!msg.getChannel().getId().equals("426864003562864641")) {
+                action.setKara(Action.ListaKar.LINK);
+                action.send();
+                return;
+            }
         }
 
         if (containsInvite(msgRaw.split(" "))) {
@@ -146,6 +148,7 @@ public class ChatListener extends ListenerAdapter {
                     action.send();
                 }
             }
+
         }
 
         int emote = emoteCount(msgRaw, msg.getJDA());
