@@ -102,7 +102,8 @@ implements Modul {
             cmd.add(new ShellCommand());
             cmd.add(new ArchiwizujCommand());
             cmd.add(new MultiCommand(multiDao, eventWaiter));
-            cmd.add(new SerweryCommand());
+//            cmd.add(new SerweryCommand());
+            cmd.add(new StaffCommand());
 
             // Moderacyjne:
             cmd.add(new StatusCommand(eventWaiter));
