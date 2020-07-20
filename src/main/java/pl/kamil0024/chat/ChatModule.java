@@ -1,7 +1,6 @@
 package pl.kamil0024.chat;
 
 import com.google.inject.Inject;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.chat.listener.ChatListener;
 import pl.kamil0024.chat.listener.KaryListener;

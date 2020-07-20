@@ -70,7 +70,10 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+
+        if (!e.getAuthor().getId().equals("343467373417857025")) {
+            if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+        }
 
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
@@ -179,7 +182,7 @@ public class ChatListener extends ListenerAdapter {
             action.send();
         }
 
-        if (member.getId().equals("415266870275342379")) {
+        if (member.getId().equals("343467373417857025")) {
             Log.debug("1");
             if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
                 action.setKara(Action.ListaKar.SKROTY);
@@ -190,8 +193,8 @@ public class ChatListener extends ListenerAdapter {
                 action.setKara(Action.ListaKar.SKROTY);
                 action.send();
             }
-        
         }
+
     }
 
     @Nullable
