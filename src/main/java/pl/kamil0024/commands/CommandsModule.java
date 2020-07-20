@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
+import pl.kamil0024.commands.listener.MultiListener;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
@@ -44,11 +45,16 @@ implements Modul {
         @Inject GiveawayDao giveawayDao;
         @Inject StatsModule statsModule;
         @Inject MusicModule musicModule;
+        @Inject MultiDao multiDao;
 
         private boolean start = false;
         private ModLog modLog;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule) {
+        // Listeners
+
+        MultiListener multiListener;
+
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao) {
             this.commandManager = commandManager;
             this.tlumaczenia = tlumaczenia;
             this.api = api;
@@ -64,6 +70,7 @@ implements Modul {
             this.giveawayDao = giveawayDao;
             this.statsModule = statsModule;
             this.musicModule = musicModule;
+            this.multiDao = multiDao;
 
             ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
             executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -72,6 +79,8 @@ implements Modul {
         @Override
         public boolean startUp() {
             GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
+            multiListener = new MultiListener(multiDao);
+            api.addEventListener(multiListener);
 
             cmd = new ArrayList<>();
 
@@ -79,7 +88,7 @@ implements Modul {
             cmd.add(new BotinfoCommand(commandManager, modulManager));
             cmd.add(new HelpCommand(commandManager));
             cmd.add(new PoziomCommand());
-            cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule));
+            cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao));
             cmd.add(new ForumCommand());
             cmd.add(new UserinfoCommand());
             cmd.add(new McpremiumCommand());
@@ -92,6 +101,7 @@ implements Modul {
             cmd.add(new StopCommand(modulManager, statsModule, eventWaiter, musicModule));
             cmd.add(new ShellCommand());
             cmd.add(new ArchiwizujCommand());
+            cmd.add(new MultiCommand(multiDao, eventWaiter));
 
             // Moderacyjne:
             cmd.add(new StatusCommand(eventWaiter));
@@ -117,6 +127,7 @@ implements Modul {
 
         @Override
         public boolean shutDown() {
+            api.removeEventListener(multiListener);
             commandManager.unregisterCommands(cmd);
             setStart(false);
             return true;

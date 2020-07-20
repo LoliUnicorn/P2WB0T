@@ -165,13 +165,14 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
-        CaseDao caseDao = new CaseDao(databaseManager);
-        UserDao userDao = new UserDao(databaseManager);
-        NieobecnosciDao nieobecnosciDao = new NieobecnosciDao(databaseManager);
-        RemindDao remindDao = new RemindDao(databaseManager);
-        GiveawayDao giveawayDao = new GiveawayDao(databaseManager);
-        StatsDao statsDao = new StatsDao(databaseManager);
-        VoiceStateDao voiceStateDao = new VoiceStateDao(databaseManager);
+        CaseDao caseDao                   = new CaseDao(databaseManager);
+        UserDao userDao                   = new UserDao(databaseManager);
+        NieobecnosciDao nieobecnosciDao   = new NieobecnosciDao(databaseManager);
+        RemindDao remindDao               = new RemindDao(databaseManager);
+        GiveawayDao giveawayDao           = new GiveawayDao(databaseManager);
+        StatsDao statsDao                 = new StatsDao(databaseManager);
+        VoiceStateDao voiceStateDao       = new VoiceStateDao(databaseManager);
+        MultiDao multiDao                 = new MultiDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -191,7 +192,7 @@ public class B0T {
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
 

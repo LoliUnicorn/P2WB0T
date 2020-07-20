@@ -40,8 +40,9 @@ public class EvalCommand extends Command {
     @Inject private final GiveawayListener giveawayListener;
     @Inject private final GiveawayDao giveawayDao;
     @Inject private final StatsModule statsModule;
+    @Inject private final MultiDao multiDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -60,6 +61,7 @@ public class EvalCommand extends Command {
         this.giveawayListener = giveawayListener;
         this.giveawayDao = giveawayDao;
         this.statsModule = statsModule;
+        this.multiDao = multiDao;
     }
 
     @Override
@@ -88,6 +90,7 @@ public class EvalCommand extends Command {
         shell.setVariable("giveawayListener", giveawayListener);
         shell.setVariable("giveawayDao", giveawayDao);
         shell.setVariable("statsModule", statsModule);
+        shell.setVariable("multiDao", multiDao);
 
         Object value;
         boolean error = false;
