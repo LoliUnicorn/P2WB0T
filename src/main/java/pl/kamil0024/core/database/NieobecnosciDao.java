@@ -17,7 +17,6 @@ public class NieobecnosciDao implements Dao<NieobecnosciConfig> {
         mapper = databaseManager.getPgStore().mapSync(NieobecnosciConfig.class);
     }
 
-
     @Override
     public NieobecnosciConfig get(String id) {
         return mapper.load(id).orElseGet(() -> newObject(id));
@@ -50,6 +49,13 @@ public class NieobecnosciDao implements Dao<NieobecnosciConfig> {
             }
         }
         return xd;
+    }
+
+    public boolean hasNieobecnosc(String id) {
+        for (Nieobecnosc nieobecnosc : get(id).getNieobecnosc()) {
+            if (nieobecnosc.isAktywna()) return true;
+        }
+        return false;
     }
 
 }

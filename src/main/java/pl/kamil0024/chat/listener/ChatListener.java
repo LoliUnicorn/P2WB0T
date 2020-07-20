@@ -121,6 +121,7 @@ public class ChatListener extends ListenerAdapter {
             }
             return;
         }
+
         if (containsLink(msgRaw.split(" "))) {
             action.setKara(Action.ListaKar.LINK);
             action.send();
@@ -160,7 +161,7 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
-        if (flood > 4 || caps >= 80 || emote > 3) {
+        if (flood > 4 || caps >= 50 || emote > 3) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + msgRaw);
@@ -209,6 +210,7 @@ public class ChatListener extends ListenerAdapter {
 
     public static boolean containsLink(String[] list) {
         for (String s : list) {
+            if (s.contains("derpmc") || s.contains("roizy") || s.contains("p2w") || s.contains("hypixel")) continue;
             try {
                 new URL(s);
                 return true;
@@ -296,7 +298,7 @@ public class ChatListener extends ListenerAdapter {
             Log.debug("Wiadomosc: " + s);
             Log.debug("Po replace: " + pat);
             Log.debug(" = chatlistener = ");
-            if (pat.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa").equals("kurwa")) return true;
+//            if (pat.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa").equals("kurwa")) return true;
         }
 
         return false;

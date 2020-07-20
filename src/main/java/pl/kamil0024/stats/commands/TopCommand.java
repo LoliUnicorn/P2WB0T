@@ -3,11 +3,14 @@ package pl.kamil0024.stats.commands;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.util.EmbedPageintaor;
@@ -20,14 +23,16 @@ import java.util.*;
 
 public class TopCommand extends Command {
 
-    private StatsDao statsDao;
-    private EventWaiter eventWaiter;
+    private final StatsDao statsDao;
+    private final EventWaiter eventWaiter;
+    private final NieobecnosciDao nieobecnosciDao;
 
-    public TopCommand(StatsDao statsDao, EventWaiter eventWaiter) {
+    public TopCommand(StatsDao statsDao, EventWaiter eventWaiter, NieobecnosciDao nieobecnosciDao) {
         name = "top";
         permLevel = PermLevel.MODERATOR;
         this.statsDao = statsDao;
         this.eventWaiter = eventWaiter;
+        this.nieobecnosciDao = nieobecnosciDao;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -43,6 +48,7 @@ public class TopCommand extends Command {
         if (dni == null) throw new UsageException();
 
         Message msg = context.send("Ładuje...").complete();
+        context.getChannel().sendTyping().queue();
 
         List<StatsConfig> staty = statsDao.getAll();
         if (staty.isEmpty()) {
@@ -52,6 +58,10 @@ public class TopCommand extends Command {
 
         HashMap<String, Suma> mapa = new HashMap<>();
         HashMap<String, Integer> top = new HashMap<>();
+        ArrayList<EmbedBuilder> pages = new ArrayList<>();
+
+        Emote green = CommandExecute.getReaction(context.getUser(), true);
+        Emote red = CommandExecute.getReaction(context.getUser(), false);
 
         for (StatsConfig statsConfig : staty) {
             int suma = 0;
@@ -67,12 +77,8 @@ public class TopCommand extends Command {
             top.put(entry.getKey(), entry.getValue().getNadaneKary());
         }
 
-        ArrayList<EmbedBuilder> pages = new ArrayList<>();
-
         int rank = 1;
-        HashMap<String, Integer> topka = sortByValue(top);
-
-        for (Map.Entry<String, Integer> entry : topka.entrySet()) {
+        for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
             EmbedBuilder eb = new EmbedBuilder();
             User user = context.getParsed().getUser(entry.getKey());
 
@@ -80,10 +86,12 @@ public class TopCommand extends Command {
             eb.setTitle("Miejsce #" + rank);
             eb.setThumbnail(user.getAvatarUrl());
             eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
-                    StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()));
+                    StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()) +
+                    "\nMa nieobecność? " + (nieobecnosciDao.hasNieobecnosc(user.getId()) ? green.getAsMention() : red.getAsMention()));
             pages.add(eb);
             rank++;
         }
+
         new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 240).create(msg);
         return true;
     }
