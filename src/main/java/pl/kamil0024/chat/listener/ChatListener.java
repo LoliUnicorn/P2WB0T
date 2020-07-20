@@ -290,15 +290,15 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("joł");
 
         for (String s : msg) {
-            if (whiteList.contains(s.toLowerCase())) {
-                continue;
-            }
             String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
             Log.debug(" = chatlistener = ");
             Log.debug("Wiadomosc: " + s);
             Log.debug("Po replace: " + pat);
             Log.debug(" = chatlistener = ");
-//            if (pat.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa").equals("kurwa")) return true;
+            if (whiteList.contains(s.toLowerCase()) || whiteList.contains(pat)) {
+                continue;
+            }
+            if (pat.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa").equals("kurwa")) return true;
         }
 
         return false;
