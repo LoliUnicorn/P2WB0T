@@ -184,7 +184,7 @@ public class B0T {
         api.addEventListener(modLog);
 
         MusicModule musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao);
-        this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule);
+        this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));

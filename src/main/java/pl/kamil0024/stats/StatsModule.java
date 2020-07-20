@@ -6,11 +6,13 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.MusicModule;
+import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.commands.TekstCommand;
 import pl.kamil0024.stats.commands.TopCommand;
@@ -29,6 +31,7 @@ public class StatsModule implements Modul {
     @Inject EventWaiter eventWaiter;
     @Inject StatsDao statsDao;
     @Inject MusicModule musicModule;
+    @Inject NieobecnosciDao nieobecnosciDao;
 
     private boolean start = false;
 
@@ -36,13 +39,14 @@ public class StatsModule implements Modul {
 
     StatsListener statsListener;
 
-    public StatsModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, StatsDao statsDao, MusicModule musicModule) {
+    public StatsModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, StatsDao statsDao, MusicModule musicModule, NieobecnosciDao nieobecnosciDao) {
         this.commandManager = commandManager;
         this.api = api;
         this.eventWaiter = eventWaiter;
         this.statsDao = statsDao;
         this.statsCache = new StatsCache(statsDao);
         this.musicModule = musicModule;
+        this.nieobecnosciDao = nieobecnosciDao;
 
         for (StatsConfig statsConfig : statsDao.getAll()) {
             Statystyka s = StatsConfig.getStatsFromDay(statsConfig.getStats(), new BDate().getDateTime().getDayOfYear());
@@ -59,7 +63,7 @@ public class StatsModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new StatsCommand(statsDao));
-        cmd.add(new TopCommand(statsDao, eventWaiter));
+        cmd.add(new TopCommand(statsDao, eventWaiter, nieobecnosciDao));
         cmd.add(new TekstCommand(eventWaiter, musicModule));
 
         cmd.forEach(commandManager::registerCommand);
