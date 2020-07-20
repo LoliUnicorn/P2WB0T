@@ -51,18 +51,15 @@ public class UserinfoCommand extends Command {
 
         eb.addField("Nick", user.getAsMention() + " [" + UserUtil.getMcNick(member) + "]", false);
 
-        long lonk = context.getUser().getTimeCreated().toInstant().toEpochMilli();
         long date = new BDate().getTimestamp();
 
         BDate discord = new BDate(user.getTimeCreated().toInstant().toEpochMilli(), ModLog.getLang());
-        String difference = discord.difference(date);
-        Log.debug("dif: " + difference);
-        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord), false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
+        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(new Date(discord.getTimestamp())) + " `" + discord.difference(date) + "` temu", false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
 
         if (member != null) {
-            Date serwer = new Date(member.getTimeJoined().toInstant().toEpochMilli());
-            long lonk2 = member.getTimeJoined().toInstant().toEpochMilli();
-            eb.addField(context.getTranslate("userinfo.serverjoin"), sfd.format(serwer), false); // + " `" + new BDate(lonk2, ModLog.getLang()).difference(date) + "` temu"
+            BDate serwer = new BDate(member.getTimeJoined().toInstant().toEpochMilli(), ModLog.getLang());
+
+            eb.addField(context.getTranslate("userinfo.serverjoin"), sfd.format(new Date(serwer.getTimestamp())) + " `" + serwer.difference(new BDate()) + "` temu", false); // + " `" + new BDate(lonk2, ModLog.getLang()).difference(date) + "` temu"
 //            eb.addField(context.getTranslate("userinfo.status"), translateStatus(member), false);
             try {
                 eb.addField(context.getTranslate("userinfo.game"), member.getActivities().get(0).getName(), false);
