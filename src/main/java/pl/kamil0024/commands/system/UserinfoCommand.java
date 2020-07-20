@@ -55,7 +55,7 @@ public class UserinfoCommand extends Command {
         long date = new BDate().getTimestamp();
 
         BDate discord = new BDate(user.getTimeCreated().toInstant().toEpochMilli(), ModLog.getLang());
-        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord) + "`" + discord.difference(new BDate()) + "` temu", false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
+        eb.addField(context.getTranslate("userinfo.dcjoin"), sfd.format(discord) + " `" + discord.difference(new BDate().getTimestamp()) + "` temu", false); // + " `" + new BDate(date, ModLog.getLang()).difference(lonk) + "` temu"
 
         if (member != null) {
             Date serwer = new Date(member.getTimeJoined().toInstant().toEpochMilli());
