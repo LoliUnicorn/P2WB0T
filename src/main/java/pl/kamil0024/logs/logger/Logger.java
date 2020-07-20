@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.stats.StatsModule;
@@ -54,7 +55,11 @@ public class Logger extends ListenerAdapter {
                 break;
             }
         }
-        if (deletedBy != null) statsModule.getStatsCache().addUsunietychWiadomosci(deletedBy.getId(), 1);
+        if (deletedBy != null) {
+            if (UserUtil.getPermLevel(deletedBy).getNumer() >= PermLevel.HELPER.getNumer()) {
+                statsModule.getStatsCache().addUsunietychWiadomosci(deletedBy.getId(), 1);
+            }
+        }
         EmbedBuilder eb = getLogMessage(Action.DELETED, msg, deletedBy);
         String content = msg.getContent();
         if (content.length() > 1024) { content = content.substring(0, 1024); }

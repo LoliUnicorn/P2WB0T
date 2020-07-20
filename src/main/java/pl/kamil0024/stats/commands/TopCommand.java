@@ -3,6 +3,7 @@ package pl.kamil0024.stats.commands;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -41,9 +42,11 @@ public class TopCommand extends Command {
         Integer dni = context.getParsed().getNumber(context.getArgs().get(0));
         if (dni == null) throw new UsageException();
 
+        Message msg = context.send("Ładuje...").complete();
+
         List<StatsConfig> staty = statsDao.getAll();
         if (staty.isEmpty()) {
-            context.send("Nikt nie ma statystyk lol").queue();
+            msg.editMessage("Nikt nie ma statystyk lol").queue();
             return false;
         }
 
@@ -67,7 +70,9 @@ public class TopCommand extends Command {
         ArrayList<EmbedBuilder> pages = new ArrayList<>();
 
         int rank = 1;
-        for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
+        HashMap<String, Integer> topka = sortByValue(top);
+
+        for (Map.Entry<String, Integer> entry : topka.entrySet()) {
             EmbedBuilder eb = new EmbedBuilder();
             User user = context.getParsed().getUser(entry.getKey());
 
@@ -79,7 +84,7 @@ public class TopCommand extends Command {
             pages.add(eb);
             rank++;
         }
-        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 240).create(context.getChannel());
+        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 240).create(msg);
         return true;
     }
 
@@ -94,6 +99,7 @@ public class TopCommand extends Command {
         List<Map.Entry<String, Integer> > list =
                 new LinkedList<>(hm.entrySet());
         list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
         HashMap<String, Integer> temp = new LinkedHashMap<>();
         for (Map.Entry<String, Integer> aa : list) {
             temp.put(aa.getKey(), aa.getValue());
