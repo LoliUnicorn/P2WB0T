@@ -24,7 +24,7 @@ public class StaffCommand extends Command {
 
         if (typ.equals("list") || typ.equals("lista")) {
             try {
-                ServerListPing17.StatusResponse resp = new ServerListPing17(new InetSocketAddress("derpmc.pl", 25565)).fetchData();
+                ServerListPing17.StatusResponse resp = new ServerListPing17(new InetSocketAddress("137.74.4.174", 25571)).fetchData();
                 for (ServerListPing17.Player player : resp.getPlayers().getSample()) {
                     Log.debug(player.getName());
                 }
