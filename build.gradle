@@ -32,11 +32,11 @@ dependencies {
     compile 'com.github.Vankka:MCDiscordReserializer:b00bafd9c6'
     compile 'net.kyori:text-api:3.0.2'
     compile 'net.kyori:text-serializer-legacy:3.0.2'
-
+    compile 'com.google.code.gson:gson:2.8.6'
+    
     compileOnly 'org.slf4j:slf4j-api:1.7.25'
     compileOnly 'club.minnced:discord-webhooks:0.2.0'
     compileOnly 'com.kcthota:emoji4j:5.0'
-    compileOnly 'com.google.code.gson:gson:2.8.6'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.jsoup:jsoup:1.12.1'
     compileOnly 'org.projectlombok:lombok:1.18.10'
