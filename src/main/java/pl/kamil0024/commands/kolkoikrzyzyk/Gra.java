@@ -139,6 +139,7 @@ public class Gra {
 
     public void end(@Nullable Member member) {
         // member == null = remis
+        if (isKoniec()) return;
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
         eb.setTitle("Gra w Kółko i Krzyżyk");

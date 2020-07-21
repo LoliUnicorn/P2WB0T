@@ -43,6 +43,8 @@ public class Slot {
 
         sloty.put(format(slot), gra.getEmote(osoba));
 
+        if (checkWin(gra.getEmote(osoba))) return ReturnType.WIN;
+
         boolean pelnaMapa = true;
         for (Map.Entry<Integer, String> entry : getSloty().entrySet()) {
             if (entry.getValue().equals(Gra.PUSTE)) {
@@ -51,7 +53,6 @@ public class Slot {
             }
         }
         if (pelnaMapa) return ReturnType.FULL_MAP;
-        if (checkWin(gra.getEmote(osoba))) return ReturnType.WIN;
 
         return ReturnType.SUCCES;
     }
@@ -89,6 +90,7 @@ public class Slot {
         if (tak(emote, 3, 6, 9)) return true;
 
         if (tak(emote, 7, 5, 3)) return true;
+        if (tak(emote, 1, 5, 9)) return true;
 
 
         return false;
