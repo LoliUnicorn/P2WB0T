@@ -23,23 +23,21 @@ public class MultiListener extends ListenerAdapter {
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                return;
-            }
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            return;
+        }
 
-            String mc = UserUtil.getMcNick(event.getMember());
-            if (mc.equals("-") && !event.getMember().getRoles().isEmpty()) {
-                mc = event.getMember().getUser().getName();
-            }
+        String mc = UserUtil.getMcNick(event.getMember());
+        if (mc.equals("-") && !event.getMember().getRoles().isEmpty()) {
+            mc = event.getMember().getUser().getName();
+        }
 
-            MultiConfig conf = multiDao.get(event.getUser().getId());
-            conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
-            multiDao.save(conf);
-
-        }).start();
+        MultiConfig conf = multiDao.get(event.getUser().getId());
+        conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
+        multiDao.save(conf);
     }
+
 
 }
