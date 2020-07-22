@@ -276,10 +276,6 @@ public class ChatListener extends ListenerAdapter {
         List<String> list = new ArrayList<>(Arrays.asList(msg.split(" ")));
         count += checkEmote(list, api);
 
-        if (count < 3) {
-            count += checkEmote(new ArrayList<>(Arrays.asList(msg.split(""))), api);
-        }
-
         return count;
     }
 
