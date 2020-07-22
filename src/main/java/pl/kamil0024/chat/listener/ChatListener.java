@@ -71,11 +71,9 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
+        if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
 
-        if (!e.getAuthor().getId().equals("343467373417857025")) {
-            if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
-            if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
-        }
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
 
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
@@ -159,9 +157,8 @@ public class ChatListener extends ListenerAdapter {
         int caps = 0;
         String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
         try {
-            caps = (containsCaps(capsMsg) / capsMsg.length()) * 100;
-            Log.debug("procent capsa: " + caps);
-        } catch (Exception ignored) {}
+            caps = containsCaps(capsMsg);
+        } catch (Exception ignored) { }
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
@@ -254,8 +251,6 @@ public class ChatListener extends ListenerAdapter {
 
     public static int containsCaps(String msg) {
         msg = msg.replaceAll(" ", "").replaceAll("<@!?([0-9])*>", "");
-        Log.debug("-- caps --");
-        Log.debug("Msg: '" + msg + "'");
         int caps = 0;
         char[] split = msg.toCharArray();
         if (split.length < 5) return 0;
@@ -263,15 +258,17 @@ public class ChatListener extends ListenerAdapter {
         for (char s : split) {
             if (!String.valueOf(s).equals("")) {
                 if (Character.isUpperCase(s)) {
-                    Log.debug("capsem jest: " + s);
                     caps++;
                 }
             }
         }
-        Log.debug("procent capsa: " + caps);
-        Log.debug("-- caps --");
 
-        return (caps / msg.length()) * 100;
+        try {
+            return (caps / msg.length()) * 100;
+        } catch (Exception e) {
+            return 0;
+        }
+
     }
 
     public static int emoteCount(String msg, JDA api) {
@@ -305,6 +302,7 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("jez");
         whiteList.add("jej");
         whiteList.add("joł");
+        whiteList.add("je");
 
         for (String s : msg) {
             String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
