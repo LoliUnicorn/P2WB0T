@@ -160,6 +160,7 @@ public class ChatListener extends ListenerAdapter {
         String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
         try {
             caps = (containsCaps(capsMsg) / capsMsg.length()) * 100;
+            Log.debug("procent capsa: " + caps);
         } catch (Exception ignored) {}
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
@@ -253,18 +254,24 @@ public class ChatListener extends ListenerAdapter {
 
     public static int containsCaps(String msg) {
         msg = msg.replaceAll(" ", "").replaceAll("<@!?([0-9])*>", "");
-
+        Log.debug("-- caps --");
+        Log.debug("Msg: '" + msg + "'");
         int caps = 0;
         char[] split = msg.toCharArray();
         if (split.length < 5) return 0;
 
         for (char s : split) {
             if (!String.valueOf(s).equals("")) {
-                if (Character.isUpperCase(s)) caps++;
+                if (Character.isUpperCase(s)) {
+                    Log.debug("capsem jest: " + s);
+                    caps++;
+                }
             }
         }
+        Log.debug("procent capsa: " + caps);
+        Log.debug("-- caps --");
 
-        return caps;
+        return (caps / msg.length()) * 100;
     }
 
     public static int emoteCount(String msg, JDA api) {
