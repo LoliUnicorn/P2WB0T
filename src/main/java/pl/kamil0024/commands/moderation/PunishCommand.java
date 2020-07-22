@@ -297,7 +297,7 @@ public class PunishCommand extends Command {
         int size = 0;
         for (KaryJSON.Kara kara : karyJSON.getKary()) {
             sb.appendLine(kara.getId() + ". " + kara.getPowod());
-            if (sb.toString().length() >= 950 || karyJSON.getKary().size() == size) {
+            if (sb.toString().length() >= 950 || karyJSON.getKary().size() == size + 1) {
                 sb.appendLine("```");
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setColor(UserUtil.getColor(mem));
