@@ -34,7 +34,7 @@ public class MultiCommand extends Command {
 
         Message msg = context.send("Ładuje...").complete();
 
-        MultiConfig mc = multiDao.get(context.getUser().getId());
+        MultiConfig mc = multiDao.get(user.getId());
         if (mc.getNicki().isEmpty()) {
             msg.editMessage("Ta osoba nie posiada multi kont!").queue();
             return false;

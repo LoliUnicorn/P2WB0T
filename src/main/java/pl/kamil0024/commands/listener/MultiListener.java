@@ -37,7 +37,7 @@ public class MultiListener extends ListenerAdapter {
         MultiConfig conf = multiDao.get(event.getUser().getId());
         conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
         multiDao.save(conf);
-    }
 
+    }
 
 }
