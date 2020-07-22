@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RebootCommand extends Command {
 
+    public static Boolean reboot = false;
+
     private ModulManager modulManager;
     private StatsModule statsModule;
     private EventWaiter eventWaiter;
@@ -32,6 +34,7 @@ public class RebootCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
+        reboot = true;
         context.send("Wyłączam...").complete();
 
         context.getShardManager().setStatus(OnlineStatus.DO_NOT_DISTURB);

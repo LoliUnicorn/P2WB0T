@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.commands.dews.RebootCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.enums.PermLevel;
@@ -50,6 +51,8 @@ public class CommandExecute extends ListenerAdapter {
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
                 e.getMessage().getContentRaw().isEmpty()) return;
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
+        if (RebootCommand.reboot) return;
+
         String prefix = Ustawienia.instance.prefix;
 
         UserConfig uc = userConfig.get(e.getAuthor().getId());
