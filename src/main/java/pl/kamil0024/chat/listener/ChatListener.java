@@ -30,6 +30,7 @@ import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -115,8 +116,8 @@ public class ChatListener extends ListenerAdapter {
                         member.getGuild().getSelfMember(),
                         msg.getTextChannel(),
                         caseDao, modLog, statsModule);
+                return;
             }
-            return;
         }
 
         if (containsLink(msgRaw.split(" "))) {
@@ -183,17 +184,16 @@ public class ChatListener extends ListenerAdapter {
             action.send();
         }
 
-        if (member.getId().equals("343467373417857025")) {
-            if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
-                action.setKara(Action.ListaKar.SKROTY);
-                action.send();
-                return;
-            }
-            if (skrotyCount(new String[] {msgRaw.toLowerCase()})) {
-                action.setKara(Action.ListaKar.SKROTY);
-                action.send();
-                return;
-            }
+        if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
+            action.setKara(Action.ListaKar.SKROTY);
+            action.send();
+            return;
+        }
+        if (skrotyCount(new String[] {msgRaw.toLowerCase()})) {
+            action.setKara(Action.ListaKar.SKROTY);
+            action.send();
+            return;
+
         }
 
     }
@@ -231,7 +231,7 @@ public class ChatListener extends ListenerAdapter {
     }
 
     public static int containsFlood(String msg) {
-        if (msg.length() < 3) return 0;
+        if (msg.length() < 3 || containsLink(new String[] {msg})) return 0;
         msg = msg.replaceAll(" ", "");
 
         int tak = 0;
@@ -268,11 +268,21 @@ public class ChatListener extends ListenerAdapter {
         Matcher m = EMOJI.matcher(msg);
         while (m.find())
             count++;
-        for (String s : msg.split(" ")) {
-            Emoji tak = Emoji.resolve(s, api);
-            if (tak != null) {
-                count++;
-            }
+
+        List<String> list = new ArrayList<>(Arrays.asList(msg.split(" ")));
+        count += checkEmote(list, api);
+
+        if (count < 3) {
+            count += checkEmote(new ArrayList<>(Arrays.asList(msg.split(""))), api);
+        }
+
+        return count;
+    }
+
+    private static int checkEmote(List<String> list, JDA api) {
+        int count = 0;
+        for (String s : list) {
+            if (Emoji.resolve(s, api) != null) count++;
         }
         return count;
     }

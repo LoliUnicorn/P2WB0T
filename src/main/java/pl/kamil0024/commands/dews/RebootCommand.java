@@ -13,15 +13,15 @@ import pl.kamil0024.stats.StatsModule;
 
 import java.util.concurrent.TimeUnit;
 
-public class StopCommand extends Command {
+public class RebootCommand extends Command {
 
     private ModulManager modulManager;
     private StatsModule statsModule;
     private EventWaiter eventWaiter;
     private MusicModule musicModule;
 
-    public StopCommand(ModulManager modulManager, StatsModule statsModule, EventWaiter eventWaiter, MusicModule musicModule) {
-        name = "stop";
+    public RebootCommand(ModulManager modulManager, StatsModule statsModule, EventWaiter eventWaiter, MusicModule musicModule) {
+        name = "reboot";
         permLevel = PermLevel.DEVELOPER;
 
         this.statsModule = statsModule;

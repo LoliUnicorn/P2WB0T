@@ -124,6 +124,7 @@ public class PunishCommand extends Command {
             Member mem = context.getParsed().getMember(arg);
             if (mem != null) osoby.add(mem);
         }
+
         StringBuilder sb = new StringBuilder();
         for (Member member : osoby) {
             sb.append(UserUtil.getMcNick(member, true)).append("`,` ");
@@ -139,7 +140,7 @@ public class PunishCommand extends Command {
             new EmbedPageintaor(getKaraList(karyJSON, context.getMember(), osoby), context.getUser(), eventWaiter, context.getJDA())
                     .setPun(true)
                     .create(msg);
-            initWaiter(context, msg, osoby);
+            initWaiter(context, msg, osoby, context.getMessage());
             return true;
         }
 
@@ -177,7 +178,7 @@ public class PunishCommand extends Command {
     private static boolean check(CommandContext context, Member osoba) {
         return Kara.check(context, osoba.getUser()) == null && !MuteCommand.hasMute(osoba);
     }
-
+    
     public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
@@ -199,11 +200,10 @@ public class PunishCommand extends Command {
                 }
             }
 
-            if (!member.getId().equals(Ustawienia.instance.bot.botId)) {
-                if (!txt.getId().equals(Ustawienia.instance.channel.moddc)) {
-                    String msg = "Daje karę **%s** dla **%s** za **%s** na czas **%s**";
-                    txt.sendMessage(String.format(msg, KaryEnum.getName(jegoTier.getType()), UserUtil.getMcNick(osoba), kara.getPowod(), jegoTier.getDuration())).queue();
-                }
+            if (!member.getId().equals(Ustawienia.instance.bot.botId) && !txt.getId().equals(Ustawienia.instance.channel.moddc)) {
+                String msg = "Daje karę **%s** dla **%s** za **%s** na czas **%s**";
+                txt.sendMessage(String.format(msg, KaryEnum.getName(jegoTier.getType()), UserUtil.getMcNick(osoba), kara.getPowod(), jegoTier.getDuration()))
+                        .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
             }
 
             Kara karaBuilder = new Kara();
@@ -250,13 +250,14 @@ public class PunishCommand extends Command {
         }
     }
 
-    private void initWaiter(CommandContext context, Message msg, List<Member> osoby) {
+    private void initWaiter(CommandContext context, Message msg, List<Member> osoby, Message userMsg) {
         AtomicBoolean kurwaBylaAkcja = new AtomicBoolean(false);
         eventWaiter.waitForEvent(
                 GuildMessageReceivedEvent.class,
                 (event) -> event.getAuthor().getId().equals(context.getUser().getId()) &&
                         event.getChannel().getId().equals(context.getChannel().getId()),
                 (event) -> {
+                    userMsg.delete().queue();
                     kurwaBylaAkcja.set(true);
                     Integer liczba = context.getParsed().getNumber(event.getMessage().getContentRaw());
                     msg.delete().queue();
@@ -307,6 +308,7 @@ public class PunishCommand extends Command {
             }
             size++;
         }
+
         return pages;
     }
 

@@ -19,6 +19,7 @@ import pl.kamil0024.stats.StatsModule;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class KaryListener extends ListenerAdapter {
 
@@ -60,17 +61,19 @@ public class KaryListener extends ListenerAdapter {
 
                 Member mem = event.getGuild().retrieveMemberById(entry.getMsg().getAuthor().getId()).complete();
                 if (mem == null) {
-                    event.getChannel().sendMessage("Użytkownik wyszedł z serwera??").queue();
+                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik wyszedł z serwera??")
+                            .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
                     continue;
                 }
                 if (MuteCommand.hasMute(mem)) {
-                    event.getChannel().sendMessage("Użytkownik jest wyciszony!").queue();
+                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik jest wyciszony!")
+                            .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
                     continue;
                 }
 
                 KaryJSON.Kara kara = karyJSON.getByName(entry.getKara().getPowod());
                 if (kara == null) {
-                    event.getChannel().sendMessage("Kara `" + entry.getKara().getPowod() + "` jest źle wpisana!").queue();
+                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", kara `" + entry.getKara().getPowod() + "` jest źle wpisana!").queue();
                     continue;
                 }
 
@@ -82,6 +85,6 @@ public class KaryListener extends ListenerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
+    }
 }

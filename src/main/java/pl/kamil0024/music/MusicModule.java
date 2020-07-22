@@ -149,7 +149,7 @@ public class MusicModule implements Modul {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                if (sendMsg) channel.sendMessage("Dodaje do kolejki " +  playlist.getTracks() + "piosenek").queue();
+                if (sendMsg) channel.sendMessage("Dodaje do kolejki " +  playlist.getTracks().size() + " piosenek").queue();
                 for (AudioTrack track : playlist.getTracks()) {
                     play(channel.getGuild(), musicManager, track, vc);
                 }
