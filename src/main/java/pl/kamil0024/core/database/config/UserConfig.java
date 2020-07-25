@@ -1,17 +1,24 @@
 package pl.kamil0024.core.database.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import gg.amy.pgorm.annotations.GIndex;
+import gg.amy.pgorm.annotations.PrimaryKey;
+import gg.amy.pgorm.annotations.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Table("userinfo")
+@GIndex({"id"})
+@Data
+@AllArgsConstructor
 public class UserConfig {
 
     public UserConfig(String id) {
         this.id = id;
     }
 
-    @Getter @Setter private String id = "";
+    @PrimaryKey
+    private String id = "";
 
-    @Getter @Setter private String mcNick = null;
-    @Getter @Setter private String fullname = "/";
+    private String prefix = "/";
 
 }

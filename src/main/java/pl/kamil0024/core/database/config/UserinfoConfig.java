@@ -5,9 +5,9 @@ import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Table("userinfo")
-@GIndex({"id"})
 @Data
 @AllArgsConstructor
 public class UserinfoConfig {
@@ -17,9 +17,10 @@ public class UserinfoConfig {
         this.id = id;
     }
 
-    @PrimaryKey
-    private String id = "";
+    @Getter
+    @Setter private String id = "";
 
-    private String prefix = "/";
+    @Getter @Setter private String mcNick = null;
+    @Getter @Setter private String fullname = "/";
 
 }
