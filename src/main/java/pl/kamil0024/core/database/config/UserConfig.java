@@ -1,17 +1,17 @@
 package pl.kamil0024.core.database.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
 public class UserConfig {
 
     public UserConfig(String id) {
         this.id = id;
     }
 
-    private String id = "";
+    @Getter @Setter private String id = "";
 
-    private String mcNick = null;
-    private String fullname = "/";
+    @Getter @Setter private String mcNick = null;
+    @Getter @Setter private String fullname = "/";
 
 }
