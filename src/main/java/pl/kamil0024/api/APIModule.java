@@ -121,48 +121,28 @@ public class APIModule implements Modul {
          * @apiError {Object} error Odpowiedź
          * @apiError {Boolean} error.body Krótka odpowiedź błędu
          * @apiError {Boolean} error.description Długa odpowiedź błędu
-         * @apiSuccessExample {json}
-         *     HTTP/1.1 200 OK
-         *     {
-         *         "success": true,
-         *         "data": {
-         *             "id": "600",
-         *             "kara": {
-         *                 "karaId": 600,
-         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)",
-         *                 "mcNick": "gracz123",
-         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
-         *                 "powod": "Omijanie bana",
-         *                 "timestamp": 1595536961248,
-         *                 "typKary": "BAN",
-         *                 "aktywna": true,
-         *                 "messageUrl": "https://discordapp.com/channels/1234/1234/1234",
-         *                 "punAktywna": false
-         *             }
-         *         }
-         *     }
          *
          * @apiSuccessExample {json}
          *     HTTP/1.1 200 OK
          *     {
-         *         "success": true,
-         *         "data": {
-         *             "id": "678",
-         *             "kara": {
-         *                 "karaId": 678,
-         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)"",
-         *                 "mcNick": "gracz123",
-         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
-         *                 "powod": "Powód",
-         *                 "timestamp": 1595685472444,
-         *                 "typKary": "TEMPBAN",
-         *                 "aktywna": true,"
-         *                 "messageUrl": "422016694408577025/533703342195605523/736583005367435294",
-         *                 "end": 1595696272444,
-         *                 "duration": "3h",
-         *                 "punAktywna": true
-         *             }
-         *         }
+         *        "success": true,
+         *        "data": {
+         *           "id": "678",
+         *           "kara": {
+         *               "karaId": 678,
+         *               "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)"",
+         *               "mcNick": "gracz123",
+         *               "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
+         *               "powod": "Powód",
+         *               "timestamp": 1595685472444,
+         *               "typKary": "TEMPBAN",
+         *               "aktywna": true,"
+         *               "messageUrl": "422016694408577025/533703342195605523/736583005367435294",
+         *               "end": 1595696272444,
+         *               "duration": "3h",
+         *               "punAktywna": true
+         *           }
+         *        }
          *     }
          *
          *

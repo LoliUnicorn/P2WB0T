@@ -7,6 +7,7 @@ import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,8 @@ public class Listakar implements HttpHandler {
             List<CaseConfig> kary = new ArrayList<>();
             caseDao.getAllNick(nick).forEach(ccase -> {
                 CaseConfig formated = Karainfo.format(ccase, api);
+                Log.info("Dodaje " + formated.getId());
                 kary.add(formated);
-                kary.remove(ccase);
             });
             if (kary.isEmpty()) {
                 Response.sendErrorResponse(ex,"Zły nick", "Ten nick nie ma żadnej kary");
