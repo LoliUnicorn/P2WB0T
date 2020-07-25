@@ -125,6 +125,27 @@ public class APIModule implements Modul {
          * @apiSuccessExample {json}
          *     HTTP/1.1 200 OK
          *     {
+         *         "success": true,
+         *         "data": {
+         *             "id": "600",
+         *             "kara": {
+         *                 "karaId": 600,
+         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)",
+         *                 "mcNick": "gracz123",
+         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
+         *                 "powod": "Omijanie bana",
+         *                 "timestamp": 1595536961248,
+         *                 "typKary": "BAN",
+         *                 "aktywna": true,
+         *                 "messageUrl": "https://discordapp.com/channels/1234/1234/1234",
+         *                 "punAktywna": false
+         *             }
+         *         }
+         *     }
+         *     
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
          *        "success": true,
          *        "data": {
          *           "id": "678",
@@ -172,42 +193,22 @@ public class APIModule implements Modul {
          * @apiSuccess {Kara} data Odpowiedź w postaci kary
          * @apiSuccess {String} id ID kary
          * @apiSuccess {Kara} data Data w postaci kary
-         * @apiSuccess {Number} kara.karaId ID kary
-         * @apiSuccess {String} kara.karanyId Karany użytkownik
-         * @apiSuccess {String} kara.mcNick Nick, który gracz miał ustawiony, gdy dostawał karę
-         * @apiSuccess {String} kara.admId Nick administratora
-         * @apiSuccess {Number} kara.timestamp Czas nadania kary
-         * @apiSuccess {String} kara.typKary Typ kary (KICK, BAN, MUTE, TEMPBAN, TEMPMUTE, UNMUTE, UNBAN)
-         * @apiSuccess {Boolean} kara.aktywna Czy kara jest aktywna
-         * @apiSuccess {String} kara.messageUrl Link do wiadomości, która została napisana na kanale #logi
-         * @apiSuccess {Boolean} kara.punAktywna Czy aktywna jako punish (raczej bez użycia to jest)
-         * @apiSuccess {Number} kara.end Czas zakończenie kary (tylko przy karze TEMPBAN, TEMPMUTE)
-         * @apiSuccess {Number} kara.duration Na jaki czas nadano
+         * @apiSuccess {Number} data.karaId ID kary
+         * @apiSuccess {String} data.karanyId Karany użytkownik
+         * @apiSuccess {String} data.mcNick Nick, który gracz miał ustawiony, gdy dostawał karę
+         * @apiSuccess {String} data.admId Nick administratora
+         * @apiSuccess {Number} data.timestamp Czas nadania kary
+         * @apiSuccess {String} data.typKary Typ kary (KICK, BAN, MUTE, TEMPBAN, TEMPMUTE, UNMUTE, UNBAN)
+         * @apiSuccess {Boolean} data.aktywna Czy kara jest aktywna
+         * @apiSuccess {String} data.messageUrl Link do wiadomości, która została napisana na kanale #logi
+         * @apiSuccess {Boolean} data.punAktywna Czy aktywna jako punish (raczej bez użycia to jest)
+         * @apiSuccess {Number} data.end Czas zakończenie kary (tylko przy karze TEMPBAN, TEMPMUTE)
+         * @apiSuccess {Number} data.duration Na jaki czas nadano
          *
          * @apiError {Boolean} success Czy zapytanie się udało
          * @apiError {Object} error Odpowiedź
          * @apiError {Boolean} error.body Krótka odpowiedź błędu
          * @apiError {Boolean} error.description Długa odpowiedź błędu
-         * @apiSuccessExample {json}
-         *     HTTP/1.1 200 OK
-         *     {
-         *         "success": true,
-         *         "data": {
-         *             "id": "600",
-         *             "kara": {
-         *                 "karaId": 600,
-         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)",
-         *                 "mcNick": "gracz123",
-         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
-         *                 "powod": "Omijanie bana",
-         *                 "timestamp": 1595536961248,
-         *                 "typKary": "BAN",
-         *                 "aktywna": true,
-         *                 "messageUrl": "https://discordapp.com/channels/1234/1234/1234",
-         *                 "punAktywna": false
-         *             }
-         *         }
-         *     }
          *
          * @apiSuccessExample {json}
          *     HTTP/1.1 200 OK
