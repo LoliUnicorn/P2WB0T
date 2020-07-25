@@ -3,12 +3,10 @@ package pl.kamil0024.api.handlers;
 import com.google.inject.Inject;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.database.config.UserConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 
 public class Karainfo implements HttpHandler {
@@ -38,6 +36,7 @@ public class Karainfo implements HttpHandler {
         } catch (NumberFormatException e) {
             Response.sendErrorResponse(ex, "Złe ID", "ID kary jest puste lub nie jest liczbą");
         } catch (Exception e) {
+            e.printStackTrace();
             Response.sendErrorResponse(ex, "Złe ID", "Nie ma kary o takim ID");
         }
 
