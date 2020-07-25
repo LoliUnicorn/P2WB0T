@@ -1,11 +1,13 @@
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 
 public class Karainfo implements HttpHandler {
 
@@ -23,7 +25,9 @@ public class Karainfo implements HttpHandler {
             int id = Integer.parseInt(ex.getQueryParameters().get("id").getFirst());
             if (id <= 0) throw new NumberFormatException();
 
+            Log.debug("id=" + id);
             CaseConfig cc = caseDao.get(id);
+            Log.debug(new Gson().toJson(cc));
             if (cc.getKara() == null) throw new Exception();
 
             Response.sendObjectResponse(ex, cc);
