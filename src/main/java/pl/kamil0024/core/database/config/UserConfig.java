@@ -1,13 +1,10 @@
 package pl.kamil0024.core.database.config;
 
 import gg.amy.pgorm.annotations.PrimaryKey;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class UserConfig {
-
     public UserConfig() { }
 
     public UserConfig(String id) {
