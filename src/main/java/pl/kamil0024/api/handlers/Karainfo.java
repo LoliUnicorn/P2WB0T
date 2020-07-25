@@ -31,6 +31,7 @@ public class Karainfo implements HttpHandler {
         } catch (NumberFormatException e) {
             Response.sendErrorResponse(ex, "Złe ID", "ID kary jest puste lub nie jest liczbą");
         } catch (Exception e) {
+            e.printStackTrace();
             Response.sendErrorResponse(ex, "Złe ID", "Nie ma kary o takim ID");
         }
 
