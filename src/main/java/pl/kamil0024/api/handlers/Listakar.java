@@ -26,12 +26,12 @@ public class Listakar implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) throws Exception {
         if (!CheckToken.checkToken(ex)) return;
 
-        String nick = ex.getPathParameters().get("nick").getFirst();
+        String nick = ex.getQueryParameters().get("nick").getFirst();
         if (nick.isEmpty()) {
             Response.sendErrorResponse(ex,"Zły nick", "Nick jest pusty?");
             return;
         }
-        
+
         try {
             List<CaseConfig> kary = caseDao.getAllNick(nick);
             if (kary.isEmpty()) {
