@@ -14,12 +14,12 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.handlers.CheckToken;
 import pl.kamil0024.api.handlers.Karainfo;
 import pl.kamil0024.api.handlers.Listakar;
+import pl.kamil0024.api.handlers.Nieobecnosci;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.database.config.UserConfig;
+import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.config.UserinfoConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
@@ -37,18 +37,20 @@ public class APIModule implements Modul {
 
     @Inject private CaseDao caseDao;
     @Inject private RedisManager redisManager;
+    @Inject private NieobecnosciDao nieobecnosciDao;
 
     private final Cache<UserinfoConfig> ucCache;
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
 
         this.caseDao = caseDao;
+        this.nieobecnosciDao = nieobecnosciDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
     }
@@ -146,24 +148,24 @@ public class APIModule implements Modul {
          * @apiSuccessExample {json}
          *     HTTP/1.1 200 OK
          *     {
-         *        "success": true,
-         *        "data": {
-         *           "id": "678",
-         *           "kara": {
-         *               "karaId": 678,
-         *               "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)"",
-         *               "mcNick": "gracz123",
-         *               "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
-         *               "powod": "Powód",
-         *               "timestamp": 1595685472444,
-         *               "typKary": "TEMPBAN",
-         *               "aktywna": true,"
-         *               "messageUrl": "422016694408577025/533703342195605523/736583005367435294",
-         *               "end": 1595696272444,
-         *               "duration": "3h",
-         *               "punAktywna": true
-         *           }
-         *        }
+         *         "success": true,
+         *         "data": {
+         *             "id": "678",
+         *             "kara": {
+         *                 "karaId": 678,
+         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)"",
+         *                 "mcNick": "gracz123",
+         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
+         *                 "powod": "Powód",
+         *                 "timestamp": 1595685472444,
+         *                 "typKary": "TEMPBAN",
+         *                 "aktywna": true,"
+         *                 "messageUrl": "422016694408577025/533703342195605523/736583005367435294",
+         *                 "end": 1595696272444,
+         *                 "duration": "3h",
+         *                 "punAktywna": true
+         *             }
+         *         }
          *     }
          *
          *
@@ -192,7 +194,7 @@ public class APIModule implements Modul {
          * @apiSuccess {String} success Czy zapytanie się udało
          * @apiSuccess {Kara} data Odpowiedź w postaci kary
          * @apiSuccess {String} id ID kary
-         * @apiSuccess {Kara} data Data w postaci kary
+         * @apiSuccess {Kara} data Data w postaci listy kary
          * @apiSuccess {Number} data.karaId ID kary
          * @apiSuccess {String} data.karanyId Karany użytkownik
          * @apiSuccess {String} data.mcNick Nick, który gracz miał ustawiony, gdy dostawał karę
@@ -265,6 +267,8 @@ public class APIModule implements Modul {
          *
          */
         routes.get("/api/listakar/{token}/{nick}", new Listakar(caseDao, this));
+
+        routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")

@@ -22,4 +22,8 @@ public class UserinfoConfig {
     @Getter @Setter private String mcNick = null;
     @Getter @Setter private String fullname = "/";
 
+    public String getWhateverName() {
+        return getMcNick() == null ? getFullname() : getMcNick();
+    }
+
 }
