@@ -31,20 +31,24 @@ public class Listakar implements HttpHandler {
             Response.sendErrorResponse(ex,"Zły nick", "Nick jest pusty?");
             return;
         }
+        
+        try {
+            List<CaseConfig> kary = caseDao.getAllNick(nick);
+            if (kary.isEmpty()) {
+                Response.sendErrorResponse(ex,"Zły nick", "Ten nick nie ma żadnej kary");
+                return;
+            }
 
-        List<CaseConfig> kary = caseDao.getAllNick(nick);
-        if (kary.isEmpty()) {
-            Response.sendErrorResponse(ex,"Zły nick", "Ten nick nie ma żadnej kary");
-            return;
+            for (CaseConfig caseConfig : kary) {
+                CaseConfig formated = Karainfo.format(caseConfig, api);
+                kary.remove(caseConfig);
+                kary.add(formated);
+            }
+
+            Response.sendObjectResponse(ex, kary);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        for (CaseConfig caseConfig : kary) {
-            CaseConfig formated = Karainfo.format(caseConfig, api);
-            kary.remove(caseConfig);
-            kary.add(formated);
-        }
-
-        Response.sendObjectResponse(ex, kary);
 
     }
 
