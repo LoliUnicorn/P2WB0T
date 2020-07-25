@@ -78,11 +78,13 @@ public class Nieobecnosci implements HttpHandler {
 
             for (NieobecnosciConfig config : nb) {
                 UserinfoConfig uc = api.getUserConfig(config.getId());
-                if (uc.getWhateverName().toLowerCase().equals(parm)) {
-                    for (Nieobecnosc nieobecnosc : config.getNieobecnosc()) {
-                        jegoUrlopy.add(format(nieobecnosc, api));
+                try {
+                    if (uc.getMcNick().split(" ")[1].toLowerCase().equals(parm.toLowerCase())) {
+                        for (Nieobecnosc nieobecnosc : config.getNieobecnosc()) {
+                            jegoUrlopy.add(format(nieobecnosc, api));
+                        }
                     }
-                }
+                } catch (Exception ignored) {}
             }
 
             if (jegoUrlopy.isEmpty()) {
