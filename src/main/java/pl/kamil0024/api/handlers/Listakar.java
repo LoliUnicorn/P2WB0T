@@ -9,8 +9,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.logger.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Listakar implements HttpHandler {
 
@@ -34,12 +33,17 @@ public class Listakar implements HttpHandler {
         }
 
         try {
+            HashMap<CaseConfig, Integer> karyMap = new HashMap<>();
             List<CaseConfig> kary = new ArrayList<>();
+
             caseDao.getAllNick(nick).forEach(ccase -> {
                 CaseConfig formated = Karainfo.format(ccase, api);
-                Log.info("Dodaje " + formated.getId());
-                kary.add(formated);
+                karyMap.put(formated, formated.getKara().getKaraId());
             });
+            for (Map.Entry<CaseConfig, Integer> entry : sortByValue(karyMap).entrySet()) {
+                kary.add(entry.getKey());
+            }
+
             if (kary.isEmpty()) {
                 Response.sendErrorResponse(ex,"Zły nick", "Ten nick nie ma żadnej kary");
                 return;
@@ -50,6 +54,18 @@ public class Listakar implements HttpHandler {
             e.printStackTrace();
         }
 
+    }
+
+    private HashMap<CaseConfig, Integer> sortByValue(HashMap<CaseConfig, Integer> hm) {
+        List<Map.Entry<CaseConfig, Integer> > list =
+                new LinkedList<>(hm.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
+        HashMap<CaseConfig, Integer> temp = new LinkedHashMap<>();
+        for (Map.Entry<CaseConfig, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
     }
 
 }
