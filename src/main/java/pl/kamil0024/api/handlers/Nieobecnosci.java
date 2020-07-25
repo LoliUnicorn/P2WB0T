@@ -40,7 +40,7 @@ public class Nieobecnosci implements HttpHandler {
 
             if (parm.equals("all")) {
                 List<NieobecnosciConfig> nb = nieobecnosciDao.getAll();
-                HashMap<String, Nieobecnosc> formated = new HashMap<>();
+                HashMap<String, List<Nieobecnosc>> formated = new HashMap<>();
 
                 if (nb.isEmpty()) {
                     Response.sendErrorResponse(ex, "Pusta lista", "Nikt jeszcze nie zgłaszał nieobecności");
@@ -50,7 +50,9 @@ public class Nieobecnosci implements HttpHandler {
                 for (NieobecnosciConfig config : nb) {
                     UserinfoConfig uic = api.getUserConfig(config.getId());
                     for (Nieobecnosc nieobecnosc : config.getNieobecnosc()) {
-                        formated.put(uic.getWhateverName(), format(nieobecnosc, api));
+                        List<Nieobecnosc> lista = formated.getOrDefault(uic.getWhateverName(), new ArrayList<>());
+                        lista.add(format(nieobecnosc, api));
+                        formated.put(uic.getWhateverName(), lista);
                     }
                 }
 

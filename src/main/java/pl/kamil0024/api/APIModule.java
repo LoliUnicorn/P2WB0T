@@ -268,6 +268,150 @@ public class APIModule implements Modul {
          */
         routes.get("/api/listakar/{token}/{nick}", new Listakar(caseDao, this));
 
+        /**
+         * @api {get} api/nieobecnosci/{token}/{nick} Lista nieobecności - Nick
+         * @apiName nieobecności
+         * @apiDescription Wyświetla liste branych nieobecności na podstawie nicku
+         * @apiGroup Nieobecności
+         * @apiVersion 1.0.0
+         * @apiParam {String} nick Nick gracza
+         * @apiParam {Token} token Token
+         *
+         * @apiSuccess {String} success Czy zapytanie się udało
+         *
+         * @apiSuccess {Nieobecnosc} data Odpowiedź w postaci listy nieobecnosci
+         * @apiSuccess {String} data.userId Nick administatora
+         * @apiSuccess {Number} data.id ID nieobecności adminisatora
+         * @apiSuccess {String} data.msgId Link do wiadomości na #nieobecnosci
+         * @apiSuccess {Number} data.start Data rozpoczęcia
+         * @apiSuccess {String} data.powod Czas nadania kary
+         * @apiSuccess {Number} data.end Data zakończenia
+         * @apiSuccess {Boolean} data.aktywna Czy nieobecność jest aktywna
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": [
+         *             {
+         *                 "userId": "[POM] KingaMiszcz",
+         *                 "id":1,
+         *                 "msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
+         *                 "start": 1595196000000,
+         *                 "powod": "Powód",
+         *                 "end": 1595800800000,
+         *                 "aktywna" :true
+         *             },
+         *             {
+         *                 "userId": "[POM] KingaMiszcz",
+         *                 "id":1,
+         *                 "msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
+         *                 "start": 1595196000000,
+         *                 "powod": "Powód2",
+         *                 "end": 1595800800000,
+         *                 "aktywna" :true
+         *             }
+         *         ]
+         *     }
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
+
+        /**
+         * @api {get} api/nieobecnosci/{token}/all Lista wszystkich nieobecności
+         * @apiName nieobecności
+         * @apiDescription Wyświetla liste wszystkich nieobecności
+         * @apiGroup Nieobecności
+         * @apiVersion 1.0.0
+         * @apiParam {Token} token Token
+         *
+         * @apiSuccess {String} success Czy zapytanie się udało
+         *
+         * @apiSuccess {Nieobecnosc} data Odpowiedź w postaci listy nieobecnosci
+         * @apiSuccess {String} data.userId Nick administatora
+         * @apiSuccess {Number} data.id ID nieobecności adminisatora
+         * @apiSuccess {String} data.msgId Link do wiadomości na #nieobecnosci
+         * @apiSuccess {Number} data.start Data rozpoczęcia
+         * @apiSuccess {String} data.powod Czas nadania kary
+         * @apiSuccess {Number} data.end Data zakończenia
+         * @apiSuccess {Boolean} data.aktywna Czy nieobecność jest aktywna
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": {
+         *             "[MOD] OhMatvv_": {
+         *                 "userId": "[MOD] OhMatvv_",
+         *                 "id":1,
+         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
+         *                 "start": 1595455200000,
+         *                 "powod": "Powód",
+         *                 "end": 1598133600000,"
+         *                 aktywna": true
+         *             },
+         *             "[POM] KingaMiszcz": {
+         *                 "userId":"[POM] KingaMiszcz","id":1,"msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276","start":1595196000000,"powod":"Jadę za granice, nie będę mieć dostępu do komputera więc nie uda mi się wyrobić normy, także i obowiązków w zepsołach w których jestem.  Na discordzie będę jak najbardziej aktywna.","end":1595800800000,"aktywna":true}}}
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
+
+        /**
+         * @api {get} api/nieobecnosci/{token}/aktywne Lista aktywnych nieobecności
+         * @apiName nieobecności
+         * @apiDescription Wyświetla liste aktywnych nieobecności
+         * @apiGroup Nieobecności
+         * @apiVersion 1.0.0
+         * @apiParam {Token} token Token
+         *
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
+         *
+         * @apiSuccess {Nieobecnosc} data Lista nieobecności
+         * @apiSuccess {String} data.userId Nick administratora
+         * @apiSuccess {Number} data.id ID nieobecności administatora
+         * @apiSuccess {String} data.msgId Link do wiadomości na #nieobecności
+         * @apiSuccess {Number} data.start Data rozpoczęcia
+         * @apiSuccess {String} data.powod Czas nadania kary
+         * @apiSuccess {Number} data.end Data zakończenia
+         * @apiSuccess {Boolean} data.aktywna Czy nieobecność jest aktywna
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": [
+         *             {
+         *                 "userId": "[POM] KingaMiszcz",
+         *                 "id":1,
+         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
+         *                 "start": 1595196000000,
+         *                 "powod": "Powód.",
+         *                 "end": 1595800800000,
+         *                 "aktywna": true
+         *             },
+         *             {
+         *                 "userId": "[MOD] OhMatvv_",
+         *                 "id":1,
+         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
+         *                 "start": 1595455200000,
+         *                 "powod": "Powód.",
+         *                 "end": 1598133600000,
+         *                 "aktywna" :true
+         *             }
+         *         ]
+         *     }
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
         routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
 
         this.server = Undertow.builder()
