@@ -33,16 +33,15 @@ public class Listakar implements HttpHandler {
         }
 
         try {
-            List<CaseConfig> kary = caseDao.getAllNick(nick);
+            List<CaseConfig> kary = new ArrayList<>();
+            caseDao.getAllNick(nick).forEach(ccase -> {
+                CaseConfig formated = Karainfo.format(ccase, api);
+                kary.add(formated);
+                kary.remove(ccase);
+            });
             if (kary.isEmpty()) {
                 Response.sendErrorResponse(ex,"Zły nick", "Ten nick nie ma żadnej kary");
                 return;
-            }
-
-            for (CaseConfig caseConfig : kary) {
-                CaseConfig formated = Karainfo.format(caseConfig, api);
-                kary.remove(caseConfig);
-                kary.add(formated);
             }
 
             Response.sendObjectResponse(ex, kary);
