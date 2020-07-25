@@ -427,6 +427,45 @@ public class APIModule implements Modul {
          */
         routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
 
+        /**
+         * @api {get} api/stats/:token/:dni/:nick Statystyki z Discorda
+         * @apiName stats
+         * @apiDescription Wyświetla statystyki danego użytkownika na podstawie nicku. Gracz musi mieć rangę ChatMod. Wpisz w :dni wartość 0, jeżeli chcesz wyświetlać statystyki z dzisiaj.
+         * @apiGroup ChatMod
+         * @apiVersion 1.0.0
+         * @apiParam {Token} token Token
+         * @apiParam {Number} dni Liczba dni z których mają być brane statystyki. Np. 7 to statystyki sprzed tygodnia, a 30 to statystyki sprzed miesiąca.
+         * @apiParam {String} nick Nick osoby
+         *
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
+         *
+         * @apiSuccess {Object} data Odpowiedź
+         * @apiSuccess {String} data.zmutowanych Liczba osób zmutowanych
+         * @apiSuccess {Number} data.zbanowanych Liczba osób zmutowanych
+         * @apiSuccess {String} data.wyrzuconych Liczba osób wyrzuconych
+         * @apiSuccess {Number} data.usunietychWiadomosci Liczba usuniętych wiadomości
+         * @apiSuccess {String} data.napisanychWiadomosci Liczba napisanych wiadomości
+         * @apiSuccess {Number} data.day Wartość tutaj bezużyteczna
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": {
+         *             "zmutowanych": 104,
+         *             "zbanowanych": 17,
+         *             "wyrzuconych": 0,
+         *             "usunietychWiadomosci": 146,
+         *             "napisanychWiadomosci": 742,
+         *             "day": 0
+         *         }
+         *     }
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
 
         this.server = Undertow.builder()

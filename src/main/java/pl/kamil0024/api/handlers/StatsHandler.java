@@ -72,6 +72,6 @@ public class StatsHandler implements HttpHandler {
         Response.sendObjectResponse(ex, stat);
 
     }
-    
+
 
 }
