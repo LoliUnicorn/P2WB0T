@@ -14,7 +14,8 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.entities.Statystyka;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatsHandler implements HttpHandler {
 
@@ -50,42 +51,27 @@ public class StatsHandler implements HttpHandler {
             return;
         }
 
-        Role r = api.getGuild().getRoleById(Ustawienia.instance.roles.chatMod);
-        Member mem = null;
+        ArrayList<Statystyka> mem = new ArrayList<>();
+        List<StatsConfig> all = statsDao.getAll();
 
-        for (Member memb : api.getGuild().getMembersWithRoles(r)) {
-            if (check(memb, nick)) {
-                mem = memb;
+        for (StatsConfig statsc : all) {
+            String mc = api.getUserConfig(statsc.getId()).getMcNick();
+            if (mc == null) continue;
+            if (mc.split(" ")[1].toLowerCase().equals(nick.toLowerCase())) {
+                mem = statsc.getStats();
                 break;
             }
         }
 
-        if (mem == null) {
-            Response.sendErrorResponse(ex, "Zły nick", "Ten nick nie istnieje, nie ma rangi ChatMod lub się leni i nic nie robi");
-            return;
-        }
-
-        StatsConfig sc = statsDao.get(mem.getId());
-        if (sc.getStats().isEmpty()) {
+        if (mem.isEmpty()) {
             Response.sendErrorResponse(ex, "Pusta lista", "Ten gracz się leni i nic nie robi");
             return;
         }
 
-        Statystyka stat = StatsCommand.getStatsOfDayMinus(sc.getStats(), dni);
+        Statystyka stat = StatsCommand.getStatsOfDayMinus(mem, dni);
         Response.sendObjectResponse(ex, stat);
 
     }
-
-    private boolean check(Member mem, String szukamy) {
-        if (mem.getNickname() == null) return false;
-        String nick = mem.getNickname().split(" ")[1];
-        if (!nick.toLowerCase().equals(szukamy.toLowerCase())) {
-            Log.debug("nie ma equalsa");
-            Log.debug(nick.toLowerCase());
-            Log.debug(szukamy.toLowerCase());
-            return false;
-        }
-        return true;
-    }
+    
 
 }
