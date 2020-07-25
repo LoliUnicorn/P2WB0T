@@ -9,6 +9,7 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.UserConfig;
+import pl.kamil0024.core.database.config.UserinfoConfig;
 
 public class Karainfo implements HttpHandler {
 
@@ -43,8 +44,8 @@ public class Karainfo implements HttpHandler {
     }
     
     public static CaseConfig format(CaseConfig cc, APIModule api) {
-        UserConfig userc = api.getUserConfig(cc.getKara().getKaranyId());
-        UserConfig admc = api.getUserConfig(cc.getKara().getAdmId());
+        UserinfoConfig userc = api.getUserConfig(cc.getKara().getKaranyId());
+        UserinfoConfig admc = api.getUserConfig(cc.getKara().getAdmId());
         cc.getKara().setMessageUrl("https://discordapp.com/channels/" + cc.getKara().getMessageUrl());
 
         cc.getKara().setKaranyId(userc.getMcNick() == null ? userc.getFullname() : userc.getMcNick());

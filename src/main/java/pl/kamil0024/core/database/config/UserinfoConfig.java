@@ -17,8 +17,7 @@ public class UserinfoConfig {
         this.id = id;
     }
 
-    @Getter
-    @Setter private String id = "";
+    @Getter @Setter private String id = "";
 
     @Getter @Setter private String mcNick = null;
     @Getter @Setter private String fullname = "/";
