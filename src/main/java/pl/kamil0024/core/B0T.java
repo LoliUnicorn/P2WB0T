@@ -199,7 +199,7 @@ public class B0T {
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
-        modulManager.getModules().add(new APIModule(api, caseDao, redisManager));
+        modulManager.getModules().add(new APIModule(api, caseDao, redisManager, nieobecnosciDao));
 
         for (Modul modul : modulManager.getModules()) {
             try {
