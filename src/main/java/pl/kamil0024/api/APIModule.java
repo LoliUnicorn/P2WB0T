@@ -149,10 +149,10 @@ public class APIModule implements Modul {
          *             "id": "678",
          *             "kara": {
          *                 "karaId": 678,
-         *                 "karanyId": "565078102628237313",
-         *                 "mcNick": "NorFoS",
-         *                 "admId": "372015855585722368",
-         *                 "powod": "Celowe utrudnianie rozmowy na publicznych",
+         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)"",
+         *                 "mcNick": "gracz123",
+         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
+         *                 "powod": "Powód",
          *                 "timestamp": 1595685472444,
          *                 "typKary": "TEMPBAN",
          *                 "aktywna": true,"
@@ -178,7 +178,7 @@ public class APIModule implements Modul {
          */
         routes.get("/api/karainfo/{token}/{id}", new Karainfo(caseDao, this));
 
-        routes.get("/api/listakar/{nick}", new Listakar(caseDao, this));
+        routes.get("/api/listakar/{token}/{nick}", new Listakar(caseDao, this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
@@ -224,7 +224,7 @@ public class APIModule implements Modul {
     private UserinfoConfig get(String id) {
         UserinfoConfig uc = new UserinfoConfig(id);
         User u = api.retrieveUserById(id).complete();
-        Member mem = guild.getMember(u);
+        Member mem = guild.retrieveMember(u).complete();
 
         if (mem != null) {
             if (mem.getNickname() != null) uc.setMcNick(mem.getNickname());
