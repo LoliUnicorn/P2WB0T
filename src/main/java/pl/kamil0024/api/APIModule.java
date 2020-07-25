@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.handlers.CheckToken;
 import pl.kamil0024.api.handlers.Karainfo;
+import pl.kamil0024.api.handlers.Listakar;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
@@ -177,6 +178,8 @@ public class APIModule implements Modul {
          */
         routes.get("/api/karainfo/{token}/{id}", new Karainfo(caseDao, this));
 
+        routes.get("/api/listakar/{nick}", new Listakar(caseDao, this));
+
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
                 .setHandler(path()
@@ -219,7 +222,6 @@ public class APIModule implements Modul {
     }
 
     private UserinfoConfig get(String id) {
-        Log.debug("Pobieram na nowo " + id);
         UserinfoConfig uc = new UserinfoConfig(id);
         User u = api.retrieveUserById(id).complete();
         Member mem = guild.getMember(u);

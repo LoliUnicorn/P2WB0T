@@ -21,7 +21,6 @@ public class Karainfo implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
-
         if (!CheckToken.checkToken(ex)) return;
 
         try {

@@ -45,6 +45,11 @@ public class CaseDao implements Dao<CaseConfig> {
         return mapper.getMcAktywne(nick);
     }
 
+    public List<CaseConfig> getAllNick(String nick) {
+        if (nick.equals("-")) return new ArrayList<>();
+        return mapper.getAllNick(nick);
+    }
+
     public List<CaseConfig> getAllAktywne() {
         return mapper.getAllAktywne();
     }
