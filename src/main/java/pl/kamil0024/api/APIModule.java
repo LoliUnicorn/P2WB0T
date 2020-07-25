@@ -64,7 +64,7 @@ public class APIModule implements Modul {
          * @apiDescription Używane do sprawdzenia prawidłowości tokenów
          * @apiGroup Token
          * @apiVersion 1.0.0
-         * @apiParam {String} token Token
+         * @apiParam {Token} token Token
          *
          * @apiSuccess {String} success Czy zapytanie się udało
          * @apiSuccess {String} msg Wiadomość potwierdzająca
@@ -93,15 +93,16 @@ public class APIModule implements Modul {
         routes.get("/api/checkToken/{token}", new CheckToken());
 
         /**
-         * @api {get} api/karainfo/:id Informacje o karze
+         * @api {get} api/karainfo/:token/:id Informacje o karze
          * @apiName karainfo
          * @apiDescription Wyświetla informacje o karze poprzez ID
          * @apiGroup Kary
          * @apiVersion 1.0.0
          * @apiParam {Number} id ID Kary
+         * @apiParam {String} token Token
          *
          * @apiSuccess {String} success Czy zapytanie się udało
-         * @apiSuccess {Object} data Odpowiedź
+         * @apiSuccess {Kara} data Odpowiedź w postaci kary
          * @apiSuccess {String} id ID kary
          * @apiSuccess {Object} kara Kara
          * @apiSuccess {Number} kara.karaId ID kary
@@ -178,6 +179,110 @@ public class APIModule implements Modul {
          */
         routes.get("/api/karainfo/{token}/{id}", new Karainfo(caseDao, this));
 
+        /**
+         * @api {get} api/listakar/:token/:nick Informacje o karach
+         * @apiName listakar
+         * @apiDescription Wyświetla informacje o karze poprzez nick użytkownika
+         * @apiGroup Kary
+         * @apiVersion 1.0.0
+         * @apiParam {String} nick Nick gracza
+         * @apiParam {Token} token Token
+         *
+         * @apiSuccess {String} success Czy zapytanie się udało
+         * @apiSuccess {Kara} data Odpowiedź w postaci kary
+         * @apiSuccess {String} id ID kary
+         * @apiSuccess {Kara} data Data w postaci kary
+         * @apiSuccess {Number} kara.karaId ID kary
+         * @apiSuccess {String} kara.karanyId Karany użytkownik
+         * @apiSuccess {String} kara.mcNick Nick, który gracz miał ustawiony, gdy dostawał karę
+         * @apiSuccess {String} kara.admId Nick administratora
+         * @apiSuccess {Number} kara.timestamp Czas nadania kary
+         * @apiSuccess {String} kara.typKary Typ kary (KICK, BAN, MUTE, TEMPBAN, TEMPMUTE, UNMUTE, UNBAN)
+         * @apiSuccess {Boolean} kara.aktywna Czy kara jest aktywna
+         * @apiSuccess {String} kara.messageUrl Link do wiadomości, która została napisana na kanale #logi
+         * @apiSuccess {Boolean} kara.punAktywna Czy aktywna jako punish (raczej bez użycia to jest)
+         * @apiSuccess {Number} kara.end Czas zakończenie kary (tylko przy karze TEMPBAN, TEMPMUTE)
+         * @apiSuccess {Number} kara.duration Na jaki czas nadano
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": {
+         *             "id": "600",
+         *             "kara": {
+         *                 "karaId": 600,
+         *                 "karanyId": "[VIP] gracz123 (lub gracz#1234 jeżeli nie ma go na serwerze)",
+         *                 "mcNick": "gracz123",
+         *                 "admId": "[POM] KAMIL0024 (lub KAMIL0024#1234 jeżeli nie ma go na serwerze)",
+         *                 "powod": "Omijanie bana",
+         *                 "timestamp": 1595536961248,
+         *                 "typKary": "BAN",
+         *                 "aktywna": true,
+         *                 "messageUrl": "https://discordapp.com/channels/1234/1234/1234",
+         *                 "punAktywna": false
+         *             }
+         *         }
+         *     }
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *          "success": true,
+         *          "data": [
+         *             {
+         *                  "id": "680",
+         *                  "kara": {
+         *                       "karaId": 680,
+         *                       "karanyId": "niezesrajsie_",
+         *                       "mcNick": "niezesrajsie_",
+         *                       "admId": "[POM] matc2002",
+         *                       "powod": "Nadmierny spam",
+         *                       "timestamp": 1595685781024,
+         *                       "typKary": "TEMPMUTE",
+         *                       "aktywna": false,
+         *                       "messageUrl":"https://discordapp.com/channels/422016694408577025/533703342195605523/736584298823417909",
+         *                       "end": 1595689381024,
+         *                       "duration": "1h",
+         *                       "punAktywna": true
+         *                 }
+         *             },
+         *             {
+         *                  "id": "680",
+         *                  "kara": {
+         *                       "karaId": 680,
+         *                       "karanyId": "niezesrajsie_",
+         *                       "mcNick": "niezesrajsie_",
+         *                       "admId": "[POM] matc2002",
+         *                       "powod": "Nadmierny spam",
+         *                       "timestamp": 1595685781024,
+         *                       "typKary": "TEMPMUTE",
+         *                       "aktywna": false,
+         *                       "messageUrl":"https://discordapp.com/channels/422016694408577025/533703342195605523/736584298823417909",
+         *                       "end": 1595689381024,
+         *                       "duration": "1h",
+         *                       "punAktywna": true
+         *                 }
+         *             }
+         *         ]
+         *     }
+         *
+         *
+         * @apiErrorExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": false,
+         *         "error": {
+         *             "body": "Zły nick",
+         *             "description": "Ten nick nie ma żadnej kary"
+         *          }
+         *      }
+         *
+         */
         routes.get("/api/listakar/{token}/{nick}", new Listakar(caseDao, this));
 
         this.server = Undertow.builder()
