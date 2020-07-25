@@ -427,7 +427,7 @@ public class APIModule implements Modul {
          */
         routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
 
-        routes.get("api/stats/{dni}/{nick}", new StatsHandler(statsDao, this));
+        routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
