@@ -49,7 +49,10 @@ public class UnbanCommand extends Command {
             boolean jest = false;
             List<Guild.Ban> bans = context.getGuild().retrieveBanList().complete();
             for (Guild.Ban b : bans) {
-                if (b.getUser().getId().equals(u.getId())) jest = true; break;
+                if (b.getUser().getId().equals(u.getId())) {
+                    jest = true;
+                    break;
+                }
             }
             if (!jest) {
                 context.sendTranslate("unban.donthave").queue();
