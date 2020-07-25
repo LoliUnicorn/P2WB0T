@@ -268,7 +268,7 @@ public class APIModule implements Modul {
 
         /**
          * @api {get} api/nieobecnosci/{token}/{nick} Lista nieobecności - Nick
-         * @apiName nieobecności
+         * @apiName nieobecnosci.nick
          * @apiDescription Wyświetla liste branych nieobecności na podstawie nicku
          * @apiGroup Nieobecności
          * @apiVersion 1.0.0
@@ -320,7 +320,7 @@ public class APIModule implements Modul {
 
         /**
          * @api {get} api/nieobecnosci/{token}/all Lista wszystkich nieobecności
-         * @apiName nieobecności
+         * @apiName nieobecnosci.all
          * @apiDescription Wyświetla liste wszystkich nieobecności
          * @apiGroup Nieobecności
          * @apiVersion 1.0.0
@@ -377,7 +377,7 @@ public class APIModule implements Modul {
 
         /**
          * @api {get} api/nieobecnosci/{token}/aktywne Lista aktywnych nieobecności
-         * @apiName nieobecności
+         * @apiName nieobecnosci.aktywne
          * @apiDescription Wyświetla liste aktywnych nieobecności
          * @apiGroup Nieobecności
          * @apiVersion 1.0.0

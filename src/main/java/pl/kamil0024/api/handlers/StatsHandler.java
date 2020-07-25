@@ -52,11 +52,13 @@ public class StatsHandler implements HttpHandler {
 
         Role r = api.getGuild().getRoleById(Ustawienia.instance.roles.chatMod);
         Member mem = null;
-        try {
-            mem = api.getGuild().getMembersWithRoles(r).stream()
-                    .filter(m -> check(m, nick))
-                    .findFirst().orElse(null);
-        } catch (Exception ignored) {}
+
+        for (Member memb : api.getGuild().getMembersWithRoles(r)) {
+            if (check(memb, nick)) {
+                mem = memb;
+                break;
+            }
+        }
 
         if (mem == null) {
             Response.sendErrorResponse(ex, "Zły nick", "Ten nick nie istnieje, nie ma rangi ChatMod lub się leni i nic nie robi");
@@ -77,7 +79,6 @@ public class StatsHandler implements HttpHandler {
     private boolean check(Member mem, String szukamy) {
         if (mem.getNickname() == null) return false;
         String nick = mem.getNickname().split(" ")[1];
-        Log.debug(nick);
         if (!nick.toLowerCase().equals(szukamy.toLowerCase())) {
             Log.debug("nie ma equalsa");
             Log.debug(nick.toLowerCase());
