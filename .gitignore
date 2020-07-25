@@ -72,3 +72,4 @@ plugins
 start.sh
 log.api
 doc/
+apidoc.json

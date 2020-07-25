@@ -219,7 +219,7 @@ public class APIModule implements Modul {
 
     private UserConfig get(String id) {
         Log.debug("Pobieram na nowo " + id);
-        UserConfig uc = new UserConfig();
+        UserConfig uc = new UserConfig(id);
         User u = api.retrieveUserById(id).complete();
         Member mem = guild.getMember(u);
 
