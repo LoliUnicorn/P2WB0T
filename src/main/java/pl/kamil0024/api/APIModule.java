@@ -17,6 +17,7 @@ import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.UserConfig;
+import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.Cache;
@@ -36,7 +37,7 @@ public class APIModule implements Modul {
     @Inject private CaseDao caseDao;
     @Inject private RedisManager redisManager;
 
-    private final Cache<UserConfig> ucCache;
+    private final Cache<UserinfoConfig> ucCache;
 
     private final Guild guild;
 
@@ -48,7 +49,7 @@ public class APIModule implements Modul {
 
         this.caseDao = caseDao;
 
-        this.ucCache = redisManager.new CacheRetriever<UserConfig>(){}.getCache();
+        this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
     }
 
     @Override
@@ -213,13 +214,13 @@ public class APIModule implements Modul {
 
     // Cache
 
-    public UserConfig getUserConfig(String id) {
+    public UserinfoConfig getUserConfig(String id) {
         return ucCache.get(id, this::get);
     }
 
-    private UserConfig get(String id) {
+    private UserinfoConfig get(String id) {
         Log.debug("Pobieram na nowo " + id);
-        UserConfig uc = new UserConfig(id);
+        UserinfoConfig uc = new UserinfoConfig(id);
         User u = api.retrieveUserById(id).complete();
         Member mem = guild.getMember(u);
 
