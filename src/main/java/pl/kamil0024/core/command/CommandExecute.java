@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CommandExecute extends ListenerAdapter {
+
     ArgumentManager argumentManager;
     CommandManager commandManager;
     Tlumaczenia tlumaczenia;
@@ -135,7 +136,7 @@ public class CommandExecute extends ListenerAdapter {
             Log.newError(omegalul);
             e.getChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
-        if (udaloSie && jegoPerm.getNumer() < 10) setCooldown(e.getAuthor(), c);
+        if (udaloSie && jegoPerm.getNumer() < PermLevel.DEVELOPER.getNumer()) setCooldown(e.getAuthor(), c);
         zareaguj(e.getMessage(), e.getAuthor(), udaloSie);
 
         try {

@@ -25,6 +25,7 @@ import pl.kamil0024.core.listener.ExceptionListener;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Statyczne;
 import pl.kamil0024.core.util.Tlumaczenia;
@@ -166,6 +167,8 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
+        RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
+
         CaseDao          caseDao             = new CaseDao(databaseManager);
         UserDao          userDao             = new UserDao(databaseManager);
         NieobecnosciDao  nieobecnosciDao     = new NieobecnosciDao(databaseManager);
@@ -196,7 +199,7 @@ public class B0T {
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
-        modulManager.getModules().add(new APIModule(api, caseDao));
+        modulManager.getModules().add(new APIModule(api, caseDao, redisManager));
 
         for (Modul modul : modulManager.getModules()) {
             try {

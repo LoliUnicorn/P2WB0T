@@ -71,3 +71,4 @@ build
 plugins
 start.sh
 log.api
+doc/

@@ -1,44 +1,55 @@
 package pl.kamil0024.api.handlers;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.database.config.UserConfig;
 
 public class Karainfo implements HttpHandler {
 
     @Inject private CaseDao caseDao;
+    @Inject private APIModule api;
 
-    public Karainfo(CaseDao caseDao) {
+    public Karainfo(CaseDao caseDao, APIModule api) {
         this.caseDao = caseDao;
+        this.api = api;
     }
 
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
+
         if (!CheckToken.checkToken(ex)) return;
 
         try {
             int id = Integer.parseInt(ex.getQueryParameters().get("id").getFirst());
             if (id <= 0) throw new NumberFormatException();
 
-            Log.debug("id=" + id);
             CaseConfig cc = caseDao.get(id);
-            Log.debug(new Gson().toJson(cc));
             if (cc.getKara() == null) throw new Exception();
 
-            Response.sendObjectResponse(ex, cc);
+            Response.sendObjectResponse(ex, format(cc, api));
 
         } catch (NumberFormatException e) {
             Response.sendErrorResponse(ex, "Złe ID", "ID kary jest puste lub nie jest liczbą");
         } catch (Exception e) {
-            e.printStackTrace();
             Response.sendErrorResponse(ex, "Złe ID", "Nie ma kary o takim ID");
         }
 
+    }
+    
+    public static CaseConfig format(CaseConfig cc, APIModule api) {
+        UserConfig userc = api.getUserConfig(cc.getKara().getKaranyId());
+        UserConfig admc = api.getUserConfig(cc.getKara().getAdmId());
+        cc.getKara().setMessageUrl("https://discordapp.com/channels/" + cc.getKara().getMessageUrl());
+
+        cc.getKara().setKaranyId(userc.getMcNick() == null ? userc.getFullname() : userc.getMcNick());
+        cc.getKara().setAdmId(admc.getMcNick() == null ? admc.getFullname() : admc.getMcNick());
+        return cc;
     }
 
 }
