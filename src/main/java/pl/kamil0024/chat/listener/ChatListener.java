@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
 
     private static final File FILE = new File("res/przeklenstwa.api");
@@ -71,9 +72,8 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        if (UserUtil.getPermLevel(e.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) return;
-        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.isWebhookMessage() || e.getMessage().getContentRaw().isEmpty()) return;
-
+        if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.HELPER.getNumer()) return;
+        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
 
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
@@ -154,11 +154,8 @@ public class ChatListener extends ListenerAdapter {
 
         int emote = emoteCount(msgRaw, msg.getJDA());
 
-        int caps = 0;
         String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
-        try {
-            caps = containsCaps(capsMsg);
-        } catch (Exception ignored) { }
+        int caps = containsCaps(capsMsg);
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
@@ -194,8 +191,6 @@ public class ChatListener extends ListenerAdapter {
         if (skrotyCount(new String[] {msgRaw.toLowerCase()})) {
             action.setKara(Action.ListaKar.SKROTY);
             action.send();
-            return;
-
         }
 
     }
@@ -212,7 +207,7 @@ public class ChatListener extends ListenerAdapter {
 
     public static boolean containsLink(String[] list) {
         for (String s : list) {
-            if (s.contains("derpmc") || s.contains("roizy") || s.contains("p2w") || s.contains("hypixel")) continue;
+            if (s.contains("derpmc") || s.contains("roizy") || s.contains("p2w") || s.contains("hypixel") || s.contains("discord")) continue;
             try {
                 new URL(s);
                 return true;
@@ -256,15 +251,13 @@ public class ChatListener extends ListenerAdapter {
         if (split.length < 5) return 0;
 
         for (char s : split) {
-            if (!String.valueOf(s).equals("")) {
-                if (Character.isUpperCase(s)) {
-                    caps++;
-                }
+            if (!String.valueOf(s).equals("") && Character.isUpperCase(s)) {
+                caps++;
             }
         }
 
         try {
-            return (caps / msg.length()) * 100;
+            return (caps / split.length) * 100;
         } catch (Exception e) {
             return 0;
         }
@@ -274,8 +267,9 @@ public class ChatListener extends ListenerAdapter {
     public static int emoteCount(String msg, JDA api) {
         int count = 0;
         Matcher m = EMOJI.matcher(msg);
-        while (m.find())
+        while (m.find()) {
             count++;
+        }
 
         List<String> list = new ArrayList<>(Arrays.asList(msg.split(" ")));
         count += checkEmote(list, api);
