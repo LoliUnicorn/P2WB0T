@@ -10,8 +10,7 @@ public class UserConfig {
     public UserConfig(String id) {
         this.id = id;
     }
-
-    @PrimaryKey
+    
     private String id = "";
 
     private String mcNick = null;
