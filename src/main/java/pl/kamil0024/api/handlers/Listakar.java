@@ -18,7 +18,7 @@ public class Listakar implements HttpHandler {
 
     public Listakar(CaseDao caseDao, APIModule apiModule) {
         this.caseDao = caseDao;
-        this.api = api;
+        this.api = apiModule;
     }
 
 
