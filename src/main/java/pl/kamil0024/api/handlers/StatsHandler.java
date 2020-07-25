@@ -7,14 +7,13 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.api.handlers.CheckToken;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.entities.Statystyka;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class StatsHandler implements HttpHandler {
@@ -32,7 +31,7 @@ public class StatsHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) throws Exception {
         if (!CheckToken.checkToken(ex)) return;
 
-        int dni = 0;
+        int dni;
         String nick = ex.getQueryParameters().get("nick").getFirst();
         if (nick.isEmpty()) {
             Response.sendErrorResponse(ex, "Zły nick", "Nick jest pusty?");
@@ -41,8 +40,12 @@ public class StatsHandler implements HttpHandler {
 
         try {
             dni = Integer.parseInt(ex.getQueryParameters().get("dni").getFirst());
-            if (dni < 0) throw new Exception();
         } catch (Exception e) {
+            Response.sendErrorResponse(ex, "Zła liczba dni", "Liczba dni jest nieprawidłowa lub jest mniejsza od zera");
+            return;
+        }
+
+        if (dni < 0) {
             Response.sendErrorResponse(ex, "Zła liczba dni", "Liczba dni jest nieprawidłowa lub jest mniejsza od zera");
             return;
         }
@@ -51,8 +54,8 @@ public class StatsHandler implements HttpHandler {
         Member mem = null;
         try {
             mem = api.getGuild().getMembersWithRoles(r).stream()
-                    .filter(m -> m.getNickname() != null && m.getNickname().split(" ")[1].toLowerCase().equals(nick.toLowerCase()))
-                    .collect(Collectors.toList()).get(0);
+                    .filter(m -> check(m, nick))
+                    .findFirst().orElse(null);
         } catch (Exception ignored) {}
 
         if (mem == null) {
@@ -69,6 +72,19 @@ public class StatsHandler implements HttpHandler {
         Statystyka stat = StatsCommand.getStatsOfDayMinus(sc.getStats(), dni);
         Response.sendObjectResponse(ex, stat);
 
+    }
+
+    private boolean check(Member mem, String szukamy) {
+        if (mem.getNickname() == null) return false;
+        String nick = mem.getNickname().split(" ")[1];
+        Log.debug(nick);
+        if (!nick.toLowerCase().equals(szukamy.toLowerCase())) {
+            Log.debug("nie ma equalsa");
+            Log.debug(nick.toLowerCase());
+            Log.debug(szukamy.toLowerCase());
+            return false;
+        }
+        return true;
     }
 
 }
