@@ -1,6 +1,5 @@
 package pl.kamil0024.api;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -11,14 +10,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.api.handlers.CheckToken;
-import pl.kamil0024.api.handlers.Karainfo;
-import pl.kamil0024.api.handlers.Listakar;
-import pl.kamil0024.api.handlers.Nieobecnosci;
+import pl.kamil0024.api.handlers.*;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.NieobecnosciDao;
+import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.Cache;
@@ -38,12 +35,13 @@ public class APIModule implements Modul {
     @Inject private CaseDao caseDao;
     @Inject private RedisManager redisManager;
     @Inject private NieobecnosciDao nieobecnosciDao;
+    @Inject private StatsDao statsDao;
 
     private final Cache<UserinfoConfig> ucCache;
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -51,13 +49,13 @@ public class APIModule implements Modul {
 
         this.caseDao = caseDao;
         this.nieobecnosciDao = nieobecnosciDao;
+        this.statsDao = statsDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
     }
 
     @Override
     public boolean startUp() {
-        Gson gson = new Gson();
         RoutingHandler routes = new RoutingHandler();
 
         /**
@@ -68,7 +66,7 @@ public class APIModule implements Modul {
          * @apiVersion 1.0.0
          * @apiParam {Token} token Token
          *
-         * @apiSuccess {String} success Czy zapytanie się udało
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
          * @apiSuccess {String} msg Wiadomość potwierdzająca
          *
          * @apiError {Boolean} success Czy zapytanie się udało
@@ -103,7 +101,7 @@ public class APIModule implements Modul {
          * @apiParam {Number} id ID Kary
          * @apiParam {String} token Token
          *
-         * @apiSuccess {String} success Czy zapytanie się udało
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
          * @apiSuccess {Kara} data Odpowiedź w postaci kary
          * @apiSuccess {String} id ID kary
          * @apiSuccess {Object} kara Kara
@@ -191,7 +189,7 @@ public class APIModule implements Modul {
          * @apiParam {String} nick Nick gracza
          * @apiParam {Token} token Token
          *
-         * @apiSuccess {String} success Czy zapytanie się udało
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
          * @apiSuccess {Kara} data Odpowiedź w postaci kary
          * @apiSuccess {String} id ID kary
          * @apiSuccess {Kara} data Data w postaci listy kary
@@ -277,7 +275,7 @@ public class APIModule implements Modul {
          * @apiParam {String} nick Nick gracza
          * @apiParam {Token} token Token
          *
-         * @apiSuccess {String} success Czy zapytanie się udało
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
          *
          * @apiSuccess {Nieobecnosc} data Odpowiedź w postaci listy nieobecnosci
          * @apiSuccess {String} data.userId Nick administatora
@@ -294,7 +292,7 @@ public class APIModule implements Modul {
          *         "success": true,
          *         "data": [
          *             {
-         *                 "userId": "[POM] KingaMiszcz",
+         *                 "userId": "[POM] adm1",
          *                 "id":1,
          *                 "msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
          *                 "start": 1595196000000,
@@ -303,7 +301,7 @@ public class APIModule implements Modul {
          *                 "aktywna" :true
          *             },
          *             {
-         *                 "userId": "[POM] KingaMiszcz",
+         *                 "userId": "[POM] adm2",
          *                 "id":1,
          *                 "msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
          *                 "start": 1595196000000,
@@ -330,7 +328,7 @@ public class APIModule implements Modul {
          *
          * @apiSuccess {String} success Czy zapytanie się udało
          *
-         * @apiSuccess {Nieobecnosc} data Odpowiedź w postaci listy nieobecnosci
+         * @apiSuccess {Object} data Odpowiedź
          * @apiSuccess {String} data.userId Nick administatora
          * @apiSuccess {Number} data.id ID nieobecności adminisatora
          * @apiSuccess {String} data.msgId Link do wiadomości na #nieobecnosci
@@ -344,17 +342,32 @@ public class APIModule implements Modul {
          *     {
          *         "success": true,
          *         "data": {
-         *             "[MOD] OhMatvv_": {
-         *                 "userId": "[MOD] OhMatvv_",
-         *                 "id":1,
-         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
-         *                 "start": 1595455200000,
-         *                 "powod": "Powód",
-         *                 "end": 1598133600000,"
-         *                 aktywna": true
-         *             },
-         *             "[POM] KingaMiszcz": {
-         *                 "userId":"[POM] KingaMiszcz","id":1,"msgId":"https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276","start":1595196000000,"powod":"Jadę za granice, nie będę mieć dostępu do komputera więc nie uda mi się wyrobić normy, także i obowiązków w zepsołach w których jestem.  Na discordzie będę jak najbardziej aktywna.","end":1595800800000,"aktywna":true}}}
+         *             "[MOD] adm1": [
+         *                 {
+         *                     "userId": "[MOD] adm1",
+         *                     "id": 1,
+         *                     "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
+         *                     "start": 1595455200000,
+         *                     "powod": "Powód.",
+         *                     "end": 1598133600000,
+         *                     "aktywna": true
+         *                 },
+         *                 {...}
+         *             ],
+         *             "[POM] adm2": [
+         *                 {
+         *                     "userId": "[POM] adm2",
+         *                     "id": 1,
+         *                     "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
+         *                     "start": 1595196000000,
+         *                     "powod": "Powód",
+         *                     "end": 1595800800000,
+         *                     "aktywna": true
+         *                 },
+         *                 {...}
+         *             ]
+         *         }
+         *     }
          *
          * @apiError {Boolean} success Czy zapytanie się udało
          * @apiError {Object} error Odpowiedź
@@ -387,7 +400,7 @@ public class APIModule implements Modul {
          *         "success": true,
          *         "data": [
          *             {
-         *                 "userId": "[POM] KingaMiszcz",
+         *                 "userId": "[POM] adm1",
          *                 "id":1,
          *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
          *                 "start": 1595196000000,
@@ -396,7 +409,7 @@ public class APIModule implements Modul {
          *                 "aktywna": true
          *             },
          *             {
-         *                 "userId": "[MOD] OhMatvv_",
+         *                 "userId": "[MOD] adm2",
          *                 "id":1,
          *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
          *                 "start": 1595455200000,
@@ -413,6 +426,8 @@ public class APIModule implements Modul {
          * @apiError {Boolean} error.description Długa odpowiedź błędu
          */
         routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
+
+        routes.get("api/stats/{dni}/{nick}", new StatsHandler(statsDao, this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
