@@ -2,6 +2,7 @@ package pl.kamil0024.core;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Ustawienia {
     public WebhookConfig webhook = new WebhookConfig();
     public Channel channel = new Channel();
     public Inne inne = new Inne();
+    public Api api = new Api();
 
     public static class Roles {
         public String helperRole = def;
@@ -72,6 +74,10 @@ public class Ustawienia {
 
     public static class Inne {
         public String kategoriaArchiwum = def;
+    }
+
+    public static class Api {
+        public List<String> tokens = Arrays.asList("343467373417857025");
     }
 
 }

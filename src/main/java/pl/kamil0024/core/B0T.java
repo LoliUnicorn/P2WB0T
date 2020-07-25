@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
 import pl.kamil0024.commands.ModLog;
@@ -195,6 +196,7 @@ public class B0T {
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
+        modulManager.getModules().add(new APIModule(api));
 
         for (Modul modul : modulManager.getModules()) {
             try {

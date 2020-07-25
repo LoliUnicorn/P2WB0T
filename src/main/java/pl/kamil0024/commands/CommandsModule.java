@@ -29,147 +29,146 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class CommandsModule
-implements Modul {
+public class CommandsModule implements Modul {
 
-        private ArrayList<Command> cmd;
+    private ArrayList<Command> cmd;
 
-        @Inject CommandManager commandManager;
-        @Inject Tlumaczenia tlumaczenia;
-        @Inject ShardManager api;
-        @Inject EventWaiter eventWaiter;
-        @Inject KaryJSON karyJSON;
-        @Inject CaseDao caseDao;
-        @Inject ModulManager modulManager;
-        @Inject CommandExecute commandExecute;
-        @Inject UserDao userDao;
-        @Inject NieobecnosciDao nieobecnosciDao;
-        @Inject RemindDao remindDao;
-        @Inject GiveawayDao giveawayDao;
-        @Inject StatsModule statsModule;
-        @Inject MusicModule musicModule;
-        @Inject MultiDao multiDao;
+    @Inject CommandManager commandManager;
+    @Inject Tlumaczenia tlumaczenia;
+    @Inject ShardManager api;
+    @Inject EventWaiter eventWaiter;
+    @Inject KaryJSON karyJSON;
+    @Inject CaseDao caseDao;
+    @Inject ModulManager modulManager;
+    @Inject CommandExecute commandExecute;
+    @Inject UserDao userDao;
+    @Inject NieobecnosciDao nieobecnosciDao;
+    @Inject RemindDao remindDao;
+    @Inject GiveawayDao giveawayDao;
+    @Inject StatsModule statsModule;
+    @Inject MusicModule musicModule;
+    @Inject MultiDao multiDao;
 
-        private boolean start = false;
-        private ModLog modLog;
+    private boolean start = false;
+    private ModLog modLog;
 
-        // Listeners
+    // Listeners
 
-        MultiListener multiListener;
-        KolkoIKrzyzykManager kolkoIKrzyzykManager;
+    MultiListener multiListener;
+    KolkoIKrzyzykManager kolkoIKrzyzykManager;
 
     public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao) {
-            this.commandManager = commandManager;
-            this.tlumaczenia = tlumaczenia;
-            this.api = api;
-            this.eventWaiter = eventWaiter;
-            this.karyJSON = karyJSON;
-            this.caseDao = caseDao;
-            this.modulManager = modulManager;
-            this.commandExecute = commandExecute;
-            this.userDao = userDao;
-            this.modLog = modLog;
-            this.nieobecnosciDao = nieobecnosciDao;
-            this.remindDao = remindDao;
-            this.giveawayDao = giveawayDao;
-            this.statsModule = statsModule;
-            this.musicModule = musicModule;
-            this.multiDao = multiDao;
+        this.commandManager = commandManager;
+        this.tlumaczenia = tlumaczenia;
+        this.api = api;
+        this.eventWaiter = eventWaiter;
+        this.karyJSON = karyJSON;
+        this.caseDao = caseDao;
+        this.modulManager = modulManager;
+        this.commandExecute = commandExecute;
+        this.userDao = userDao;
+        this.modLog = modLog;
+        this.nieobecnosciDao = nieobecnosciDao;
+        this.remindDao = remindDao;
+        this.giveawayDao = giveawayDao;
+        this.statsModule = statsModule;
+        this.musicModule = musicModule;
+        this.multiDao = multiDao;
 
-            ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-            executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
-        }
+        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
+    }
 
-        @Override
-        public boolean startUp() {
-            GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
-            kolkoIKrzyzykManager = new KolkoIKrzyzykManager(api, eventWaiter);
+    @Override
+    public boolean startUp() {
+        GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
+        kolkoIKrzyzykManager = new KolkoIKrzyzykManager(api, eventWaiter);
 
-            multiListener = new MultiListener(multiDao);
-            api.addEventListener(multiListener);
+        multiListener = new MultiListener(multiDao);
+        api.addEventListener(multiListener);
 
-            cmd = new ArrayList<>();
+        cmd = new ArrayList<>();
 
-            cmd.add(new PingCommand());
-            cmd.add(new BotinfoCommand(commandManager, modulManager));
-            cmd.add(new HelpCommand(commandManager));
-            cmd.add(new PoziomCommand());
-            cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao));
-            cmd.add(new ForumCommand());
-            cmd.add(new UserinfoCommand());
-            cmd.add(new McpremiumCommand());
-            cmd.add(new RemindmeCommand(remindDao, eventWaiter));
-            cmd.add(new ModulesCommand(modulManager));
-            cmd.add(new ClearCommand(statsModule));
-            cmd.add(new CytujCommand());
-            cmd.add(new CheckCommand(caseDao));
-            cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
-            cmd.add(new RebootCommand(modulManager, statsModule, eventWaiter, musicModule));
-            cmd.add(new ShellCommand());
-            cmd.add(new ArchiwizujCommand());
-            cmd.add(new MultiCommand(multiDao, eventWaiter));
-//            cmd.add(new SerweryCommand());
-            cmd.add(new PogodaCommand());
-            cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
+        cmd.add(new PingCommand());
+        cmd.add(new BotinfoCommand(commandManager, modulManager));
+        cmd.add(new HelpCommand(commandManager));
+        cmd.add(new PoziomCommand());
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao));
+        cmd.add(new ForumCommand());
+        cmd.add(new UserinfoCommand());
+        cmd.add(new McpremiumCommand());
+        cmd.add(new RemindmeCommand(remindDao, eventWaiter));
+        cmd.add(new ModulesCommand(modulManager));
+        cmd.add(new ClearCommand(statsModule));
+        cmd.add(new CytujCommand());
+        cmd.add(new CheckCommand(caseDao));
+        cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
+        cmd.add(new RebootCommand(modulManager, statsModule, eventWaiter, musicModule));
+        cmd.add(new ShellCommand());
+        cmd.add(new ArchiwizujCommand());
+        cmd.add(new MultiCommand(multiDao, eventWaiter));
+        cmd.add(new PogodaCommand());
+        cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
 
-            // Moderacyjne:
-            cmd.add(new StatusCommand(eventWaiter));
-            cmd.add(new KarainfoCommand(caseDao));
-            cmd.add(new UnmuteCommand(caseDao, modLog));
-            cmd.add(new TempmuteCommand(caseDao, modLog, statsModule));
-            cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog, statsModule));
-            cmd.add(new KickCommand(caseDao, modLog, statsModule));
-            cmd.add(new BanCommand(caseDao, modLog, statsModule));
-            cmd.add(new TempbanCommand(caseDao, modLog, statsModule));
-            cmd.add(new UnbanCommand(caseDao, modLog));
-            cmd.add(new MuteCommand(caseDao, modLog, statsModule));
-            cmd.add(new HistoryCommand(caseDao, eventWaiter));
+        // Moderacyjne:
+        cmd.add(new StatusCommand(eventWaiter));
+        cmd.add(new KarainfoCommand(caseDao));
+        cmd.add(new UnmuteCommand(caseDao, modLog));
+        cmd.add(new TempmuteCommand(caseDao, modLog, statsModule));
+        cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog, statsModule));
+        cmd.add(new KickCommand(caseDao, modLog, statsModule));
+        cmd.add(new BanCommand(caseDao, modLog, statsModule));
+        cmd.add(new TempbanCommand(caseDao, modLog, statsModule));
+        cmd.add(new UnbanCommand(caseDao, modLog));
+        cmd.add(new MuteCommand(caseDao, modLog, statsModule));
+        cmd.add(new HistoryCommand(caseDao, eventWaiter));
 
-            cmd.forEach(commandManager::registerCommand);
-            setStart(true);
-            return true;
-        }
+        cmd.forEach(commandManager::registerCommand);
+        setStart(true);
+        return true;
+    }
 
-        private void tak() {
+    private void tak() {
             RemindmeCommand.check(remindDao, api);
         }
 
-        @Override
-        public boolean shutDown() {
-            kolkoIKrzyzykManager.stop();
-            api.removeEventListener(multiListener);
-            commandManager.unregisterCommands(cmd);
-            setStart(false);
-            return true;
-        }
+    @Override
+    public boolean shutDown() {
+        kolkoIKrzyzykManager.stop();
+        api.removeEventListener(multiListener);
+        commandManager.unregisterCommands(cmd);
+        setStart(false);
+        return true;
+    }
 
-        @Override
-        public String getName() {
+    @Override
+    public String getName() {
             return "commands";
         }
 
-        @Override
-        public boolean isStart() {
+    @Override
+    public boolean isStart() {
             return start;
         }
 
-        @Override
-        public void setStart(boolean bol) {
+    @Override
+    public void setStart(boolean bol) {
             this.start = bol;
         }
 
-        @Data
-        @AllArgsConstructor
-        public class KaraJSON {
-            private final int id;
-            private final String powod;
-        }
+    @Data
+    @AllArgsConstructor
+    public class KaraJSON {
+        private final int id;
+        private final String powod;
+    }
 
-        @Data
-        @AllArgsConstructor
-        public class WarnJSON {
-            private final int warns;
-            private final String kara;
-            private final String czas;
-        }
+    @Data
+    @AllArgsConstructor
+    public class WarnJSON {
+        private final int warns;
+        private final String kara;
+        private final String czas;
+    }
+
 }
