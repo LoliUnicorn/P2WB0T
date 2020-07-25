@@ -35,7 +35,7 @@ public class APIModule implements Modul {
         RoutingHandler routes = new RoutingHandler();
 
         routes.get("/api/checkToken/{token}", new CheckToken());
-        routes.get("/api/karainfo/{id}", new Karainfo(caseDao));
+        routes.get("/api/karainfo/{token}/{id}", new Karainfo(caseDao));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
