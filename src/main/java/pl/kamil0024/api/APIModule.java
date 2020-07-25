@@ -29,11 +29,12 @@ public class APIModule implements Modul {
 
         routes.get("/api/checkToken/{token}", new CheckToken());
 
-        this.server = Undertow.builder()
+        server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
                 .setHandler(path()
                         .addPrefixPath("/", wrapWithMiddleware(routes)))
                 .build();
+        server.start();
 
         return true;
     }
