@@ -72,13 +72,10 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        Log.debug("1");
+        
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.HELPER.getNumer()) return;
-        Log.debug("2");
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
-        Log.debug("3");
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
-        Log.debug("4");
 
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
@@ -92,9 +89,7 @@ public class ChatListener extends ListenerAdapter {
     }
 
     public void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
-        Log.debug("5");
         if (MuteCommand.hasMute(member)) return;
-        Log.debug("6");
 
         String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "");
         Action action = new Action(karyJSON);
@@ -165,20 +160,19 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
-        if (msg.getAuthor().getId().equals("343467373417857025")) {
-            if (flood > 4 || caps >= 50 || emote > 3) {
-                Log.debug("---------------------------");
-                Log.debug("user: " + msg.getAuthor().getId());
-                Log.debug("msg: " + msgRaw);
-                Log.debug("int flooda: " + flood);
-                Log.debug("procent capsa " + caps);
-                Log.debug("int emotek: " + emote);
-                Log.debug("---------------------------");
-                msg.delete().queue();
-                action.setKara(Action.ListaKar.FLOOD);
-                action.send();
-            }
+        if (flood > 4 || caps >= 50 || emote > 3) {
+            Log.debug("---------------------------");
+            Log.debug("user: " + msg.getAuthor().getId());
+            Log.debug("msg: " + msgRaw);
+            Log.debug("int flooda: " + flood);
+            Log.debug("procent capsa " + caps);
+            Log.debug("int emotek: " + emote);
+            Log.debug("---------------------------");
+            msg.delete().queue();
+            action.setKara(Action.ListaKar.FLOOD);
+            action.send();
         }
+
 
         // Może to nie być w 100% prawdziwe
         action.setPewnosc(false);
