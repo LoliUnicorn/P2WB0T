@@ -17,6 +17,7 @@ import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
 import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.dews.RebootCommand;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
@@ -63,10 +64,12 @@ public class B0T {
 
     private Ustawienia ustawienia;
     private Tlumaczenia tlumaczenia;
+    private Thread shutdownThread;
 
     private StatsModule statsModule;
     private ShardManager api;
     private ModulManager modulManager;
+    private MusicModule musicModule;
 
     public B0T(String token) {
         moduls = new HashMap<>();
@@ -75,6 +78,7 @@ public class B0T {
         commandManager = new CommandManager();
 
         argumentManager.registerAll();
+        shutdownThread();
 
         Log.info("Loguje v%s", Statyczne.CORE_VERSION);
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
@@ -188,7 +192,7 @@ public class B0T {
         NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
-        MusicModule musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao);
+        this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
@@ -234,6 +238,21 @@ public class B0T {
             Log.newError("Nie ma bota na serwerze docelowym");
             System.exit(1);
         }
+    }
+
+    public void shutdownThread() {
+        this.shutdownThread = new Thread(() -> {
+            Log.info("Zamykam...");
+            RebootCommand.reboot = true;
+            api.setStatus(OnlineStatus.DO_NOT_DISTURB);
+            api.setActivity(Activity.playing("Wyłącznie bota w toku..."));
+
+            musicModule.load();
+            modulManager.disableAll();
+            statsModule.getStatsCache().databaseSave();
+        });
+        shutdownThread.setName("P2WB0T ShutDown");
+        Runtime.getRuntime().addShutdownHook(shutdownThread);
     }
 
 

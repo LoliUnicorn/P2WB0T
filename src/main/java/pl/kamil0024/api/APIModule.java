@@ -486,7 +486,7 @@ public class APIModule implements Modul {
 
     @Override
     public String getName() {
-        return "API";
+        return "api";
     }
 
     @Override

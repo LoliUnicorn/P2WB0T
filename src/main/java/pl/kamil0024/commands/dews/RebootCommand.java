@@ -36,28 +36,28 @@ public class RebootCommand extends Command {
     public boolean execute(CommandContext context) {
         reboot = true;
         context.send("Wyłączam...").complete();
+        System.exit(0);
+//        context.getShardManager().setStatus(OnlineStatus.DO_NOT_DISTURB);
+//        context.getShardManager().setActivity(Activity.playing("Wyłącznie bota w toku..."));
+//
+//        musicModule.load();
+//        modulManager.disableAll();
+//        statsModule.getStatsCache().databaseSave();
 
-        context.getShardManager().setStatus(OnlineStatus.DO_NOT_DISTURB);
-        context.getShardManager().setActivity(Activity.playing("Wyłącznie bota w toku..."));
+//        context.send("Zrobić builda? (y/n)").queue();
 
-        musicModule.load();
-        modulManager.disableAll();
-        statsModule.getStatsCache().databaseSave();
-
-        context.send("Zrobić builda? (y/n)").queue();
-
-        eventWaiter.waitForEvent(GuildMessageReceivedEvent.class,
-                (event) -> event.getAuthor().getId().equals(context.getUser().getId()) && event.getChannel().getId().equals(context.getChannel().getId()),
-                (event) -> {
-                    if (event.getMessage().getContentRaw().toLowerCase().equals("y")) {
-                        context.send("Robię builda...").queue();
-                        ShellCommand.shell("cd /home/debian/P2WB0T && screen -dmS Tak ./start.sh");
-                    } else {
-                        context.getShardManager().shutdown();
-                        System.exit(0);
-                    }
-                }, 1, TimeUnit.MINUTES, () -> {}
-        );
+//        eventWaiter.waitForEvent(GuildMessageReceivedEvent.class,
+//                (event) -> event.getAuthor().getId().equals(context.getUser().getId()) && event.getChannel().getId().equals(context.getChannel().getId()),
+//                (event) -> {
+//                    if (event.getMessage().getContentRaw().toLowerCase().equals("y")) {
+//                        context.send("Robię builda...").queue();
+//                        ShellCommand.shell("cd /home/debian/P2WB0T && screen -dmS Tak ./start.sh");
+//                    } else {
+//                        context.getShardManager().shutdown();
+//                        System.exit(0);
+//                    }
+//                }, 1, TimeUnit.MINUTES, () -> {}
+//        );
         return true;
     }
 
