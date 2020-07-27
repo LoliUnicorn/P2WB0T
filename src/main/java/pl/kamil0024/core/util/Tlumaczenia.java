@@ -23,20 +23,9 @@ public class Tlumaczenia {
 
     public Properties getProp() {
         Properties p = new Properties();
-
-        URL res = Main.class.getClassLoader().getResource("pl.properties");
-        if (res == null) {
-            Log.newError("Plik .properties jest nullem");
-            throw new NullPointerException("Plik .properties jest nullem");
-        }
-        File file = new File(res.getFile());
-        if (!file.exists()) {
-            Log.newError("Plik .properties nie istnieje!");
-            throw new NullPointerException("Plik .properties nie istnieje!");
-        }
-
+        
         try {
-            InputStream input = new FileInputStream(file);
+            InputStream input = Main.class.getClassLoader().getResourceAsStream("pl.properties");
             p.load(input);
         } catch (IOException e) {
             e.printStackTrace();
