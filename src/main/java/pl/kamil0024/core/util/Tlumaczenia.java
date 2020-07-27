@@ -2,12 +2,15 @@ package pl.kamil0024.core.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.kamil0024.core.Main;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -19,11 +22,21 @@ public class Tlumaczenia {
     public Tlumaczenia() { }
 
     public Properties getProp() {
-        String name = "res/pl.properties";
         Properties p = new Properties();
 
+        URL res = Main.class.getClassLoader().getResource(Ustawienia.instance.language.toLowerCase() + ".properties");
+        if (res == null) {
+            Log.newError("Plik .properties jest nullem");
+            throw new NullPointerException("Plik .properties jest nullem");
+        }
+        File file = new File(res.getFile());
+        if (!file.exists()) {
+            Log.newError("Plik .properties nie istnieje!");
+            throw new NullPointerException("Plik .properties nie istnieje!");
+        }
+
         try {
-            InputStream input = new FileInputStream(name);
+            InputStream input = new FileInputStream(file);
             p.load(input);
         } catch (IOException e) {
             e.printStackTrace();

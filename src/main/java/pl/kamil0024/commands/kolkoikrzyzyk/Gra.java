@@ -109,10 +109,10 @@ public class Gra {
                         .queue(m -> m.delete().queueAfter(7, TimeUnit.SECONDS));
                 return false;
             case FULL_MAP:
-                end(null);
+                end(null, false);
                 return false;
             case WIN:
-                end(event.getMember());
+                end(event.getMember(), false);
                 return false;
         }
         return true;
@@ -134,10 +134,10 @@ public class Gra {
     }
 
     public void end() {
-        end(null);
+        end(null, true);
     }
 
-    public void end(@Nullable Member member) {
+    public void end(@Nullable Member member, boolean brakCzasu) {
         // member == null = remis
         if (isKoniec()) return;
         EmbedBuilder eb = new EmbedBuilder();
@@ -147,14 +147,19 @@ public class Gra {
                 + "\n" + getOsoba2().getAsMention() + " " + getEmote(getOsoba2()));
 
         eb.addField("Plansza", getPlansza(), false);
-        
-        if (member != null) {
-            eb.addField("Runda się zakończyła", "Wygrał: " + member.getAsMention() 
-                    + "\nEzem jest: " + (member.getId().equals(osoba1.getId()) ? osoba2 : osoba1).getAsMention(), false);
+
+        if (!brakCzasu) {
+            if (member != null) {
+                eb.addField("Runda się zakończyła", "Wygrał: " + member.getAsMention()
+                        + "\nEzem jest: " + (member.getId().equals(osoba1.getId()) ? osoba2 : osoba1).getAsMention(), false);
+            } else {
+                eb.addField("Runda się zakończyła", "Remis! Czyli "
+                        + osoba1.getAsMention() + " i " + osoba2.getAsMention() + " sa ezami.", false);
+            }
         } else {
-            eb.addField("Runda się zakończyła", "Remis! Czyli "
-                    + osoba1.getAsMention() + " i " + osoba2.getAsMention() + " sa ezami.", false);
+            eb.addField("Runda się zakończyła", getKogoRuch().getAsMention() + " jest ślimakiem i się nie ruszył na czas!", false);
         }
+
         getBotMsg().editMessage(eb.build()).queue();
         setKoniec(true);
         KolkoIKrzyzykManager.graja.remove(osoba1.getId());

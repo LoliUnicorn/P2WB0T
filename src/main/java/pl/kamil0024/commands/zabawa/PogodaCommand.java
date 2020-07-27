@@ -20,8 +20,8 @@ public class PogodaCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String lokacja = context.getArgs().get(0);
-        if (lokacja == null) throw new UsageException();
+        String lokacja = context.getArgsToString(0);
+        if (context.getArgs().get(0) == null) throw new UsageException();
 
         try {
             String downloaded = new String(NetworkUtil.download("http://en.wttr.in/" +

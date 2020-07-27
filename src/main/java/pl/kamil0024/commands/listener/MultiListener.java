@@ -1,5 +1,6 @@
 package pl.kamil0024.commands.listener;
 
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.bdate.BDate;
@@ -23,20 +24,20 @@ public class MultiListener extends ListenerAdapter {
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            return;
-        }
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                return;
+            }
 
-        String mc = UserUtil.getMcNick(event.getMember());
-        if (mc.equals("-") && !event.getMember().getRoles().isEmpty()) {
-            mc = event.getMember().getUser().getName();
-        }
+            Member mem = event.getGuild().retrieveMemberById(event.getMember().getId()).complete();
+            String mc = UserUtil.getMcNick(mem, true);
 
-        MultiConfig conf = multiDao.get(event.getUser().getId());
-        conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
-        multiDao.save(conf);
+            MultiConfig conf = multiDao.get(event.getUser().getId());
+            conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
+            multiDao.save(conf);
+        }).start();
 
     }
 

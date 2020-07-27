@@ -15,6 +15,7 @@ import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.PunishCommand;
+import pl.kamil0024.core.Main;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.logger.Log;
@@ -39,7 +40,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
 
-    private static final File FILE = new File("res/przeklenstwa.api");
+    private final File FILE;// = new File("res/przeklenstwa.api");
     private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
     private static final String DISCORD_INVITE = "(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]";
 
@@ -59,6 +60,18 @@ public class ChatListener extends ListenerAdapter {
         this.modLog = modLog;
         this.caseDao = caseDao;
         this.statsModule = statsModule;
+
+        URL res = Main.class.getClassLoader().getResource("przeklenstwa.api");
+        if (res == null) {
+            Log.newError("Plik przeklenstwa.api jest nullem");
+            throw new NullPointerException("Plik przeklenstwa.api jest nullem");
+        }
+        this.FILE = new File(res.getFile());
+        if (!FILE.exists()) {
+            String msg = "Plik przeklenstwa.api nie istnieje";
+            Log.newError(msg);
+            throw new UnsupportedOperationException(msg);
+        }
 
         this.przeklenstwa = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
