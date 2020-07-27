@@ -337,7 +337,7 @@ public class PgMapper<T> {
 
     public List<T> getMcAktywne(String nick) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"kara\": {\"aktywna\": false, \"mcNick\": \"%s\"} }';", table.value(), nick);
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"kara\": {\"aktywna\": true, \"mcNick\": \"%s\"} }';", table.value(), nick);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

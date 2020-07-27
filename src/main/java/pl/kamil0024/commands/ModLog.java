@@ -59,11 +59,12 @@ public class ModLog extends ListenerAdapter {
         List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
         String nick = UserUtil.getMcNick(event.getMember());
 
-        checkKara(event, false, cc);
-//        checkKara(event, true, caseDao.getNickAktywne(nick));
+        if (!checkKara(event, false, cc)) {
+            //checkKara(event, true, caseDao.getNickAktywne(nick));
+        }
     }
 
-    private synchronized void checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
+    private synchronized boolean checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
         Member user = event.getMember();
         for (CaseConfig config : cc) {
             Kara k = config.getKara();
@@ -88,7 +89,7 @@ public class ModLog extends ListenerAdapter {
                     break;
             }
 
-            if (powod == null) continue;
+            if (powod == null) return false;
 
             Kara kara = new Kara();
 
@@ -113,14 +114,17 @@ public class ModLog extends ListenerAdapter {
                     caseDao.save(caseconfig);
 
                     for (CaseConfig ccase : caseDao.getAktywe(user.getId())) {
+                        caseDao.delete(ccase.getKara().getKaraId());
                         ccase.getKara().setAktywna(false);
-                            caseDao.save(ccase);
+                        caseDao.save(ccase);
                     }
+
                 }
                 sendModlog(kara, true);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     private void tak() {

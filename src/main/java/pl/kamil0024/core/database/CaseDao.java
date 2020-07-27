@@ -4,6 +4,7 @@ import gg.amy.pgorm.PgMapper;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.UserConfig;
+import pl.kamil0024.core.util.kary.KaryEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class CaseDao implements Dao<CaseConfig> {
     }
 
     public List<CaseConfig> getAktywe(String id) {
+        List<CaseConfig> aktywne = mapper.getAktywne(id);
+        aktywne.removeIf(k -> k.getKara().getTypKary() == KaryEnum.UNBAN || k.getKara().getTypKary() == KaryEnum.UNMUTE);
         return mapper.getAktywne(id);
     }
 

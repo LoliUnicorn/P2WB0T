@@ -14,6 +14,7 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.*;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
@@ -104,6 +105,11 @@ public class EvalCommand extends Command {
         EmbedBuilder eb = new EmbedBuilder();
         if (!error) eb.setColor(Color.green);
         else eb.setColor(Color.red);
+
+        if (String.valueOf(value).length() >= 1000) {
+            Log.debug(String.valueOf(value));
+            value = "Output przekracza liczbę znaków. Zobacz konsole";
+        }
 
         eb.addField("\ud83d\udce4 INPUT", codeBlock("java", kod), false);
         eb.addField("\ud83d\udce5 OUTPUT", codeBlock("java", value), false);

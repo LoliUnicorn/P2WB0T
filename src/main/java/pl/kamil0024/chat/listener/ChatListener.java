@@ -98,7 +98,7 @@ public class ChatListener extends ListenerAdapter {
     public void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         if (MuteCommand.hasMute(member)) return;
 
-        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "");
+        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "").replaceAll("<#(\\d+)>", "");
         Action action = new Action(karyJSON);
         action.setMsg(msg);
 

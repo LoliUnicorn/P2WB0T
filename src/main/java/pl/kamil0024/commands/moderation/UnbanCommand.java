@@ -64,6 +64,7 @@ public class UnbanCommand extends Command {
 
             for (CaseConfig kara1 : caseDao.getAktywe(u.getId())) {
                 if (kara1.getKara().getTypKary() == KaryEnum.TEMPBAN || kara1.getKara().getTypKary() == KaryEnum.BAN) {
+                    caseDao.delete(kara1.getKara().getKaraId());
                     kara1.getKara().setAktywna(false);
                     caseDao.save(kara1);
                 }

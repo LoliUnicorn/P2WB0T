@@ -55,6 +55,7 @@ public class UnmuteCommand extends Command {
 
             for (CaseConfig kara1 : caseDao.getAktywe(mem.getId())) {
                 if (kara1.getKara().getTypKary() == KaryEnum.MUTE || kara1.getKara().getTypKary() == KaryEnum.TEMPMUTE) {
+                    caseDao.delete(kara1.getKara().getKaraId());
                     kara1.getKara().setAktywna(false);
                     caseDao.save(kara1);
                 }
