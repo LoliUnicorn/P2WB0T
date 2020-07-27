@@ -24,7 +24,7 @@ public class Tlumaczenia {
     public Properties getProp() {
         Properties p = new Properties();
 
-        URL res = Main.class.getClassLoader().getResource(Ustawienia.instance.language.toLowerCase() + ".properties");
+        URL res = Main.class.getClassLoader().getResource("pl.properties");
         if (res == null) {
             Log.newError("Plik .properties jest nullem");
             throw new NullPointerException("Plik .properties jest nullem");
