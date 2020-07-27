@@ -15,21 +15,17 @@ import pl.kamil0024.core.logger.Log;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-
-
 public class TrackScheduler extends AudioEventAdapter {
     // haha @Data robi brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 
     @Getter private AudioPlayer player;
-    @Getter private GuildMusicManager guildMusicManager;
-
     @Getter private AudioManager audioManager;
 
     @Getter public final BlockingQueue<AudioTrack> queue;
 
     @Getter @Setter public AudioTrack aktualnaPiosenka = null;
-
     @Getter @Setter public Boolean destroy = false;
+    @Getter @Setter public Boolean loop = false;
 
     public TrackScheduler(AudioPlayer player, AudioManager audioManager) {
         this.player = player;
@@ -45,6 +41,12 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void nextTrack() {
         AudioTrack next = queue.poll();
+
+        if (getAktualnaPiosenka() != null && getLoop()) {
+            player.startTrack(getAktualnaPiosenka(), false);
+            return;
+        }
+
         if (next != null) {
             if (!getDestroy()) {
                 player.startTrack(next, false);

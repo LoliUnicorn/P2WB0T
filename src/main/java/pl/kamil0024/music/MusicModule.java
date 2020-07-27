@@ -93,6 +93,7 @@ public class MusicModule implements Modul {
         cmd.add(new SkipCommand(this));
         cmd.add(new YouTubeCommand(this, eventWaiter));
         cmd.add(new LeaveCommand(this));
+        cmd.add(new LoopCommand(this));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
