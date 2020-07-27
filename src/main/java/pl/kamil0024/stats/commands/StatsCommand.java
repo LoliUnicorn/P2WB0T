@@ -40,15 +40,15 @@ public class StatsCommand extends Command {
 
         EmbedBuilder glowny = new EmbedBuilder();
         glowny.setColor(UserUtil.getColor(mem));
-        glowny.setFooter("Statystyki liczone od: " + DAY_OF_STATS);
+        glowny.setFooter(context.getTranslate("stats.dayofstats", DAY_OF_STATS));
 
         glowny.setThumbnail(mem.getUser().getAvatarUrl());
         glowny.setTitle(UserUtil.getName(mem.getUser()));
 
-        glowny.addField("Statystyki z dzisiaj", getStringForStats(getStatsOfDayMinus(sc.getStats(), 0)).toString(), false);
-        glowny.addField("Statystyki z 7 dni", getStringForStats(getStatsOfDayMinus(sc.getStats(), 7)).toString(), false);
-        glowny.addField("Statystyki z 14 dni", getStringForStats(getStatsOfDayMinus(sc.getStats(), 14)).toString(), false);
-        glowny.addField("Statystyki z 30 dni", getStringForStats(getStatsOfDayMinus(sc.getStats(), 30)).toString(), false);
+        glowny.addField(context.getTranslate("stats.dzisiaj"), getStringForStats(getStatsOfDayMinus(sc.getStats(), 0)).toString(), false);
+        glowny.addField(context.getTranslate("stats.7day"), getStringForStats(getStatsOfDayMinus(sc.getStats(), 7)).toString(), false);
+        glowny.addField(context.getTranslate("stats.14day"), getStringForStats(getStatsOfDayMinus(sc.getStats(), 14)).toString(), false);
+        glowny.addField(context.getTranslate("stats.30day"), getStringForStats(getStatsOfDayMinus(sc.getStats(), 30)).toString(), false);
         context.send(glowny.build()).queue();
         return true;
     }

@@ -40,7 +40,7 @@ public class TopCommand extends Command {
     public boolean execute(CommandContext context) {
 
         if (UserUtil.getPermLevel(context.getMember()).getNumer() < PermLevel.ADMINISTRATOR.getNumer() && !context.getMember().getId().equals("416264257978761217")) {
-            context.send("Nie możesz użyć tej komendy!").queue();
+            context.sendTranslate("top.perms").queue();
             return false;
         }
 
@@ -53,7 +53,7 @@ public class TopCommand extends Command {
         new Thread(() -> {
             List<StatsConfig> staty = statsDao.getAll();
             if (staty.isEmpty()) {
-                msg.editMessage("Nikt nie ma statystyk lol").queue();
+                msg.editMessage(context.getTranslate("top.lol")).queue();
             }
 
             HashMap<String, Suma> mapa = new HashMap<>();
@@ -83,7 +83,7 @@ public class TopCommand extends Command {
                 User user = context.getParsed().getUser(entry.getKey());
 
                 eb.setColor(UserUtil.getColor(context.getMember()));
-                eb.setTitle("Miejsce #" + rank);
+                eb.setTitle(context.getTranslate("top.rank", rank));
                 eb.setThumbnail(user.getAvatarUrl());
                 eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
                         StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()) +

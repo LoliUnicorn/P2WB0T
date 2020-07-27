@@ -40,15 +40,14 @@ public class YouTubeCommand extends Command {
         List<AudioTrack> audioTrackList = musicModule.search(tytul);
 
         if (audioTrackList.isEmpty()) {
-            context.send("Nie znaleziono dopasowań!").queue();
+            context.sendTranslate("youtube.bad").queue();
             return false;
         }
         HashMap<Integer, AudioTrack> mapa = new HashMap<>();
 
         BetterStringBuilder bsb = new BetterStringBuilder();
         bsb.appendLine("```");
-        bsb.appendLine("= Napisz liczby utworów, których chcesz posłuchać = ");
-        bsb.appendLine("PS: Można wpisać 1,2,3");
+        bsb.appendLine("youtube.firstline");
         int tracks = 0;
         for (AudioTrack audioTrack : audioTrackList) {
             tracks++;
@@ -77,7 +76,7 @@ public class YouTubeCommand extends Command {
                     }
                     msg.delete().complete();
                     lista.forEach(i -> musicModule.loadAndPlay(context.getChannel(), QueueCommand.getYtLink(mapa.get(i)), PlayCommand.getVc(context.getMember()), false));
-                    context.send("Dodano " + lista.size() + " utworów do kolejki!").queue();
+                    context.sendTranslate("youtube.succes", lista.size()).queue();
                 }, 30, TimeUnit.SECONDS, () -> msg.delete().queue());
 
         return true;

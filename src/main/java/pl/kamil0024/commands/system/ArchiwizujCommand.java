@@ -30,17 +30,17 @@ public class ArchiwizujCommand extends Command {
         if (cate == null) throw new NullPointerException("Kategoria do archiwum jest nullem");
 
         if (txt == null) {
-            context.send("Nie ma takiego kanału!").queue();
+            context.sendTranslate("archiwizuj.badchannel").queue();
             return true;
         }
 
         if (txt.getParent() == cate) {
-            context.send("Ten kanał jest już w archiwum!").queue();
+            context.sendTranslate("archiwizuj.already").queue();
             return false;
         }
 
         if (!context.getGuild().getSelfMember().hasPermission(txt, Permission.MANAGE_CHANNEL)) {
-            context.send("Nie mam permisji do zarządzania kanałem " + txt.getAsMention() + " !").queue();
+            context.sendTranslate("archiwizuj.perms", txt.getAsMention()).queue();
             return false;
         }
 
@@ -56,7 +56,7 @@ public class ArchiwizujCommand extends Command {
         }
         manager.queue();
 
-        context.send("Pomyślnie zarchiwizowano!").queue();
+        context.sendTranslate("archiwizuj.succes").queue();
         return true;
     }
 

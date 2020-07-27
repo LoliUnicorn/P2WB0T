@@ -28,13 +28,13 @@ public class KolkoIKrzyzykCommand extends Command {
         if (arg.toLowerCase().equals("akceptuj")) {
             Integer id = context.getParsed().getNumber(context.getArgs().get(1));
             if (id == null) {
-                context.send("Musisz wpisac ID gry!").queue();
+                context.sendTranslate("kolkoikrzyzyk.emptyid").queue();
                 return false;
             }
 
             Zaproszenie zapro = kolkoIKrzyzykManager.getZaproById(id);
             if (zapro == null || !zapro.getZapraszajaGo().equals(context.getUser().getId())) {
-                context.send("Nie ma takiego ID lub zaproszenie nie należy do Ciebie!").queue();
+                context.sendTranslate("kolkoikrzyzyk.badid").queue();
                 return false;
             }
             kolkoIKrzyzykManager.nowaGra(zapro);
@@ -42,16 +42,16 @@ public class KolkoIKrzyzykCommand extends Command {
         } else {
             Member member = context.getParsed().getMember(context.getArgs().get(0));
             if (member == null) {
-                context.send("Nie ma takiego użytkownika!").queue();
+                context.sendTranslate("kolkoikrzyzyk.badmember").queue();
                 return false;
             }
             if (member.getId().equals(context.getUser().getId())) {
-                context.send("Kolegów nie masz, że musisz siebie do gry zapraszać? xD").queue();
+                context.sendTranslate("kolkoikrzyzyk.nofriend").queue();
                 return false;
             }
 
             if (member.getUser().isBot() || member.getUser().isFake()) {
-                context.send("Nie masz kolegów, że musisz bota do gry zapraszać?").queue();
+                context.sendTranslate("kolkoikrzyzyk.bot").queue();
                 return false;
             }
 

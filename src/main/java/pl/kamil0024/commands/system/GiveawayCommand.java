@@ -54,13 +54,13 @@ public class GiveawayCommand extends Command {
             giveawayDao.getAll().forEach(kd -> strony.add(giveawayListener.createEmbed(kd)));
             Collections.reverse(strony);
             if (strony.isEmpty()) {
-                context.send("Nie było żadnych konkursów :(").queue();
+                context.sendTranslate("giveaway.emptygive").queue();
                 return false;
             }
             new EmbedPageintaor(strony, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
         }
         if (typ.equals("create") || typ.equals("stworz")) {
-            Message msg = context.getChannel().sendMessage("Wybierz kanał, na którym ma się odbyć konkurs..." + CZAS).complete();
+            Message msg = context.sendTranslate("giveaway.create", CZAS).complete();
             initWaiter(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getJDA(), msg, context.getParsed());
         }
         return true;

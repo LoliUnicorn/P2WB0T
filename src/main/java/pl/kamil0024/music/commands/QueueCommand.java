@@ -54,7 +54,7 @@ public class QueueCommand extends Command {
         }
 
         if (pages.isEmpty()) {
-            context.send("Kolejka jest pusta!").queue();
+            context.sendTranslate("queue.empty").queue();
             return false;
         }
 

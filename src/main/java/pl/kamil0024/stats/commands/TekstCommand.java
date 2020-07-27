@@ -57,8 +57,8 @@ public class TekstCommand extends Command {
 
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(UserUtil.getColor(context.getMember()));
-            eb.addField("Autor", author, true);
-            eb.addField("Tytuł", String.format("[%s](%s)", tytul, links.getString("genius")), true);
+            eb.addField(context.getTranslate("tekst.autor"), author, true);
+            eb.addField(context.getTranslate("tekst.tytul"), String.format("[%s](%s)", tytul, links.getString("genius")), true);
             eb.setTimestamp(Instant.now());
             eb.setImage(thumbnail.getString("genius"));
 
@@ -97,7 +97,7 @@ public class TekstCommand extends Command {
             e.printStackTrace();
         }
 
-        context.send("Wstąpił zewnętrzny błąd z API (lub nie znaleziono piosenki)!").queue();
+        context.sendTranslate("tekst.error").queue();
         return false;
     }
 

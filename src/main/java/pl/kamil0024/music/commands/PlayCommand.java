@@ -32,19 +32,19 @@ public class PlayCommand extends Command {
         if (url == null) throw new UsageException();
         
         if (!isVoice(context.getMember())) {
-            context.send("Musisz być połączony z kanałem głosowym!").queue();
+            context.sendTranslate("play.nochannel").queue();
             return false;
         }
 
         if (isVoice(context.getGuild().getSelfMember()) && !isSameChannel(context.getGuild().getSelfMember(), context.getMember())) {
             if (!getVc(context.getGuild().getSelfMember()).getId().equals(getVc(context.getMember()).getId())) {
-                context.send("Musisz być połączony z tym samym kanałem co bot!").queue();
+                context.sendTranslate("leave.samechannel").queue();
                 return false;
             }
         }
         
         if (!hasPermission(context.getGuild().getSelfMember(), getVc(context.getMember()))) {
-            context.send("Nie mam wystarczających uprawnień żeby dołaczyć na ten kanał!").queue();
+            context.sendTranslate("play.noperms").queue();
             return false;
         }
 

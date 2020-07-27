@@ -22,32 +22,31 @@ public class ResumeCommand extends Command {
         this.musicModule = musicModule;
     }
 
-    @SuppressWarnings("UnusedAssignment")
     @Override
     public boolean execute(CommandContext context) {
         if (!PlayCommand.isVoice(context.getGuild().getSelfMember())) {
-            context.send("Nie jestem na żadnym kanale głosowym!").queue();
+            context.sendTranslate("leave.nochannel").queue();
             return false;
         }
 
         if (!PlayCommand.isSameChannel(context.getGuild().getSelfMember(), context.getMember())) {
-            context.send("Musisz być połączony z tym samym kanałem głosowym co bot!").queue();
+            context.sendTranslate("leave.samechannel").queue();
             return false;
         }
 
         GuildMusicManager audio = musicModule.getGuildAudioPlayer(context.getGuild());
         if (audio.getPlayer().getPlayingTrack() == null) {
-            context.send("Nic nie gram!").queue();
+            context.sendTranslate("resume.noplay").queue();
             return false;
         }
 
         String tak = " piosenkę";
 
         if (audio.getPlayer().isPaused()) {
-            tak = "Wznawiam" + tak;
+            tak = context.getTranslate("resume.resumed");
             audio.getPlayer().setPaused(false);
         } else {
-            tak = "Zatrzymuje" + tak;
+            tak = context.getTranslate("resume.stoped");
             audio.getPlayer().setPaused(true);
         }
         context.send(tak).queue();

@@ -28,21 +28,21 @@ public class PogodaCommand extends Command {
                     NetworkUtil.encodeURIComponent(lokacja) + "?T"));
             downloaded = Jsoup.parse(downloaded).getElementsByTag("body").text();
             if (downloaded.startsWith("ERROR:")) {
-                context.send("Wystąpił błąd z API strony!");
+                context.sendTranslate("pogoda.errorapi").queue();
                 return false;
             }
             if (downloaded.contains("We were unable to find your location")) {
-                context.send("Nie znaleziono takiej lokacji!").queue();
+                context.sendTranslate("pogoda.badlocation").queue();
                 return false;
             }
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(UserUtil.getColor(context.getMember()));
-            eb.setTitle(lokacja);
+            eb.setTitle(context.getTranslate("pogoda.pogodaw", lokacja));
             eb.setImage("http://" + "pl.wttr.in/" +
                     NetworkUtil.encodeURIComponent(lokacja) + ".png?0m");
             context.send(eb.build()).queue();
         } catch (Exception e) {
-            context.send("Nie znaleziono takiej lokacji!").queue();
+            context.sendTranslate("pogoda.badlocation").queue();
             return false;
         }
         return true;

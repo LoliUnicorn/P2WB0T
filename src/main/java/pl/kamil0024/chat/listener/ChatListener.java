@@ -28,12 +28,15 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.nio.charset.StandardCharsets.*;
 
 @SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
@@ -65,7 +68,7 @@ public class ChatListener extends ListenerAdapter {
         }
 
         this.przeklenstwa = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(res, "UTF-8"))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(res, UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) { przeklenstwa.add(line); }
         } catch (Exception e) {

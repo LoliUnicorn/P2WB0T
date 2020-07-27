@@ -33,7 +33,7 @@ public class StatusCommand extends Command {
         if (txt == null) throw new NullPointerException("Kanal do statusu jest nullem");
 
         if (!txt.canTalk()) {
-            context.send("Nie mam permisji do pisania na " + txt.getAsMention() + "!").queue();
+            context.sendTranslate("status.perms",  txt.getAsMention()).queue();
             return false;
         }
 
@@ -47,7 +47,7 @@ public class StatusCommand extends Command {
         }
 
         if (feerko == null && roizy == null && derp == null) {
-            context.send("Wpisałeś złe nazwy serwerów!").queue();
+            context.sendTranslate("status.badservers").queue();
             return false;
         }
 
@@ -72,7 +72,7 @@ public class StatusCommand extends Command {
         if (feerko != null) sb.append("feerko, ");
         if (roizy != null) sb.append("roizy, ");
 
-        final Message waitMsg = context.send("Na jaki status chcesz zmienić serwer(-y) " + sb.toString() + " ?").complete();
+        final Message waitMsg = context.sendTranslate("status.stats", sb.toString()).complete();
         for (Emote value : Emote.values()) {
             waitMsg.addReaction(value.getUnicode()).queue();
         }
@@ -94,7 +94,7 @@ public class StatusCommand extends Command {
                             finalFeerko == null ? null : e,
                             finalRoizy == null ? null : e, finalBotMsg)).queue();
 
-                    waitMsg.editMessage("Pomyślnie zmieniono!").queue();
+                    waitMsg.editMessage(context.getTranslate("status.succes")).queue();
                     waitMsg.clearReactions().queue();
                 },30, TimeUnit.SECONDS, () -> waitMsg.clearReactions().queue());
 

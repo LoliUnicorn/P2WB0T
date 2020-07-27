@@ -23,22 +23,22 @@ public class SkipCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         if (!PlayCommand.isVoice(context.getGuild().getSelfMember())) {
-            context.send("Nie jestem na żadnym kanale głosowym!").queue();
+            context.sendTranslate("leave.nochannel").queue();
             return false;
         }
 
         if (!PlayCommand.isSameChannel(context.getGuild().getSelfMember(), context.getMember())) {
-            context.send("Musisz być połączony z tym samym kanałem głosowym co bot!").queue();
+            context.sendTranslate("leave.samechannel").queue();
             return false;
         }
 
         GuildMusicManager musicManager = musicModule.getGuildAudioPlayer(context.getGuild());
 
         if (musicManager.getPlayer().getPlayingTrack() == null) {
-            context.send("Nic nie gram!").queue();
+            context.sendTranslate("resume.noplay").queue();
             return false;
         }
-        context.send("Puszczam następną piosenkę").queue();
+        context.sendTranslate("skip.next").queue();
         musicManager.getScheduler().nextTrack();
         return true;
     }
