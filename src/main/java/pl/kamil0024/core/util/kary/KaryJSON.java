@@ -9,20 +9,13 @@ import org.json.JSONTokener;
 import pl.kamil0024.core.Main;
 import pl.kamil0024.core.logger.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Data
 public class KaryJSON {
-
-    private final File file;
 
     private ArrayList<Kara> kary;
 
@@ -34,24 +27,12 @@ public class KaryJSON {
     public KaryJSON() {
         this.kary = new ArrayList<>();
 
-        URL res = Main.class.getClassLoader().getResource("kary.json");
-        if (res == null) {
-            Log.newError("Plik kary.json jest nullem");
-            throw new NullPointerException("Plik kary.json jest nullem");
-        }
-
-        this.file = new File(res.getFile());
-
-        if (!file.exists()) {
-            String msg = "Plik " + file.getName() + " nie istnieje";
-            Log.newError(msg);
-            throw new UnsupportedOperationException(msg);
-        }
         try {
-            this.is = new FileInputStream(file);
+            this.is = Main.class.getClassLoader().getResourceAsStream("kary.json");
+            if (is == null) throw new NullPointerException("kary.json jest nullem");
             this.tokener = new JSONTokener(is);
             this.object = new JSONObject(tokener).getJSONObject("list");
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Log.newError("Przy ladowaniu kary \n" + e.getLocalizedMessage());
         }
