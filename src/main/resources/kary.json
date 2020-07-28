@@ -438,6 +438,14 @@
         "type": "Tempban",
         "time": "3d"
       }
+    },
+    "29": {
+      "name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szeroko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem.",
+      "tier_1": {
+        "maxWarns": 1,
+        "type": "Tempmute",
+        "time": "24h"
+      }
     }
   }
 }

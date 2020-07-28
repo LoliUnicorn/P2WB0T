@@ -161,6 +161,10 @@ public class PunishCommand extends Command {
                 if (event.getReactionEmote().getId().equals(red.getId())) return;
                 if (event.getReactionEmote().getId().equals(green.getId())) {
                     putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
+
+                    try {
+                        event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().complete();
+                    } catch (Exception ignored) {}
                 }
                 msg.clearReactions().complete();
             } catch (Exception ignored) {}
@@ -257,13 +261,15 @@ public class PunishCommand extends Command {
                 (event) -> event.getAuthor().getId().equals(context.getUser().getId()) &&
                         event.getChannel().getId().equals(context.getChannel().getId()),
                 (event) -> {
-                    userMsg.delete().queue();
                     kurwaBylaAkcja.set(true);
                     Integer liczba = context.getParsed().getNumber(event.getMessage().getContentRaw());
-                    msg.delete().queue();
                     if (liczba == null || liczba - 1 > karyJSON.getKary().size() || liczba <= 0) return;
                     KaryJSON.Kara kara = karyJSON.getKary().get(liczba - 1);
                     putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
+                    try {
+                        msg.delete().complete();
+                        userMsg.delete().complete();
+                    } catch (Exception ignored) {}
                 },
                 30, TimeUnit.SECONDS,
                 () -> {

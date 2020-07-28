@@ -223,8 +223,12 @@ public class ModLog extends ListenerAdapter {
         return getEmbed(kara, api, false);
     }
 
+    public static EmbedBuilder getEmbed(Kara kara, ShardManager api, Boolean bol) {
+        return getEmbed(kara, api, bol, false);
+    }
+
     @SuppressWarnings("ConstantConditions")
-    private static EmbedBuilder getEmbed(Kara kara, ShardManager api, Boolean bol) {
+    public static EmbedBuilder getEmbed(Kara kara, ShardManager api, Boolean bol, Boolean seeAktywna) {
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         EmbedBuilder eb = new EmbedBuilder();
         User u = api.retrieveUserById(kara.getKaranyId()).complete();
@@ -272,6 +276,9 @@ public class ModLog extends ListenerAdapter {
             if (kara.getMessageUrl() != null) {
                 eb.addField("Kolega prosi o linka?", "[Klik](" + "https://discordapp.com/channels/" + kara.getMessageUrl() + ")", false);
             }
+        }
+        if (seeAktywna) {
+            eb.addField("Aktywna?", kara.getAktywna() ? "Tak" : "Nie", false);
         }
         return eb;
     }

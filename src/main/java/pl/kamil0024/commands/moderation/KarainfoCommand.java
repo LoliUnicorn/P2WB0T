@@ -32,7 +32,7 @@ public class KarainfoCommand extends Command {
             context.send(context.getTranslate("karainfo.invalid")).queue();
             return false;
         }
-        context.send(ModLog.getEmbed(cc.getKara(), context.getShardManager()).build()).queue();
+        context.send(ModLog.getEmbed(cc.getKara(), context.getShardManager(), false, true).build()).queue();
         return true;
     }
 

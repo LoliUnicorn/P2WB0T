@@ -34,6 +34,11 @@ public class SkipCommand extends Command {
 
         GuildMusicManager musicManager = musicModule.getGuildAudioPlayer(context.getGuild());
 
+        if (musicManager.getScheduler().getLoop()) {
+            context.sendTranslate("skip.looped").queue();
+            return false;
+        }
+
         if (musicManager.getPlayer().getPlayingTrack() == null) {
             context.sendTranslate("resume.noplay").queue();
             return false;
