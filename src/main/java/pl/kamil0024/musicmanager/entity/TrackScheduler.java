@@ -42,7 +42,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void nextTrack() {
         AudioTrack next = queue.poll();
 
-        if (getDestroy() || next == null) {
+        if (getDestroy() || (next == null && !getLoop())) {
             destroy();
             return;
         }
@@ -57,7 +57,7 @@ public class TrackScheduler extends AudioEventAdapter {
             player.startTrack(next, false);
             setAktualnaPiosenka(next);
         }
-        
+
     }
 
     public void destroy() {
