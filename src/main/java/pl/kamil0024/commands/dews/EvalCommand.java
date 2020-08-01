@@ -19,6 +19,7 @@ import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.musicmanager.MusicManager;
 import pl.kamil0024.musicmanager.impl.MusicManagerImpl;
 import pl.kamil0024.stats.StatsModule;
@@ -42,8 +43,9 @@ public class EvalCommand extends Command {
     @Inject private final GiveawayDao giveawayDao;
     @Inject private final StatsModule statsModule;
     @Inject private final MultiDao multiDao;
+    @Inject private final MusicModule musicModule;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -63,6 +65,7 @@ public class EvalCommand extends Command {
         this.giveawayDao = giveawayDao;
         this.statsModule = statsModule;
         this.multiDao = multiDao;
+        this.musicModule = musicModule;
     }
 
     @Override
@@ -92,6 +95,7 @@ public class EvalCommand extends Command {
         shell.setVariable("giveawayDao", giveawayDao);
         shell.setVariable("statsModule", statsModule);
         shell.setVariable("multiDao", multiDao);
+        shell.setVariable("musicModule", musicModule);
 
         Object value;
         boolean error = false;

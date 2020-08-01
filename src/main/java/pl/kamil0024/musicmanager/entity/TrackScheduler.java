@@ -1,8 +1,12 @@
 package pl.kamil0024.musicmanager.entity;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Data;
@@ -11,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.music.commands.QueueCommand;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,6 +25,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Getter private AudioPlayer player;
     @Getter private AudioManager audioManager;
+    @Getter private AudioPlayerManager manager;
+    @Getter private GuildMusicManager guildMusicManager;
 
     @Getter public final BlockingQueue<AudioTrack> queue;
 
@@ -27,10 +34,12 @@ public class TrackScheduler extends AudioEventAdapter {
     @Getter @Setter public Boolean destroy = false;
     @Getter @Setter public Boolean loop = false;
 
-    public TrackScheduler(AudioPlayer player, AudioManager audioManager) {
+    public TrackScheduler(AudioPlayer player, AudioManager audioManager, AudioPlayerManager manager, GuildMusicManager guildMusicManager) {
         this.player = player;
         this.audioManager = audioManager;
+        this.manager = manager;
         this.queue = new LinkedBlockingQueue<>();
+        this.guildMusicManager = guildMusicManager;
     }
 
     public void queue(AudioTrack track) {
@@ -40,7 +49,10 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void nextTrack() {
-        AudioTrack next = queue.poll();
+        AudioTrack next = null;
+        if (!getLoop()) {
+            next = queue.poll();
+        }
 
         if (getDestroy() || (next == null && !getLoop())) {
             Log.debug("Destroy");
@@ -49,8 +61,21 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         if (getAktualnaPiosenka() != null && getLoop()) {
-            Log.debug("loop");
-            player.startTrack(getAktualnaPiosenka(), false);
+            manager.loadItemOrdered(guildMusicManager, QueueCommand.getYtLink(getAktualnaPiosenka()), new AudioLoadResultHandler() {
+                @Override
+                public void trackLoaded(AudioTrack track) {
+                    Log.debug("startuje");
+                    player.startTrack(track, false);
+                }
+
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {}
+                @Override
+                public void noMatches() {}
+                @Override
+                public void loadFailed(FriendlyException exception) {}
+
+            });
             return;
         }
 
