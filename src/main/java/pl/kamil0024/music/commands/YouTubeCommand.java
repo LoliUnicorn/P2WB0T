@@ -47,7 +47,7 @@ public class YouTubeCommand extends Command {
 
         BetterStringBuilder bsb = new BetterStringBuilder();
         bsb.appendLine("```");
-        bsb.appendLine("youtube.firstline");
+        bsb.appendLine(context.getTranslate("youtube.firstline"));
         int tracks = 0;
         for (AudioTrack audioTrack : audioTrackList) {
             tracks++;

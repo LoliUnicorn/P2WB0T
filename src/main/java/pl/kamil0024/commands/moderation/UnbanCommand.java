@@ -39,7 +39,7 @@ public class UnbanCommand extends Command {
             return false;
         }
 
-        String powod = context.getArgsToString(2);
+        String powod = context.getArgsToString(1);
         if (powod == null) {
             context.send(context.getTranslate("unban.reason")).queue();
             return false;

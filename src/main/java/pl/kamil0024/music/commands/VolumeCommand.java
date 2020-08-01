@@ -40,7 +40,7 @@ public class VolumeCommand extends Command {
         }
 
         if (arg < 1 || arg > 100) {
-            context.sendTranslate("Mvolume.badnumber").queue();
+            context.sendTranslate("volume.badnumber").queue();
             return false;
         }
 

@@ -43,12 +43,13 @@ public class TrackScheduler extends AudioEventAdapter {
         AudioTrack next = queue.poll();
 
         if (getDestroy() || (next == null && !getLoop())) {
+            Log.debug("Destroy");
             destroy();
             return;
         }
 
         if (getAktualnaPiosenka() != null && getLoop()) {
-            player.startTrack(null, false);
+            Log.debug("loop");
             player.startTrack(getAktualnaPiosenka(), false);
             return;
         }
