@@ -34,7 +34,7 @@ public class LeaveCommand extends Command {
 
         GuildMusicManager musicManager = musicModule.getGuildAudioPlayer(context.getGuild());
         musicManager.getScheduler().destroy();
-        context.sendTranslate("leave.succes").queue();
+        context.sendTranslate("leave.succes", "\uD83D\uDC4B").queue();
         return true;
     }
 

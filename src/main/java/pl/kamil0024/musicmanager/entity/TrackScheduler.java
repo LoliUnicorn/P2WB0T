@@ -60,11 +60,11 @@ public class TrackScheduler extends AudioEventAdapter {
             return;
         }
 
-        if (getAktualnaPiosenka() != null && getLoop()) {
+        if (getLoop()) {
             manager.loadItemOrdered(guildMusicManager, QueueCommand.getYtLink(getAktualnaPiosenka()), new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
-                    Log.debug("startuje");
+                    setAktualnaPiosenka(track);
                     player.startTrack(track, false);
                 }
 

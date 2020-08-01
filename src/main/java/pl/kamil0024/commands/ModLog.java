@@ -202,6 +202,8 @@ public class ModLog extends ListenerAdapter {
                 }
             }
         }
+        
+        
     }
 
     public synchronized void sendModlog(Kara kara) {
