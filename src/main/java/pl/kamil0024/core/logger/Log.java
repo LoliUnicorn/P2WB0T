@@ -71,7 +71,7 @@ public class Log {
             web.setMessage(String.format(msg, args));
             web.setType(WebhookUtil.LogType.DEBUG);
             web.send();
-        } catch (Exception ignored) {}
+        } catch (Exception | ExceptionInInitializerError ignored) { }
 
     }
 
