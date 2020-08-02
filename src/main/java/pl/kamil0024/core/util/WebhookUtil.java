@@ -97,10 +97,11 @@ public class WebhookUtil {
 
         ERROR("Logi errorów", Ustawienia.instance.webhook.error),
         CMD("Logi komend", Ustawienia.instance.webhook.cmd),
+        DEBUG("Logi debugu", Ustawienia.instance.webhook.debug),
         STATUS("Logi statusów", Ustawienia.instance.webhook.status);
 
-        @Getter private String slownie;
-        @Getter private String url;
+        @Getter private final String slownie;
+        @Getter private final String url;
 
         LogType(String slownie, String url) {
             this.slownie = slownie;

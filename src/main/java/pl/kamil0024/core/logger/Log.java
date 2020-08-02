@@ -66,6 +66,13 @@ public class Log {
 
     public static void debug(String msg, @Nullable Object... args) {
         log("DEBUG", msg, args);
+        try {
+            WebhookUtil web = new WebhookUtil();
+            web.setMessage(String.format(msg, args));
+            web.setType(WebhookUtil.LogType.DEBUG);
+            web.send();
+        } catch (Exception ignored) {}
+
     }
 
     private static void log(String type, String msg, @Nullable Object... args) {
