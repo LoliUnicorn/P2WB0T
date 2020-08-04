@@ -6,7 +6,6 @@ import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
-import pl.kamil0024.commands.listener.MultiListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
 import pl.kamil0024.core.command.Command;
@@ -54,7 +53,6 @@ public class CommandsModule implements Modul {
 
     // Listeners
 
-    MultiListener multiListener;
     KolkoIKrzyzykManager kolkoIKrzyzykManager;
 
     public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao) {
@@ -83,9 +81,6 @@ public class CommandsModule implements Modul {
     public boolean startUp() {
         GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
         kolkoIKrzyzykManager = new KolkoIKrzyzykManager(api, eventWaiter);
-
-        multiListener = new MultiListener(multiDao);
-        api.addEventListener(multiListener);
 
         cmd = new ArrayList<>();
 
@@ -135,7 +130,6 @@ public class CommandsModule implements Modul {
     @Override
     public boolean shutDown() {
         kolkoIKrzyzykManager.stop();
-        api.removeEventListener(multiListener);
         commandManager.unregisterCommands(cmd);
         setStart(false);
         return true;

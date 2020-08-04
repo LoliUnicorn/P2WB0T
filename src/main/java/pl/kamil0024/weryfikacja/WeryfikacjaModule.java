@@ -1,6 +1,7 @@
 package pl.kamil0024.weryfikacja;
 
 import pl.kamil0024.api.APIModule;
+import pl.kamil0024.core.database.MultiDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.weryfikacja.listeners.WeryfikacjaListener;
 
@@ -10,10 +11,12 @@ public class WeryfikacjaModule implements Modul {
 
     private boolean start = false;
     private WeryfikacjaListener weryfikacjaListener;
+    private final MultiDao multiDao;
 
-    public WeryfikacjaModule(APIModule apiModule) {
+    public WeryfikacjaModule(APIModule apiModule, MultiDao multiDao) {
         this.apiModule = apiModule;
-        this.weryfikacjaListener = new WeryfikacjaListener(apiModule);
+        this.multiDao = multiDao;
+        this.weryfikacjaListener = new WeryfikacjaListener(apiModule, this.multiDao);
     }
 
     @Override
