@@ -1,5 +1,6 @@
 package pl.kamil0024.weryfikacja.listeners;
 
+import com.google.gson.Gson;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -34,7 +35,9 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (msg.isEmpty()) return;
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
+        Log.debug(new Gson().toJson(dc));
         if (dc == null) {
+            Log.debug("kod jest nullem");
             return;
         }
         Role ranga = null;
@@ -50,6 +53,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (dc.getRanga().equals("yt")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
 
         if (ranga == null) {
+            Log.debug("ranga jest zla");
             return;
         }
 
@@ -60,11 +64,13 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (ranga.getName().toLowerCase().equals("gracz")) { nickname = ""; }
 
         Member mem = event.getMember();
+        Log.debug("tak");
         if (mem != null) {
+            Log.debug("jest git wszystko");
             try {
-                event.getGuild().modifyNickname(event.getMember(), nickname).complete();
+                event.getGuild().modifyNickname(mem, nickname).complete();
             } catch (Exception ignored) {}
-            event.getGuild().addRoleToMember(event.getMember(), ranga).complete();
+            event.getGuild().addRoleToMember(mem, ranga).complete();
 
             Member member = event.getGuild().retrieveMemberById(event.getMember().getId()).complete();
             String mc = UserUtil.getMcNick(member, true);

@@ -6,6 +6,7 @@ import io.undertow.server.HttpServerExchange;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.Map;
 
@@ -35,7 +36,9 @@ public class DiscordInvite implements HttpHandler  {
                 apiModule.getDcCache().invalidate(dcconfig.getKey());
             }
         }
-
+        Log.debug("nick: " + nick);
+        Log.debug("kod: " + kod);
+        Log.debug("ranga: " + ranga);
         apiModule.putDiscordConfig(nick, kod, ranga);
         Response.sendResponse(ex, "Zapytanie przebiegło pomyślnie");
 
