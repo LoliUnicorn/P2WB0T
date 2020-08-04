@@ -473,7 +473,7 @@ public class APIModule implements Modul {
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
 
 
-        routes.post("api/discord/{nick}/{ranga}/{kod}", new DiscordInvite(this));
+        routes.post("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
