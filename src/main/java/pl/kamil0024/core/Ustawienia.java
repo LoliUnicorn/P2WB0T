@@ -91,6 +91,7 @@ public class Ustawienia {
         public String sponsor = def;
         public String miniyt = def;
         public String yt = def;
+        public String pomocnik = def;
     }
 
 }

@@ -13,9 +13,9 @@ import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.MultiConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Nick;
-import pl.kamil0024.core.util.UserUtil;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.TimeUnit;
 
 public class WeryfikacjaListener extends ListenerAdapter {
 
@@ -32,12 +32,13 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || event.getAuthor().isFake()) return;
 
         String msg = event.getMessage().getContentRaw();
-        if (msg.isEmpty()) return;
+        event.getMessage().delete().queue();
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
         Log.debug(new Gson().toJson(dc));
         if (dc == null) {
-            Log.debug("kod jest nullem");
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", kod jest zły!")
+                    .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
             return;
         }
         Role ranga = null;
@@ -51,9 +52,11 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (dc.getRanga().equals("Sponsor")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.sponsor); }
         if (dc.getRanga().equals("MiniYT")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.miniyt); }
         if (dc.getRanga().equals("YouTuber")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
+        if (dc.getRanga().equals("Pomocnik")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.pomocnik); }
 
         if (ranga == null) {
-            Log.debug("ranga jest zla");
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", twoja ranga została źle wpisana! Skontaktuj się z kimś w administracji")
+                    .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
             return;
         }
 
@@ -62,11 +65,10 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (ranga.getName().toLowerCase().equals("youtuber")) { nickname = "[YT]"; }
         if (ranga.getName().toLowerCase().equals("miniyt")) { nickname = "[MiniYT]"; }
         if (ranga.getName().toLowerCase().equals("gracz")) { nickname = ""; }
+        if (ranga.getName().toLowerCase().equals("pomocnik")) { nickname = "[POM]"; }
 
         Member mem = event.getMember();
-        Log.debug("tak");
         if (mem != null) {
-            Log.debug("jest git wszystko");
             try {
                 event.getGuild().modifyNickname(mem, nickname + " " + dc.getNick()).complete();
             } catch (Exception ignored) {}
@@ -76,9 +78,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
             conf.getNicki().add(new Nick(nickname + " " + dc.getNick(), new BDate().getTimestamp()));
             multiDao.save(conf);
         }
-
         apiModule.getDcCache().invalidate(dc.getKod());
-
     }
 
 }
