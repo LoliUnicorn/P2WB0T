@@ -72,11 +72,8 @@ public class WeryfikacjaListener extends ListenerAdapter {
             } catch (Exception ignored) {}
             event.getGuild().addRoleToMember(mem, ranga).complete();
 
-            Member member = event.getGuild().retrieveMemberById(event.getMember().getId()).complete();
-            String mc = UserUtil.getMcNick(member, true);
-
             MultiConfig conf = multiDao.get(event.getAuthor().getId());
-            conf.getNicki().add(new Nick(mc, new BDate().getTimestamp()));
+            conf.getNicki().add(new Nick(nickname, new BDate().getTimestamp()));
             multiDao.save(conf);
         }
 
