@@ -26,6 +26,7 @@ public class Ustawienia {
     public Channel channel = new Channel();
     public Inne inne = new Inne();
     public Api api = new Api();
+    public Rangi rangi = new Rangi();
 
     public static class Roles {
         public String helperRole = def;
@@ -78,6 +79,18 @@ public class Ustawienia {
 
     public static class Api {
         public List<String> tokens = Arrays.asList("343467373417857025");
+    }
+
+    public static class Rangi {
+        public String gracz = def;
+        public String vip = def;
+        public String vipplus = def;
+        public String mvp = def;
+        public String mvpplus = def;
+        public String mvpplusplus = def;
+        public String sponsor = def;
+        public String miniyt = def;
+        public String yt = def;
     }
 
 }
