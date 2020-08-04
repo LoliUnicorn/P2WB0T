@@ -68,12 +68,12 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (mem != null) {
             Log.debug("jest git wszystko");
             try {
-                event.getGuild().modifyNickname(mem, nickname).complete();
+                event.getGuild().modifyNickname(mem, nickname + " " + dc.getNick()).complete();
             } catch (Exception ignored) {}
             event.getGuild().addRoleToMember(mem, ranga).complete();
 
             MultiConfig conf = multiDao.get(event.getAuthor().getId());
-            conf.getNicki().add(new Nick(nickname, new BDate().getTimestamp()));
+            conf.getNicki().add(new Nick(nickname + " " + dc.getNick(), new BDate().getTimestamp()));
             multiDao.save(conf);
         }
 
