@@ -10,12 +10,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.api.handlers.*;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
+import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.Cache;
@@ -38,6 +40,7 @@ public class APIModule implements Modul {
     @Inject private StatsDao statsDao;
 
     private final Cache<UserinfoConfig> ucCache;
+    private final Cache<DiscordInviteConfig> dcCache;
 
     private final Guild guild;
 
@@ -52,6 +55,7 @@ public class APIModule implements Modul {
         this.statsDao = statsDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
+        this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache();
     }
 
     @Override
@@ -468,6 +472,9 @@ public class APIModule implements Modul {
          */
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
 
+
+        routes.post("api/discord/{nick}/{ranga}/{kod}", new DiscordInvite(this));
+
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
                 .setHandler(path()
@@ -503,8 +510,7 @@ public class APIModule implements Modul {
         return MiddlewareBuilder.begin(BlockingHandler::new).complete(handler);
     }
 
-    // Cache
-
+    //#region User Cache
     public UserinfoConfig getUserConfig(String id) {
         return ucCache.get(id, this::get);
     }
@@ -513,15 +519,28 @@ public class APIModule implements Modul {
         UserinfoConfig uc = new UserinfoConfig(id);
         User u = api.retrieveUserById(id).complete();
         Member mem = guild.retrieveMember(u).complete();
-
         if (mem != null) {
             if (mem.getNickname() != null) uc.setMcNick(mem.getNickname());
         }
-
         uc.setFullname(UserUtil.getName(u));
-
         ucCache.put(id, uc);
         return uc;
     }
+    //#endregion User Cache
+
+    //#region Discord Cache
+    @Nullable
+    public DiscordInviteConfig getDiscordConfig(String nick) {
+        return dcCache.getIfPresent(nick);
+    }
+
+    public void putDiscordConfig(String nick, String kod, String ranga) {
+        DiscordInviteConfig dc = new DiscordInviteConfig(nick);
+        dc.setKod(kod);
+        dc.setRanga(ranga);
+        dcCache.put(kod, dc);
+    }
+
+    //#endregion Discord Cache
 
 }

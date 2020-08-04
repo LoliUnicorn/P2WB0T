@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class Log {
-
 
     public Log() { }
 
@@ -66,13 +64,6 @@ public class Log {
 
     public static void debug(String msg, @Nullable Object... args) {
         log("DEBUG", msg, args);
-        try {
-            WebhookUtil web = new WebhookUtil();
-            web.setMessage(String.format(msg, args));
-            web.setType(WebhookUtil.LogType.DEBUG);
-            web.send();
-        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError ignored) { }
-
     }
 
     private static void log(String type, String msg, @Nullable Object... args) {
