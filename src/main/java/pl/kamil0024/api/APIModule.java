@@ -473,7 +473,85 @@ public class APIModule implements Modul {
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
 
 
-        routes.post("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
+        /**
+         * @api {get} api/nieobecnosci/{token}/aktywne Lista aktywnych nieobecności
+         * @apiName nieobecnosci.aktywne
+         * @apiDescription Wyświetla liste aktywnych nieobecności
+         * @apiGroup Nieobecności
+         * @apiVersion 1.0.0
+         * @apiParam {Token} token Token
+         *
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
+         *
+         * @apiSuccess {Nieobecnosc} data Lista nieobecności
+         * @apiSuccess {String} data.userId Nick administratora
+         * @apiSuccess {Number} data.id ID nieobecności administatora
+         * @apiSuccess {String} data.msgId Link do wiadomości na #nieobecności
+         * @apiSuccess {Number} data.start Data rozpoczęcia
+         * @apiSuccess {String} data.powod Czas nadania kary
+         * @apiSuccess {Number} data.end Data zakończenia
+         * @apiSuccess {Boolean} data.aktywna Czy nieobecność jest aktywna
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "data": [
+         *             {
+         *                 "userId": "[POM] adm1",
+         *                 "id":1,
+         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/734660241878155276",
+         *                 "start": 1595196000000,
+         *                 "powod": "Powód.",
+         *                 "end": 1595800800000,
+         *                 "aktywna": true
+         *             },
+         *             {
+         *                 "userId": "[MOD] adm2",
+         *                 "id":1,
+         *                 "msgId": "https://discordapp.com/channels/422016694408577025/687775040065896495/735598733173063750",
+         *                 "start": 1595455200000,
+         *                 "powod": "Powód.",
+         *                 "end": 1598133600000,
+         *                 "aktywna" :true
+         *             }
+         *         ]
+         *     }
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
+        routes.get("api/nieobecnosci/{token}/{data}", new Nieobecnosci(nieobecnosciDao, this));
+
+        /**
+         * @api {get} api/discord/:token/:nick/:ranga/:kod Weryfikacja
+         * @apiName weryfikacja-discord
+         * @apiDescription
+         * @apiGroup Discord
+         * @apiVersion 1.0.0
+         * @apiParam {Token} token Token
+         * @apiParam {String} nick Nick gracza
+         * @apiParam {String} ranga Ranga gracza (gracz, vip, vipplus, mvp, mvpplus, mvpplusplus, sponsor)
+         * @apiParam {String} kod Kod jaki gracz musi wpisać na #weryfikacja
+         *
+         * @apiSuccess {Boolean} success Czy zapytanie się udało
+         * @apiSuccess {String} msg Odpowiedź do zapytania
+         *
+         * @apiSuccessExample {json}
+         *     HTTP/1.1 200 OK
+         *     {
+         *         "success": true,
+         *         "msg": "Zapytanie przebiegło pomyślnie"
+         *     }
+         *
+         * @apiError {Boolean} success Czy zapytanie się udało
+         * @apiError {Object} error Odpowiedź
+         * @apiError {Boolean} error.body Krótka odpowiedź błędu
+         * @apiError {Boolean} error.description Długa odpowiedź błędu
+         */
+        routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")
