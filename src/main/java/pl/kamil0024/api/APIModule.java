@@ -528,7 +528,7 @@ public class APIModule implements Modul {
         /**
          * @api {get} api/discord/:token/:nick/:ranga/:kod Weryfikacja
          * @apiName weryfikacja-discord
-         * @apiDescription
+         * @apiDescription Weryfikacja serwer -> discord
          * @apiGroup Discord
          * @apiVersion 1.0.0
          * @apiParam {Token} token Token
