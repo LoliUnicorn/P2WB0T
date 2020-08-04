@@ -42,15 +42,15 @@ public class WeryfikacjaListener extends ListenerAdapter {
         }
         Role ranga = null;
 
-        if (dc.getRanga().equals("gracz")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.gracz); }
-        if (dc.getRanga().equals("vip")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vip); }
-        if (dc.getRanga().equals("vipplus")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vipplus); }
-        if (dc.getRanga().equals("mvp")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvp); }
-        if (dc.getRanga().equals("mvpplus")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplus); }
-        if (dc.getRanga().equals("mvpplusplus")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplusplus); }
-        if (dc.getRanga().equals("sponsor")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.sponsor); }
-        if (dc.getRanga().equals("miniyt")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.miniyt); }
-        if (dc.getRanga().equals("yt")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
+        if (dc.getRanga().equals("Gracz")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.gracz); }
+        if (dc.getRanga().equals("VIP")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vip); }
+        if (dc.getRanga().equals("VIP+")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vipplus); }
+        if (dc.getRanga().equals("MVP")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvp); }
+        if (dc.getRanga().equals("MVP+")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplus); }
+        if (dc.getRanga().equals("MVP++")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplusplus); }
+        if (dc.getRanga().equals("Sponsor")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.sponsor); }
+        if (dc.getRanga().equals("MiniYT")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.miniyt); }
+        if (dc.getRanga().equals("YouTuber")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
 
         if (ranga == null) {
             Log.debug("ranga jest zla");
