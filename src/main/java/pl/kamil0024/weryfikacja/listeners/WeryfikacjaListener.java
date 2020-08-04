@@ -47,11 +47,11 @@ public class WeryfikacjaListener extends ListenerAdapter {
             return;
         }
 
-        String nickname = "[" + ranga.getName() + "]";
+        String nickname = "[" + ranga.getName().toUpperCase() + "]";
 
         if (ranga.getName().toLowerCase().equals("youtuber")) { nickname = "[YT]"; }
-
         if (ranga.getName().toLowerCase().equals("miniyt")) { nickname = "[MiniYT]"; }
+        if (ranga.getName().toLowerCase().equals("gracz")) { nickname = ""; }
 
         event.getChannel().sendMessage("daje range " + ranga.getName() + " i zmieniam nick na `"
                 + nickname + " " + dc.getNick() + "`").queue();
