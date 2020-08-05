@@ -32,10 +32,9 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || event.getAuthor().isFake()) return;
 
         String msg = event.getMessage().getContentRaw();
-        event.getMessage().delete().queue();
+        event.getMessage().delete().complete();
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
-        Log.debug(new Gson().toJson(dc));
         if (dc == null) {
             event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", kod jest zły!")
                     .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
@@ -55,7 +54,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (dc.getRanga().equals("Pomocnik")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.pomocnik); }
 
         if (ranga == null) {
-            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", twoja ranga została źle wpisana! Skontaktuj się z kimś w administracji")
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", twoja ranga została źle wpisana! Skontaktuj się z kimś z administracji")
                     .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
             return;
         }

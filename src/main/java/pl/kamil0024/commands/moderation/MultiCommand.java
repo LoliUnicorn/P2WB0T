@@ -42,6 +42,7 @@ public class MultiCommand extends Command {
 
         ArrayList<EmbedBuilder> pages = new ArrayList<>();
         EmbedBuilder eb = new EmbedBuilder();
+        eb.addField("Multi konta gracza", UserUtil.getLogName(user), false);
         eb.setColor(UserUtil.getColor(context.getMember()));
 
         BetterStringBuilder sb = new BetterStringBuilder();
