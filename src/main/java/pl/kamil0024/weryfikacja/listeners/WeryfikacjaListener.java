@@ -36,8 +36,8 @@ public class WeryfikacjaListener extends ListenerAdapter {
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
         if (dc == null) {
-            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", kod jest zły!")
-                    .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", podałeś zły kod! Sprawdź swój kod jeszcze raz na serwerze lub wygeneruj nowy.")
+                    .queue(m -> m.delete().queueAfter(11, TimeUnit.SECONDS));
             return;
         }
         Role ranga = null;
