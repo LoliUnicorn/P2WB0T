@@ -2,6 +2,7 @@ package pl.kamil0024.weryfikacja;
 
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.MultiDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.status.listeners.ChangeNickname;
@@ -12,16 +13,18 @@ public class WeryfikacjaModule implements Modul {
     private final APIModule apiModule;
     private final MultiDao multiDao;
     private final ModLog modLog;
+    private final CaseDao caseDao;
 
     private boolean start = false;
     private WeryfikacjaListener weryfikacjaListener;
     private ChangeNickname changeNickname;
 
-    public WeryfikacjaModule(APIModule apiModule, MultiDao multiDao, ModLog modLog) {
+    public WeryfikacjaModule(APIModule apiModule, MultiDao multiDao, ModLog modLog, CaseDao caseDao) {
         this.apiModule = apiModule;
         this.multiDao = multiDao;
         this.modLog = modLog;
-        this.weryfikacjaListener = new WeryfikacjaListener(apiModule, this.multiDao, modLog);
+        this.caseDao = caseDao;
+        this.weryfikacjaListener = new WeryfikacjaListener(apiModule, this.multiDao, modLog, caseDao);
     }
 
     @Override

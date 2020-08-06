@@ -207,7 +207,7 @@ public class B0T {
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
-        modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog));
+        modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao));
 
         for (Modul modul : modulManager.getModules()) {
             try {

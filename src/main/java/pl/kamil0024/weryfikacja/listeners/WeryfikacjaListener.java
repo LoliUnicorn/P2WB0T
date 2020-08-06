@@ -1,6 +1,5 @@
 package pl.kamil0024.weryfikacja.listeners;
 
-import com.google.gson.Gson;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -13,9 +12,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.MultiDao;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.MultiConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Nick;
-import pl.kamil0024.core.util.UserUtil;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
