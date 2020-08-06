@@ -57,44 +57,43 @@ public class ModLog extends ListenerAdapter {
         Thread.sleep(10000);
 
         List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
-        String nick = UserUtil.getMcNick(event.getMember());
 
-        if (!checkKara(event, false, cc)) {
-            //checkKara(event, true, caseDao.getNickAktywne(nick));
-        }
+        checkKara(event.getMember(), false, cc);
+        //checkKara(event, true, caseDao.getNickAktywne(nick));
     }
 
-    private synchronized boolean checkKara(GuildMemberJoinEvent event, boolean nick, List<CaseConfig> cc) {
-        Member user = event.getMember();
+    public synchronized void checkKara(Member event, boolean nick, List<CaseConfig> cc) {
         for (CaseConfig config : cc) {
             Kara k = config.getKara();
             String powod = null;
 
+            String check = nick ? "Ten nick " : "Te konto ";
+
             switch (k.getTypKary()) {
                 case BAN:
-                    powod = "Te konto jest permanentnie zbanowane!";
-                    event.getGuild().ban(user, 0, powod).queue();
+                    powod = check + "jest permanentnie zbanowane!";
+                    event.getGuild().ban(event, 0, powod).queue();
                     break;
                 case MUTE:
-                    powod = "Te konto jest permanentnie wyciszone";
-                    event.getGuild().addRoleToMember(user, Objects.requireNonNull(api.getRoleById(Ustawienia.instance.muteRole))).queue();
+                    powod = check + "jest permanentnie wyciszone";
+                    event.getGuild().addRoleToMember(event, Objects.requireNonNull(api.getRoleById(Ustawienia.instance.muteRole))).queue();
                     break;
                 case TEMPBAN:
-                    powod = "Te konto jest tymczasowo zbanowane";
-                    TempbanCommand.tempban(user, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
+                    powod = check + "jest tymczasowo zbanowane";
+                    TempbanCommand.tempban(event, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
                 case TEMPMUTE:
-                    powod = "Te konto jest tymczasowo wyciszone";
-                    TempmuteCommand.tempmute(user, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
+                    powod = check + "jest tymczasowo wyciszone";
+                    TempmuteCommand.tempmute(event, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
             }
 
-            if (powod == null) return false;
+            if (powod == null) return;
 
             Kara kara = new Kara();
 
-            kara.setKaranyId(user.getId());
-            kara.setMcNick(UserUtil.getMcNick(user));
+            kara.setKaranyId(event.getId());
+            kara.setMcNick(UserUtil.getMcNick(event));
             kara.setAdmId(k.getAdmId());
             kara.setPowod(powod + " (" + k.getPowod() + ") [ID: " + k.getKaraId() + "]");
             kara.setTimestamp(new Date().getTime());
@@ -109,11 +108,11 @@ public class ModLog extends ListenerAdapter {
             if (!k.getPowod().contains("Te konto jest") && k.getKaraId() != 0) {
                 if (nick) {
                     kara.setAktywna(true);
-                    CaseConfig caseconfig = new CaseConfig(user.getId());
+                    CaseConfig caseconfig = new CaseConfig(event.getId());
                     caseconfig.setKara(kara);
                     caseDao.save(caseconfig);
 
-                    for (CaseConfig ccase : caseDao.getAktywe(user.getId())) {
+                    for (CaseConfig ccase : caseDao.getAktywe(event.getId())) {
                         caseDao.delete(ccase.getKara().getKaraId());
                         ccase.getKara().setAktywna(false);
                         caseDao.save(ccase);
@@ -121,10 +120,9 @@ public class ModLog extends ListenerAdapter {
 
                 }
                 sendModlog(kara, true);
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     private void tak() {

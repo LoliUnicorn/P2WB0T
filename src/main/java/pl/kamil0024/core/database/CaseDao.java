@@ -45,6 +45,8 @@ public class CaseDao implements Dao<CaseConfig> {
 
     public List<CaseConfig> getNickAktywne(String nick) {
         if (nick.equals("-")) return new ArrayList<>();
+        List<CaseConfig> tak = mapper.getMcAktywne(nick);
+        tak.removeIf(k -> k.getKara().getTypKary() == KaryEnum.UNBAN || k.getKara().getTypKary() == KaryEnum.UNMUTE);
         return mapper.getMcAktywne(nick);
     }
 

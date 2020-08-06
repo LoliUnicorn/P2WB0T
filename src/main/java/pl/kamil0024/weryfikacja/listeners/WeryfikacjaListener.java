@@ -7,12 +7,15 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.bdate.BDate;
+import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.MultiDao;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.MultiConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Nick;
+import pl.kamil0024.core.util.UserUtil;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -21,10 +24,14 @@ public class WeryfikacjaListener extends ListenerAdapter {
 
     private final APIModule apiModule;
     private final MultiDao multiDao;
+    private final ModLog modLog;
+    private final CaseDao caseDao;
 
-    public WeryfikacjaListener(APIModule apiModule, MultiDao multiDao) {
+    public WeryfikacjaListener(APIModule apiModule, MultiDao multiDao, ModLog modLog, CaseDao caseDao) {
         this.apiModule = apiModule;
         this.multiDao = multiDao;
+        this.modLog = modLog;
+        this.caseDao = caseDao;
     }
 
     @Override
@@ -36,8 +43,8 @@ public class WeryfikacjaListener extends ListenerAdapter {
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
         if (dc == null) {
-            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", kod jest zły!")
-                    .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", podałeś zły kod! Sprawdź swój kod jeszcze raz na serwerze lub wygeneruj nowy.")
+                    .queue(m -> m.delete().queueAfter(11, TimeUnit.SECONDS));
             return;
         }
         Role ranga = null;
@@ -76,6 +83,9 @@ public class WeryfikacjaListener extends ListenerAdapter {
             MultiConfig conf = multiDao.get(event.getAuthor().getId());
             conf.getNicki().add(new Nick(nickname + " " + dc.getNick(), new BDate().getTimestamp()));
             multiDao.save(conf);
+
+            modLog.checkKara(event.getMember(), true,
+                    caseDao.getNickAktywne(dc.getNick().replace(" ", "")));
         }
         apiModule.getDcCache().invalidate(dc.getKod());
     }
