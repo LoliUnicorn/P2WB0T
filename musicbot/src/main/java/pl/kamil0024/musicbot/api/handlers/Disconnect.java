@@ -29,6 +29,7 @@ public class Disconnect implements HttpHandler {
                 return;
             }
             state.closeAudioConnection();
+            Response.sendResponse(ex, "Pod opuścił kanał głosowy");
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd");
         }
