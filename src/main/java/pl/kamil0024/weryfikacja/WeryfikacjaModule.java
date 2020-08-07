@@ -24,12 +24,12 @@ public class WeryfikacjaModule implements Modul {
         this.multiDao = multiDao;
         this.modLog = modLog;
         this.caseDao = caseDao;
-        this.weryfikacjaListener = new WeryfikacjaListener(apiModule, this.multiDao, modLog, caseDao);
     }
 
     @Override
     public boolean startUp() {
         this.changeNickname = new ChangeNickname();
+        this.weryfikacjaListener = new WeryfikacjaListener(apiModule, this.multiDao, modLog, caseDao);
         apiModule.getApi().addEventListener(weryfikacjaListener, changeNickname);
         return true;
     }
