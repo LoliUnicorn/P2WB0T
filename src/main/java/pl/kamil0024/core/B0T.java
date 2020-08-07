@@ -177,6 +177,7 @@ public class B0T {
 
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
         MusicAPI         musicAPI            = new MusicAPIImpl(api);
+//        musicAPI.getAction(1111).testConnection();
 
         CaseDao          caseDao             = new CaseDao(databaseManager);
         UserDao          userDao             = new UserDao(databaseManager);
@@ -207,7 +208,7 @@ public class B0T {
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);

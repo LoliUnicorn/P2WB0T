@@ -16,6 +16,7 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.ModulManager;
+import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -44,8 +45,9 @@ public class EvalCommand extends Command {
     @Inject private final StatsModule statsModule;
     @Inject private final MultiDao multiDao;
     @Inject private final MusicModule musicModule;
+    @Inject private final MusicAPI musicAPI;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -66,6 +68,7 @@ public class EvalCommand extends Command {
         this.statsModule = statsModule;
         this.multiDao = multiDao;
         this.musicModule = musicModule;
+        this.musicAPI = musicAPI;
     }
 
     @Override
@@ -96,6 +99,7 @@ public class EvalCommand extends Command {
         shell.setVariable("statsModule", statsModule);
         shell.setVariable("multiDao", multiDao);
         shell.setVariable("musicModule", musicModule);
+        shell.setVariable("musicAPI", musicAPI);
 
         Object value;
         boolean error = false;

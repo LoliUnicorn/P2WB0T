@@ -2,6 +2,7 @@ package pl.kamil0024.core.musicapi.impl;
 
 import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 
@@ -43,7 +44,11 @@ public class MusicAPIImpl implements MusicAPI {
     }
 
     @Override
+    @Nullable
     public MusicRestAction getAction(Integer ind) {
+        if (!getPorts().contains(ind)) {
+            return null;
+        }
         return new MusicRestActionImpl(getApi(), ind);
     }
 
