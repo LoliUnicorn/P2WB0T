@@ -20,6 +20,7 @@ import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.module.Modul;
+import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.UserUtil;
@@ -30,6 +31,7 @@ import static io.undertow.Handlers.path;
 @SuppressWarnings("DanglingJavadoc")
 public class APIModule implements Modul {
 
+    private MusicAPI musicAPI;
     private ShardManager api;
     private boolean start = false;
     Undertow server;
@@ -44,10 +46,11 @@ public class APIModule implements Modul {
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
+        this.musicAPI = musicAPI;
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
 
         this.caseDao = caseDao;
@@ -499,6 +502,11 @@ public class APIModule implements Modul {
          * @apiError {Boolean} error.description Długa odpowiedź błędu
          */
         routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
+
+        //#region Music Bot api
+        routes.get("api/musicbot/shutdown/{port}", new MusicBotHandler(musicAPI, false));
+        routes.get("api/musicbot/connect/{port}", new MusicBotHandler(musicAPI, true));
+        //#endregion Music Bot api
 
         this.server = Undertow.builder()
                 .addHttpListener(1234, "0.0.0.0")

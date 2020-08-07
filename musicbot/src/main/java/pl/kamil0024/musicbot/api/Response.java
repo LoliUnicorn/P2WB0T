@@ -1,4 +1,4 @@
-package pl.kamil0024.api;
+package pl.kamil0024.musicbot.api;
 
 import com.google.gson.Gson;
 import io.undertow.server.HttpServerExchange;
@@ -38,7 +38,7 @@ public class Response {
 
     @Data
     @AllArgsConstructor
-    public static class Error {
+    private static class Error {
         private final String body;
         private final String description;
     }

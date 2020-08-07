@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import net.dv8tion.jda.internal.JDAImpl;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
@@ -26,6 +27,8 @@ import pl.kamil0024.core.listener.ExceptionListener;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
+import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Statyczne;
@@ -173,6 +176,7 @@ public class B0T {
         } catch (InterruptedException ignored) {}
 
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
+        MusicAPI         musicAPI            = new MusicAPIImpl(api);
 
         CaseDao          caseDao             = new CaseDao(databaseManager);
         UserDao          userDao             = new UserDao(databaseManager);
@@ -196,7 +200,7 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));

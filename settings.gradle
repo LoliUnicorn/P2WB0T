@@ -1,2 +1,3 @@
 rootProject.name = 'P2WB0T'
+include 'musicbot'
 

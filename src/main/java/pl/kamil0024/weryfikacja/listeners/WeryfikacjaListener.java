@@ -2,6 +2,7 @@ package pl.kamil0024.weryfikacja.listeners;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.api.APIModule;
@@ -32,8 +33,8 @@ public class WeryfikacjaListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || event.getAuthor().isFake()) return;
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || !event.isFromGuild()) return;
 
         String msg = event.getMessage().getContentRaw();
         event.getMessage().delete().complete();
