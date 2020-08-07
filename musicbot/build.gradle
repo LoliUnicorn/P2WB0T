@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow'
 }
 
 group 'pl.kamil0024'
@@ -49,6 +50,25 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+build.dependsOn jar
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+artifacts {
+    archives shadowJar
+}
+
+shadowJar {
+    manifest {
+        attributes 'Implementation-Title': 'musicbot', 'Implementation-Version': version
+        attributes 'Main-Class': 'pl.kamil0024.musicbot.core.Main'
+    }
+    mergeServiceFiles()
+    mergeGroovyExtensionModules()
 }
 
 compileJava.options.encoding = 'UTF-8'
