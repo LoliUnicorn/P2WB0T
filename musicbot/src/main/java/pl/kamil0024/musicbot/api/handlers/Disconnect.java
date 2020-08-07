@@ -17,7 +17,6 @@ public class Disconnect implements HttpHandler {
         this.api = api;
     }
 
-
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
 

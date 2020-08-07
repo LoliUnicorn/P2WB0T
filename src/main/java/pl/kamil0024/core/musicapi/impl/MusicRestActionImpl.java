@@ -30,12 +30,13 @@ public class MusicRestActionImpl implements MusicRestAction {
 
     @Override
     public JSONResponse connect(String channelId) throws Exception {
+        new Exception().printStackTrace();
         return NetworkUtil.getJson(formatUrl("connect/" + channelId));
     }
 
     @Override
     public JSONResponse disconnect() throws Exception {
-        return NetworkUtil.getJson(formatUrl("disconnect/"));
+        return NetworkUtil.getJson(formatUrl("disconnect"));
     }
 
     private String formatUrl(String path) {
