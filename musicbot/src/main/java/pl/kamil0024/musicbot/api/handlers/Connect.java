@@ -20,7 +20,7 @@ public class Connect implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
-        String channelid = ex.getQueryParameters().get("token").getFirst();
+        String channelid = ex.getQueryParameters().get("channelid").getFirst();
         if (channelid.isEmpty()) {
             Response.sendErrorResponse(ex, "Złe ID", "ID kanału jest puste?");
             return;
