@@ -4,4 +4,6 @@ public interface MusicRestAction {
 
     MusicResponse testConnection();
 
+    void connect(String channelId) throws Exception;
+
 }
