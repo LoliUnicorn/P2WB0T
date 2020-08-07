@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.CheckToken;
 import pl.kamil0024.musicbot.api.handlers.Connect;
+import pl.kamil0024.musicbot.api.handlers.Disconnect;
 import pl.kamil0024.musicbot.api.internale.MiddlewareBuilder;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.module.Modul;
@@ -44,6 +45,7 @@ public class APIModule implements Modul {
 
         routes.get("api/musicbot/test", new CheckToken());
         routes.get("api/musicbot/connect/{channelid}", new Connect(api));
+        routes.get("api/musicbot/disconnect", new Disconnect(api));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

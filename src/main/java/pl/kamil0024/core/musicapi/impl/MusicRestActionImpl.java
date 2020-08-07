@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.util.JSONResponse;
 import pl.kamil0024.core.util.NetworkUtil;
 
 public class MusicRestActionImpl implements MusicRestAction {
@@ -28,8 +29,13 @@ public class MusicRestActionImpl implements MusicRestAction {
     }
 
     @Override
-    public void connect(String channelId) throws Exception {
-        NetworkUtil.getJson(formatUrl("connect/" + channelId));
+    public JSONResponse connect(String channelId) throws Exception {
+        return NetworkUtil.getJson(formatUrl("connect/" + channelId));
+    }
+
+    @Override
+    public JSONResponse disconnect() throws Exception {
+        return NetworkUtil.getJson(formatUrl("disconnect/"));
     }
 
     private String formatUrl(String path) {
