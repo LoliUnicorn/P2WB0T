@@ -50,6 +50,7 @@ public class Ustawienia {
 
     public static class Api {
         public int port = 0;
+        public int mainPort = 0;
         public List<String> tokens = Arrays.asList("12345");
     }
 }

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -170,8 +169,8 @@ public class B0T {
         }
 
         try {
-            NetworkUtil.getJson("http://0.0.0.0:1234/api/musicbot/connect/" + Ustawienia.instance.api.port);
-        } catch (IOException e) {
+            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/connect/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
+        } catch (Exception e) {
             Log.newError("Nie udało się podłączyć do głównego api");
             Log.newError(e);
         }
