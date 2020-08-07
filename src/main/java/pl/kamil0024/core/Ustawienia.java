@@ -78,6 +78,7 @@ public class Ustawienia {
     }
 
     public static class Api {
+        public Integer port;
         public List<String> tokens = Arrays.asList("343467373417857025");
     }
 

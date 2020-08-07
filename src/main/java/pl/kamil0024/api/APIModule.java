@@ -509,7 +509,7 @@ public class APIModule implements Modul {
         //#endregion Music Bot api
 
         this.server = Undertow.builder()
-                .addHttpListener(1234, "0.0.0.0")
+                .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()
                         .addPrefixPath("/", wrapWithMiddleware(routes)))
                 .build();
