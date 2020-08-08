@@ -3,6 +3,7 @@ package pl.kamil0024.core.musicapi.impl;
 import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 
@@ -32,6 +33,7 @@ public class MusicAPIImpl implements MusicAPI {
         getPorts().remove(port);
         getPorts().add(port);
         String client = getAction(port).clientid();
+        Log.debug("client: " + client);
         getClients().add(client);
         getSuma().put(port, client);
         return true;
@@ -43,6 +45,9 @@ public class MusicAPIImpl implements MusicAPI {
             return false;
         }
         getPorts().remove(port);
+        String client = getClientByPort(port);
+        getClients().remove(client);
+        getSuma().remove(port);
         return true;
     }
 
