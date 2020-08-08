@@ -3,10 +3,8 @@ package pl.kamil0024.core.musicapi.impl;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
-import pl.kamil0024.core.util.JSONResponse;
 import pl.kamil0024.core.util.NetworkUtil;
 
 public class MusicRestActionImpl implements MusicRestAction {
