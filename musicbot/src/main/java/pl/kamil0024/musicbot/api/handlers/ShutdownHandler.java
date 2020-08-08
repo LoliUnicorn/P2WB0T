@@ -17,11 +17,10 @@ public class ShutdownHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) {
         try {
             Response.sendResponse(ex, "Pomyślnie podłączono");
-            System.exit(1);
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());
         }
-        System.exit(1);
+        new Thread(() -> System.exit(0)).start();
 
     }
 

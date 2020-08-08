@@ -50,7 +50,7 @@ public class PrivatePlayCommand extends Command {
             }
         }
 
-        if (wolnyBot == 0 && restAction != null) {
+        if (wolnyBot == 0 && restAction == null) {
             for (Integer port : musicAPI.getPorts()) {
                 restAction = musicAPI.getAction(port);
                 if (restAction.getVoiceChannel() == null) {
