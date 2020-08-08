@@ -13,4 +13,10 @@ public interface MusicAPI {
 
     List<Integer> getPorts();
 
+    List<String> getClients();
+
+    String getClientByPort(int port);
+
+    Integer getPortByClient(String client);
+
 }

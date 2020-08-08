@@ -6,9 +6,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
-import pl.kamil0024.musicbot.core.logger.Log;
+import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
+@SuppressWarnings("DuplicatedCode")
 public class PlayHandler implements HttpHandler {
 
     private final ShardManager api;
@@ -27,9 +28,7 @@ public class PlayHandler implements HttpHandler {
                 Response.sendErrorResponse(ex, "Zły parametr", "Parametr {link} jest pusty");
                 return;
             }
-            Log.debug("track:" + track);
             track = "https://www.youtube.com/watch?v=" + track;
-            Log.debug("trackv2:" + track);
 
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();
@@ -37,10 +36,16 @@ public class PlayHandler implements HttpHandler {
                 Response.sendErrorResponse(ex, "Błąd", "Bot nie jest na żadnym kanale!");
                 return;
             }
-            if (musicManager.loadAndPlay(guild, track, state.getConnectedChannel())) {
+
+            GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+            int queueSize = serwerManager.getQueue().size();
+            boolean bol = musicManager.loadAndPlay(guild, track, state.getConnectedChannel());
+
+            if (!bol || serwerManager.getPlayer().getPlayingTrack() != null || (queueSize == serwerManager.getQueue().size() && serwerManager.getPlayer().getPlayingTrack() != null) ) {
                 Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
                 return;
             }
+
             Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
 
         } catch (Exception e) {

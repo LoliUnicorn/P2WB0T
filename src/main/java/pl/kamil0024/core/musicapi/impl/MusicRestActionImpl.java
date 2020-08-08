@@ -1,5 +1,6 @@
 package pl.kamil0024.core.musicapi.impl;
 
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +73,27 @@ public class MusicRestActionImpl implements MusicRestAction {
     @Override
     public MusicResponse volume(Integer procent) throws IOException {
         return new MusicResponse(NetworkUtil.getJson(formatUrl("volume/" + procent)));
+    }
+
+    @SneakyThrows
+    @Override
+    public String clientid() {
+        try {
+            JSONResponse mr = NetworkUtil.getJson(formatUrl("channel"));
+            return mr.getString("data");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public MusicResponse getQueue() throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("queue")));
+    }
+
+    @Override
+    public MusicResponse getPlayingTrack() throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("playingtrack")));
     }
 
     private String formatUrl(String path) {

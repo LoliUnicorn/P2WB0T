@@ -47,8 +47,9 @@ public class APIModule implements Modul {
         //#region Main
         routes.get("api/musicbot/test", new CheckToken());
         routes.get("api/musicbot/shutdown", new ShutdownHandler(api));
+        routes.get("api/musicbot/clientid", ex -> Response.sendObjectResponse(ex, api.getShards().get(0).getSelfUser().getId()));
         //#endregion Main
-
+        
         //#region VoiceChannel
         routes.get("api/musicbot/connect/{channelid}", new Connect(api));
         routes.get("api/musicbot/disconnect", new Disconnect(api));
@@ -59,6 +60,8 @@ public class APIModule implements Modul {
         routes.get("api/musicbot/playlink/{link}", new PlayHandler(api, musicManager));
         routes.get("api/musicbot/skip", new SkipHandler(api, musicManager));
         routes.get("api/musicbot/volume/{liczba}", new VolumeHandler(api, musicManager));
+        routes.get("api/musicbot/queue", new QueueHandler(api, musicManager));
+        routes.get("api/musicbot/playingtrack", new PlayingTrackHandler(api, musicManager));
         //#endregion Play
 
         this.server = Undertow.builder()

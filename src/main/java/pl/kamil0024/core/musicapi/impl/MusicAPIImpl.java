@@ -7,25 +7,33 @@ import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class MusicAPIImpl implements MusicAPI {
 
     private ShardManager api;
     private List<Integer> ports;
+    private List<String> clients;
+    private HashMap<Integer, String> suma;
 
     public MusicAPIImpl(ShardManager api) {
         this.api = api;
         this.ports = new ArrayList<>();
+        this.suma = new HashMap<>();
+        this.clients = new ArrayList<>();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean connect(Integer port) {
-        if (getPorts().contains(port)) {
-            return false;
-        }
+        getPorts().remove(port);
         getPorts().add(port);
+        String client = getAction(port).clientid();
+        getClients().add(client);
+        getSuma().put(port, client);
         return true;
     }
 
@@ -50,6 +58,26 @@ public class MusicAPIImpl implements MusicAPI {
             return null;
         }
         return new MusicRestActionImpl(getApi(), ind);
+    }
+
+    @Override
+    public String getClientByPort(int port) {
+        for (Map.Entry<Integer, String> entry : getSuma().entrySet()) {
+            if (entry.getKey() == port) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getPortByClient(String client) {
+        for (Map.Entry<Integer, String> entry : getSuma().entrySet()) {
+            if (entry.getValue().equals(client)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
 }
