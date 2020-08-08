@@ -33,13 +33,14 @@ public class PlayHandler implements HttpHandler {
                 Response.sendErrorResponse(ex, "Błąd", "Bot nie jest na żadnym kanale!");
                 return;
             }
-            if (musicManager.loadAndPlay(null, track, state.getConnectedChannel())) {
+            if (musicManager.loadAndPlay(guild, track, state.getConnectedChannel())) {
                 Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
                 return;
             }
             Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
 
         } catch (Exception e) {
+            e.printStackTrace();
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());
         }
 
