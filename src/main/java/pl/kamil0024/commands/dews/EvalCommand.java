@@ -21,8 +21,6 @@ import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.musicmanager.MusicManager;
-import pl.kamil0024.musicmanager.impl.MusicManagerImpl;
 import pl.kamil0024.stats.StatsModule;
 
 import java.awt.*;
@@ -73,12 +71,12 @@ public class EvalCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String kod = context.getMessage().getContentRaw();
-        if (kod.isEmpty()) {
-            context.getChannel().sendMessage(HelpCommand.getUsage(context).build()).queue();
+        String kod = context.getArgsToString(0);
+        if (context.getArgs().get(0).isEmpty() || kod == null) {
+            context.send(HelpCommand.getUsage(context).build()).queue();
             return false;
         }
-        kod = kod.replaceAll("```", "").replace(context.getPrefix() + "eval ", "");
+        kod = kod.replaceAll("```", "");
         Binding binding = new Binding();
         GroovyShell shell = new GroovyShell(binding);
 
@@ -119,14 +117,10 @@ public class EvalCommand extends Command {
             value = "Output przekracza liczbę znaków. Zobacz konsole";
         }
 
-        eb.addField("\ud83d\udce4 INPUT", codeBlock("java", kod), false);
-        eb.addField("\ud83d\udce5 OUTPUT", codeBlock("java", value), false);
-        context.getChannel().sendMessage(eb.build()).queue();
+        eb.addField("\ud83d\udce4 INPUT", "```\n" + kod + "\n```", false);
+        eb.addField("\ud83d\udce5 OUTPUT", "```\n" + value + "\n```", false);
+        context.send(eb.build()).queue();
         return true;
-    }
-
-    private String codeBlock(String code, Object text) {
-        return "```" + code + "\n" + text + "```";
     }
 
 

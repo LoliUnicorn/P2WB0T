@@ -1,12 +1,13 @@
 package pl.kamil0024.core.musicapi;
 
-import pl.kamil0024.core.util.JSONResponse;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 
 public interface MusicRestAction {
 
     MusicResponse testConnection();
 
-    JSONResponse connect(String channelId) throws Exception;
-    JSONResponse disconnect() throws Exception;
+    MusicResponse connect(String channelId) throws Exception;
+    MusicResponse disconnect() throws Exception;
+    VoiceChannel getVoiceChannel() throws Exception;
 
 }

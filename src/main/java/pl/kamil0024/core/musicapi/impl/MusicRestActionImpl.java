@@ -1,7 +1,9 @@
 package pl.kamil0024.core.musicapi.impl;
 
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.util.JSONResponse;
@@ -29,14 +31,25 @@ public class MusicRestActionImpl implements MusicRestAction {
     }
 
     @Override
-    public JSONResponse connect(String channelId) throws Exception {
-        new Exception().printStackTrace();
-        return NetworkUtil.getJson(formatUrl("connect/" + channelId));
+    public MusicResponse connect(String channelId) throws Exception {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("connect/" + channelId)));
     }
 
     @Override
-    public JSONResponse disconnect() throws Exception {
-        return NetworkUtil.getJson(formatUrl("disconnect"));
+    public MusicResponse disconnect() throws Exception {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("disconnect")));
+    }
+
+    @Override
+    @Nullable
+    public VoiceChannel getVoiceChannel() throws Exception {
+        try {
+            MusicResponse json = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
+            Log.debug(json.toString());
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 
     private String formatUrl(String path) {
