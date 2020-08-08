@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import lombok.Data;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-
 @Data
 public class GuildMusicManager {
 
@@ -23,4 +22,5 @@ public class GuildMusicManager {
     public AudioPlayerSendHandler getSendHandler() {
         return new AudioPlayerSendHandler(player);
     }
+
 }

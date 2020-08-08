@@ -241,10 +241,16 @@ public class ChatListener extends ListenerAdapter {
         int tak = 0;
         int flood = 0;
         String[] ssplit = msg.split("");
+        String floodowanyZnak = null;
         for (String split : ssplit) {
             try {
                 String nastepnaLitera = ssplit[tak + 1];
-                if (!split.equals("") && !nastepnaLitera.equals("") && split.equals(nastepnaLitera)) flood++;
+                if (nastepnaLitera == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
+                    floodowanyZnak = nastepnaLitera;
+                    flood++;
+                } else if (floodowanyZnak != null && floodowanyZnak.toLowerCase().equals(split.toLowerCase())) {
+                    flood++;
+                }
                 tak++;
             } catch (Exception ignored) {}
         }

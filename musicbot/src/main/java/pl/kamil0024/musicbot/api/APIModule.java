@@ -14,6 +14,7 @@ import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.module.Modul;
 import pl.kamil0024.musicbot.core.redis.RedisManager;
 import pl.kamil0024.musicbot.core.util.NetworkUtil;
+import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.io.IOException;
 
@@ -23,6 +24,7 @@ import static io.undertow.Handlers.path;
 public class APIModule implements Modul {
 
     private ShardManager api;
+    private MusicManager musicManager;
     private boolean start = false;
     Undertow server;
 
@@ -30,22 +32,34 @@ public class APIModule implements Modul {
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, RedisManager redisManager) {
+    public APIModule(ShardManager api, RedisManager redisManager, MusicManager musicManager) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
+        this.musicManager = musicManager;
     }
 
     @Override
     public boolean startUp() {
         RoutingHandler routes = new RoutingHandler();
 
+        //#region Main
         routes.get("api/musicbot/test", new CheckToken());
+        routes.get("api/musicbot/shutdown", new ShutdownHandler(api));
+        //#endregion Main
+
+        //#region VoiceChannel
         routes.get("api/musicbot/connect/{channelid}", new Connect(api));
         routes.get("api/musicbot/disconnect", new Disconnect(api));
         routes.get("api/musicbot/channel", new ChannelHandler(api));
-        routes.get("api/musicbot/shutdown", new ShutdownHandler(api));
+        //#endregion VoiceChannel
+
+        //#region Play
+        routes.get("api/musicbot/playlink/{link}", new PlayHandler(api, musicManager));
+        routes.get("api/musicbot/skip", new SkipHandler(api, musicManager));
+        routes.get("api/musicbot/volume/{liczba}", new VolumeHandler(api, musicManager));
+        //#endregion Play
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

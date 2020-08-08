@@ -59,6 +59,21 @@ public class MusicRestActionImpl implements MusicRestAction {
         return new MusicResponse(NetworkUtil.getJson(formatUrl("shutdown")));
     }
 
+    @Override
+    public MusicResponse play(String link) throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("playlink/" + link)));
+    }
+
+    @Override
+    public MusicResponse skip() throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("skip")));
+    }
+
+    @Override
+    public MusicResponse volume(Integer procent) throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("volume/" + procent)));
+    }
+
     private String formatUrl(String path) {
         return String.format("http://0.0.0.0:%s/api/musicbot/%s", port, path);
     }

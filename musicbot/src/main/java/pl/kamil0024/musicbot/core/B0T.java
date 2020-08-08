@@ -18,6 +18,8 @@ import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.core.util.NetworkUtil;
 import pl.kamil0024.musicbot.core.util.Statyczne;
 import pl.kamil0024.musicbot.core.util.Tlumaczenia;
+import pl.kamil0024.musicbot.music.MusicModule;
+import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -132,9 +134,11 @@ public class B0T {
 
         this.modulManager = new ModulManager();
 
-        APIModule apiModule = new APIModule(api, redisManager);
+        MusicManager musicManager = new MusicManager(api);
+        APIModule apiModule = new APIModule(api, redisManager, musicManager);
 
         modulManager.getModules().add(apiModule);
+        modulManager.getModules().add(new MusicModule(api, musicManager));
 
         for (Modul modul : modulManager.getModules()) {
             try {
@@ -181,7 +185,7 @@ public class B0T {
         this.shutdownThread = new Thread(() -> {
             Log.info("Zamykam...");
             try {
-                NetworkUtil.getJson("http://0.0.0.0:123/api/musicbot/shutdown/" + Ustawienia.instance.api.port);
+                NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/shutdown/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
             } catch (Exception ignored) {}
 
             modulManager.disableAll();
