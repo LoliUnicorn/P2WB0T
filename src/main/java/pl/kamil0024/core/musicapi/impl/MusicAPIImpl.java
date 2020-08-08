@@ -27,7 +27,6 @@ public class MusicAPIImpl implements MusicAPI {
         this.clients = new ArrayList<>();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean connect(Integer port, String id) {
         getPorts().remove(port);

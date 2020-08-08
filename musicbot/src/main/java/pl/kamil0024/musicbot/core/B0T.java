@@ -184,10 +184,6 @@ public class B0T {
     public void shutdownThread() {
         this.shutdownThread = new Thread(() -> {
             Log.info("Zamykam...");
-            try {
-                NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/shutdown/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
-            } catch (Exception ignored) {}
-
             modulManager.disableAll();
             api.shutdown();
         });
