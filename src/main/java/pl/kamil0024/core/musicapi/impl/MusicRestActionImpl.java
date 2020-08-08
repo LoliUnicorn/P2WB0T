@@ -45,11 +45,11 @@ public class MusicRestActionImpl implements MusicRestAction {
     public VoiceChannel getVoiceChannel() throws Exception {
         try {
             MusicResponse json = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
-            Log.debug(json.toString());
+            return api.getVoiceChannelById(json.json.getString("data"));
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-        return null;
     }
 
     private String formatUrl(String path) {

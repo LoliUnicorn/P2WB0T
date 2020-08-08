@@ -7,7 +7,7 @@ import pl.kamil0024.api.Response;
 
 public class MusicResponse {
 
-    private final JSONObject json;
+    public final JSONObject json;
 
     public MusicResponse(JSONObject json) {
         this.json = json;
