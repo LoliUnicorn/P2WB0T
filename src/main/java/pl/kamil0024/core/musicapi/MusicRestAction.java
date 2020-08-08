@@ -8,6 +8,6 @@ public interface MusicRestAction {
 
     MusicResponse connect(String channelId) throws Exception;
     MusicResponse disconnect() throws Exception;
-    VoiceChannel getVoiceChannel() throws Exception;
+    VoiceChannel getVoiceChannel();
 
 }

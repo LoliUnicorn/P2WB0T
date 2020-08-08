@@ -42,7 +42,7 @@ public class MusicRestActionImpl implements MusicRestAction {
 
     @Override
     @Nullable
-    public VoiceChannel getVoiceChannel() throws Exception {
+    public VoiceChannel getVoiceChannel() {
         try {
             MusicResponse mr = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
             String id = mr.json.getString("data");
