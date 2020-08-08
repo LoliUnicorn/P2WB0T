@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
+import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 public class PlayHandler implements HttpHandler {
@@ -26,6 +27,9 @@ public class PlayHandler implements HttpHandler {
                 Response.sendErrorResponse(ex, "Zły parametr", "Parametr {link} jest pusty");
                 return;
             }
+            Log.debug("track:" + track);
+            track = "https://www.youtube.com/watch?v=" + track;
+            Log.debug("trackv2:" + track);
 
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();

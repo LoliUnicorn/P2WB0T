@@ -21,7 +21,7 @@ public interface MusicRestAction {
     MusicResponse play(String link) throws IOException;
 
     default MusicResponse play(AudioTrack track) throws IOException {
-        return play(QueueCommand.getYtLink(track));
+        return play(track.getIdentifier());
     }
 
     MusicResponse skip() throws IOException;
