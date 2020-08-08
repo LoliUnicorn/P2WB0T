@@ -1,5 +1,9 @@
 package pl.kamil0024.musicbot.api.handlers;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import net.dv8tion.jda.api.entities.Guild;
@@ -38,15 +42,33 @@ public class PlayHandler implements HttpHandler {
             }
 
             GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
-            int queueSize = serwerManager.getQueue().size();
-            boolean bol = musicManager.loadAndPlay(guild, track, state.getConnectedChannel());
 
-            if (!bol || serwerManager.getPlayer().getPlayingTrack() != null || (queueSize == serwerManager.getQueue().size() && serwerManager.getPlayer().getPlayingTrack() != null) ) {
-                Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
-                return;
-            }
+            serwerManager.getManager().loadItemOrdered(serwerManager, track, new AudioLoadResultHandler() {
 
-            Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
+                @Override
+                public void trackLoaded(AudioTrack track) {
+                    musicManager.play(Connect.getGuild(api), serwerManager, track, state.getConnectedChannel());
+                    Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
+                }
+
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {
+                    for (AudioTrack track : playlist.getTracks()) {
+                        musicManager.play(Connect.getGuild(api), serwerManager, track, state.getConnectedChannel());
+                    }
+                    Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
+                }
+
+                @Override
+                public void noMatches() {
+                    Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
+                }
+
+                @Override
+                public void loadFailed(FriendlyException exception) {
+                    Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

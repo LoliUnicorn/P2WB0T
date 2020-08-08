@@ -15,12 +15,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.musicbot.core.Ustawienia;
-import pl.kamil0024.musicbot.core.database.config.VoiceStateConfig;
 
 import java.awt.*;
 import java.time.Instant;
@@ -84,12 +81,10 @@ public class MusicManager {
                     play(guild, musicManager, track, vc);
                 }
             }
-
             @Override
             public void noMatches() {
                 error.set(true);
             }
-
             @Override
             public void loadFailed(FriendlyException exception) {
                 error.set(true);
