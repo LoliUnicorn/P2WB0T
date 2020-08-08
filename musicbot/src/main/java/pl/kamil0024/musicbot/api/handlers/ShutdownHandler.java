@@ -18,7 +18,7 @@ public class ShutdownHandler implements HttpHandler {
         try {
             api.shutdown();
             Response.sendResponse(ex, "Pomyślnie podłączono");
-            System.exit(1);
+            System.exit(0);
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());
         }
