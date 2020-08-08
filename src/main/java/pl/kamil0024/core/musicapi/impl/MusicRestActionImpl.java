@@ -46,10 +46,8 @@ public class MusicRestActionImpl implements MusicRestAction {
     public VoiceChannel getVoiceChannel() {
         try {
             JSONResponse mr = NetworkUtil.getJson(formatUrl("channel"));
-            Log.debug(mr.toString());
             String id = mr.getString("data");
-            Log.debug(id);
-            return api.getVoiceChannelById("id");
+            return api.getVoiceChannelById(id);
         } catch (Exception e) {
             return null;
         }

@@ -34,7 +34,7 @@ public class Connect implements HttpHandler {
         try {
             Guild guild = getGuild(api);
             guild.getAudioManager().openAudioConnection(vc);
-            Response.sendResponse(ex, "Pod dołączył kanał głosowy");
+            Response.sendResponse(ex, "Bot dołączył na kanał głosowy");
         } catch (InsufficientPermissionException e) {
             Response.sendErrorResponse(ex, "Brak permisji", "Bot nie ma wystarczających permisji");
         } catch (UnsupportedOperationException e) {

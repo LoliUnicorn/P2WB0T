@@ -7,18 +7,17 @@ import pl.kamil0024.api.Response;
 
 public class MusicResponse {
 
-    public final JSONObject json;
+    public JSONObject json;
 
     public MusicResponse(JSONObject json) {
         this.json = json;
+        try {
+            this.json = json.getJSONObject("map");
+        } catch (Exception ignored) {}
     }
 
     public boolean isError() {
-        try {
-            return !json.getBoolean("succes");
-        } catch (Exception e) {
-            return !json.getJSONObject("map").getBoolean("succes");
-        }
+        return !json.getBoolean("succes");
     }
 
     @Nullable
