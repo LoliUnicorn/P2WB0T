@@ -153,7 +153,7 @@ public class B0T {
                 }
                 return true;
             })) {
-                Thread.sleep(600);
+                Thread.sleep(1000);
             }
         } catch (LoginException | InterruptedException e) {
             Log.error("Nie udalo sie zalogowac!");
