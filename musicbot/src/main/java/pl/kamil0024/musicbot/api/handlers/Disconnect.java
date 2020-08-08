@@ -18,7 +18,7 @@ public class Disconnect implements HttpHandler {
     }
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         try {
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();

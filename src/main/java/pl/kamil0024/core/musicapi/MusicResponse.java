@@ -14,7 +14,11 @@ public class MusicResponse {
     }
 
     public boolean isError() {
-        return !json.getBoolean("succes");
+        try {
+            return !json.getBoolean("succes");
+        } catch (Exception e) {
+            return !json.getJSONObject("map").getBoolean("succes");
+        }
     }
 
     @Nullable
