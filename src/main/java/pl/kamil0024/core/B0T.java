@@ -45,6 +45,7 @@ import pl.kamil0024.weryfikacja.WeryfikacjaModule;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class B0T {
     private ShardManager api;
     private ModulManager modulManager;
     private MusicModule musicModule;
+    private MusicAPI musicAPI;
 
     public B0T(String token) {
         moduls = new HashMap<>();
@@ -176,8 +178,7 @@ public class B0T {
         } catch (InterruptedException ignored) {}
 
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
-        MusicAPI         musicAPI            = new MusicAPIImpl(api);
-//        musicAPI.getAction(1111).testConnection();
+                         this.musicAPI       = new MusicAPIImpl(api);
 
         CaseDao          caseDao             = new CaseDao(databaseManager);
         UserDao          userDao             = new UserDao(databaseManager);
@@ -256,6 +257,12 @@ public class B0T {
             api.setStatus(OnlineStatus.DO_NOT_DISTURB);
             api.setActivity(Activity.playing("Wyłącznie bota w toku..."));
 
+            musicAPI.getPorts().forEach(port -> {
+                try {
+                    musicAPI.getAction(port).shutdown();
+                } catch (IOException ignored) { }
+            });
+            
             musicModule.load();
             modulManager.disableAll();
             statsModule.getStatsCache().databaseSave();

@@ -183,6 +183,7 @@ public class B0T {
             try {
                 NetworkUtil.getJson("http://0.0.0.0:123/api/musicbot/shutdown/" + Ustawienia.instance.api.port);
             } catch (Exception ignored) {}
+
             modulManager.disableAll();
             api.shutdown();
         });

@@ -1,6 +1,5 @@
 package pl.kamil0024.core.musicapi;
 
-import com.google.gson.Gson;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import pl.kamil0024.api.Response;

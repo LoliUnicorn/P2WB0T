@@ -38,9 +38,9 @@ public class Connect implements HttpHandler {
         } catch (InsufficientPermissionException e) {
             Response.sendErrorResponse(ex, "Brak permisji", "Bot nie ma wystarczających permisji");
         } catch (UnsupportedOperationException e) {
-            Response.sendErrorResponse(ex, "Błąd JDA", "Wystąpił wewnętrzny błąd z JDA");
+            Response.sendErrorResponse(ex, "Błąd JDA", "Wystąpił wewnętrzny błąd z JDA:" + e.getLocalizedMessage());
         } catch (Exception e) {
-            Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd");
+            Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd:" + e.getLocalizedMessage());
         }
 
     }

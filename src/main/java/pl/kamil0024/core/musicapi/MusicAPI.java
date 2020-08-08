@@ -1,5 +1,7 @@
 package pl.kamil0024.core.musicapi;
 
+import java.util.List;
+
 public interface MusicAPI {
 
     boolean connect(Integer port);
@@ -8,5 +10,7 @@ public interface MusicAPI {
     void stop(int port);
 
     MusicRestAction getAction(Integer port);
+
+    List<Integer> getPorts();
 
 }

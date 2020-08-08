@@ -3,11 +3,12 @@ package pl.kamil0024.core.musicapi.impl;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.util.JSONResponse;
 import pl.kamil0024.core.util.NetworkUtil;
+
+import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
 public class MusicRestActionImpl implements MusicRestAction {
@@ -51,6 +52,11 @@ public class MusicRestActionImpl implements MusicRestAction {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public MusicResponse shutdown() throws IOException {
+        return new MusicResponse(NetworkUtil.getJson(formatUrl("shutdown")));
     }
 
     private String formatUrl(String path) {
