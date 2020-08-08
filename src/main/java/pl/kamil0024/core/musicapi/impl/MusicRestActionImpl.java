@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.util.JSONResponse;
 import pl.kamil0024.core.util.NetworkUtil;
 
 @SuppressWarnings("ConstantConditions")
@@ -43,9 +44,9 @@ public class MusicRestActionImpl implements MusicRestAction {
     @Nullable
     public String getVoiceChannel() {
         try {
-            MusicResponse mr = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
+            JSONResponse mr = NetworkUtil.getJson(formatUrl("channel"));
             Log.debug(mr.toString());
-            String id = mr.json.getString("data");
+            String id = mr.getString("data");
             Log.debug(id);
             return id;
         } catch (Exception e) {

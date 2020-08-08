@@ -10,7 +10,7 @@ public class MusicResponse {
     public final JSONObject json;
 
     public MusicResponse(JSONObject json) {
-        this.json = json.getJSONObject("map");
+        this.json = json;
     }
 
     public boolean isError() {
