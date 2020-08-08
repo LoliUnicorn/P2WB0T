@@ -22,7 +22,8 @@ public class MusicBotHandler implements HttpHandler {
         }
         try {
             Integer port = Integer.valueOf(ex.getQueryParameters().get("port").getFirst());
-            if (connect) musicAPI.connect(port);
+            String id = ex.getQueryParameters().get("clientid").getFirst();
+            if (connect) musicAPI.connect(port, id);
             else musicAPI.disconnect(port);
             Response.sendResponse(ex, "Pomyślnie zarejestrowano port");
         } catch (Exception e) {

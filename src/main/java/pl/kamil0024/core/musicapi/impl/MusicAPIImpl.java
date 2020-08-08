@@ -29,13 +29,12 @@ public class MusicAPIImpl implements MusicAPI {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean connect(Integer port) {
+    public boolean connect(Integer port, String id) {
         getPorts().remove(port);
         getPorts().add(port);
-        String client = getAction(port).clientid();
-        Log.debug("client: " + client);
-        getClients().add(client);
-        getSuma().put(port, client);
+        Log.debug("client: " + id);
+        getClients().add(id);
+        getSuma().put(port, id);
         return true;
     }
 

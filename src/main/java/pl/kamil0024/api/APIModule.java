@@ -505,7 +505,7 @@ public class APIModule implements Modul {
 
         //#region Music Bot api
         routes.get("api/musicbot/shutdown/{port}", new MusicBotHandler(musicAPI, false));
-        routes.get("api/musicbot/connect/{port}", new MusicBotHandler(musicAPI, true));
+        routes.get("api/musicbot/connect/{port}/{clientid}", new MusicBotHandler(musicAPI, true));
         //#endregion Music Bot api
 
         this.server = Undertow.builder()

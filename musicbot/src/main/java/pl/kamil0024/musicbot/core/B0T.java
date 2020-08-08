@@ -173,7 +173,7 @@ public class B0T {
         }
 
         try {
-            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/connect/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
+            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/connect/%s/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port, shard.get().getSelfUser().getId()));
         } catch (Exception e) {
             Log.newError("Nie udało się podłączyć do głównego api");
             Log.newError(e);

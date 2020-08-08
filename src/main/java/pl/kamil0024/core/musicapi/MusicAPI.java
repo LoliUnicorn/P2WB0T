@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface MusicAPI {
 
-    boolean connect(Integer port);
+    boolean connect(Integer port, String id);
     boolean disconnect(Integer port);
 
     void stop(int port);
