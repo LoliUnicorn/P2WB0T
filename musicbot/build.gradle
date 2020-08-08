@@ -64,7 +64,7 @@ artifacts {
 
 shadowJar {
     manifest {
-        attributes 'Implementation-Title': 'musicbot', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'musicbot', 'Implementation-Version': '1.0'
         attributes 'Main-Class': 'pl.kamil0024.musicbot.core.Main'
     }
     mergeServiceFiles()
