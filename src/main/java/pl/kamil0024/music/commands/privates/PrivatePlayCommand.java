@@ -14,6 +14,7 @@ import pl.kamil0024.music.commands.PlayCommand;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PrivatePlayCommand extends Command {
 
@@ -101,8 +102,7 @@ public class PrivatePlayCommand extends Command {
         }
 
 
-        List<Member> members = vc.getMembers();
-        members.removeIf(m -> m.getUser().isBot());
+        List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
         int size = members.size();
 
 //        if (size < 4) {
