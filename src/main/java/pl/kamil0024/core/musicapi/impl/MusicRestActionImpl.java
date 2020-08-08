@@ -3,10 +3,12 @@ package pl.kamil0024.core.musicapi.impl;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.util.NetworkUtil;
 
+@SuppressWarnings("ConstantConditions")
 public class MusicRestActionImpl implements MusicRestAction {
 
     private final ShardManager api;
@@ -42,8 +44,10 @@ public class MusicRestActionImpl implements MusicRestAction {
     @Nullable
     public VoiceChannel getVoiceChannel() throws Exception {
         try {
-            MusicResponse json = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
-            return api.getVoiceChannelById(json.json.getString("data"));
+            MusicResponse mr = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
+            String id = mr.json.getString("data");
+            Log.debug(id);
+            return api.getVoiceChannelById(id);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
