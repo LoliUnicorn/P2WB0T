@@ -14,10 +14,11 @@ public class MusicResponse {
         try {
             this.json = json.getJSONObject("map");
         } catch (Exception ignored) {}
+
     }
 
     public boolean isError() {
-        return !json.getBoolean("succes");
+        return !json.getBoolean("success");
     }
 
     @Nullable
@@ -29,7 +30,7 @@ public class MusicResponse {
 
     @Override
     public String toString() {
-        return new Gson().toJson(json);
+        return json.toString();
     }
 
 }
