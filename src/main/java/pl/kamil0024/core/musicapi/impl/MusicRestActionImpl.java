@@ -1,6 +1,5 @@
 package pl.kamil0024.core.musicapi.impl;
 
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.logger.Log;
@@ -42,12 +41,13 @@ public class MusicRestActionImpl implements MusicRestAction {
 
     @Override
     @Nullable
-    public VoiceChannel getVoiceChannel() {
+    public String getVoiceChannel() {
         try {
             MusicResponse mr = new MusicResponse(NetworkUtil.getJson(formatUrl("channel")));
+            Log.debug(mr.toString());
             String id = mr.json.getString("data");
             Log.debug(id);
-            return api.getVoiceChannelById(id);
+            return id;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
