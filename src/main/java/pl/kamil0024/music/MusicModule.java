@@ -24,8 +24,10 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.module.Modul;
+import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.commands.*;
+import pl.kamil0024.music.commands.privates.PrivatePlayCommand;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
@@ -52,11 +54,14 @@ public class MusicModule implements Modul {
 
     public YoutubeAudioSourceManager youtubeSourceManager;
 
-    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao) {
+    public MusicAPI musicAPI;
+
+    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao, MusicAPI musicAPI) {
         this.commandManager = commandManager;
         this.api = api;
         this.eventWaiter = eventWaiter;
         this.voiceStateDao = voiceStateDao;
+        this.musicAPI = musicAPI;
 
         this.playerManager = new DefaultAudioPlayerManager();
         this.musicManagers = new HashMap<>();
@@ -89,6 +94,10 @@ public class MusicModule implements Modul {
         cmd.add(new YouTubeCommand(this, eventWaiter));
         cmd.add(new LeaveCommand(this));
         cmd.add(new LoopCommand(this));
+
+        //#region Prywatne
+        cmd.add(new PrivatePlayCommand(musicAPI));
+        //#endregion Prywatne
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
