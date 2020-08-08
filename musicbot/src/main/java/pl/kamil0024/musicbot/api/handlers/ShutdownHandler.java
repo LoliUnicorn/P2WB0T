@@ -16,12 +16,12 @@ public class ShutdownHandler implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange ex) {
         try {
-            api.shutdown();
             Response.sendResponse(ex, "Pomyślnie podłączono");
-            System.exit(0);
+            System.exit(1);
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());
         }
+        System.exit(1);
 
     }
 
