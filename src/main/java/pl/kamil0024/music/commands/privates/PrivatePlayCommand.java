@@ -12,7 +12,6 @@ import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.music.commands.PlayCommand;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +55,12 @@ public class PrivatePlayCommand extends Command {
                 restAction = musicAPI.getAction(port);
                 if (restAction.getVoiceChannel() == null) {
                     wolnyBot = port;
+                    try {
+                        MusicResponse tak = restAction.connect(PlayCommand.getVc(context.getMember()));
+                    } catch (Exception e) {
+                        context.send("Nie udało się dołączyć na kanał głosowy.").queue();
+                        return false;
+                    }
                     break;
                 }
             }
@@ -63,13 +68,6 @@ public class PrivatePlayCommand extends Command {
 
         if (wolnyBot == 0) {
             context.send("Aktualnie nie ma wolnych botów.").queue();
-            return false;
-        }
-
-        try {
-            restAction.connect(PlayCommand.getVc(context.getMember()));
-        } catch (Exception e) {
-            context.send("Nie udało się dołączyć na kanał głosowy.").queue();
             return false;
         }
 
