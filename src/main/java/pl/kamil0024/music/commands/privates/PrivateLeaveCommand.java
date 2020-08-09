@@ -6,7 +6,6 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
-import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.commands.PlayCommand;
 
 @SuppressWarnings("DuplicatedCode")

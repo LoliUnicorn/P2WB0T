@@ -37,11 +37,12 @@ public class GuildMusicManager extends AudioEventAdapter {
     }
 
     public void queue(AudioTrack track) {
-        if (queue.size() >= 10) return;
+        if (queue.size() > 10) return;
 
         if (!player.startTrack(track, true)) {
             queue.offer(track);
         }
+
     }
 
     public void nextTrack() {

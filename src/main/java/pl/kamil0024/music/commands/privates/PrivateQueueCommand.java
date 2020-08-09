@@ -1,13 +1,10 @@
 package pl.kamil0024.music.commands.privates;
 
 import com.google.gson.Gson;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import org.json.JSONArray;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.musicapi.MusicAPI;
@@ -66,7 +63,7 @@ public class PrivateQueueCommand extends Command {
 
             MusicResponse skip = restAction.getQueue();
             MusicResponse playing = restAction.getPlayingTrack();
-            if (skip.isError() || playing.isError()) {
+            if ((skip.isError() && !skip.getError().getDescription().contains("Kolejka jest pusta!") ) || playing.isError()) {
                 context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
                 return false;
             }

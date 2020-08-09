@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.logger.Log;
@@ -27,9 +26,9 @@ import java.util.concurrent.TimeUnit;
 
 public class PrivateYouTubeCommand extends Command {
 
-    private MusicAPI musicAPI;
-    private EventWaiter eventWaiter;
-    private MusicModule musicModule;
+    private final MusicAPI musicAPI;
+    private final EventWaiter eventWaiter;
+    private final MusicModule musicModule;
 
     public PrivateYouTubeCommand(MusicAPI musicAPI, EventWaiter eventWaiter, MusicModule musicModule) {
         name = "pyt";
@@ -131,6 +130,7 @@ public class PrivateYouTubeCommand extends Command {
                                 } catch (IOException ignored) { }
                             });
                         } catch (Exception e) {
+                            e.printStackTrace();
                             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
                         }
                         context.sendTranslate("youtube.succes", lista.size()).queue();
