@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
+import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
@@ -33,6 +34,7 @@ public class PlayHandler implements HttpHandler {
                 return;
             }
             track = "https://www.youtube.com/watch?v=" + track;
+            Log.debug("track: " + track);
 
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();

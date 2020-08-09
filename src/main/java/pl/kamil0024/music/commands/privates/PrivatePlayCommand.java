@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("DuplicatedCode")
 public class PrivatePlayCommand extends Command {
 
     private MusicAPI musicAPI;
@@ -75,14 +76,16 @@ public class PrivatePlayCommand extends Command {
         try {
             MusicResponse play = restAction.play(link.split("v=")[1]);
             if (play.isError()) {
-                context.send("Nie udało się odtworzyć piosenki!").queue();
-                // TODO: Jeżeli queue.size() == 0 to disconnect();
+                context.send("Nie udało się odtworzyć piosenki! " + play.getError().getDescription()).queue();
+                if (restAction.getQueue().json.getJSONArray("data").length() == 0 && restAction.getPlayingTrack().json.getJSONObject("data").isEmpty()) {
+                    restAction.disconnect();
+                }
                 return false;
             } else {
                 context.send("Pomyślnie dodano piosenkę do kolejki!").queue();
-                return false;
+                return true;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             context.send("Wystąpił błąd z API! " + e.getLocalizedMessage());
             Log.newError(e);
         }
