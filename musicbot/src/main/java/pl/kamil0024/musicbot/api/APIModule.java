@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.*;
 import pl.kamil0024.musicbot.api.internale.MiddlewareBuilder;
+import pl.kamil0024.musicbot.api.listeners.LeaveVcListener;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.module.Modul;
 import pl.kamil0024.musicbot.core.redis.RedisManager;
@@ -28,13 +29,12 @@ public class APIModule implements Modul {
     private boolean start = false;
     Undertow server;
 
-    @Inject private RedisManager redisManager;
-
     private final Guild guild;
 
-    public APIModule(ShardManager api, RedisManager redisManager, MusicManager musicManager) {
+    private LeaveVcListener leaveVcListener;
+
+    public APIModule(ShardManager api, MusicManager musicManager) {
         this.api = api;
-        this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
         this.musicManager = musicManager;
@@ -42,6 +42,8 @@ public class APIModule implements Modul {
 
     @Override
     public boolean startUp() {
+        this.leaveVcListener = new LeaveVcListener(musicManager);
+        api.addEventListener(leaveVcListener);
         RoutingHandler routes = new RoutingHandler();
 
         //#region Main
@@ -75,6 +77,7 @@ public class APIModule implements Modul {
 
     @Override
     public boolean shutDown() {
+        api.removeEventListener(this.leaveVcListener);
         this.server.stop();
         try {
             NetworkUtil.getJson("http://0.0.0.0:123/api/musicbot/shutdown/" + Ustawienia.instance.api.port);

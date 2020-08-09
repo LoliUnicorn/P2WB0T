@@ -125,12 +125,10 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
-        RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
-
         this.modulManager = new ModulManager();
 
         MusicManager musicManager = new MusicManager(api);
-        APIModule apiModule = new APIModule(api, redisManager, musicManager);
+        APIModule apiModule = new APIModule(api, musicManager);
 
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new MusicModule(api, musicManager));

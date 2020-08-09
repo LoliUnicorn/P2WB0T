@@ -73,7 +73,7 @@ public class PrivatePlayCommand extends Command {
 
         try {
             MusicResponse play = restAction.play(link.split("v=")[1]);
-            if (play.isError()) {
+            if (play.isError() && !play.getError().getDescription().contains("Bot nie jest na żadnym kanale!")) {
                 context.send("Nie udało się odtworzyć piosenki! " + play.getError().getDescription()).queue();
                 if (restAction.getQueue().json.getJSONArray("data").length() == 0 && restAction.getPlayingTrack().json.getJSONObject("data").isEmpty()) {
                     restAction.disconnect();

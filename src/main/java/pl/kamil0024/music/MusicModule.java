@@ -101,6 +101,7 @@ public class MusicModule implements Modul {
         cmd.add(new PrivateQueueCommand(musicAPI, eventWaiter));
         cmd.add(new PrivateSkipCommand(musicAPI));
         cmd.add(new PrivateVolumeCommand(musicAPI));
+        cmd.add(new PrivateYouTubeCommand(musicAPI, eventWaiter, this));
         //#endregion Prywatne
 
         cmd.forEach(commandManager::registerCommand);
