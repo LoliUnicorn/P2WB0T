@@ -69,7 +69,7 @@ public class PlayHandler implements HttpHandler {
                     Response.sendErrorResponse(ex, "Nie udało się odtworzyć piosenki!", "Link jest nieprawidłowy!");
                 }
             });
-
+            Response.sendResponse(ex, "Pomyślnie dodano piosenkę do kolejki");
         } catch (Exception e) {
             e.printStackTrace();
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());

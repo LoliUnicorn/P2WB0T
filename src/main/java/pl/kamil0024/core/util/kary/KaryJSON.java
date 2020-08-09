@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import pl.kamil0024.core.Main;
@@ -45,7 +46,6 @@ public class KaryJSON {
         
         Iterator<String> keys = object.keys();
         ArrayList<String> ids = new ArrayList<>();
-
         while (keys.hasNext()) { ids.add(keys.next()); }
 
         for (int i = 1; i < ids.size(); i++) {

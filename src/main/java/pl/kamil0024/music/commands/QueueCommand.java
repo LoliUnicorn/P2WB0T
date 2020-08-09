@@ -86,8 +86,16 @@ public class QueueCommand extends Command {
         return String.format("https://i.ytimg.com/vi_webp/%s/sddefault.webp", audtioTrack.getIdentifier());
     }
 
+    public static String getImageUrl(String audtioTrack) {
+        return String.format("https://i.ytimg.com/vi_webp/%s/sddefault.webp", audtioTrack);
+    }
+
     public static String getYtLink(AudioTrack audioTrack) {
         return String.format("https://www.youtube.com/watch?v=%s", audioTrack.getIdentifier());
+    }
+
+    public static String getYtLink(String audioTrack) {
+        return String.format("https://www.youtube.com/watch?v=%s", audioTrack);
     }
 
     public static String longToTimespan(Number milins) {

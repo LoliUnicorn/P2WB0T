@@ -27,7 +27,7 @@ import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.commands.*;
-import pl.kamil0024.music.commands.privates.PrivatePlayCommand;
+import pl.kamil0024.music.commands.privates.*;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 
 import java.util.ArrayList;
@@ -97,6 +97,10 @@ public class MusicModule implements Modul {
 
         //#region Prywatne
         cmd.add(new PrivatePlayCommand(musicAPI));
+        cmd.add(new PrivateLeaveCommand(musicAPI));
+        cmd.add(new PrivateQueueCommand(musicAPI, eventWaiter));
+        cmd.add(new PrivateSkipCommand(musicAPI));
+        cmd.add(new PrivateVolumeCommand(musicAPI));
         //#endregion Prywatne
 
         cmd.forEach(commandManager::registerCommand);

@@ -45,14 +45,16 @@ public class QueueHandler implements HttpHandler {
         private final String author;
         private final String title;
         private final boolean stream;
-        private final long lenght;
+        private final long length;
+        private final long position;
 
         public Track(AudioTrack audioTrack) {
             this.identifier = audioTrack.getIdentifier();
             this.author = audioTrack.getInfo().author;
             this.title = audioTrack.getInfo().title;
             this.stream = audioTrack.getInfo().isStream;
-            this.lenght = audioTrack.getInfo().length;
+            this.length = audioTrack.getInfo().length;
+            this.position = audioTrack.getPosition();
         }
         
     }

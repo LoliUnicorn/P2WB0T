@@ -100,21 +100,16 @@ public class B0T {
             builder.setBulkDeleteSplittingEnabled(false);
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
             this.api = builder.build();
-            Thread.sleep(1000);
-            while (api.getShards().stream().noneMatch(s -> {
-                try {
-                    s.getSelfUser();
-                } catch (IllegalStateException e) {
-                    return false;
-                }
-                return true;
-            })) {
-                Thread.sleep(1000);
-            }
-        } catch (LoginException | InterruptedException e) {
+        } catch (LoginException e) {
             Log.error("Nie udalo sie zalogowac!");
             e.printStackTrace();
             System.exit(1);
+        }
+
+        while(api.getShards().stream().allMatch(s -> s.getStatus() != JDA.Status.CONNECTED)) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) { }
         }
 
         Optional<JDA> shard = api.getShards().stream().filter(s -> {

@@ -20,9 +20,8 @@ public class MusicResponse {
         return !json.getBoolean("success");
     }
 
-    @Nullable
     public Response.Error getError() {
-        if (!isError()) return null;
+        if (!isError()) throw new UnsupportedOperationException("Operacja nie jest bledem");
         JSONObject tak = json.getJSONObject("error");
         return new Response.Error(tak.getString("body"), tak.getString("description"));
     }
