@@ -1,5 +1,6 @@
 package pl.kamil0024.music.commands.privates;
 
+import com.google.gson.Gson;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
@@ -112,12 +113,14 @@ public class PrivateYouTubeCommand extends Command {
                         String eMsg = event.getMessage().getContentRaw().replaceAll(" ", "");
                         for (String s : eMsg.split(",")) {
                             Integer i = context.getParsed().getNumber(s);
-                            assert i != null && mapa.get(i) != null;
-                            lista.add(i);
+                            if (i != null && mapa.get(i) != null) {
+                                lista.add(i);
+                            }
                         }
+                        Log.debug("lista: " + new Gson().toJson(lista));
                         try {
                             if (lista.isEmpty()) {
-                                if (finalRestAction.getQueue().json.getJSONArray("data").length() == 0 && finalRestAction.getPlayingTrack().json.getJSONObject("data").isEmpty()) {
+                                if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
                                     finalRestAction.disconnect();
                                 }
                                 msg.delete().complete();
@@ -136,7 +139,7 @@ public class PrivateYouTubeCommand extends Command {
                         context.sendTranslate("youtube.succes", lista.size()).queue();
                     }, 30, TimeUnit.SECONDS, () -> {
                         try {
-                            if (finalRestAction.getQueue().json.getJSONArray("data").length() == 0 && finalRestAction.getPlayingTrack().json.getJSONObject("data").isEmpty()) {
+                            if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
                                 finalRestAction.disconnect();
                             }
                         } catch (Exception ignored) {}
