@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
@@ -23,6 +25,8 @@ public class PrivatePlayCommand extends Command {
     public PrivatePlayCommand(MusicAPI musicAPI) {
         name = "pplay";
         aliases.add("privateplay");
+        category = CommandCategory.PRIVATE_CHANNEL;
+        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 

@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
@@ -35,6 +37,8 @@ public class PrivateYouTubeCommand extends Command {
         name = "pyt";
         aliases.add("privateeyt");
         aliases.add("privateeyoutube");
+        category = CommandCategory.PRIVATE_CHANNEL;
+        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
         this.eventWaiter = eventWaiter;
         this.musicModule = musicModule;
@@ -117,7 +121,6 @@ public class PrivateYouTubeCommand extends Command {
                                 lista.add(i);
                             }
                         }
-                        Log.debug("lista: " + new Gson().toJson(lista));
                         try {
                             if (lista.isEmpty()) {
                                 if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
@@ -137,7 +140,7 @@ public class PrivateYouTubeCommand extends Command {
                             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
                         }
                         context.sendTranslate("youtube.succes", lista.size()).queue();
-                    }, 30, TimeUnit.SECONDS, () -> {
+                    }, 15, TimeUnit.SECONDS, () -> {
                         try {
                             if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
                                 finalRestAction.disconnect();

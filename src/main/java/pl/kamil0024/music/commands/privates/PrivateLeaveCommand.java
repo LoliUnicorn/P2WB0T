@@ -3,6 +3,8 @@ package pl.kamil0024.music.commands.privates;
 import net.dv8tion.jda.api.entities.Member;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
@@ -16,6 +18,8 @@ public class PrivateLeaveCommand extends Command {
     public PrivateLeaveCommand(MusicAPI musicAPI) {
         name = "pleave";
         aliases.add("privateleave");
+        category = CommandCategory.PRIVATE_CHANNEL;
+        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 
