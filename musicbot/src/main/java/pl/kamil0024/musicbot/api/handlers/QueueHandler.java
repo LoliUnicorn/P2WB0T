@@ -35,7 +35,6 @@ public class QueueHandler implements HttpHandler {
             return;
         }
         List<Track> traki = new ArrayList<>();
-        traki.add(new Track(manager.getPlayer().getPlayingTrack()));
         klele.forEach(t -> traki.add(new Track(t)));
         Response.sendObjectResponse(ex, traki);
     }
