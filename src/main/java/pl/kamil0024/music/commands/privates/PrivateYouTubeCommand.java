@@ -38,7 +38,6 @@ public class PrivateYouTubeCommand extends Command {
         aliases.add("privateeyt");
         aliases.add("privateeyoutube");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
         this.eventWaiter = eventWaiter;
         this.musicModule = musicModule;

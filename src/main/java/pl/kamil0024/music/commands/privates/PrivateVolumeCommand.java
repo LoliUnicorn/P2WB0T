@@ -20,7 +20,6 @@ public class PrivateVolumeCommand extends Command {
         name = "pvolume";
         aliases.add("privatevolume");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 

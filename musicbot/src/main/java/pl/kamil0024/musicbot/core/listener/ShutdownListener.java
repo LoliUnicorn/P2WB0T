@@ -12,7 +12,7 @@ public class ShutdownListener extends ListenerAdapter {
     @Override
     public void onShutdown(@Nonnull ShutdownEvent event) {
         try {
-            NetworkUtil.getJson("http://0.0.0.0:123/api/musicbot/shutdown/" + Ustawienia.instance.api.port);
+            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/shutdown/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
         } catch (Exception ignored) {}
     }
 

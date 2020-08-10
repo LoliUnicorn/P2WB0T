@@ -19,7 +19,6 @@ public class PrivateSkipCommand extends Command {
         name = "pskip";
         aliases.add("privateskip");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 

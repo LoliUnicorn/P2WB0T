@@ -79,6 +79,7 @@ public class CommandExecute extends ListenerAdapter {
         }
 
         if (c == null) { return; }
+        PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
             try {
@@ -89,9 +90,15 @@ public class CommandExecute extends ListenerAdapter {
                     return;
                 }
             } catch (Exception ignored) {}
+
+            if (!e.getChannel().getId().equals("426864003562864641") && jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", komend muzycznych musisz używać na <#426864003562864641>!")
+                        .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
+                return;
+            }
+
         }
 
-        PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
             if (jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {

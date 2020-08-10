@@ -34,7 +34,6 @@ public class PrivateQueueCommand extends Command {
         name = "pqueue";
         aliases.add("privatequeue");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
         this.eventWaiter = eventWaiter;
     }

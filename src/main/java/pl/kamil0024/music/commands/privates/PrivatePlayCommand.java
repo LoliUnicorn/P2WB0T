@@ -26,7 +26,6 @@ public class PrivatePlayCommand extends Command {
         name = "pplay";
         aliases.add("privateplay");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 
@@ -87,12 +86,14 @@ public class PrivatePlayCommand extends Command {
                 context.send("Pomyślnie dodano piosenkę do kolejki!").queue();
                 return true;
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            context.send("Link jest nieprawidłowy?").queue();
+            return false;
         } catch (Exception e) {
-            context.send("Wystąpił błąd z API! " + e.getLocalizedMessage());
+            context.send("Wystąpił błąd z API! " + e.getLocalizedMessage()).queue();
             Log.newError(e);
+            return false;
         }
-
-        return true;
     }
 
     public static boolean check(CommandContext context) {
@@ -110,10 +111,10 @@ public class PrivatePlayCommand extends Command {
         List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
         int size = members.size();
 
-//        if (size < 4) {
-//            context.sendTranslate("pplay.min.members").queue();
-//            return false;
-//        }
+        if (size < 4) {
+            context.sendTranslate("pplay.min.members").queue();
+            return false;
+        }
         if (!context.getMember().hasPermission(vc, Permission.MANAGE_CHANNEL)) {
             context.sendTranslate("pplay.no.channel.owner").queue();
             return false;

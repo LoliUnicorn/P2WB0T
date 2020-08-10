@@ -19,7 +19,6 @@ public class PrivateLeaveCommand extends Command {
         name = "pleave";
         aliases.add("privateleave");
         category = CommandCategory.PRIVATE_CHANNEL;
-        permLevel = PermLevel.HELPER;
         this.musicAPI = musicAPI;
     }
 
