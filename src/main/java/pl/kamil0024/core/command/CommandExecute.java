@@ -1,10 +1,7 @@
 package pl.kamil0024.core.command;
 
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.commands.dews.RebootCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.arguments.ArgumentManager;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.UserDao;
 import pl.kamil0024.core.database.config.UserConfig;
@@ -21,6 +19,7 @@ import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
+import pl.kamil0024.music.commands.PlayCommand;
 
 import java.time.Instant;
 import java.util.Calendar;
@@ -80,6 +79,17 @@ public class CommandExecute extends ListenerAdapter {
         }
 
         if (c == null) { return; }
+
+        if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
+            try {
+                VoiceChannel vc = PlayCommand.getVc(e.getMember());
+                if (vc.getParent() != null && vc.getParent().getName().toLowerCase().equals("prywatne kanały")) {
+                    e.getChannel().sendMessage("Funkcja jest w fazie **BETA** i jest dostępna od rangi [VIP]").queue();
+                    zareaguj(e.getMessage(), e.getAuthor(), false);
+                    return;
+                }
+            } catch (Exception ignored) {}
+        }
 
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 

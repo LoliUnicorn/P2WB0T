@@ -245,11 +245,14 @@ public class ChatListener extends ListenerAdapter {
         for (String split : ssplit) {
             try {
                 String nastepnaLitera = ssplit[tak + 1];
-                if (nastepnaLitera == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
+                if (floodowanyZnak == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
                     floodowanyZnak = nastepnaLitera;
                     flood++;
                 } else if (floodowanyZnak != null && floodowanyZnak.toLowerCase().equals(split.toLowerCase())) {
                     flood++;
+                } else {
+                    floodowanyZnak = split;
+                    flood = 0;
                 }
                 tak++;
             } catch (Exception ignored) {}

@@ -25,7 +25,6 @@ public class TekstCommand extends Command {
         name = "tekst";
         aliases.add("lyrics");
         category = CommandCategory.MUSIC;
-        permLevel = PermLevel.HELPER;
 
         this.eventWaiter = eventWaiter;
         this.musicModule = musicModule;
@@ -37,7 +36,7 @@ public class TekstCommand extends Command {
         AudioTrack track = musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack();
 
         String arg0 = context.getArgs().get(0);
-        if (arg0 == null && musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() != null) {
+        if (UserUtil.getPermLevel(context.getMember()).getNumer() >= PermLevel.HELPER.getNumer() && arg0 == null && musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack() != null) {
             arg = track.getInfo().title;
         } else {
             arg = context.getArgsToString(0);
