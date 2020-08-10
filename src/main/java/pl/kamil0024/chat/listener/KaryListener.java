@@ -19,6 +19,7 @@ import pl.kamil0024.stats.StatsModule;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.concurrent.TimeUnit;
 
 public class KaryListener extends ListenerAdapter {
@@ -82,6 +83,7 @@ public class KaryListener extends ListenerAdapter {
                 msg.delete().queue();
             }
 
+        } catch (ConcurrentModificationException ignored) {
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -60,7 +60,7 @@ public class BotinfoCommand extends Command {
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.core"), Statyczne.WERSJA, false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.jre"), System.getProperty("java.version"), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.os"), System.getProperty("os.name"), false));
-        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.users"), String.valueOf(context.getJDA().getUsers().size()),
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.users"), String.valueOf(context.getGuild().getMemberCount()),
                 false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.name"), UserUtil.getFullName(context.getBot()), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cmd"), String.valueOf(commandManager.getCommands().size()), false));
