@@ -12,6 +12,7 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.music.commands.PlayCommand;
 
 import java.util.List;
@@ -111,12 +112,13 @@ public class PrivatePlayCommand extends Command {
         List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
         int size = members.size();
 
-        if (size < 4) {
-            context.sendTranslate("pplay.min.members").queue();
-            return false;
-        }
         if (!context.getMember().hasPermission(vc, Permission.MANAGE_CHANNEL)) {
             context.sendTranslate("pplay.no.channel.owner").queue();
+            return false;
+        }
+
+        if (size < 4 && UserUtil.getPermLevel(context.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) {
+            context.sendTranslate("pplay.min.members").queue();
             return false;
         }
 
