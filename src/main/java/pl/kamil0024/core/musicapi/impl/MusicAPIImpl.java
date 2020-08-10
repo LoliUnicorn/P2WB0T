@@ -29,9 +29,8 @@ public class MusicAPIImpl implements MusicAPI {
 
     @Override
     public boolean connect(Integer port, String id) {
-        getPorts().remove(port);
+        disconnect(port);
         getPorts().add(port);
-        Log.debug("client: " + id);
         getClients().add(id);
         getSuma().put(port, id);
         return true;
@@ -42,8 +41,8 @@ public class MusicAPIImpl implements MusicAPI {
         if (!getPorts().contains(port)) {
             return false;
         }
-        getPorts().remove(port);
         String client = getClientByPort(port);
+        getPorts().remove(port);
         getClients().remove(client);
         getSuma().remove(port);
         return true;

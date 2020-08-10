@@ -7,6 +7,7 @@ import io.undertow.server.HttpServerExchange;
 import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
+import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.util.ArrayList;
@@ -24,16 +25,17 @@ public class QueueHandler implements HttpHandler {
         this.musicManager = musicManager;
     }
 
-
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
-        List<AudioTrack> klele = new ArrayList<>(musicManager.getGuildAudioPlayer(Connect.getGuild(api)).getQueue());
+        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+        List<AudioTrack> klele = new ArrayList<>(manager.getQueue());
         
-        if (klele.isEmpty()) {
+        if (klele.isEmpty() && manager.getPlayer().getPlayingTrack() == null) {
             Response.sendErrorResponse(ex, "Błąd", "Kolejka jest pusta!");
             return;
         }
         List<Track> traki = new ArrayList<>();
+        traki.add(new Track(manager.getPlayer().getPlayingTrack()));
         klele.forEach(t -> traki.add(new Track(t)));
         Response.sendObjectResponse(ex, traki);
     }
