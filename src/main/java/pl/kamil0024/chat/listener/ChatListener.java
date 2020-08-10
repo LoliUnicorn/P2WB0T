@@ -104,7 +104,7 @@ public class ChatListener extends ListenerAdapter {
 
         String przeklenstwa = msgRaw;
 
-        String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
+        String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż", "e;3", "i;1"};
         for (String s : tak) {
             String[] kurwa = s.split(";");
             przeklenstwa = przeklenstwa.replaceAll(kurwa[1], kurwa[0]);
@@ -128,12 +128,10 @@ public class ChatListener extends ListenerAdapter {
             }
         }
 
-        if (containsLink(msgRaw.split(" "))) {
-            if (!msg.getChannel().getId().equals("426864003562864641")) {
-                action.setKara(Action.ListaKar.LINK);
-                action.send();
-                return;
-            }
+        if (containsLink(msgRaw.split(" ")) && !msg.getChannel().getId().equals("426864003562864641")) {
+            action.setKara(Action.ListaKar.LINK);
+            action.send();
+            return;
         }
 
         if (containsInvite(msgRaw.split(" "))) {
