@@ -117,9 +117,11 @@ public class PrivatePlayCommand extends Command {
             return false;
         }
 
-        if (size < 4 && UserUtil.getPermLevel(context.getMember()).getNumer() >= PermLevel.HELPER.getNumer()) {
-            context.sendTranslate("pplay.min.members").queue();
-            return false;
+        if (UserUtil.getPermLevel(context.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) {
+            if (size < 4) {
+                context.sendTranslate("pplay.min.members").queue();
+                return false;
+            }
         }
 
         return true;
