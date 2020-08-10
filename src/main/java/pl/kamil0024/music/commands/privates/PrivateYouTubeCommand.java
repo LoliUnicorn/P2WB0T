@@ -49,7 +49,11 @@ public class PrivateYouTubeCommand extends Command {
 
         String tytul = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
-        List<AudioTrack> audioTrackList = musicModule.search(tytul);
+        List<AudioTrack> audioTrackList = null;
+
+        try {
+            audioTrackList = musicModule.search(tytul);
+        } catch (Exception ignored) {}
 
         if (audioTrackList.isEmpty()) {
             context.sendTranslate("youtube.bad").queue();
