@@ -4,12 +4,14 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.module.ModulManager;
+import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.Statyczne;
 import pl.kamil0024.core.util.UserUtil;
 
@@ -24,14 +26,16 @@ public class BotinfoCommand extends Command {
 
     @Inject private final CommandManager commandManager;
     @Inject private final ModulManager modulManager;
+    @Inject private final MusicAPI musicAPI;
 
-    public BotinfoCommand(CommandManager commandManager, ModulManager modulManager) {
+    public BotinfoCommand(CommandManager commandManager, ModulManager modulManager, MusicAPI musicAPI) {
         name = "botinfo";
         aliases = Arrays.asList("botstat", "botstats");
         cooldown = 5;
 
         this.commandManager = commandManager;
         this.modulManager = modulManager;
+        this.musicAPI = musicAPI;
     }
 
     @Override
@@ -61,6 +65,15 @@ public class BotinfoCommand extends Command {
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.name"), UserUtil.getFullName(context.getBot()), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cmd"), String.valueOf(commandManager.getCommands().size()), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.modules"), String.valueOf(modulManager.getModules().size()), false));
+
+        int polaczonych = 0;
+        for (Integer port : musicAPI.getPorts()) {
+            VoiceChannel vc = musicAPI.getAction(port).getVoiceChannel();
+            if (vc != null) {
+                polaczonych++;
+            }
+        }
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.musicbots"), String.format("[ %s / %s ]", polaczonych, musicAPI.getPorts().size()), false));
 
         eb.setColor(UserUtil.getColor(context.getMember()));
 

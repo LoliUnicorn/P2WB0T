@@ -88,7 +88,7 @@ public class CommandsModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new PingCommand());
-        cmd.add(new BotinfoCommand(commandManager, modulManager));
+        cmd.add(new BotinfoCommand(commandManager, modulManager, musicAPI));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
         cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI));

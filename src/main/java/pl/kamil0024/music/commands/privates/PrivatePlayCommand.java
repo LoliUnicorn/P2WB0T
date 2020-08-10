@@ -89,10 +89,20 @@ public class PrivatePlayCommand extends Command {
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             context.send("Link jest nieprawidłowy?").queue();
+            try {
+                if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
+                    restAction.disconnect();
+                }
+            } catch (Exception ignored) {}
             return false;
         } catch (Exception e) {
             context.send("Wystąpił błąd z API! " + e.getLocalizedMessage()).queue();
             Log.newError(e);
+            try {
+                if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
+                    restAction.disconnect();
+                }
+            } catch (Exception ignored) {}
             return false;
         }
     }

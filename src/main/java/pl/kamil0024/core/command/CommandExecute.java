@@ -82,14 +82,14 @@ public class CommandExecute extends ListenerAdapter {
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
-            try {
-                VoiceChannel vc = PlayCommand.getVc(e.getMember());
-                if (vc.getParent() != null && vc.getParent().getName().toLowerCase().equals("prywatne kanały")) {
-                    e.getChannel().sendMessage("Funkcja jest w fazie **BETA** i jest dostępna od rangi [VIP]").queue();
-                    zareaguj(e.getMessage(), e.getAuthor(), false);
-                    return;
-                }
-            } catch (Exception ignored) {}
+//            try {
+//                VoiceChannel vc = PlayCommand.getVc(e.getMember());
+//                if (vc.getParent() != null && vc.getParent().getName().toLowerCase().equals("prywatne kanały")) {
+//                    e.getChannel().sendMessage("Funkcja jest w fazie **BETA** i jest dostępna od rangi [VIP]").queue();
+//                    zareaguj(e.getMessage(), e.getAuthor(), false);
+//                    return;
+//                }
+//            } catch (Exception ignored) {}
 
             if (!e.getChannel().getId().equals("426864003562864641") && jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", komend muzycznych musisz używać na <#426864003562864641>!")

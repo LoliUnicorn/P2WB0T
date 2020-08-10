@@ -82,6 +82,9 @@ public class PrivateYouTubeCommand extends Command {
                     wolnyBot = port;
                     try {
                         MusicResponse tak = restAction.connect(PlayCommand.getVc(context.getMember()));
+                        if (tak.isError()) {
+                            throw new Exception();
+                        }
                     } catch (Exception e) {
                         context.send("Nie udało się dołączyć na kanał głosowy.").queue();
                         return false;
