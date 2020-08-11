@@ -3,12 +3,16 @@ package pl.kamil0024.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -23,11 +27,14 @@ import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.*;
+import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.listener.ExceptionListener;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.musicapi.MusicResponse;
+import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
@@ -37,6 +44,8 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
 import pl.kamil0024.music.MusicModule;
+import pl.kamil0024.music.commands.QueueCommand;
+import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 import pl.kamil0024.stats.StatsModule;
@@ -48,10 +57,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
@@ -76,6 +82,7 @@ public class B0T {
     private ModulManager modulManager;
     private MusicModule musicModule;
     private MusicAPI musicAPI;
+    private VoiceStateDao voiceStateDao;
 
     public B0T(String token) {
         moduls = new HashMap<>();
@@ -181,7 +188,7 @@ public class B0T {
         RemindDao        remindDao           = new RemindDao(databaseManager);
         GiveawayDao      giveawayDao         = new GiveawayDao(databaseManager);
         StatsDao         statsDao            = new StatsDao(databaseManager);
-        VoiceStateDao    voiceStateDao       = new VoiceStateDao(databaseManager);
+                    this.voiceStateDao       = new VoiceStateDao(databaseManager);
         MultiDao         multiDao            = new MultiDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
@@ -197,7 +204,7 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, musicAPI);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
@@ -252,6 +259,7 @@ public class B0T {
             api.setStatus(OnlineStatus.DO_NOT_DISTURB);
             api.setActivity(Activity.playing("Wyłącznie bota w toku..."));
 
+            loadMusic();
             musicAPI.getPorts().forEach(port -> {
                 try {
                     musicAPI.getAction(port).shutdown();
@@ -264,6 +272,37 @@ public class B0T {
         });
         shutdownThread.setName("P2WB0T ShutDown");
         Runtime.getRuntime().addShutdownHook(shutdownThread);
+    }
+
+    public void loadMusic() {
+        try {
+            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+            if (g == null) return;
+
+            for (Integer port : musicAPI.getPorts()) {
+                MusicRestAction action = musicAPI.getAction(port);
+                VoiceStateConfig vsc = new VoiceStateConfig(musicAPI.getClientByPort(port));
+
+                VoiceChannel vc = action.getVoiceChannel();
+                if (vc == null) continue;
+                vsc.setVoiceChannel(vc.getId());
+
+                MusicResponse queue = action.getQueue();
+                if (queue.isError()) continue;
+
+                for (Object o : queue.json.getJSONArray("data")) {
+                    PrivateQueueCommand.Track trak = new Gson()
+                            .fromJson(o.toString(), PrivateQueueCommand.Track.class);
+                    vsc.getQueue().add(trak.getIdentifier());
+                }
+                MusicResponse mr = action.getPlayingTrack();
+                PrivateQueueCommand.Track trak = new Gson()
+                        .fromJson(mr.json.getJSONObject("data").toString(), PrivateQueueCommand.Track.class);
+                vsc.setAktualnaPiosenka(trak.getIdentifier());
+                voiceStateDao.save(vsc);
+            }
+
+        } catch (Exception ignored) {}
     }
 
 

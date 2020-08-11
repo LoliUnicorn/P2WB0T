@@ -59,12 +59,6 @@ public class PrivatePlayCommand extends Command {
                 restAction = musicAPI.getAction(port);
                 if (restAction.getVoiceChannel() == null) {
                     wolnyBot = port;
-                    try {
-                        MusicResponse tak = restAction.connect(PlayCommand.getVc(context.getMember()));
-                    } catch (Exception e) {
-                        context.sendTranslate("pplay.dont.connect").queue();
-                        return false;
-                    }
                     break;
                 }
             }
@@ -77,6 +71,12 @@ public class PrivatePlayCommand extends Command {
 
         try {
             MusicResponse play = restAction.play(link.split("v=")[1]);
+            try {
+                restAction.connect(PlayCommand.getVc(context.getMember()));
+            } catch (Exception e) {
+                context.sendTranslate("pplay.dont.connect").queue();
+                return false;
+            }
             if (play.isError() && !play.getError().getDescription().contains("Bot nie jest na żadnym kanale!")) {
                 context.send("Nie udało się odtworzyć piosenki! " + play.getError().getDescription()).queue();
                 if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
@@ -117,10 +117,6 @@ public class PrivatePlayCommand extends Command {
             context.sendTranslate("pplay.no.private").queue();
             return false;
         }
-
-
-        List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
-        int size = members.size();
 
         if (!context.getMember().hasPermission(vc, Permission.MANAGE_CHANNEL)) {
             context.sendTranslate("pplay.no.channel.owner").queue();

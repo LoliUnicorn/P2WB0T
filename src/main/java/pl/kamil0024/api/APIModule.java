@@ -17,6 +17,7 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
+import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.module.Modul;
@@ -31,6 +32,7 @@ import static io.undertow.Handlers.path;
 @SuppressWarnings("DanglingJavadoc")
 public class APIModule implements Modul {
 
+    private VoiceStateDao voiceStateDao;
     private MusicAPI musicAPI;
     private ShardManager api;
     private boolean start = false;
@@ -46,7 +48,7 @@ public class APIModule implements Modul {
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -56,6 +58,7 @@ public class APIModule implements Modul {
         this.caseDao = caseDao;
         this.nieobecnosciDao = nieobecnosciDao;
         this.statsDao = statsDao;
+        this.voiceStateDao = voiceStateDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache();
@@ -504,8 +507,8 @@ public class APIModule implements Modul {
         routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
 
         //#region Music Bot api
-        routes.get("api/musicbot/shutdown/{port}", new MusicBotHandler(musicAPI, false));
-        routes.get("api/musicbot/connect/{port}/{clientid}", new MusicBotHandler(musicAPI, true));
+        routes.get("api/musicbot/shutdown/{port}", new MusicBotHandler(musicAPI, false, voiceStateDao, api));
+        routes.get("api/musicbot/connect/{port}/{clientid}", new MusicBotHandler(musicAPI, true, voiceStateDao, api));
         //#endregion Music Bot api
 
         this.server = Undertow.builder()

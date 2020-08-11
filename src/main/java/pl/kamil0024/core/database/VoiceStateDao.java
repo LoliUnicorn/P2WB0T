@@ -27,12 +27,12 @@ public class VoiceStateDao implements Dao<VoiceStateConfig> {
         mapper.save(toCos);
     }
 
-    public void delete() {
-        mapper.delete(1);
+    public void delete(int id) {
+        mapper.delete(id);
     }
 
     @Override
     public List<VoiceStateConfig> getAll() {
-        return null;
+        return mapper.loadAll();
     }
 }
