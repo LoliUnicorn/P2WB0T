@@ -23,14 +23,14 @@ import pl.kamil0024.core.util.Emoji;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
-
-import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
+
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -233,6 +233,7 @@ public class ChatListener extends ListenerAdapter {
 
 
     public static int containsTestFlood(String msg) {
+        if (msg.length() < 4) return 0;
         HashMap<Character, Integer> mapa = new HashMap<>();
 
         for (char c : msg.replaceAll(" ", "").toCharArray()) {
@@ -243,7 +244,7 @@ public class ChatListener extends ListenerAdapter {
 
         int suma = 0;
         for (Map.Entry<Character, Integer> entry : mapa.entrySet()) {
-            suma += entry.getValue();
+            if (entry.getValue() > 1) suma += entry.getValue();
         }
 
         return (suma / msg.length()) * 100;
