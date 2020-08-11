@@ -153,8 +153,6 @@ public class PrivatePlayCommand extends Command {
 
             } catch (Exception ignored) {}
         }
-
-        
         return members.size() <= 1;
     }
 

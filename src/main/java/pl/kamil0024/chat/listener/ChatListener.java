@@ -168,7 +168,7 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
-        if (flood > 4 || caps >= 50 || emote > 3) {
+        if (flood > 3 || caps >= 50 || emote > 3) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + msgRaw);
