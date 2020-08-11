@@ -28,11 +28,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -168,7 +164,7 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
 
-        if (flood > 3 || caps >= 50 || emote > 3) {
+        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(msgRaw) == 100) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + msgRaw);
@@ -233,6 +229,24 @@ public class ChatListener extends ListenerAdapter {
             if (tak.contains("CzemuTutajJestJakisJebanyInvite")) return true;
         }
         return false;
+    }
+
+
+    public static int containsTestFlood(String msg) {
+        HashMap<Character, Integer> mapa = new HashMap<>();
+
+        for (char c : msg.replaceAll(" ", "").toCharArray()) {
+            Integer ind = mapa.getOrDefault(c, 0);
+            ind++;
+            mapa.put(c, ind);
+        }
+
+        int suma = 0;
+        for (Map.Entry<Character, Integer> entry : mapa.entrySet()) {
+            suma += entry.getValue();
+        }
+
+        return (suma / msg.length()) * 100;
     }
 
     public static int containsFlood(String msg) {

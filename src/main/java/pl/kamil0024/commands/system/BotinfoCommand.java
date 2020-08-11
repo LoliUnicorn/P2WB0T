@@ -1,6 +1,7 @@
 package pl.kamil0024.commands.system;
 
 import com.google.inject.Inject;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -38,6 +39,7 @@ public class BotinfoCommand extends Command {
         this.musicAPI = musicAPI;
     }
 
+    @SneakyThrows
     @Override
     public boolean execute(CommandContext context) {
         EmbedBuilder eb = new EmbedBuilder();
@@ -53,7 +55,7 @@ public class BotinfoCommand extends Command {
         int cpuCount = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
 
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.ram"), format, false));
-        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cpu"), calcCPU(startCPUTime, start, cpuCount) + "%", false));
+//        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cpu"), calcCPU(startCPUTime, start, cpuCount) + "%", false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.uptime"), new BDate(Statyczne.START_DATE.getTime(), ModLog.getLang()).difference(new Date().getTime()), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.jda"), JDAInfo.VERSION, false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.shard"), String.format("[ %s / %s ]", context.getJDA().getShardInfo().getShardId(), context.getJDA().getShardInfo().getShardTotal()), false));
