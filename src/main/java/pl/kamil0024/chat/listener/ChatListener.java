@@ -252,8 +252,8 @@ public class ChatListener extends ListenerAdapter {
                 } else if (floodowanyZnak != null && floodowanyZnak.toLowerCase().equals(split.toLowerCase())) {
                     flood++;
                 } else {
-                    floodowanyZnak = split;
-                    flood = 0;
+                    floodowanyZnak = nastepnaLitera;
+                    if (flood < 3) flood = 0;
                 }
                 tak++;
             } catch (Exception ignored) {}
