@@ -14,6 +14,7 @@ import pl.kamil0024.musicbot.api.listeners.LeaveVcListener;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.module.Modul;
 import pl.kamil0024.musicbot.core.redis.RedisManager;
+import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.core.util.NetworkUtil;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
@@ -26,6 +27,7 @@ public class APIModule implements Modul {
 
     private ShardManager api;
     private MusicManager musicManager;
+    private EventWaiter eventWaiter;
     private boolean start = false;
     Undertow server;
 
@@ -33,16 +35,17 @@ public class APIModule implements Modul {
 
     private LeaveVcListener leaveVcListener;
 
-    public APIModule(ShardManager api, MusicManager musicManager) {
+    public APIModule(ShardManager api, MusicManager musicManager, EventWaiter eventWaiter) {
         this.api = api;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
         this.musicManager = musicManager;
+        this.eventWaiter = eventWaiter;
     }
 
     @Override
     public boolean startUp() {
-        this.leaveVcListener = new LeaveVcListener(musicManager);
+        this.leaveVcListener = new LeaveVcListener(musicManager, eventWaiter);
         api.addEventListener(leaveVcListener);
         RoutingHandler routes = new RoutingHandler();
 

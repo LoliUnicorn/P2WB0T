@@ -98,13 +98,16 @@ public class ChatListener extends ListenerAdapter {
     public void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         if (MuteCommand.hasMute(member)) return;
 
-        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "").replaceAll("<#(\\d+)>", "");
+        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "")
+                .replaceAll("3", "e")
+                .replaceAll("1", "i")
+                .replaceAll("<#(\\d+)>", "");
         Action action = new Action(karyJSON);
         action.setMsg(msg);
 
         String przeklenstwa = msgRaw;
 
-        String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż", "e;3", "i;1"};
+        String[] tak = new String[] {"a;ą", "c;ć","e;ę", "l;ł", "n;ń", "o;ó", "s;ś", "z;ź", "z;ż"};
         for (String s : tak) {
             String[] kurwa = s.split(";");
             przeklenstwa = przeklenstwa.replaceAll(kurwa[1], kurwa[0]);

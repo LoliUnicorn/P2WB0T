@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.musicbot.core.Ustawienia;
+import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import javax.annotation.Nonnull;
@@ -16,9 +17,13 @@ import java.util.stream.Collectors;
 public class LeaveVcListener extends ListenerAdapter {
 
     private final MusicManager musicManager;
+    private EventWaiter eventWaiter;
+    private final LeaveWaiter leaveWaiter;
 
-    public LeaveVcListener(MusicManager musicManager) {
+    public LeaveVcListener(MusicManager musicManager, EventWaiter eventWaiter) {
         this.musicManager = musicManager;
+        this.eventWaiter = eventWaiter;
+        this.leaveWaiter = new LeaveWaiter(eventWaiter, musicManager);
     }
 
     @Override
@@ -53,7 +58,7 @@ public class LeaveVcListener extends ListenerAdapter {
         int size = members.size();
 
         if (size < 4) {
-            musicManager.getMusicManagers().get(guild.getIdLong()).destroy();
+            leaveWaiter.initWaiter(event.getChannelLeft());
         }
 
     }
