@@ -86,7 +86,7 @@ public class PrivateYouTubeCommand extends Command {
                             throw new Exception();
                         }
                     } catch (Exception e) {
-                        context.send("Nie udało się dołączyć na kanał głosowy.").queue();
+                        context.sendTranslate("pplay.dont.connect").queue();
                         return false;
                     }
                     break;
@@ -95,7 +95,7 @@ public class PrivateYouTubeCommand extends Command {
         }
 
         if (wolnyBot == 0) {
-            context.send("Aktualnie nie ma wolnych botów.").queue();
+            context.sendTranslate("pplay.to.small.bot").queue();
             return false;
         }
 

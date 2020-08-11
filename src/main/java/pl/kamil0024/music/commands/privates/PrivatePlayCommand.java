@@ -62,7 +62,7 @@ public class PrivatePlayCommand extends Command {
                     try {
                         MusicResponse tak = restAction.connect(PlayCommand.getVc(context.getMember()));
                     } catch (Exception e) {
-                        context.send("Nie udało się dołączyć na kanał głosowy.").queue();
+                        context.sendTranslate("pplay.dont.connect").queue();
                         return false;
                     }
                     break;
@@ -71,7 +71,7 @@ public class PrivatePlayCommand extends Command {
         }
 
         if (wolnyBot == 0) {
-            context.send("Aktualnie nie ma wolnych botów.").queue();
+            context.sendTranslate("pplay.to.small.bot").queue();
             return false;
         }
 
@@ -84,11 +84,11 @@ public class PrivatePlayCommand extends Command {
                 }
                 return false;
             } else {
-                context.send("Pomyślnie dodano piosenkę do kolejki!").queue();
+                context.sendTranslate("pplay.success").queue();
                 return true;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            context.send("Link jest nieprawidłowy?").queue();
+            context.sendTranslate("pplay.bad.link").queue();
             try {
                 if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
                     restAction.disconnect();

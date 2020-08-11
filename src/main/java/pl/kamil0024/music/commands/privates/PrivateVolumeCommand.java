@@ -30,7 +30,7 @@ public class PrivateVolumeCommand extends Command {
         Integer liczba = context.getParsed().getNumber(context.getArgs().get(0));
         if (liczba == null) throw new UsageException();
         if (liczba <= 0 || liczba > 100) {
-            context.send("Liczba musi być pomiędzy **1** a **100**").queue();
+            context.sendTranslate("pvolume.bad.number");
             return false;
         }
 
@@ -49,7 +49,7 @@ public class PrivateVolumeCommand extends Command {
         }
 
         if (wolnyBot == 0) {
-            context.send("Na Twoim kanale nie ma żadnego bota").queue();
+            context.sendTranslate("pleave.no.bot").queue();
             return false;
         }
 
@@ -59,7 +59,7 @@ public class PrivateVolumeCommand extends Command {
                 context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
                 return false;
             }
-            context.send("Pomyślnie zmieniono głośność na " + liczba + " procent").queue();
+            context.sendTranslate("pvolume.success", liczba);
             return true;
         } catch (Exception e) {
             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();

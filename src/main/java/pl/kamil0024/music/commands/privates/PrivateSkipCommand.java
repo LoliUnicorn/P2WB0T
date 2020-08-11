@@ -41,7 +41,7 @@ public class PrivateSkipCommand extends Command {
         }
 
         if (wolnyBot == 0) {
-            context.send("Na Twoim kanale nie ma żadnego bota").queue();
+            context.sendTranslate("pleave.no.bot").queue();
             return false;
         }
 
@@ -51,7 +51,7 @@ public class PrivateSkipCommand extends Command {
                 context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
                 return false;
             }
-            context.send("Pomyślnie pominięto piosenkę").queue();
+            context.sendTranslate("pskip.success").queue();
             return true;
         } catch (Exception e) {
             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
