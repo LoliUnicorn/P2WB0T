@@ -128,13 +128,35 @@ public class PrivatePlayCommand extends Command {
         }
 
         if (UserUtil.getPermLevel(context.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) {
-            if (size < 4) {
+            if (leave(vc)) {
                 context.sendTranslate("pplay.min.members").queue();
                 return false;
             }
         }
 
         return true;
+    }
+
+    public static boolean leave(VoiceChannel vc) {
+        List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
+
+        boolean jestAdm = false;
+        for (Member member : members) {
+            try {
+                String nick = member.getNickname();
+                if (nick == null) continue;
+
+                if (nick.startsWith("[POM]") || nick.startsWith("[MOD]") || nick.startsWith("[ADM]")) {
+                    jestAdm = true;
+                    break;
+                }
+
+            } catch (Exception ignored) {}
+        }
+
+        if (jestAdm) return false;
+
+        return members.size() < 4;
     }
 
 }

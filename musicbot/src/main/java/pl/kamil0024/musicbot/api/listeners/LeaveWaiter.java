@@ -31,9 +31,7 @@ public class LeaveWaiter {
         eventWaiter.waitForEvent(GuildVoiceJoinEvent.class, this::checkJoin, this::event,
                 1, TimeUnit.MINUTES,
                 () -> {
-                    List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
-                    int size = members.size();
-                    if (size < 4) {
+                    if (LeaveVcListener.leave(vc)) {
                         musicManager.getGuildAudioPlayer(vc.getGuild()).destroy();
                     }
                     czekaja.remove(vc.getGuild().getId());

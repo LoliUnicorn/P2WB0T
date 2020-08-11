@@ -3,6 +3,7 @@ package pl.kamil0024.musicbot.api.listeners;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -54,13 +55,32 @@ public class LeaveVcListener extends ListenerAdapter {
             return;
         }
 
-        List<Member> members = event.getChannelLeft().getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
-        int size = members.size();
-
-        if (size < 4) {
+        if (leave(event.getChannelLeft())) {
             leaveWaiter.initWaiter(event.getChannelLeft());
         }
 
+    }
+
+    public static boolean leave(VoiceChannel vc) {
+        List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
+
+        boolean jestAdm = false;
+        for (Member member : members) {
+            try {
+                String nick = member.getNickname();
+                if (nick == null) continue;
+
+                if (nick.startsWith("[POM]") || nick.startsWith("[MOD]") || nick.startsWith("[ADM]")) {
+                    jestAdm = true;
+                    break;
+                }
+
+            } catch (Exception ignored) {}
+        }
+
+        if (jestAdm) return false;
+
+        return members.size() <= 1;
     }
 
 }
