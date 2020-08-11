@@ -42,9 +42,11 @@ public class StatsConfig {
     @Nullable
     public static Statystyka getStatsFromDay(ArrayList<Statystyka> stats, long date) {
         for (Statystyka stat : stats) {
-            if (stat.getDay() == date) {
-                return stat;
-            }
+            try {
+                if (stat.getDay() == date) {
+                    return stat;
+                }
+            } catch (Exception e) {}
         }
         return null;
     }
