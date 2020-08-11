@@ -46,7 +46,7 @@ public class StatsConfig {
                 if (stat.getDay() == date) {
                     return stat;
                 }
-            } catch (Exception e) {}
+            } catch (Exception ignored) {}
         }
         return null;
     }
