@@ -138,25 +138,24 @@ public class PrivatePlayCommand extends Command {
     }
 
     public static boolean leave(VoiceChannel vc) {
-        List<Member> members = vc.getMembers().stream().filter(m -> !m.getUser().isBot()).collect(Collectors.toList());
+        List<Member> members = vc.getMembers().stream()
+                .filter(m -> !m.getUser().isBot())
+                .collect(Collectors.toList());
 
-        boolean jestAdm = false;
         for (Member member : members) {
             try {
                 String nick = member.getNickname();
                 if (nick == null) continue;
 
                 if (nick.startsWith("[POM]") || nick.startsWith("[MOD]") || nick.startsWith("[ADM]")) {
-                    jestAdm = true;
-                    break;
+                    return false;
                 }
 
             } catch (Exception ignored) {}
         }
 
-        if (jestAdm) return false;
-
-        return members.size() < 4;
+        
+        return members.size() <= 1;
     }
 
 }
