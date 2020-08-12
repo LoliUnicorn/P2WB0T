@@ -46,21 +46,14 @@ public class MusicBotHandler implements HttpHandler {
                     if (vc != null) {
                         MusicRestAction ra = musicAPI.getAction(port);
                         ra.connect(vc.getId());
-                        MusicResponse aktualnaPiosenka = ra.play(vsc.getAktualnaPiosenka());
-                        if (aktualnaPiosenka.isError()) {
-                            Log.debug(aktualnaPiosenka.getError().getDescription());
-                        }
+                        ra.play(vsc.getAktualnaPiosenka());
                         for (String s : vsc.getQueue()) {
                             try {
-                                MusicResponse tak = ra.play(s);
-                                if (aktualnaPiosenka.isError()) {
-                                    Log.debug("2");
-                                    Log.debug(tak.getError().getDescription());
-                                }
+                                ra.play(s);
                             } catch (Exception ignored) {}
                         }
                     }
-                    voiceStateDao.delete(Integer.parseInt(id));
+                    voiceStateDao.delete(id);
                 }
             } else {
                 musicAPI.disconnect(port);

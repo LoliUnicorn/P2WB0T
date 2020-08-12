@@ -79,7 +79,7 @@ public class MusicModule implements Modul {
                 loadAndPlay(txt, vsc.getAktualnaPiosenka(), vc, false);
                 vsc.getQueue().forEach(p -> loadAndPlay(txt, p, vc, false));
             }
-            voiceStateDao.delete(1);
+            voiceStateDao.delete("1");
         }
 
     }

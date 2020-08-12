@@ -27,7 +27,7 @@ public class VoiceStateDao implements Dao<VoiceStateConfig> {
         mapper.save(toCos);
     }
 
-    public void delete(int id) {
+    public void delete(String id) {
         mapper.delete(id);
     }
 
