@@ -168,7 +168,7 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(bezEmotek);
 
-        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(bezEmotek) >= 80) {
+        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(bezEmotek) == 100) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + takMsg);
@@ -237,7 +237,7 @@ public class ChatListener extends ListenerAdapter {
 
 
     public static double containsTestFlood(String msg) {
-        if (msg.length() < 4) return 0;
+        if (msg.length() < 4 || msg.toLowerCase().contains("zaraz")) return 0;
         HashMap<Character, Integer> mapa = new HashMap<>();
 
         for (char c : msg.replaceAll(" ", "").toCharArray()) {
