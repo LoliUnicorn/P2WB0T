@@ -9,6 +9,7 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.VoiceStateConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
@@ -45,10 +46,17 @@ public class MusicBotHandler implements HttpHandler {
                     if (vc != null) {
                         MusicRestAction ra = musicAPI.getAction(port);
                         ra.connect(vc.getId());
-                        ra.play(vsc.getAktualnaPiosenka());
+                        MusicResponse aktualnaPiosenka = ra.play(vsc.getAktualnaPiosenka());
+                        if (aktualnaPiosenka.isError()) {
+                            Log.debug(aktualnaPiosenka.getError().getDescription());
+                        }
                         for (String s : vsc.getQueue()) {
                             try {
-                                ra.play(s);
+                                MusicResponse tak = ra.play(s);
+                                if (aktualnaPiosenka.isError()) {
+                                    Log.debug("2");
+                                    Log.debug(tak.getError().getDescription());
+                                }
                             } catch (Exception ignored) {}
                         }
                     }
