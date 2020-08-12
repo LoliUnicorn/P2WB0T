@@ -159,12 +159,13 @@ public class ChatListener extends ListenerAdapter {
 
         int emote = emoteCount(msgRaw, msg.getJDA());
 
-        String capsMsg = msgRaw.replaceAll(EMOJI.toString(), "").replaceAll("[^\\w\\s]*", "");
+        String bezEmotek = msgRaw.replaceAll(EMOJI.toString(), "");
+        String capsMsg = bezEmotek.replaceAll("[^\\w\\s]*", "");
         int caps = containsCaps(capsMsg);
 
-        int flood = containsFlood(msgRaw.replaceAll(EMOJI.toString(), ""));
+        int flood = containsFlood(bezEmotek);
 
-        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(msgRaw.replaceAll(EMOJI.toString(), "")) >= 80) {
+        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(bezEmotek) >= 80) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + msgRaw);
