@@ -45,7 +45,8 @@ public class MusicBotHandler implements HttpHandler {
                     VoiceChannel vc = shardManager.getVoiceChannelById(vsc.getVoiceChannel());
                     if (vc != null) {
                         MusicRestAction ra = musicAPI.getAction(port);
-                        ra.connect(vc.getId());
+                        MusicResponse kurwa = ra.connect(vc.getId());
+                        Thread.sleep(4000);
                         ra.play(vsc.getAktualnaPiosenka());
                         for (String s : vsc.getQueue()) {
                             try {
