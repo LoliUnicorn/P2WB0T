@@ -157,7 +157,7 @@ public class ChatListener extends ListenerAdapter {
 
         }
 
-        String takMsg = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "")
+        String takMsg = msg.getContentRaw().replaceAll("<@(&?)(!?)([0-9])*>", "")
                 .replaceAll("<#(\\d+)>", "");
 
         int emote = emoteCount(takMsg, msg.getJDA());

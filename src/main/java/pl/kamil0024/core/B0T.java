@@ -302,7 +302,9 @@ public class B0T {
                 voiceStateDao.save(vsc);
             }
 
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
