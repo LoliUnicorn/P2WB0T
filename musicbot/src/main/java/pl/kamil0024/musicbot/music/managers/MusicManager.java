@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.time.Instant;
@@ -93,14 +94,17 @@ public class MusicManager {
         return !error.get();
     }
 
-    public synchronized void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, VoiceChannel vc) {
+    public synchronized void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, @Nullable VoiceChannel vc) {
         for (AudioTrack audioTrack : musicManager.getQueue()) {
             if (audioTrack.getIdentifier().equals(track.getIdentifier())) {
                 return;
             }
         }
 
-        connectToFirstVoiceChannel(guild.getAudioManager(), vc);
+        if (vc != null) {
+            connectToFirstVoiceChannel(guild.getAudioManager(), vc);
+        }
+
         musicManager.queue(track);
 
         if (musicManager.getAktualnaPiosenka() == null) {
