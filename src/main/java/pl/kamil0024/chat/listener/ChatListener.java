@@ -157,9 +157,12 @@ public class ChatListener extends ListenerAdapter {
 
         }
 
-        int emote = emoteCount(msgRaw, msg.getJDA());
+        String takMsg = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "")
+                .replaceAll("<#(\\d+)>", "");
 
-        String bezEmotek = msgRaw.replaceAll(EMOJI.toString(), "");
+        int emote = emoteCount(takMsg, msg.getJDA());
+
+        String bezEmotek = takMsg.replaceAll(EMOJI.toString(), "");
         String capsMsg = bezEmotek.replaceAll("[^\\w\\s]*", "");
         int caps = containsCaps(capsMsg);
 
@@ -168,7 +171,7 @@ public class ChatListener extends ListenerAdapter {
         if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(bezEmotek) >= 80) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
-            Log.debug("msg: " + msgRaw);
+            Log.debug("msg: " + takMsg);
             Log.debug("int flooda: " + flood);
             Log.debug("procent capsa " + caps);
             Log.debug("int emotek: " + emote);
@@ -188,12 +191,12 @@ public class ChatListener extends ListenerAdapter {
             action.send();
         }
 
-        if (skrotyCount(msgRaw.toLowerCase().split(" "))) {
+        if (skrotyCount(takMsg.toLowerCase().split(" "))) {
             action.setKara(Action.ListaKar.SKROTY);
             action.send();
             return;
         }
-        if (skrotyCount(new String[] {msgRaw.toLowerCase()})) {
+        if (skrotyCount(new String[] {takMsg.toLowerCase()})) {
             action.setKara(Action.ListaKar.SKROTY);
             action.send();
         }
