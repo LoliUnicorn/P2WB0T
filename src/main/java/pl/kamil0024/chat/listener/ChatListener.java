@@ -168,7 +168,7 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(bezEmotek);
 
-        if (flood > 3 || caps >= 50 || emote > 3 || containsTestFlood(bezEmotek) == 100) {
+        if (flood > 3 || caps >= 50 || emote > 3) {
             Log.debug("---------------------------");
             Log.debug("user: " + msg.getAuthor().getId());
             Log.debug("msg: " + takMsg);
@@ -179,6 +179,14 @@ public class ChatListener extends ListenerAdapter {
             msg.delete().queue();
             action.setKara(Action.ListaKar.FLOOD);
             action.send();
+        }
+        
+        if (msg.getChannel().getId().equals("739975462247202816")) {
+            if (containsTestFlood(bezEmotek) == 100) {
+                msg.delete().queue();
+                action.setKara(Action.ListaKar.FLOOD);
+                action.send();
+            }
         }
 
 
@@ -257,7 +265,6 @@ public class ChatListener extends ListenerAdapter {
 
     public static int containsFlood(String msg) {
         if (msg.length() < 3 || containsLink(new String[] {msg})) return 0;
-        msg = msg.replaceAll(" ", "");
 
         int tak = 0;
         int flood = 0;
@@ -265,6 +272,7 @@ public class ChatListener extends ListenerAdapter {
         String floodowanyZnak = null;
         for (String split : ssplit) {
             try {
+                 if (split.equals(" ")) continue;
                 String nastepnaLitera = ssplit[tak + 1];
                 if (floodowanyZnak == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
                     floodowanyZnak = nastepnaLitera;
