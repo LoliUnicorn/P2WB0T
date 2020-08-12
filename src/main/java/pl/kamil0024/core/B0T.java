@@ -290,11 +290,13 @@ public class B0T {
                 MusicResponse queue = action.getQueue();
                 if (queue.isError()) continue;
 
+                ArrayList<String> kurwa = new ArrayList<>();
                 for (Object o : queue.json.getJSONArray("data")) {
                     PrivateQueueCommand.Track trak = new Gson()
                             .fromJson(o.toString(), PrivateQueueCommand.Track.class);
-                    vsc.getQueue().add(trak.getIdentifier());
+                    kurwa.add(trak.getIdentifier());
                 }
+                vsc.setQueue(kurwa);
                 MusicResponse mr = action.getPlayingTrack();
                 PrivateQueueCommand.Track trak = new Gson()
                         .fromJson(mr.json.getJSONObject("data").toString(), PrivateQueueCommand.Track.class);
