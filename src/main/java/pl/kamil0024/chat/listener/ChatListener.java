@@ -168,17 +168,19 @@ public class ChatListener extends ListenerAdapter {
 
         int flood = containsFlood(bezEmotek);
 
-        if (flood > 3 || caps >= 50 || emote > 3) {
-            Log.debug("---------------------------");
-            Log.debug("user: " + msg.getAuthor().getId());
-            Log.debug("msg: " + takMsg);
-            Log.debug("int flooda: " + flood);
-            Log.debug("procent capsa " + caps);
-            Log.debug("int emotek: " + emote);
-            Log.debug("---------------------------");
-            msg.delete().queue();
-            action.setKara(Action.ListaKar.FLOOD);
-            action.send();
+        if (!msg.getChannel().getId().equals("652927860943880224")) {
+            if (flood > 3 || caps >= 50 || emote > 3) {
+                Log.debug("---------------------------");
+                Log.debug("user: " + msg.getAuthor().getId());
+                Log.debug("msg: " + takMsg);
+                Log.debug("int flooda: " + flood);
+                Log.debug("procent capsa " + caps);
+                Log.debug("int emotek: " + emote);
+                Log.debug("---------------------------");
+                msg.delete().queue();
+                action.setKara(Action.ListaKar.FLOOD);
+                action.send();
+            }
         }
         
         if (msg.getChannel().getId().equals("739975462247202816")) {
