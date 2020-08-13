@@ -59,7 +59,7 @@ public class PrivateVolumeCommand extends Command {
                 context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
                 return false;
             }
-            context.sendTranslate("pvolume.success", liczba);
+            context.sendTranslate("pvolume.success", liczba).queue();
             return true;
         } catch (Exception e) {
             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
