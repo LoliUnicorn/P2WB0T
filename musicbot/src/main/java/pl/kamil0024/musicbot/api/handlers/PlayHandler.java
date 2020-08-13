@@ -34,7 +34,7 @@ public class PlayHandler implements HttpHandler {
                 return;
             }
             track = "https://www.youtube.com/watch?v=" + track;
-            
+
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();
             if (state.getConnectedChannel() == null) {
