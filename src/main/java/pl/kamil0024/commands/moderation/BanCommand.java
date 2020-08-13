@@ -39,7 +39,7 @@ public class BanCommand extends Command {
     public boolean execute(CommandContext context) {
         User mem = context.getParsed().getUser(context.getArgs().get(0));
         if (mem == null) {
-            context.sendTranslate("kick.badmember");
+            context.sendTranslate("kick.badmember").queue();
             return false;
         }
         String powod = context.getArgsToString(1);

@@ -93,6 +93,11 @@ public class Ustawienia {
         public String miniyt = def;
         public String yt = def;
         public String pomocnik = def;
+        public String buildteam = def;
+        public String stazysta = def;
+        public String moderator = def;
+        public String administrator = def;
+        public String korona = def;
     }
 
 }

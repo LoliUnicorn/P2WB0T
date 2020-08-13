@@ -40,7 +40,7 @@ public class KickCommand extends Command {
     public boolean execute(CommandContext context) {
         Member mem = context.getParsed().getMember(context.getArgs().get(0));
         if (mem == null) {
-            context.sendTranslate("kick.badmember");
+            context.sendTranslate("kick.badmember").queue();
             return false;
         }
         String powod = context.getArgsToString(1);

@@ -1,6 +1,7 @@
 package pl.kamil0024.weryfikacja.listeners;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -16,6 +17,7 @@ import pl.kamil0024.core.database.config.MultiConfig;
 import pl.kamil0024.core.util.Nick;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class WeryfikacjaListener extends ListenerAdapter {
@@ -84,6 +86,10 @@ public class WeryfikacjaListener extends ListenerAdapter {
 
             modLog.checkKara(event.getMember(), true,
                     caseDao.getNickAktywne(dc.getNick().replace(" ", "")));
+
+            event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", pomyślnie zweryfikowano. Witamy na serwerze sieci P2W!")
+                    .allowedMentions(Collections.singleton(Message.MentionType.USER))
+                    .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
         }
         apiModule.getDcCache().invalidate(dc.getKod());
     }

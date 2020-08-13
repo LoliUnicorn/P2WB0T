@@ -103,4 +103,8 @@ public class UserUtil {
         return getMcNick(member, false);
     }
 
+    public static List<DiscordRank> getRanks(Member member) {
+        return DiscordRank.getRanks(member);
+    }
+
 }
