@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 
 import java.util.ArrayList;
@@ -38,15 +37,12 @@ public enum DiscordRank {
 
     public static ArrayList<DiscordRank> getRanks(Member member) {
         ArrayList<DiscordRank> rank = new ArrayList<>();
-
         List<String> rolesId = member.getRoles().stream().map(Role::getId).collect(Collectors.toList());
-
         for (DiscordRank value : DiscordRank.values()) {
             if (rolesId.contains(value.getRoleId())) {
                 rank.add(value);
             }
         }
-
         return rank;
     }
 
