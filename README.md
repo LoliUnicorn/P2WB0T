@@ -1,5 +1,5 @@
 # P2WB0T
---
+
 [![TeamCity](https://ci.fratikbot.pl/app/rest/builds/buildType:Kamil_P2wb0t_Build/statusIcon)](http://teamcity/viewType.html?buildTypeId=myID&guest=1)
 [![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![HitCount](http://hits.dwyl.com/KAMIL0024/P2WB0T.svg)](http://hits.dwyl.com/KAMIL0024/P2WB0T)
@@ -27,3 +27,8 @@ Taki se słabo napisany bocik. Nie umiem opisywać rzeczy ok.
   
 ## Podziękowania
   Większość kodu zostało zaje- wzięta od [FratikB0Ta](https://github.com/fratik/FratikB0T)
+  
+## Linki
+[TeamCity](https://ci.fratikbot.pl)
+
+[Discord](https://discord.gg/CZ8pXah)
