@@ -20,7 +20,6 @@ package pl.kamil0024.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -29,12 +28,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import net.dv8tion.jda.internal.JDAImpl;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
@@ -61,7 +58,6 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
 import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.music.commands.QueueCommand;
 import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
@@ -72,9 +68,10 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
@@ -113,9 +110,9 @@ public class B0T {
         Log.info("Loguje v%s", Statyczne.CORE_VERSION);
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
-        if (api.getGuildById(Ustawienia.instance.bot.guildId) == null) {
+        if (!cfg.exists()) {
             api.shutdown();
-            Log.newError("Nie ma bota na serwerze docelowym");
+            Log.newError("Nie ma pliku konfiguracyjnego!");
             System.exit(1);
         }
 
