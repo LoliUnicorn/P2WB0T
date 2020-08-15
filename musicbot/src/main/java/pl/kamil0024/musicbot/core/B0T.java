@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2019-2020 FratikB0T Contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package pl.kamil0024.musicbot.core;
 
 import com.google.gson.Gson;
@@ -54,17 +71,8 @@ public class B0T {
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
         if (!cfg.exists()) {
-            try {
-                if (cfg.createNewFile()) {
-                    ustawienia = new Ustawienia();
-                    Files.write(cfg.toPath(), gson.toJson(ustawienia).getBytes(StandardCharsets.UTF_8));
-                    Log.info("Konfiguracja stworzona, mozesz ustawic bota");
-                    System.exit(1);
-                }
-            } catch (Exception e) {
-                Log.error("Nie udalo sie stworzyc konfiguracji! %s", e);
-                System.exit(1);
-            }
+            Log.error("Nie ma pliku konfiguracyjnego!");
+            System.exit(1);
         }
 
         try {
@@ -75,14 +83,7 @@ public class B0T {
         }
 
         Ustawienia.instance = ustawienia;
-        EventWaiter eventWaiter;
-        try {
-            eventWaiter = new EventWaiter();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-            return; // super jestes idea
-        }
+        EventWaiter eventWaiter = new EventWaiter();
 
         tlumaczenia.setLang("pl");
         tlumaczenia.load();
@@ -162,7 +163,6 @@ public class B0T {
             api.shutdown();
             Log.newError("Nie ma bota na serwerze docelowym");
             System.exit(1);
-            return;
         }
 
         try {

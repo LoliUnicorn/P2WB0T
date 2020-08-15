@@ -1,3 +1,22 @@
+/*
+ *
+ *    Copyright 2020 P2WB0T
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package pl.kamil0024.chat.listener;
 
 import com.google.inject.Inject;
@@ -94,7 +113,13 @@ public class ChatListener extends ListenerAdapter {
     public void checkMessage(Member member, Message msg, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog) {
         if (MuteCommand.hasMute(member)) return;
 
-        String msgRaw = msg.getContentRaw().replaceAll("<@!?([0-9])*>", "")
+        String czystaWiadomosc = msg.getContentRaw();
+        String[] split = czystaWiadomosc.split("\n");
+        if (czystaWiadomosc.startsWith("> ") && split.length >= 1) {
+            czystaWiadomosc = czystaWiadomosc.replaceAll(split[0], "");
+        }
+
+        String msgRaw = czystaWiadomosc.replaceAll("<@!?([0-9])*>", "")
                 .replaceAll("3", "e")
                 .replaceAll("1", "i")
                 .replaceAll("<#(\\d+)>", "");
@@ -157,7 +182,7 @@ public class ChatListener extends ListenerAdapter {
 
         }
 
-        String takMsg = msg.getContentRaw().replaceAll("<@(&?)(!?)([0-9])*>", "")
+        String takMsg = czystaWiadomosc.replaceAll("<@(&?)(!?)([0-9])*>", "")
                 .replaceAll("<#(\\d+)>", "");
 
         int emote = emoteCount(takMsg, msg.getJDA());

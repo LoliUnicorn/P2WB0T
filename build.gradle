@@ -1,3 +1,22 @@
+/*
+ *
+ *    Copyright 2020 P2WB0T
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 plugins {
     id 'java'
     id 'application'
@@ -32,9 +51,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'redis.clients:jedis:2.9.0'
 
-    compile 'com.github.Vankka:MCDiscordReserializer:b00bafd9c6'
-    compile 'net.kyori:text-api:3.0.2'
-    compile 'net.kyori:text-serializer-legacy:3.0.2'
     compile 'com.google.inject:guice:4.2.2'
     compile 'org.jsoup:jsoup:1.12.1'
     compile 'org.slf4j:slf4j-api:1.7.25'
@@ -64,8 +80,6 @@ artifacts {
     archives shadowJar
 }
 
-compileJava.options.encoding = 'UTF-8'
-
 shadowJar {
     manifest {
         attributes 'Implementation-Title': 'P2WB0T', 'Implementation-Version': version
@@ -73,8 +87,8 @@ shadowJar {
     }
     mergeServiceFiles()
     mergeGroovyExtensionModules()
-}
 
+}
 
 class Version {
     String major, minor

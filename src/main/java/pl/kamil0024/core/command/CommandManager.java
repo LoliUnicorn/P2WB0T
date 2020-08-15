@@ -1,5 +1,25 @@
+/*
+ *
+ *    Copyright 2020 P2WB0T
+ *
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
 package pl.kamil0024.core.command;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.core.logger.Log;
@@ -24,7 +44,7 @@ public class CommandManager extends ListenerAdapter {
         if (command.getName() == null || command.getName().isEmpty()) throw new NullPointerException("Nazwa jest pusta! " + command.getClass().getName());
         registered.add(command);
         commands.put(command.toString(), command);
-        Log.debug("Register command %s", command.getName());
+        Log.debug("Rejestruje komende %s (%s)", command.getName(), new Gson().toJson(command.getAliases()));
         registerAliases(command);
     }
 
@@ -43,6 +63,7 @@ public class CommandManager extends ListenerAdapter {
 
             commands.values().removeIf(cmd -> cmd.toString().equals(command.toString()));
             registered.removeIf(cmd -> cmd.toString().equals(command.toString()));
+            Log.debug("Unloaduje komende %s (%s)", cmds.getName(), new Gson().toJson(cmds.getAliases()));
         }
     }
 
