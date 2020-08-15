@@ -44,7 +44,7 @@ public class CommandManager extends ListenerAdapter {
         if (command.getName() == null || command.getName().isEmpty()) throw new NullPointerException("Nazwa jest pusta! " + command.getClass().getName());
         registered.add(command);
         commands.put(command.toString(), command);
-        Log.debug("Rejestruje komende %s (%s)", command.getName(), new Gson().toJson(command.getAliases()));
+        Log.debug("Rejestruje komende %s (%s)", command.getName());
         registerAliases(command);
     }
 
@@ -63,7 +63,6 @@ public class CommandManager extends ListenerAdapter {
 
             commands.values().removeIf(cmd -> cmd.toString().equals(command.toString()));
             registered.removeIf(cmd -> cmd.toString().equals(command.toString()));
-            Log.debug("Unloaduje komende %s (%s)", cmds.getName(), new Gson().toJson(cmds.getAliases()));
         }
     }
 
