@@ -45,7 +45,7 @@ public class CytujCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         String msgId = context.getArgs().get(0);
-        String komentarz = context.getArgs().get(1);
+        String komentarz = context.getArgsToString(1);
         if (msgId == null) throw new UsageException();
 
         Message msg = null;
@@ -83,7 +83,10 @@ public class CytujCommand extends Command {
         eb.setTimestamp(msg.getTimeCreated());
 
         MessageBuilder mb = new MessageBuilder();
-        if (komentarz != null) mb.setContent("**" + UserUtil.getMcNick(context.getMember(), true) + "**: " + komentarz);
+        if (komentarz != null) {
+            context.getMessage().delete().queue();
+            mb.setContent("**" + UserUtil.getMcNick(context.getMember(), true) + "**: " + komentarz);
+        }
         mb.setEmbed(eb.build());
         context.getChannel().sendMessage(mb.build()).
                 allowedMentions(Collections.singleton(Message.MentionType.EMOTE)).
