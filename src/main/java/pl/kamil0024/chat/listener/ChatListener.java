@@ -194,7 +194,7 @@ public class ChatListener extends ListenerAdapter {
         int flood = containsFlood(bezEmotek);
 
         if (!msg.getChannel().getId().equals("652927860943880224")) {
-            if (flood > 3 || caps >= 50 || emote > 3) {
+            if (caps >= 50 || emote > 3) {
                 Log.debug("---------------------------");
                 Log.debug("user: " + msg.getAuthor().getId());
                 Log.debug("msg: " + takMsg);
@@ -205,6 +205,14 @@ public class ChatListener extends ListenerAdapter {
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();
+                return;
+            }
+            if (flood > 3) {
+                action.setPewnosc(false);
+                action.setDeleted(false);
+                action.setKara(Action.ListaKar.FLOOD);
+                action.send();
+                return;
             }
         }
         
@@ -213,6 +221,7 @@ public class ChatListener extends ListenerAdapter {
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();
+                return;
             }
         }
 
@@ -224,6 +233,7 @@ public class ChatListener extends ListenerAdapter {
                 containsSwear(new String[] {przeklenstwa.replaceAll(" ", "")}) != null) {
             action.setKara(Action.ListaKar.ZACHOWANIE);
             action.send();
+            return;
         }
 
         if (skrotyCount(takMsg.toLowerCase().split(" "))) {
