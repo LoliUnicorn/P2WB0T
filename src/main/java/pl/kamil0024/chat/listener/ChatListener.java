@@ -97,7 +97,7 @@ public class ChatListener extends ListenerAdapter {
         
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.HELPER.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
-        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
+        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
 
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
@@ -106,7 +106,7 @@ public class ChatListener extends ListenerAdapter {
     public void onGuildMessageUpdate(@Nonnull GuildMessageUpdateEvent e) {
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.HELPER.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
-        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374")) return;
+        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") ||  e.getChannel().getId().equals("573873102757429256")) return;
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
 
