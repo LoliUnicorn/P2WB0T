@@ -177,7 +177,11 @@ public class PunishCommand extends Command {
                 (event) -> event.getUser().getId().equals(context.getUser().getId()) && event.getMessageId().equals(msg.getId()),
                 (event) -> {
             try {
-                if (event.getReactionEmote().getId().equals(red.getId())) return;
+                if (event.getReactionEmote().getId().equals(red.getId())) {
+                    context.getMessage().delete().complete();
+                    msg.delete().complete();
+                    return;
+                }
                 if (event.getReactionEmote().getId().equals(green.getId())) {
                     putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
                     try {
