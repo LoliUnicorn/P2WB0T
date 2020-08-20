@@ -122,6 +122,8 @@ public class ChatListener extends ListenerAdapter {
         String msgRaw = czystaWiadomosc.replaceAll("<@!?([0-9])*>", "")
                 .replaceAll("3", "e")
                 .replaceAll("1", "i")
+                .replaceAll("0", "o")
+                .replaceAll("v", "u")
                 .replaceAll("<#(\\d+)>", "");
         Action action = new Action(karyJSON);
         action.setMsg(msg);
@@ -225,16 +227,9 @@ public class ChatListener extends ListenerAdapter {
             }
         }
 
-
         // Może to nie być w 100% prawdziwe
         action.setPewnosc(false);
         action.setDeleted(false);
-        if (containsSwear(new String[] {przeklenstwa}) != null ||
-                containsSwear(new String[] {przeklenstwa.replaceAll(" ", "")}) != null) {
-            action.setKara(Action.ListaKar.ZACHOWANIE);
-            action.send();
-            return;
-        }
 
         if (skrotyCount(takMsg.toLowerCase().split(" "))) {
             action.setKara(Action.ListaKar.SKROTY);
@@ -244,6 +239,14 @@ public class ChatListener extends ListenerAdapter {
         if (skrotyCount(new String[] {takMsg.toLowerCase()})) {
             action.setKara(Action.ListaKar.SKROTY);
             action.send();
+        }
+
+        for (String s : getPrzeklenstwa()) {
+            if (przeklenstwa.toLowerCase().contains(s) || przeklenstwa.replaceAll(" ", "").toLowerCase().contains(s)) {
+                action.setKara(Action.ListaKar.ZACHOWANIE);
+                action.send();
+                return;
+            }
         }
 
     }
@@ -339,7 +342,7 @@ public class ChatListener extends ListenerAdapter {
         }
 
         try {
-            return (caps / split.length) * 100;
+            return ((caps / split.length) * 100);
         } catch (Exception e) {
             return 0;
         }
@@ -379,6 +382,8 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("jej");
         whiteList.add("joł");
         whiteList.add("je");
+        whiteList.add("jo");
+        whiteList.add("jol");
 
         for (String s : msg) {
             String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
