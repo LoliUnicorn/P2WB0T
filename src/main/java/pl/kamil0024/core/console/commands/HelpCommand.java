@@ -27,8 +27,7 @@ public class HelpCommand extends Command {
     public HelpCommand() {
         name = "help";
     }
-
-    @Override
+    
     public boolean execute(ConsoleCommandContext context) {
         return false;
     }

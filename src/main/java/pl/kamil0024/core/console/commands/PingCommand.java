@@ -29,7 +29,6 @@ public class PingCommand extends Command {
         aliases.add("pong");
     }
 
-    @Override
     public boolean execute(ConsoleCommandContext context) {
         context.println("Pong!");
         return false;
