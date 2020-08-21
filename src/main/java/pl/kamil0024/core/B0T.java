@@ -40,6 +40,8 @@ import pl.kamil0024.commands.dews.RebootCommand;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.console.Console;
+import pl.kamil0024.core.console.impl.ConsoleImpl;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.listener.ExceptionListener;
@@ -257,6 +259,9 @@ public class B0T {
             Log.newError("Nie ma bota na serwerze docelowym");
             System.exit(1);
         }
+
+        Console console = new ConsoleImpl();
+        console.start();
     }
 
     public void shutdownThread() {

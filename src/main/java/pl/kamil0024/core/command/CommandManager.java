@@ -19,7 +19,6 @@
 
 package pl.kamil0024.core.command;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.core.logger.Log;

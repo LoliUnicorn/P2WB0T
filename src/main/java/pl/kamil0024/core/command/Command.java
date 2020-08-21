@@ -21,6 +21,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.console.ConsoleCommandContext;
 import pl.kamil0024.core.util.UsageException;
 
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public abstract class Command {
     @Getter protected List<String> aliases = new ArrayList<>();
     
     protected boolean execute(@NotNull CommandContext context) throws Exception, UsageException {
+        throw new UnsupportedOperationException("Komenda nie ma zaimplementowanej funkcji execute()");
+    }
+
+    protected boolean consoleExecute(ConsoleCommandContext context) {
         throw new UnsupportedOperationException("Komenda nie ma zaimplementowanej funkcji execute()");
     }
 
