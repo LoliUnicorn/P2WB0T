@@ -27,13 +27,17 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
+import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
+import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 public class Disconnect implements HttpHandler {
 
     private final ShardManager api;
+    private final MusicManager musicManager;
 
-    public Disconnect(ShardManager api) {
+    public Disconnect(ShardManager api, MusicManager musicManager) {
         this.api = api;
+        this.musicManager = musicManager;
     }
 
     @Override
@@ -45,6 +49,8 @@ public class Disconnect implements HttpHandler {
                 Response.sendErrorResponse(ex, "Błąd", "Bot nie jest na żadnym kanale!");
                 return;
             }
+            GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+            manager.destroy();
             state.closeAudioConnection();
             Response.sendResponse(ex, "Pod opuścił kanał głosowy");
         } catch (Exception e) {

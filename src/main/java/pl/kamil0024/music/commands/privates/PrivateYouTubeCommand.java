@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("DuplicatedCode")
 public class PrivateYouTubeCommand extends Command {
 
     private final MusicAPI musicAPI;

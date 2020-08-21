@@ -76,7 +76,7 @@ public class APIModule implements Modul {
         
         //#region VoiceChannel
         routes.get("api/musicbot/connect/{channelid}", new Connect(api));
-        routes.get("api/musicbot/disconnect", new Disconnect(api));
+        routes.get("api/musicbot/disconnect", new Disconnect(api, musicManager));
         routes.get("api/musicbot/channel", new ChannelHandler(api));
         //#endregion VoiceChannel
 
