@@ -19,17 +19,20 @@
 
 package pl.kamil0024.core.console.commands;
 
+import pl.kamil0024.commands.dews.ShellCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.console.ConsoleCommandContext;
 
-public class HelpCommand extends Command {
+public class RebootCommand extends Command {
 
-    public HelpCommand() {
-        name = "help";
+    public RebootCommand() {
+        name = "reboot";
     }
 
     public boolean execute(ConsoleCommandContext context) {
-        return false;
+        ShellCommand.shell("./start.sh");
+        return true;
     }
+
 
 }

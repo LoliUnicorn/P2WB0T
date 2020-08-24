@@ -196,7 +196,7 @@ public class ChatListener extends ListenerAdapter {
         int flood = containsFlood(bezEmotek);
 
         if (!msg.getChannel().getId().equals("652927860943880224")) {
-            if (caps >= 50 || emote > 3) {
+            if (caps >= 50 || emote >= 10) {
                 Log.debug("---------------------------");
                 Log.debug("user: " + msg.getAuthor().getId());
                 Log.debug("msg: " + takMsg);
@@ -209,7 +209,7 @@ public class ChatListener extends ListenerAdapter {
                 action.send();
                 return;
             }
-            if (flood > 3) {
+            if (flood >= 10) {
                 action.setPewnosc(false);
                 action.setDeleted(false);
                 action.setKara(Action.ListaKar.FLOOD);
@@ -321,7 +321,7 @@ public class ChatListener extends ListenerAdapter {
                     flood++;
                 } else {
                     floodowanyZnak = nastepnaLitera;
-                    if (flood < 3) flood = 0;
+                    if (flood < 10) flood = 0;
                 }
                 tak++;
             } catch (Exception ignored) {}

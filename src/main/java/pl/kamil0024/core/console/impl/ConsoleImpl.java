@@ -23,6 +23,7 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.console.Console;
 import pl.kamil0024.core.console.ConsoleCommandContext;
 import pl.kamil0024.core.console.commands.PingCommand;
+import pl.kamil0024.core.console.commands.RebootCommand;
 import pl.kamil0024.core.logger.Log;
 
 import java.io.BufferedReader;
@@ -42,9 +43,11 @@ public class ConsoleImpl implements Console {
             String input;
             try {
                 input = buffered.readLine().toLowerCase();
-
                 ConsoleCommandContext context = new ConsoleCommandContext(input);
+
                 if (input.equals("ping")) new PingCommand().execute(context);
+                if (input.equals("reboot")) new RebootCommand().execute(context);
+                
                 else Log.error("Nie ma takiej komendy!");
 
             } catch (Exception e) {

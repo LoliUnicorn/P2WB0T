@@ -88,6 +88,7 @@ public class Log {
     private static void log(String type, String msg, @Nullable Object... args) {
         String time = new SimpleDateFormat("dd.MM HH:mm:ss").format(Calendar.getInstance().getTime());
         System.out.println(String.format("[%s] [%s] %s", time, type, String.format(msg, args)));
+        System.out.print("> ");
     }
 
 }
