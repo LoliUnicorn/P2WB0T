@@ -72,4 +72,5 @@ public class Ustawienia {
         public int mainPort = 0;
         public List<String> tokens = Arrays.asList("12345");
     }
+
 }

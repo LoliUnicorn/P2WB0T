@@ -135,4 +135,16 @@ public class TopCommand extends Command {
         return temp;
     }
 
+    public static Map<String, Integer> sortByValue(Map<String, Integer> hm) {
+        List<Map.Entry<String, Integer> > list =
+                new LinkedList<>(hm.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
+        HashMap<String, Integer> temp = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+
 }
