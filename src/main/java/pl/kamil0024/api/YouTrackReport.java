@@ -53,7 +53,7 @@ public class YouTrackReport implements HttpHandler {
         String header = ex.getRequestHeaders().get("data").getFirst();
 
         Type typeOfHashMap = new TypeToken<Map<String, Integer>>() { }.getType();
-        HashMap<String, Integer> map = new Gson().fromJson(header, typeOfHashMap);
+        Map<String, Integer> map = new Gson().fromJson(header, typeOfHashMap);
         TextChannel txt = api.getTextChannelById("738122215878295572");
 
         MessageBuilder mb = new MessageBuilder();
