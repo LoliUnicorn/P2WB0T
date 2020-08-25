@@ -70,7 +70,7 @@ public class YouTrackReport implements HttpHandler {
             miejsce++;
         }
         eb.addField("Stworzonych issuesów", sb.toString(), false);
-
+        mb.setEmbed(eb.build());
         Objects.requireNonNull(txt).sendMessage(mb.build()).queue();
     }
 
