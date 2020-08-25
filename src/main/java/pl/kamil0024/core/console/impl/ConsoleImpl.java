@@ -47,7 +47,7 @@ public class ConsoleImpl implements Console {
 
                 if (input.equals("ping")) new PingCommand().execute(context);
                 if (input.equals("reboot")) new RebootCommand().execute(context);
-                
+
                 else Log.error("Nie ma takiej komendy!");
 
             } catch (Exception e) {

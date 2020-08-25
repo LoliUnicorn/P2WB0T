@@ -530,6 +530,8 @@ public class APIModule implements Modul {
         routes.get("api/musicbot/connect/{port}/{clientid}", new MusicBotHandler(musicAPI, true, voiceStateDao, api));
         //#endregion Music Bot api
 
+        routes.get("api/youtrack/reports", new YouTrackReport(api));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()
