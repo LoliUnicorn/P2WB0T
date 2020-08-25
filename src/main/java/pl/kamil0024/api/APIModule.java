@@ -79,8 +79,8 @@ public class APIModule implements Modul {
         this.statsDao = statsDao;
         this.voiceStateDao = voiceStateDao;
 
-        this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache();
-        this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache();
+        this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
+        this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(-1);
     }
 
     @Override

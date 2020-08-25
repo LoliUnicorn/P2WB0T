@@ -86,8 +86,8 @@ public class YouTrackReport implements HttpHandler {
         StringBuilder topCreated = new StringBuilder(getPodium(map));
         SimpleDateFormat firstFormat = new SimpleDateFormat("yyyy-MM-");
 
-        String format = String.format("issues?q=created: %s .. %s",
-                firstFormat.format(new Date()) + "01",
+        String format = String.format("issues?q=created:%s%s..%s%s",
+                firstFormat.format(new Date()) + "01", "%20", "%20",
                 firstFormat.format(new Date()) + maxDay);
         String string = String.format("[TUTAJ](%s)", Ustawienia.instance.yt.url + "/" + format);
 
