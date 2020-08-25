@@ -19,11 +19,25 @@
 
 package pl.kamil0024.api;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderValues;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.logger.Log;
+
+import java.awt.*;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class YouTrackReport implements HttpHandler {
 
@@ -35,10 +49,29 @@ public class YouTrackReport implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
-        for (HeaderValues header : ex.getRequestHeaders()) {
-            Log.debug(header.getHeaderName().toString() + "=" + header.getFirst());
-        }
         Response.sendResponse(ex, "Pomyślnie wysłano reporta!");
+        String header = ex.getRequestHeaders().get("data").getFirst();
+
+        Type typeOfHashMap = new TypeToken<Map<String, Integer>>() { }.getType();
+        HashMap<String, Integer> map = new Gson().fromJson(header, typeOfHashMap);
+        TextChannel txt = api.getTextChannelById("738122215878295572");
+
+        MessageBuilder mb = new MessageBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.**MM**");
+        mb.setContent("Statystyki z " + sdf.format(new Date()));
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setColor(Color.red);
+        eb.setTimestamp(Instant.now());
+
+        int miejsce = 1;
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            sb.append(miejsce).append(". ").append(entry.getKey()).append(": ").append(entry.getValue());
+            miejsce++;
+        }
+        eb.addField("Stworzonych issuesów", sb.toString(), false);
+
+        Objects.requireNonNull(txt).sendMessage(mb.build()).queue();
     }
 
 }
