@@ -120,6 +120,10 @@ public class Ustawienia {
 
     public static class YouTrack {
         public String url = def;
+        public String hub = def;
+        public String ytId = def;
+        public String clientSecret = def;
+        public String clientScope = def;
     }
 
 }

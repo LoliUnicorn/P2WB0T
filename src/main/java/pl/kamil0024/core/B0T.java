@@ -65,6 +65,9 @@ import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.weryfikacja.WeryfikacjaModule;
+import pl.kamil0024.youtrack.YTModule;
+import pl.kamil0024.youtrack.YouTrack;
+import pl.kamil0024.youtrack.YouTrackBuilder;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -139,6 +142,21 @@ public class B0T {
 
         tlumaczenia.setLang(Ustawienia.instance.language);
         tlumaczenia.load();
+
+        YouTrackBuilder ytbuilder = new YouTrackBuilder();
+        ytbuilder.setApiUrl(Ustawienia.instance.yt.url);
+        ytbuilder.setHubUrl(Ustawienia.instance.yt.hub);
+        ytbuilder.setClientId(Ustawienia.instance.yt.ytId);
+        ytbuilder.setClientSecret(Ustawienia.instance.yt.clientSecret);
+        ytbuilder.setScope(Ustawienia.instance.yt.clientScope);
+
+        YouTrack youTrack = null;
+        try {
+            youTrack = ytbuilder.build();
+        } catch (Exception e) {
+            Log.newError("Nie udało się połączyć z YouTrackiem!");
+            Log.newError(e);
+        }
 
         this.api = null;
         try {
@@ -224,6 +242,9 @@ public class B0T {
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao));
+        if (youTrack != null) {
+            modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
+        }
 
         for (Modul modul : modulManager.getModules()) {
             try {

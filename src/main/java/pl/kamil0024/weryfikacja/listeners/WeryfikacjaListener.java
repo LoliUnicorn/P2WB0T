@@ -79,6 +79,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (dc.getRanga().equals("YouTuber")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
         if (dc.getRanga().equals("Pomocnik")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.pomocnik); }
         if (dc.getRanga().equals("Stażysta")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.stazysta); }
+        if (dc.getRanga().equals("Build Team")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.buildteam); }
 
         if (ranga == null) {
             event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", twoja ranga została źle wpisana! Skontaktuj się z kimś z administracji")
@@ -93,6 +94,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (ranga.getName().toLowerCase().equals("gracz")) { nickname = ""; }
         if (ranga.getName().toLowerCase().equals("pomocnik")) { nickname = "[POM]"; }
         if (ranga.getName().toLowerCase().equals("stażysta")) { nickname = "[STAŻ]"; }
+        if (ranga.getName().toLowerCase().equals("build team")) { nickname = "[BUILD TEAM]"; }
 
         Member mem = event.getMember();
         if (mem != null) {
