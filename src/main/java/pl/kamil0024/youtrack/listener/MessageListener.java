@@ -184,7 +184,7 @@ public class MessageListener extends ListenerAdapter {
 
     private String listToString(List<Issue.Field.FieldValue> lista) {
         StringBuilder sb = new StringBuilder();
-        int tak = 0;
+        int tak = 1;
         for (Issue.Field.FieldValue f : lista) {
             sb.append(f.getName());
             if (tak != lista.size()) sb.append(", ");

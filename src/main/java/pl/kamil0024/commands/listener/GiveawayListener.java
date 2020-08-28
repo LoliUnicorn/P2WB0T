@@ -63,7 +63,7 @@ public class GiveawayListener {
         tak.forEach(e -> getKonkursMsg().add(String.valueOf(e.getMessageId())));
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::update, 0, 30, TimeUnit.SECONDS);
+        executorSche.scheduleAtFixedRate(this::update, 0, 5, TimeUnit.MINUTES);
     }
 
     public void createMessage(GiveawayConfig kc) {
