@@ -71,6 +71,7 @@ public class Ustawienia {
         public int port = 0;
         public int mainPort = 0;
         public List<String> tokens = Arrays.asList("12345");
+        public String cidr = def;
     }
 
 }

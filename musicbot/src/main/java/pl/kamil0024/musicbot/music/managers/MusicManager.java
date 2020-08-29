@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.musicbot.core.Ustawienia;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,12 +60,12 @@ public class MusicManager {
 
         playerManager.registerSourceManager(youtubeSourceManager);
 
-        List<IpBlock> blocks = Collections.singletonList(new Ipv6Block("192.168.0.1/26"));
-        AbstractRoutePlanner planner = new BalancingIpRoutePlanner(blocks);
-
-        new YoutubeIpRotatorSetup(planner)
-                .forSource(playerManager.source(YoutubeAudioSourceManager.class))
-                .setup();
+        try {
+            AbstractRoutePlanner planner = new BalancingIpRoutePlanner(Collections.singletonList(new Ipv6Block(Ustawienia.instance.api.cidr)));
+            new YoutubeIpRotatorSetup(planner)
+                    .forSource(playerManager.source(YoutubeAudioSourceManager.class))
+                    .setup();
+        } catch (Exception ignored) { }
 
     }
 
