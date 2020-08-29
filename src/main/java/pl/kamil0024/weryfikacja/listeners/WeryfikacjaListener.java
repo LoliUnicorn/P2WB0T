@@ -68,18 +68,43 @@ public class WeryfikacjaListener extends ListenerAdapter {
         }
         Role ranga = null;
 
-        if (dc.getRanga().equals("Gracz")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.gracz); }
-        if (dc.getRanga().equals("VIP")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vip); }
-        if (dc.getRanga().equals("VIP+")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vipplus); }
-        if (dc.getRanga().equals("MVP")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvp); }
-        if (dc.getRanga().equals("MVP+")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplus); }
-        if (dc.getRanga().equals("MVP++")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplusplus); }
-        if (dc.getRanga().equals("Sponsor")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.sponsor); }
-        if (dc.getRanga().equals("MiniYT")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.miniyt); }
-        if (dc.getRanga().equals("YouTuber")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt); }
-        if (dc.getRanga().equals("Pomocnik")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.pomocnik); }
-        if (dc.getRanga().equals("Stażysta")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.stazysta); }
-        if (dc.getRanga().equals("Build Team")) { ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.buildteam); }
+        switch (dc.getRanga()) {
+            case "Gracz":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.gracz);
+                break;
+            case "VIP":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vip);
+                break;
+            case "VIP+":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.vipplus);
+                break;
+            case "MVP":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvp);
+                break;
+            case "MVP+":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplus);
+                break;
+            case "MVP++":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.mvpplusplus);
+                break;
+            case "Sponsor":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.sponsor);
+                break;
+            case "MiniYT":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.miniyt);
+                break;
+            case "YouTuber":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.yt);
+                break;
+            case "Pomocnik":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.pomocnik);
+                break;
+            case "Stażysta":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.stazysta);
+                break;
+            case "Build_Team":
+                ranga = event.getGuild().getRoleById(Ustawienia.instance.rangi.buildteam);
+        }
 
         if (ranga == null) {
             event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", twoja ranga została źle wpisana! Skontaktuj się z kimś z administracji")
