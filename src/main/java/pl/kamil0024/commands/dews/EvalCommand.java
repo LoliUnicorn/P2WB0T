@@ -20,13 +20,11 @@
 package pl.kamil0024.commands.dews;
 
 import com.google.inject.Inject;
-import com.sun.prism.Texture;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.dv8tion.jda.api.EmbedBuilder;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.listener.GiveawayListener;
-import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandExecute;

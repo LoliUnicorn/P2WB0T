@@ -53,7 +53,7 @@ public class Log {
                 sb.append("\n```");
                 WebhookUtil web = new WebhookUtil();
                 web.setType(WebhookUtil.LogType.ERROR);
-                web.setMessage(sb.toString().replaceAll(" {4}at ", "").replaceAll("    at ", ""));
+                web.setMessage(sb.toString().replaceAll(" {4}at ", ""));
                 web.send();
                 sb = new StringBuilder();
                 strona = true;
@@ -62,7 +62,7 @@ public class Log {
         if (!strona) {
             WebhookUtil web = new WebhookUtil();
             web.setType(WebhookUtil.LogType.ERROR);
-            web.setMessage(sb.toString().replaceAll(" {4}at ", "") + "\n```");
+            web.setMessage(sb.append("\n```").toString().replaceAll(" {4}at ", "") + "\n```");
             web.send();
         }
     }
