@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.system;
 
 import com.google.inject.Inject;
+import com.google.inject.internal.cglib.core.$HashCodeCustomizer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -29,6 +30,7 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.RemindDao;
+import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.RemindConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
@@ -38,6 +40,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RemindmeCommand extends Command {
 
@@ -73,6 +77,26 @@ public class RemindmeCommand extends Command {
             return true;
         }
 
+        if (arg.toLowerCase().equals("delete") || arg.toLowerCase().equals("remove")) {
+            Integer id = context.getParsed().getNumber(context.getArgs().get(1));
+            if (id == null) throw new UsageException();
+
+            List<RemindConfig> rc = remindDao.getAll();
+            rc.removeIf(m -> !m.getUserId().equals(context.getUser().getId()));
+            if (rc.isEmpty()) {
+                context.send(context.getTranslate("remind.remindlist")).queue();
+                return false;
+            }
+            RemindConfig ids = rc.stream().filter(conf -> conf.getId().equals(id.toString())).findAny().orElse(null);
+            if (ids == null) {
+                context.sendTranslate("remind.badid").queue();
+                return false;
+            }
+            remindDao.remove(ids);
+            context.sendTranslate("remind.successdelete").queue();
+            return true;
+        }
+
         Long dur = new Duration().parseLong(arg);
         if (dur == null) {
             context.send(context.getTranslate("cytuj.badtime")).queue();
@@ -100,7 +124,8 @@ public class RemindmeCommand extends Command {
         BDate bd = new BDate(dzisiaj, ModLog.getLang());
         EmbedBuilder eb = new EmbedBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        eb.addField("Treść przypomnienia", remind.getMsg(), false);
+        eb.addField("Treść przypomnienia", remind.getTresc(), false);
+        eb.addField("Wiadomość przypomnienia", String.format("[KLIK](%s)", remind.getMsg()), false);
         eb.addField("Zaplanowano na", bd.difference(remind.getCzas()), false);
         eb.addField("Dzień zaplanowania", sdf.format(new Date(remind.getCzas())), false);
         eb.setColor(Color.cyan);
@@ -111,10 +136,6 @@ public class RemindmeCommand extends Command {
         long teraz = new Date().getTime();
         for (RemindConfig remind : remindDao.getAll()) {
             if (remind.getCzas() - teraz <= 0) {
-                Log.debug("remind");
-                Log.debug(remind.getCzas() + "");
-                Log.debug(teraz + "");
-                Log.debug("remind");
                 BetterStringBuilder sb = new BetterStringBuilder();
                 sb.appendLine("⏰ **Przypomnienie**: " + remind.getTresc());
                 sb.appendLine("Przypomnienie ustawione w tej wiadomości:");

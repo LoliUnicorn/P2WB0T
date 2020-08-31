@@ -53,12 +53,12 @@ public class WebhookUtil {
         WebhookClient client = WebhookClient.withUrl(getType().url);
         WebhookMessageBuilder builder = new WebhookMessageBuilder();
 
-        builder.setUsername(getType().slownie);
+        if (name == null) builder.setUsername(getType().slownie);
+        if (avatar == null) builder.setAvatarUrl(getAvatar());
 
         if (!getMessage().isEmpty()) builder.setContent(String.format("[%s] %s", getTime(), getMessage()));
         if (getEmbed() != null) builder.addEmbeds(getEmbed());
 
-        builder.setAvatarUrl(getAvatar());
         client.send(builder.build());
         client.close();
     }
@@ -117,7 +117,8 @@ public class WebhookUtil {
         ERROR("Logi errorów", Ustawienia.instance.webhook.error),
         CMD("Logi komend", Ustawienia.instance.webhook.cmd),
         DEBUG("Logi debugu", Ustawienia.instance.webhook.debug),
-        STATUS("Logi statusów", Ustawienia.instance.webhook.status);
+        STATUS("Logi statusów", Ustawienia.instance.webhook.status),
+        CASES("Logi Akcji", Ustawienia.instance.webhook.cases);
 
         @Getter private final String slownie;
         @Getter private final String url;

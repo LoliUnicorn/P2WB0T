@@ -25,7 +25,7 @@ plugins {
 
 group 'pl.kamil0024'
 
-def versionObj = new Version(major: 2, minor: 0)
+def versionObj = new Version(major: 2, minor: 137)
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 

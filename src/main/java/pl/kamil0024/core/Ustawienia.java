@@ -80,6 +80,7 @@ public class Ustawienia {
         public String cmd = "https://discordapp.com/api/webhooks/";
         public String status = "https://discordapp.com/api/webhooks/";
         public String debug = "https://discordapp.com/api/webhooks/";
+        public String cases = "https://discordapp.com/api/webhooks/";
     }
 
     public static class Channel {

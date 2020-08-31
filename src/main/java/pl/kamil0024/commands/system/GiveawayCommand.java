@@ -53,8 +53,8 @@ public class GiveawayCommand extends Command {
     private static final String CZAS = "\n\n*Czas na odpowiedź to 1 minuta*";
 
     public GiveawayCommand(GiveawayDao giveawayDao, EventWaiter eventWaiter, GiveawayListener giveawayListener) {
-        name = "konkurs";
-        aliases.add("giveaway");
+        name = "giveaway";
+        aliases.add("konkurs");
         permLevel = PermLevel.ADMINISTRATOR;
 
         this.giveawayDao = giveawayDao;
@@ -169,7 +169,7 @@ public class GiveawayCommand extends Command {
                 () -> {
                     TextChannel txt = api.getTextChannelById(channelId);
                     if (getKonkurs().get(String.valueOf(userId)) != null) {
-                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
+                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId));
                     }
                 }
         );

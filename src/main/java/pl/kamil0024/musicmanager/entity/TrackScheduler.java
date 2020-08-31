@@ -74,7 +74,6 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         if (getDestroy() || (next == null && !getLoop())) {
-            Log.debug("Destroy");
             destroy();
             return;
         }

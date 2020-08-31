@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.dews;
 
 import com.google.inject.Inject;
+import com.sun.prism.Texture;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -38,6 +39,7 @@ import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
+import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.StatsModule;
@@ -91,10 +93,8 @@ public class EvalCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         String kod = context.getArgsToString(0);
-        if (context.getArgs().get(0).isEmpty() || kod == null) {
-            context.send(HelpCommand.getUsage(context).build()).queue();
-            return false;
-        }
+        if (context.getArgs().get(0).isEmpty() || kod == null) throw new UsageException();
+
         kod = kod.replaceAll("```", "");
         Binding binding = new Binding();
         GroovyShell shell = new GroovyShell(binding);
@@ -118,6 +118,7 @@ public class EvalCommand extends Command {
         shell.setVariable("musicModule", musicModule);
         shell.setVariable("musicAPI", musicAPI);
 
+        long ms = System.currentTimeMillis();
         Object value;
         boolean error = false;
         try {
@@ -126,6 +127,7 @@ public class EvalCommand extends Command {
             error = true;
             value = e.getMessage();
         }
+        ms = System.currentTimeMillis() - ms;
 
         EmbedBuilder eb = new EmbedBuilder();
         if (!error) eb.setColor(Color.green);
@@ -136,8 +138,9 @@ public class EvalCommand extends Command {
             value = "Output przekracza liczbę znaków. Zobacz konsole";
         }
 
-        eb.addField("\ud83d\udce4 INPUT", "```\n" + kod + "\n```", false);
-        eb.addField("\ud83d\udce5 OUTPUT", "```\n" + value + "\n```", false);
+        eb.addField("\ud83d\udce5 INPUT", "```\n" + kod + "\n```", false);
+        eb.addField("\ud83d\udce4 OUTPUT", "```\n" + value + "\n```", false);
+        eb.setFooter(ms + "ms");
         context.send(eb.build()).queue();
         return true;
     }

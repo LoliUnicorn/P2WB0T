@@ -21,7 +21,11 @@ package pl.kamil0024.commands;
 
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -36,17 +40,20 @@ import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.WebhookUtil;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ModLog extends ListenerAdapter {
 
@@ -155,6 +162,8 @@ public class ModLog extends ListenerAdapter {
         if (muteRole == null) throw new NullPointerException("muteRole jest nullem");
         if (g == null) throw new NullPointerException("Serwer docelowy jest nullem");
         List<CaseConfig> cc = caseDao.getAllAktywne();
+        List<User> bans = g.retrieveBanList().complete().stream().map(Guild.Ban::getUser).collect(Collectors.toList());
+
         for (CaseConfig a : cc) {
             Kara aCase = a.getKara();
             if (!aCase.getAktywna()) continue;
@@ -169,6 +178,11 @@ public class ModLog extends ListenerAdapter {
                 if (end - data.getTime() <= 0) {
                     try {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
+                        if (!bans.contains(u)) {
+                            String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
+                            Log.newError(String.format(msg, u.getId(), aCase.getKaraId()));
+                            continue;
+                        }
 
                         if (u == null) continue;
                         Member m = null;
@@ -309,6 +323,40 @@ public class ModLog extends ListenerAdapter {
         lang.setMinute("min.");
         lang.setSecond("sek.");
         return lang;
+    }
+
+    @Override
+    public void onGuildBan(@Nonnull GuildBanEvent event) {
+        sendCase(event.getGuild(), event.getUser(), ActionType.BAN);
+    }
+
+    @Override
+    public void onGuildUnban(@Nonnull GuildUnbanEvent event) {
+        sendCase(event.getGuild(), event.getUser(), ActionType.UNBAN);
+    }
+
+    private void sendCase(Guild guild, User banowany, ActionType at) {
+        String odpowiedzialny = "??";
+        String powod = "??";
+        try {
+            List<AuditLogEntry> entries = guild.retrieveAuditLogs().type(at).complete();
+            for (AuditLogEntry e : entries) {
+                if (e.getTimeCreated().isAfter(OffsetDateTime.now().minusSeconds(15)) &&
+                        e.getTargetIdLong() == banowany.getIdLong()) {
+                    if (e.getUser() == null) continue;
+                    odpowiedzialny = UserUtil.getLogName(e.getUser());
+                    powod = e.getReason();
+                    break;
+                }
+            }
+        } catch (Exception ignored) { }
+
+        String action = at == ActionType.BAN ? "zbanował" : "odbanował";
+        String format = "%s %s %s za `%s`";
+        WebhookUtil web = new WebhookUtil();
+        web.setType(WebhookUtil.LogType.CASES);
+        web.setMessage(String.format(format, odpowiedzialny, action, UserUtil.getLogName(banowany), powod));
+        web.send();
     }
 
 }

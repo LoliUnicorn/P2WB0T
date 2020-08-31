@@ -159,27 +159,18 @@ public class GiveawayListener {
                         }
                     }
                 }
-
-                Log.debug("Może wygrają: " + new Gson().toJson(mozeWygraja));
                 int i = 0;
-                Log.debug("losuje " + config.getWygranychOsob() + " wygranych");
-
                 while (i < config.getWygranychOsob()) {
-                    Log.debug("Losowanko...");
                     try {
                         if (!mozeWygraja.isEmpty()) {
                             Random rand = new Random();
                             String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1 == 0 ? 1 : mozeWygraja.size() - 1));
-                            Log.debug("Jeden z wygranych: " + wygral);
                             wygrani.add(wygral);
                             mozeWygraja.remove(wygral);
                         }
                     } catch (Exception e) { e.printStackTrace(); }
                     i++;
-                    Log.debug("Koniec losowanka");
                 }
-
-                Log.debug("Wygrali: " + new Gson().toJson(wygrani));
                 config.setWinners(wygrani);
                 giveawayDao.save(config);
                 msg.clearReactions().queue();
