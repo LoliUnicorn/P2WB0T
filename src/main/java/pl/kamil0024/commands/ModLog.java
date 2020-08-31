@@ -178,7 +178,7 @@ public class ModLog extends ListenerAdapter {
                 if (end - data.getTime() <= 0) {
                     try {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
-                        if (!bans.contains(u)) {
+                        if (!bans.contains(u) && typ == KaryEnum.TEMPBAN) {
                             String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
                             Log.newError(String.format(msg, u.getId(), aCase.getKaraId()));
                             continue;
