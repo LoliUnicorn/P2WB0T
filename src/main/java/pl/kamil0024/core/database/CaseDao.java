@@ -81,6 +81,7 @@ public class CaseDao implements Dao<CaseConfig> {
     public void delete(int id) {
         mapper.delete(id);
     }
+    public void remove(int id) { delete(id); }
 
     public List<CaseConfig> getAllPunAktywne(String id) {
         return mapper.getAllPunAktywne(id);

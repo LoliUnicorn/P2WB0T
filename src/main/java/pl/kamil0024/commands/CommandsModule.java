@@ -120,7 +120,7 @@ public class CommandsModule implements Modul {
         cmd.add(new CytujCommand());
         cmd.add(new CheckCommand(caseDao));
         cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
-        cmd.add(new RebootCommand(modulManager, statsModule, eventWaiter, musicModule));
+        cmd.add(new RebootCommand());
         cmd.add(new ShellCommand());
         cmd.add(new ArchiwizujCommand());
         cmd.add(new MultiCommand(multiDao, eventWaiter));

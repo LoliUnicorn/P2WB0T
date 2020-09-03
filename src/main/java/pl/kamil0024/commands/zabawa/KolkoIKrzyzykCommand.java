@@ -24,6 +24,7 @@ import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.kolkoikrzyzyk.entites.Zaproszenie;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.util.UsageException;
 
 public class KolkoIKrzyzykCommand extends Command {
@@ -35,6 +36,7 @@ public class KolkoIKrzyzykCommand extends Command {
         aliases.add("kolko");
         aliases.add("krzyzyk");
         cooldown = 15;
+        category = CommandCategory.ZABAWA;
 
         this.kolkoIKrzyzykManager = kolkoIKrzyzykManager;
     }

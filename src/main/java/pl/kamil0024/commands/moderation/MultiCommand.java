@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.MultiDao;
 import pl.kamil0024.core.database.config.MultiConfig;
@@ -41,7 +42,7 @@ public class MultiCommand extends Command {
     public MultiCommand(MultiDao multiDao, EventWaiter eventWaiter) {
         name = "multi";
         permLevel = PermLevel.HELPER;
-
+        category = CommandCategory.MODERATION;
         this.multiDao = multiDao;
         this.eventWaiter = eventWaiter;
     }
