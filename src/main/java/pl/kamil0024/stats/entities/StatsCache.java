@@ -67,7 +67,10 @@ public class StatsCache {
             StatsConfig config = statsDao.get(entry.getId());
             config.getStats().removeIf(configStat -> configStat.getDay() == day);
             config.getStats().add(stat);
+<<<<<<< HEAD
             statsDao.save(config);
+=======
+>>>>>>> 1b3b57938df0b3159c7db78ca872345cbf35968d
         }
     }
 
