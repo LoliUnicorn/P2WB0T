@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class StatsCommand extends Command {
 
-    private static final String DAY_OF_STATS = "18.07.2020";
+    private static final String DAY_OF_STATS = "03.09.2020";
 
     private StatsDao statsDao;
 

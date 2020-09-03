@@ -103,7 +103,6 @@ class Version {
     static String getBuild() {
         String b = System.getenv("BUILD_NUMBER")
         if (b == null || b.isEmpty()) b = System.getProperty("BUILD_NUMBER")
-
         if (b == null || b.isEmpty()) return "????"
         return b
     }

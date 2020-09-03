@@ -77,7 +77,8 @@ public class UserStats {
     }
 
     public Statystyka getFromNow() {
-        return Optional.of(getStatsMap().get(getDay())).orElse(newStats());
+        Statystyka xd = getStatsMap().get(getDay());
+        return xd == null ? newStats() : xd;
     }
 
     public enum StatsType {
