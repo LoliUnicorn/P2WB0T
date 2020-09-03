@@ -61,11 +61,10 @@ public class StatsCache {
     }
 
     public synchronized void databaseSave() {
-        int day = new BDate().getDateTime().getDayOfYear();
         for (UserStats entry : getStatystykaMap()) {
             Statystyka stat = entry.getFromNow();
             StatsConfig config = statsDao.get(entry.getId());
-            config.getStats().removeIf(configStat -> configStat.getDay() == day);
+            config.getStats().removeIf(configStat -> configStat.getDay() == stat.getDay());
             config.getStats().add(stat);
             statsDao.save(config);
         }
