@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
@@ -40,6 +41,7 @@ public class CheckCommand extends Command {
     public CheckCommand(CaseDao caseDao) {
         name = "check";
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MODERATION;
         cooldown = 5;
         this.caseDao = caseDao;
     }

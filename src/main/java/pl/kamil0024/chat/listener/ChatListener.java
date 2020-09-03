@@ -312,7 +312,7 @@ public class ChatListener extends ListenerAdapter {
         String floodowanyZnak = null;
         for (String split : ssplit) {
             try {
-                 if (split.equals(" ")) continue;
+                if (split.equals(" ")) continue;
                 String nastepnaLitera = ssplit[tak + 1];
                 if (floodowanyZnak == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
                     floodowanyZnak = nastepnaLitera;
@@ -330,7 +330,9 @@ public class ChatListener extends ListenerAdapter {
     }
 
     public static int containsCaps(String msg) {
-        msg = msg.replaceAll(" ", "").replaceAll("<@!?([0-9])*>", "");
+        msg = msg.replaceAll(" ", "")
+                .replaceAll("<@!?([0-9])*>", "")
+                .replaceAll("(x|X)", "").replaceAll("(d|D)", "");
         int caps = 0;
         char[] split = msg.toCharArray();
         if (split.length < 5) return 0;

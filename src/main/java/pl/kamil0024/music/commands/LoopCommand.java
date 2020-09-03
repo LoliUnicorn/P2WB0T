@@ -21,6 +21,7 @@ package pl.kamil0024.music.commands;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
@@ -33,6 +34,7 @@ public class LoopCommand extends Command {
     public LoopCommand(MusicModule musicModule) {
         name = "loop";
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.MUSIC;
         this.musicModule = musicModule;
     }
 
