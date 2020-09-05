@@ -140,6 +140,7 @@ public class PrivateYouTubeCommand extends Command {
                     (event) -> event.getAuthor().getId().equals(context.getUser().getId()) && event.getChannel().getId().equals(context.getChannel().getId()),
                     (event) -> {
                         List<Integer> lista = new ArrayList<>();
+                        List<AudioTrack> track = new ArrayList<>();
                         String eMsg = event.getMessage().getContentRaw().replaceAll(" ", "");
                         for (String s : eMsg.split(",")) {
                             Integer i = context.getParsed().getNumber(s);
@@ -148,16 +149,16 @@ public class PrivateYouTubeCommand extends Command {
                             }
                         }
                         try {
+                            msg.delete().complete();
                             if (lista.isEmpty()) {
                                 if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
                                     finalRestAction.disconnect();
                                 }
-                                msg.delete().complete();
                                 return;
                             }
-                            msg.delete().complete();
                             lista.forEach(i -> {
                                 try {
+                                    track.add(mapa.get(i));
                                     finalRestAction.play(QueueCommand.getYtLink(mapa.get(i)).split("v=")[1]);
                                 } catch (IOException ignored) { }
                             });
@@ -165,7 +166,8 @@ public class PrivateYouTubeCommand extends Command {
                             e.printStackTrace();
                             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
                         }
-                        context.sendTranslate("youtube.succes", lista.size()).queue();
+                        context.sendTranslate("youtube.succes", getTekst(track)).queue();
+                        event.getMessage().delete().queue();
                     }, 15, TimeUnit.SECONDS, () -> {
                         try {
                             if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
@@ -180,6 +182,18 @@ public class PrivateYouTubeCommand extends Command {
         }
 
         return true;
+    }
+
+    private String getTekst(List<AudioTrack> tracks) {
+        StringBuilder sb = new StringBuilder();
+        int size = 1;
+        for (AudioTrack track : tracks) {
+            String tytul = track.getInfo().title.replace("`", "");
+            sb.append("`").append(tytul).append("`");
+            if (size != tracks.size()) sb.append(", ");
+            size++;
+        }
+        return sb.toString();
     }
 
 }
