@@ -44,7 +44,8 @@ public class UserStats {
 
     public void add(StatsType statsType, int count) {
         int day = getDay();
-        Statystyka stats = Optional.of(getStatsMap().get(day)).orElse(newStats());
+        Statystyka stats = getStatsMap().get(day);
+        if (stats == null) stats = newStats();
         switch (statsType) {
             case MUTE:
                 stats.setZmutowanych(stats.getZmutowanych() + count);
