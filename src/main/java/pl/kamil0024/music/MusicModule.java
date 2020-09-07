@@ -72,13 +72,13 @@ public class MusicModule implements Modul {
 
     private boolean start = false;
 
-    private final AudioPlayerManager playerManager;
+    public final DefaultAudioPlayerManager defaultAudioPlayerManager = new DefaultAudioPlayerManager();
+    public final AudioPlayerManager playerManager;
+    public SpotifyAudioSourceManager spotifyAudioSourceManager;
     @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
-
     public YoutubeAudioSourceManager youtubeSourceManager;
-
     public MusicAPI musicAPI;
 
     public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao, MusicAPI musicAPI) {
@@ -88,19 +88,20 @@ public class MusicModule implements Modul {
         this.voiceStateDao = voiceStateDao;
         this.musicAPI = musicAPI;
 
-        this.playerManager = new DefaultAudioPlayerManager();
+        this.playerManager = defaultAudioPlayerManager;
         this.musicManagers = new HashMap<>();
         this.youtubeSourceManager = new YoutubeAudioSourceManager(true);
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 
         playerManager.registerSourceManager(youtubeSourceManager);
-        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
+        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager("ann9287afsyklxggnsei4svde5b34h"));
         playerManager.registerSourceManager(new BeamAudioSourceManager());
         playerManager.registerSourceManager(new VimeoAudioSourceManager());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
-        playerManager.registerSourceManager(new SpotifyAudioSourceManager(youtubeSourceManager));
+        this.spotifyAudioSourceManager = new SpotifyAudioSourceManager(youtubeSourceManager);
+        playerManager.registerSourceManager(spotifyAudioSourceManager);
 
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
@@ -127,6 +128,7 @@ public class MusicModule implements Modul {
         cmd.add(new YouTubeCommand(this, eventWaiter));
         cmd.add(new LeaveCommand(this));
         cmd.add(new LoopCommand(this));
+        cmd.add(new SpotifyCommand(this, spotifyAudioSourceManager));
 
         //#region Prywatne
         cmd.add(new PrivatePlayCommand(musicAPI));
