@@ -70,8 +70,7 @@ public class SpotifyCommand extends Command {
         }
         if (music instanceof SpotifyAudioTrack) {
             SpotifyAudioTrack spotifi = (SpotifyAudioTrack) music;
-            context.send(spotifi.getSourceManager().getSourceName()).queue();
-            context.send(spotifi.getInfo().title + "\n" + spotifi.getInfo().author + "\n" +spotifi.getInfo().identifier + "\n" + spotifi.getInfo().uri).queue();
+            context.send(spotifi.getInfo().uri).queue();
 //            musicModule.play(context.getGuild(), manager, (AudioTrack) music, PlayCommand.getVc(context.getMember()));
         }
         context.send("!(music instanceof SpotifyAudioTrack)").queue();
