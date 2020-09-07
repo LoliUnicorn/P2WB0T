@@ -20,15 +20,13 @@
 package pl.kamil0024.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.track.AudioItem;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioReference;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.*;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.music.audiomanager.spotify.SpotifyAudioSourceManager;
+import pl.kamil0024.music.audiomanager.spotify.SpotifyAudioTrack;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 import pl.kamil0024.music.commands.PlayCommand.*;
 
@@ -63,7 +61,6 @@ public class SpotifyCommand extends Command {
             context.sendTranslate("play.noperms").queue();
             return false;
         }
-        GuildMusicManager manager = musicModule.getGuildAudioPlayer(context.getGuild());
         String arg = context.getArgs().get(0);
         if (arg == null) throw new UsageException();
         AudioItem music = spotify.loadItem(musicModule.defaultAudioPlayerManager, new AudioReference(arg, "?"));
@@ -71,10 +68,13 @@ public class SpotifyCommand extends Command {
             context.send("Nie znaleziono takiej piosenki!").queue();
             return false;
         }
-        if (music instanceof AudioPlaylist) {
-            musicModule.play(context.getGuild(), manager, (AudioTrack) music, PlayCommand.getVc(context.getMember()));
+        if (music instanceof SpotifyAudioTrack) {
+            SpotifyAudioTrack spotifi = (SpotifyAudioTrack) music;
+            context.send(spotifi.getSourceManager().getSourceName()).queue();
+            context.send(spotifi.getInfo().title + "\n" + spotifi.getInfo().author + "\n" +spotifi.getInfo().identifier + "\n" + spotifi.getInfo().uri).queue();
+//            musicModule.play(context.getGuild(), manager, (AudioTrack) music, PlayCommand.getVc(context.getMember()));
         }
-        context.send("!(music instanceof AudioPlaylist)").queue();
+        context.send("!(music instanceof SpotifyAudioTrack)").queue();
         return false;
     }
     
