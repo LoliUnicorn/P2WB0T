@@ -86,9 +86,10 @@ public class QueueCommand extends Command {
         AudioTrackInfo info = audioTrack.getInfo();
 
         eb.setColor(Color.cyan);
-        eb.setImage(getImageUrl(audioTrack));
-
-        eb.addField("Tytuł", String.format("[%s](%s)", info.title, getYtLink(audioTrack)), false);
+        if (audioTrack.getSourceManager().getSourceName().equalsIgnoreCase("youtube")) {
+            eb.setImage(getImageUrl(audioTrack));
+        }
+        eb.addField("Tytuł", String.format("[%s](%s)", info.title, audioTrack.getInfo().uri), false);
         eb.addField("Autor", info.author, false);
 
         if (!aktualnieGrana) {

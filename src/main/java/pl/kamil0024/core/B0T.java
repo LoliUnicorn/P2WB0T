@@ -157,7 +157,7 @@ public class B0T {
             youTrack = ytbuilder.build();
         } catch (Exception e) {
             Log.newError("Nie udało się połączyć z YouTrackiem!");
-            Log.newError(e);
+            e.printStackTrace();
         }
 
         this.api = null;

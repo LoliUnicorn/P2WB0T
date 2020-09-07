@@ -45,6 +45,7 @@ public class Ustawienia {
     public Api api = new Api();
     public Rangi rangi = new Rangi();
     public YouTrack yt = new YouTrack();
+    public SpotifyCredentials spotify = new SpotifyCredentials();
 
     public static class Roles {
         public String helperRole = def;
@@ -126,5 +127,11 @@ public class Ustawienia {
         public String clientSecret = def;
         public String clientScope = def;
     }
+
+    public static class SpotifyCredentials {
+        public String id;
+        public String secret;
+    }
+
 
 }

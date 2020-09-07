@@ -57,12 +57,6 @@ public class TopCommand extends Command {
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean execute(CommandContext context) {
-
-        if (UserUtil.getPermLevel(context.getMember()).getNumer() < PermLevel.ADMINISTRATOR.getNumer() && !context.getMember().getId().equals("416264257978761217")) {
-            context.sendTranslate("top.perms").queue();
-            return false;
-        }
-
         Integer dni = context.getParsed().getNumber(context.getArgs().get(0));
         if (dni == null) throw new UsageException();
 
@@ -124,18 +118,6 @@ public class TopCommand extends Command {
     }
 
     public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
-        List<Map.Entry<String, Integer> > list =
-                new LinkedList<>(hm.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        Collections.reverse(list);
-        HashMap<String, Integer> temp = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> aa : list) {
-            temp.put(aa.getKey(), aa.getValue());
-        }
-        return temp;
-    }
-
-    public static Map<String, Integer> sortByValue(Map<String, Integer> hm) {
         List<Map.Entry<String, Integer> > list =
                 new LinkedList<>(hm.entrySet());
         list.sort(Map.Entry.comparingByValue());

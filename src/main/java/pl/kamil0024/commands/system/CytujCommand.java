@@ -78,7 +78,7 @@ public class CytujCommand extends Command {
         eb.setColor(UserUtil.getColor(context.getMember()));
         eb.setFooter("Cytuj");
         eb.setAuthor(UserUtil.getName(msg.getAuthor()), null, msg.getAuthor().getAvatarUrl());
-        eb.setDescription(msg.getContentRaw().isEmpty() ? context.getTranslate("Wiadomość pusta.") + " " + takEmbed : msg.getContentRaw());
+        eb.setDescription(msg.getContentRaw().isEmpty() ? context.getTranslate("cytuj.msgempty") + " " + takEmbed : msg.getContentRaw());
         eb.addField(context.getTranslate("cytuj.kolega"), String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
         eb.setTimestamp(msg.getTimeCreated());
 

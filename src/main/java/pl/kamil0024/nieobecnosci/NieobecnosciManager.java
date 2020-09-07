@@ -108,6 +108,7 @@ public class NieobecnosciManager {
 
     public void xd() { update(); }
 
+    @SuppressWarnings("DuplicatedCode")
     public synchronized void update() {
         TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
 
@@ -126,7 +127,7 @@ public class NieobecnosciManager {
             }
 
             if (msg == null) {
-                Log.newError("Nieobecnosc o ID " + nb.getId() + " nie ma wiadomosci!");
+                Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!");
                 continue;
             }
 

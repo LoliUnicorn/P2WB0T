@@ -268,7 +268,10 @@ public class PunishCommand extends Command {
                     statsModule.getStatsCache().addZmutowanych(member.getId(), 1);
                     String mute = TempmuteCommand.tempmute(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
                     if (mute != null) {
-                        Log.newError(mute);
+                        if (mute.equalsIgnoreCase("Ta osoba jest już wyciszona!")) {
+                            String msg = "Uzytkownik %s chcial wyciszyc %s, ale ten ma juz muta!";
+                            Log.newError(String.format(msg, UserUtil.getLogName(member), UserUtil.getLogName(osoba)));
+                        }
                         return;
                     }
                     break;

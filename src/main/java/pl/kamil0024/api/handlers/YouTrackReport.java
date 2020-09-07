@@ -60,8 +60,8 @@ public class YouTrackReport implements HttpHandler {
         String testerzy = ex.getRequestHeaders().get("testerzy").getFirst();
 
         Type typeOfHashMap = new TypeToken<Map<String, Integer>>() { }.getType();
-        Map<String, Integer> map = new Gson().fromJson(header, typeOfHashMap);
-        Map<String, Integer> testerzyMap = new Gson().fromJson(testerzy, typeOfHashMap);
+        HashMap<String, Integer> map = new Gson().fromJson(header, typeOfHashMap);
+        HashMap<String, Integer> testerzyMap = new Gson().fromJson(testerzy, typeOfHashMap);
         TextChannel txt = api.getTextChannelById("738122215878295572");
 
         MessageBuilder mb = new MessageBuilder();
@@ -103,7 +103,7 @@ public class YouTrackReport implements HttpHandler {
         Objects.requireNonNull(txt).sendMessage(mb.build()).queue();
     }
 
-    private String getPodium(Map<String, Integer> map) {
+    private String getPodium(HashMap<String, Integer> map) {
         int miejsce = 1;
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Integer> entry : TopCommand.sortByValue(map).entrySet()) {

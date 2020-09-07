@@ -21,6 +21,7 @@ package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
+import pl.kamil0024.commands.dews.ShellCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 
@@ -30,13 +31,26 @@ public class PingCommand extends Command {
 
     public PingCommand() {
         name = "ping";
+        cooldown = 15;
     }
 
     @Override
     public boolean execute(@NotNull CommandContext context) {
+        double derpmc = 0, feerko = 0, roizy = 0;
+        String out = ShellCommand.shell("ping derpmc.pl -c 1 && ping feerko.pl -c 1 && ping roizy.pl -c 1");
+        if (out != null) {
+            for (String s : out.split("\n")) {
+                if (s.contains("time=")) {
+                    String ms = s.split("time=")[1].replaceAll(" ms", "");
+                    if (derpmc == 0) derpmc = Double.parseDouble(ms);
+                    else if (feerko == 0) feerko = Double.parseDouble(ms);
+                    else if (roizy == 0) roizy = Double.parseDouble(ms);
+                }
+            }
+        }
         Message msg = context.send(context.getTranslate("ping.ping")).complete();
         long ping = context.getEvent().getMessage().getTimeCreated().until(msg.getTimeCreated(), ChronoUnit.MILLIS);
-        msg.editMessage(context.getTranslate("ping.pong", ping, context.getEvent().getJDA().getGatewayPing())).queue();
+        msg.editMessage(context.getTranslate("ping.pong", ping, context.getEvent().getJDA().getGatewayPing(), derpmc, feerko, roizy)).queue();
         return true;
     }
 

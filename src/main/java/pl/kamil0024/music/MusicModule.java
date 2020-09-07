@@ -24,6 +24,11 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.*;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
@@ -45,6 +50,7 @@ import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.util.EventWaiter;
+import pl.kamil0024.music.audiomanager.spotify.SpotifyAudioSourceManager;
 import pl.kamil0024.music.commands.*;
 import pl.kamil0024.music.commands.privates.*;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
@@ -89,6 +95,12 @@ public class MusicModule implements Modul {
         AudioSourceManagers.registerLocalSource(playerManager);
 
         playerManager.registerSourceManager(youtubeSourceManager);
+        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
+        playerManager.registerSourceManager(new BeamAudioSourceManager());
+        playerManager.registerSourceManager(new VimeoAudioSourceManager());
+        playerManager.registerSourceManager(new BandcampAudioSourceManager());
+        playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
+        playerManager.registerSourceManager(new SpotifyAudioSourceManager(youtubeSourceManager));
 
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
