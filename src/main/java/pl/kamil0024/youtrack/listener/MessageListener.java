@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
@@ -44,7 +45,7 @@ public class MessageListener extends ListenerAdapter {
     private static final String NICO = "\uDB40\uDC00\uDB40\uDC00\uDB40\uDC00\uDB40\uDC00 \uDB40\uDC00\uDB40\uDC00\uDB40\uDC00\uDB40\uDC00";
     private static final Pattern ISSUE_ID = Pattern.compile("([A-Z0-9]+)-(\\d+)");
 
-    private YouTrack youTrack;
+    private final YouTrack youTrack;
     private List<Project> projects;
 
     public MessageListener(YouTrack youTrack) {
@@ -59,7 +60,7 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent e) {
         if (!e.isFromGuild() || !e.getGuild().getId().equals(Ustawienia.instance.bot.guildId) ||
-                e.getAuthor().isBot() || UserUtil.getPermLevel(e.getAuthor()).getNumer() <= 1) return;
+                e.getAuthor().isBot() || UserUtil.getPermLevel(e.getAuthor()) == PermLevel.MEMBER) return;
         Matcher issue = ISSUE_ID.matcher(e.getMessage().getContentRaw());
         List<MessageEmbed> embedsToSend = new ArrayList<>();
         while (issue.find()) {

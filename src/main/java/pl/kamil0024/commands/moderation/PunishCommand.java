@@ -174,7 +174,7 @@ public class PunishCommand extends Command {
         msg.addReaction(Objects.requireNonNull(green)).queue();
         msg.addReaction(Objects.requireNonNull(red)).queue();
         eventWaiter.waitForEvent(MessageReactionAddEvent.class,
-                (event) -> event.get().getId().equals(context.getUser().getId()) && event.getMessageId().equals(msg.getId()),
+                (event) -> event.getUser().getId().equals(context.getUser().getId()) && event.getMessageId().equals(msg.getId()),
                 (event) -> {
             try {
                 if (event.getReactionEmote().getId().equals(red.getId())) {
