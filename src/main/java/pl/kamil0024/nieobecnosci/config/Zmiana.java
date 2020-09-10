@@ -49,9 +49,9 @@ public class Zmiana {
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         User u = g.getJDA().retrieveUserById(getKtoZmienia()).complete();
-        sb.append("Kto zmieniał: ").append(UserUtil.getLogName(u));
-        sb.append("Kiedy zmieniał: ").append(sfd.format(new Date(getKiedy())));
-        sb.append("Co zmieniał: ").append(getString(getCoZmienia()));
+        sb.append("Kto zmieniał: ").append(UserUtil.getLogName(u)).append("\n");
+        sb.append("Kiedy zmieniał: ").append(sfd.format(new Date(getKiedy()))).append("\n");
+        sb.append("Co zmieniał: ").append(getString(getCoZmienia())).append("\n");
         if (komentarz != null) {
             sb.append("Komentarz:\n").append(getKomentarz());
         }
