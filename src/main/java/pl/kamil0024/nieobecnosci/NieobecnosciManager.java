@@ -101,8 +101,8 @@ public class NieobecnosciManager {
         if (nieobecnosc.isAktywna()) {
             eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
             eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+            eb.addField("Pozostało", new Timespan(new Date().getTime(), ModLog.getLang()).difference(nieobecnosc.getEnd()), false);
         }
-        eb.addField("Pozostało", new Timespan(new Date().getTime(), ModLog.getLang()).difference(nieobecnosc.getEnd()), false);
         eb.setFooter("ID: " + nieobecnosc.getId() + " | Ostatnia aktualizacja:");
         eb.setTimestamp(Instant.now());
 

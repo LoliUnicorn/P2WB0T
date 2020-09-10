@@ -22,6 +22,7 @@ package pl.kamil0024.nieobecnosci.listeners;
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -156,6 +157,12 @@ public class NieobecnosciListener extends ListenerAdapter {
                         zmiana.setCoZmienia(Zmiana.Enum.CANCEL);
                         nbc.getNieobecnosc().add(nieobecnosc);
                         nieobecnosciDao.save(nbc);
+
+                        try {
+                            PrivateChannel pv = e.getJDA().retrieveUserById(nieobecnosc.getUserId()).complete().openPrivateChannel().complete();
+                            pv.sendMessage("Twój urlop o ID " + nieobecnosc.getId() + " został anulowany przez administratora!").complete();
+                        } catch (Exception ignored) { }
+
                         Message msg = CytujCommand.kurwaJDA(e.getChannel(), e.getMessageId());
                         if (msg == null) continue;
                         msg.delete().queue();

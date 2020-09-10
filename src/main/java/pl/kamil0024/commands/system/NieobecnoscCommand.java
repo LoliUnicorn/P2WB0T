@@ -35,6 +35,7 @@ import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.nieobecnosci.config.Zmiana;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -99,6 +100,7 @@ public class NieobecnoscCommand extends Command {
                         , false);
                 pages.add(eb);
             }
+            Collections.reverse(pages);
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 320)
                     .create(context.getChannel());
             return true;
@@ -126,10 +128,11 @@ public class NieobecnoscCommand extends Command {
             zmiana.setKtoZmienia(context.getUser().getId());
             zmiana.setCoZmienia(Zmiana.Enum.REASON);
             zmiana.setKiedy(new Date().getTime());
-            zmiana.setKomentarz("Stary powód: " + last.getPowod() + "\nNowy powód:" + powod);
+            zmiana.setKomentarz("Stary powód: " + last.getPowod() + "\nNowy powód: " + powod);
             zmiana.sendLog(context.getGuild(), last.getUserId(), last.getId());
             if (last.getZmiany() == null) last.setZmiany(new ArrayList<>());
             last.getZmiany().add(zmiana);
+            last.setPowod(powod);
             nbConf.getNieobecnosc().add(last);
             nieobecnosciDao.save(nbConf);
             context.send("Pomyślnie zmieniono powód!").queue();

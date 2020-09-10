@@ -112,7 +112,7 @@ public class TopCommand extends Command {
                 eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
                         StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()) +
                         "\nMa nieobecność? " + (nieobecnosciDao.hasNieobecnosc(user.getId()) ? green.getAsMention() : red.getAsMention()) +
-                        "\nOstatnia nieobecność skończyła się o:" + tak);
+                        "\nOstatnia nieobecność skończyła się o: " + tak);
                 pages.add(eb);
                 rank++;
             }

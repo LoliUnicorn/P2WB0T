@@ -31,6 +31,7 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,7 +60,8 @@ public class Zmiana {
 
     public void sendLog(Guild g, String autorNieobecnosci, int idNieobecnosci) {
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setFooter("Update nieobecności ID:" + idNieobecnosci);
+        eb.setColor(Color.cyan);
+        eb.setFooter("Update nieobecności ID: " + idNieobecnosci);
         eb.addField("Kto zmienia?", UserUtil.getLogName(g.retrieveMemberById(getKtoZmienia()).complete()), false);
         eb.addField("Co się stało?", getString(getCoZmienia()), false);
         eb.addField("Komu zmienia?", UserUtil.getLogName(g.retrieveMemberById(autorNieobecnosci).complete()), false);
