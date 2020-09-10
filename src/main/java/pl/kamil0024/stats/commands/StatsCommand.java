@@ -36,17 +36,20 @@ public class StatsCommand extends Command {
 
     private static final String DAY_OF_STATS = "03.09.2020";
 
-    private StatsDao statsDao;
+    private final StatsDao statsDao;
 
     public StatsCommand(StatsDao statsDao) {
         name = "stats";
-        permLevel = PermLevel.MODERATOR;
-
+        permLevel = PermLevel.HELPER;
         this.statsDao = statsDao;
     }
 
     @Override
     public boolean execute(CommandContext context) {
+        if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("552580366200864778")) {
+            context.send("Nie możesz tego użyć!").queue();
+            return false;
+        }
         Member mem = context.getParsed().getMember(context.getArgs().get(0));
         if (mem == null) mem = context.getMember();
 

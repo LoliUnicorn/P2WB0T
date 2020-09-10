@@ -20,16 +20,12 @@
 package pl.kamil0024.stats.entities;
 
 import lombok.Data;
-import org.w3c.dom.stylesheets.LinkStyle;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

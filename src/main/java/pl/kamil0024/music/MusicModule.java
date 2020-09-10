@@ -27,7 +27,6 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.*;
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
@@ -74,7 +73,6 @@ public class MusicModule implements Modul {
 
     public final DefaultAudioPlayerManager defaultAudioPlayerManager = new DefaultAudioPlayerManager();
     public final AudioPlayerManager playerManager;
-    public SpotifyAudioSourceManager spotifyAudioSourceManager;
     @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
     private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
@@ -95,13 +93,10 @@ public class MusicModule implements Modul {
         AudioSourceManagers.registerLocalSource(playerManager);
 
         playerManager.registerSourceManager(youtubeSourceManager);
-        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager("ann9287afsyklxggnsei4svde5b34h"));
         playerManager.registerSourceManager(new BeamAudioSourceManager());
         playerManager.registerSourceManager(new VimeoAudioSourceManager());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
-        this.spotifyAudioSourceManager = new SpotifyAudioSourceManager(youtubeSourceManager);
-        playerManager.registerSourceManager(spotifyAudioSourceManager);
 
         VoiceStateConfig vsc = voiceStateDao.get("1");
         if (vsc != null && vsc.getVoiceChannel() != null) {
@@ -128,7 +123,6 @@ public class MusicModule implements Modul {
         cmd.add(new YouTubeCommand(this, eventWaiter));
         cmd.add(new LeaveCommand(this));
         cmd.add(new LoopCommand(this));
-        cmd.add(new SpotifyCommand(this, spotifyAudioSourceManager));
 
         //#region Prywatne
         cmd.add(new PrivatePlayCommand(musicAPI));

@@ -48,7 +48,7 @@ public class TopCommand extends Command {
 
     public TopCommand(StatsDao statsDao, EventWaiter eventWaiter, NieobecnosciDao nieobecnosciDao) {
         name = "top";
-        permLevel = PermLevel.MODERATOR;
+        permLevel = PermLevel.HELPER;
         this.statsDao = statsDao;
         this.eventWaiter = eventWaiter;
         this.nieobecnosciDao = nieobecnosciDao;
@@ -57,6 +57,10 @@ public class TopCommand extends Command {
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean execute(CommandContext context) {
+        if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("552580366200864778")) {
+            context.send("Nie możesz tego użyć!").queue();
+            return false;
+        }
         Integer dni = context.getParsed().getNumber(context.getArgs().get(0));
         if (dni == null) throw new UsageException();
 
@@ -110,6 +114,7 @@ public class TopCommand extends Command {
         return true;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     @Data
     @AllArgsConstructor
     private class Suma {

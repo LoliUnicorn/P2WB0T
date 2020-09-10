@@ -50,7 +50,7 @@ public class PingCommand extends Command {
         }
         Message msg = context.send(context.getTranslate("ping.ping")).complete();
         long ping = context.getEvent().getMessage().getTimeCreated().until(msg.getTimeCreated(), ChronoUnit.MILLIS);
-        msg.editMessage(context.getTranslate("ping.pong", ping, context.getEvent().getJDA().getGatewayPing(), derpmc, feerko, roizy)).queue();
+        msg.editMessage(context.getTranslate("ping.pong", ping, context.getEvent().getJDA().getGatewayPing(), "\uD83C\uDFD3 **PING SERWEROW** \uD83C\uDFD3", derpmc, feerko, roizy)).queue();
         return true;
     }
 
