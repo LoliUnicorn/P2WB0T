@@ -36,8 +36,10 @@ import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.stats.entities.Statystyka;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TopCommand extends Command {
@@ -93,7 +95,7 @@ public class TopCommand extends Command {
             for (Map.Entry<String, Suma> entry : mapa.entrySet()) {
                 top.put(entry.getKey(), entry.getValue().getNadaneKary());
             }
-
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             int rank = 1;
             for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
                 EmbedBuilder eb = new EmbedBuilder();
@@ -102,9 +104,11 @@ public class TopCommand extends Command {
                 eb.setColor(UserUtil.getColor(context.getMember()));
                 eb.setTitle(context.getTranslate("top.rank", rank));
                 eb.setThumbnail(user.getAvatarUrl());
+                Nieobecnosc lastNieobecnosci = nieobecnosciDao.lastNieobecnosc(user.getId());
                 eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
                         StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()) +
-                        "\nMa nieobecność? " + (nieobecnosciDao.hasNieobecnosc(user.getId()) ? green.getAsMention() : red.getAsMention()));
+                        "\nMa nieobecność? " + (nieobecnosciDao.hasNieobecnosc(user.getId()) ? green.getAsMention() : red.getAsMention()) +
+                        "\nOstatnia nieobecność skończyła się o:" + lastNieobecnosci == null ? "???" : sdf.format(new Date(lastNieobecnosci.getEnd())));
                 pages.add(eb);
                 rank++;
             }

@@ -138,6 +138,11 @@ public class WeryfikacjaListener extends ListenerAdapter {
             event.getChannel().sendMessage(event.getAuthor().getAsMention() + ", pomyślnie zweryfikowano. Witamy na serwerze sieci P2W!")
                     .allowedMentions(Collections.singleton(Message.MentionType.USER))
                     .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
+            if (ranga.getId().equalsIgnoreCase(Ustawienia.instance.rangi.gracz)) {
+                CheckMk mk = new CheckMk(event.getMember());
+                mk.check();
+            }
+
         }
         apiModule.getDcCache().invalidate(dc.getKod());
     }

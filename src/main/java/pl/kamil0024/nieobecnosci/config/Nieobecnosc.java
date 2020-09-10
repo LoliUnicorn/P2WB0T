@@ -22,11 +22,14 @@ package pl.kamil0024.nieobecnosci.config;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Data
 public class Nieobecnosc {
 
-    public Nieobecnosc() { };
+    public Nieobecnosc() { }
 
     private String userId;
     private int id;
@@ -37,5 +40,7 @@ public class Nieobecnosc {
     private long end;
 
     private boolean aktywna = true;
+
+    private List<Zmiana> zmiany = new ArrayList<>();
 
 }

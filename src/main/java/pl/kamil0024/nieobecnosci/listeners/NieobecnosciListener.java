@@ -35,9 +35,12 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
+import pl.kamil0024.nieobecnosci.config.Zmiana;
 
 import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class NieobecnosciListener extends ListenerAdapter {
@@ -79,7 +82,21 @@ public class NieobecnosciListener extends ListenerAdapter {
             }
 
             try {
-                xd.setEnd(sfd.parse(e.getMessage().getContentRaw().split("Przedłużam: ")[1]).getTime());
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                Date nowyCzas = sfd.parse(e.getMessage().getContentRaw().split("Przedłużam: ")[1]);
+
+                Zmiana zmiana = new Zmiana();
+                zmiana.setCoZmienia(Zmiana.Enum.ENDTIME);
+                zmiana.setKiedy(new Date().getTime());
+                zmiana.setKtoZmienia(e.getAuthor().getId());
+
+                String stary = String.format("Stary czas: `%s`\n", sdf.format(new Date(xd.getEnd())));
+                String nowy = String.format("Nowy czas: `%s`", sdf.format(new Date(nowyCzas.getTime())));
+                zmiana.setKomentarz(stary + nowy);
+                zmiana.sendLog(e.getGuild(), xd.getUserId(), xd.getId());
+                if (xd.getZmiany() == null) xd.setZmiany(new ArrayList<>());
+                xd.getZmiany().add(zmiana);
+                xd.setEnd(nowyCzas.getTime());
                 nbc.getNieobecnosc().add(xd);
                 nieobecnosciDao.save(nbc);
                 nieobecnosciManager.update();

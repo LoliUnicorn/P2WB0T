@@ -33,6 +33,7 @@ import pl.kamil0024.core.database.config.NieobecnosciConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
+import pl.kamil0024.nieobecnosci.config.Zmiana;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -87,7 +88,7 @@ public class NieobecnosciManager {
         msg.delete().queue();
     }
 
-    public EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member) {
+    public static EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -97,8 +98,10 @@ public class NieobecnosciManager {
 
         eb.addField("Osoba zgłaszająca", UserUtil.getFullNameMc(member), false);
         eb.addField("Powód", nieobecnosc.getPowod(), false);
-        eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
-        eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+        if (nieobecnosc.isAktywna()) {
+            eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
+            eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+        }
         eb.addField("Pozostało", new Timespan(new Date().getTime(), ModLog.getLang()).difference(nieobecnosc.getEnd()), false);
         eb.setFooter("ID: " + nieobecnosc.getId() + " | Ostatnia aktualizacja:");
         eb.setTimestamp(Instant.now());
@@ -139,6 +142,7 @@ public class NieobecnosciManager {
                     nb.setAktywna(false);
                     nbc.getNieobecnosc().add(nb);
                     nieobecnosciDao.save(nbc);
+                    Zmiana.endNieobecnosci(nb, mem);
                     PrivateChannel pv = mem.getUser().openPrivateChannel().complete();
                     pv.sendMessage("Twój urlop właśnie się zakończył!").complete();
                 } catch (Exception ignored) {}

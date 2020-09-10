@@ -24,6 +24,7 @@ import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.NieobecnosciConfig;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +76,15 @@ public class NieobecnosciDao implements Dao<NieobecnosciConfig> {
             if (nieobecnosc.isAktywna()) return true;
         }
         return false;
+    }
+
+    @Nullable
+    public Nieobecnosc lastNieobecnosc(String id) {
+        Nieobecnosc xd = null;
+        for (Nieobecnosc nieobecnosc : get(id).getNieobecnosc()) {
+            xd = nieobecnosc;
+        }
+        return xd;
     }
 
 }

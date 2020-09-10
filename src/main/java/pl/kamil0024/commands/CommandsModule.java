@@ -37,6 +37,7 @@ import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.music.MusicModule;
+import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.commands.dews.*;
 import pl.kamil0024.commands.moderation.*;
@@ -68,6 +69,7 @@ public class CommandsModule implements Modul {
     @Inject MusicModule musicModule;
     @Inject MultiDao multiDao;
     @Inject MusicAPI musicAPI;
+    @Inject NieobecnosciManager nieobecnosciManager;
 
     private boolean start = false;
     private ModLog modLog;
@@ -76,7 +78,7 @@ public class CommandsModule implements Modul {
 
     KolkoIKrzyzykManager kolkoIKrzyzykManager;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -94,6 +96,7 @@ public class CommandsModule implements Modul {
         this.musicModule = musicModule;
         this.multiDao = multiDao;
         this.musicAPI = musicAPI;
+        this.nieobecnosciManager = nieobecnosciManager;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -139,6 +142,7 @@ public class CommandsModule implements Modul {
         cmd.add(new UnbanCommand(caseDao, modLog));
         cmd.add(new MuteCommand(caseDao, modLog, statsModule));
         cmd.add(new HistoryCommand(caseDao, eventWaiter));
+        cmd.add(new NieobecnoscCommand(nieobecnosciManager, eventWaiter, nieobecnosciDao));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);

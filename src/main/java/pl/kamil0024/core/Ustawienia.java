@@ -91,6 +91,7 @@ public class Ustawienia {
         public String liczek = def;
         public String wiadomosci = def;
         public String moddc = def;
+        public String loginieobecnosci = def;
     }
 
     public static class Inne {
