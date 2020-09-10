@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -28,12 +29,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.slf4j.LoggerFactory;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
@@ -71,10 +70,12 @@ import pl.kamil0024.youtrack.YTModule;
 import pl.kamil0024.youtrack.YouTrack;
 import pl.kamil0024.youtrack.YouTrackBuilder;
 
+import javax.net.ssl.*;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -105,7 +106,29 @@ public class B0T {
     private MusicAPI musicAPI;
     private VoiceStateDao voiceStateDao;
 
+    @SneakyThrows
     public B0T(String token) {
+        //#region fix self-assigne certs
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {  }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {  }
+                }
+        };
+
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        //#endregion fix self-assigne certs
         moduls = new HashMap<>();
         tlumaczenia = new Tlumaczenia();
         argumentManager = new ArgumentManager();
