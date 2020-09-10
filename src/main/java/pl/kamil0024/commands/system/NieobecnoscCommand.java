@@ -20,7 +20,6 @@
 package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
@@ -39,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("DuplicatedCode")
 public class NieobecnoscCommand extends Command {
 
     private final NieobecnosciManager nieobecnosciManager;
@@ -72,7 +72,7 @@ public class NieobecnoscCommand extends Command {
                 if (mem == null) continue;
                 EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
                 List<Zmiana> zmiany = nieobecnosc.getZmiany();
-                eb.addField("Ilość zmian:", zmiany == null ? "0" : zmiany + "", false);
+                eb.addField("Ilość zmian:", zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
                 eb.addField("Ostatnia zmiana:",
                         zmiany == null || zmiany.isEmpty() ? "Brak." : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
                         , false);
@@ -91,8 +91,16 @@ public class NieobecnoscCommand extends Command {
             }
             List<EmbedBuilder> pages = new ArrayList<>();
             for (Nieobecnosc nieobecnosc : nbConf.getNieobecnosc()) {
-                pages.add(NieobecnosciManager.getEmbed(nieobecnosc, mem));
+                EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
+                List<Zmiana> zmiany = nieobecnosc.getZmiany();
+                eb.addField("Ilość zmian:", zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
+                eb.addField("Ostatnia zmiana:",
+                        zmiany == null || zmiany.isEmpty() ? "Brak." : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
+                        , false);
+                pages.add(eb);
             }
+            new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 320)
+                    .create(context.getChannel());
             return true;
         }
         if (arg.equalsIgnoreCase("powod")) {
@@ -102,7 +110,7 @@ public class NieobecnoscCommand extends Command {
                 context.send("Użycie: nieobecnosc powod <member> <nowy powód>").queue();
                 return false;
             }
-            Member maNieobecnosc = context.getParsed().getMember(arg);
+            Member maNieobecnosc = context.getParsed().getMember(rawMember);
             if (maNieobecnosc == null) {
                 context.send("Użycie: nieobecnosc powod <member> <nowy powód>").queue();
                 return false;

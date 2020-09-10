@@ -50,7 +50,7 @@ public class Zmiana {
         User u = g.getJDA().retrieveUserById(getKtoZmienia()).complete();
         sb.append("Kto zmieniał: ").append(UserUtil.getLogName(u));
         sb.append("Kiedy zmieniał: ").append(sfd.format(new Date(getKiedy())));
-        sb.append("Co zmieniał: ").append(getCoZmienia() == Enum.ENDTIME ? "Czas zakończenia nieobecności" : "Powód nieobecności");
+        sb.append("Co zmieniał: ").append(getString(getCoZmienia()));
         if (komentarz != null) {
             sb.append("Komentarz:\n").append(getKomentarz());
         }
@@ -61,7 +61,7 @@ public class Zmiana {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setFooter("Update nieobecności ID:" + idNieobecnosci);
         eb.addField("Kto zmienia?", UserUtil.getLogName(g.retrieveMemberById(getKtoZmienia()).complete()), false);
-        eb.addField("Co zmienia?", getCoZmienia() == Enum.ENDTIME ? "Czas zakończenia nieobecności" : "Powód nieobecności", false);
+        eb.addField("Co się stało?", getString(getCoZmienia()), false);
         eb.addField("Komu zmienia?", UserUtil.getLogName(g.retrieveMemberById(autorNieobecnosci).complete()), false);
         if (getKomentarz() != null) {
             eb.addField("Komentarz",getKomentarz(), false);
@@ -84,8 +84,21 @@ public class Zmiana {
         txt.sendMessage(eb.build()).queue();
     }
 
+    public static String getString(Enum en) {
+        switch (en) {
+            case ENDTIME:
+                return "Koniec czasu";
+            case REASON:
+                return "Zmiana powodu";
+            case CANCEL:
+                return "Anulowanie nieobecności";
+            default:
+                return en.toString();
+        }
+    }
+
     public enum Enum {
-        ENDTIME, REASON
+        ENDTIME, REASON, CANCEL
     }
 
 }

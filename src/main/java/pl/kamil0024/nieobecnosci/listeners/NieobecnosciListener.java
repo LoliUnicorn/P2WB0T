@@ -150,6 +150,10 @@ public class NieobecnosciListener extends ListenerAdapter {
                         NieobecnosciConfig nbc = nieobecnosciDao.get(nieobecnosc.getUserId());
                         nbc.getNieobecnosc().remove(nieobecnosc);
                         nieobecnosc.setAktywna(false);
+                        Zmiana zmiana = new Zmiana();
+                        zmiana.setKiedy(new Date().getTime());
+                        zmiana.setKtoZmienia(e.getUser().getId());
+                        zmiana.setCoZmienia(Zmiana.Enum.CANCEL);
                         nbc.getNieobecnosc().add(nieobecnosc);
                         nieobecnosciDao.save(nbc);
                         Message msg = CytujCommand.kurwaJDA(e.getChannel(), e.getMessageId());

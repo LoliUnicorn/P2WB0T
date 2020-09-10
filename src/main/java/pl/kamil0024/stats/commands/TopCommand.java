@@ -105,10 +105,14 @@ public class TopCommand extends Command {
                 eb.setTitle(context.getTranslate("top.rank", rank));
                 eb.setThumbnail(user.getAvatarUrl());
                 Nieobecnosc lastNieobecnosci = nieobecnosciDao.lastNieobecnosc(user.getId());
+                String tak = "???";
+                if (lastNieobecnosci != null) {
+                    tak = sdf.format(new Date(lastNieobecnosci.getEnd()));
+                }
                 eb.setDescription(UserUtil.getFullName(user) + "\n\n" +
                         StatsCommand.getStringForStats(mapa.get(entry.getKey()).getStatystyka()) +
                         "\nMa nieobecność? " + (nieobecnosciDao.hasNieobecnosc(user.getId()) ? green.getAsMention() : red.getAsMention()) +
-                        "\nOstatnia nieobecność skończyła się o:" + lastNieobecnosci == null ? "???" : sdf.format(new Date(lastNieobecnosci.getEnd())));
+                        "\nOstatnia nieobecność skończyła się o:" + tak);
                 pages.add(eb);
                 rank++;
             }
