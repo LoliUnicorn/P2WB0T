@@ -152,10 +152,13 @@ public class CommandContext {
     @Nullable
     public String getArgsToString(Integer num) {
         StringBuffer args = new StringBuffer();
+        int size = 1;
         for (Map.Entry<Integer, String> a : getArgs().entrySet()) {
             if (a.getKey() >= num) {
-                args.append(a.getValue()).append(" ");
+                args.append(a.getValue());
             }
+            if (size < getArgs().size()) args.append(" ");
+            size++;
         }
         if (args.toString().isEmpty()) return null;
         return args.toString();
