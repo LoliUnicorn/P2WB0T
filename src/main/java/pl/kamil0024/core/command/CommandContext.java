@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unused", "UnusedReturnValue", "StringBufferMayBeStringBuilder"})
 public class CommandContext {
 
-    @Getter private final GuildMessageReceivedEvent event;
+    @Getter private final MessageReceivedEvent event;
     @Getter private final String prefix;
     @Getter private final HashMap<Integer, String> args;
 
@@ -54,7 +54,7 @@ public class CommandContext {
             "[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?://(?:www\\.|(?!www))[a-zA-Z0-9]" +
             "\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]\\.[^\\s]{2,})");
 
-    public CommandContext(GuildMessageReceivedEvent event, String prefix, @Nullable HashMap<Integer, String> args, Tlumaczenia tlumaczenia, ArgumentManager argumentManager, Command cmd) {
+    public CommandContext(MessageReceivedEvent event, String prefix, @Nullable HashMap<Integer, String> args, Tlumaczenia tlumaczenia, ArgumentManager argumentManager, Command cmd) {
         this.event = event;
         this.prefix = prefix;
         this.args = args;
@@ -99,7 +99,7 @@ public class CommandContext {
     }
 
     public TextChannel getChannel() {
-        return event.getChannel();
+        return event.getTextChannel();
     }
 
     public Guild getGuild() {

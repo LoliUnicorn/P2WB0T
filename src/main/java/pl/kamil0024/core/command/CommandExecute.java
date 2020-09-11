@@ -20,7 +20,11 @@
 package pl.kamil0024.core.command;
 
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -34,12 +38,9 @@ import pl.kamil0024.core.database.UserDao;
 import pl.kamil0024.core.database.config.UserConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Error;
-import pl.kamil0024.core.util.Tlumaczenia;
-import pl.kamil0024.core.util.UsageException;
-import pl.kamil0024.core.util.UserUtil;
-import pl.kamil0024.core.util.WebhookUtil;
-import pl.kamil0024.music.commands.PlayCommand;
+import pl.kamil0024.core.util.*;
 
+import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -66,8 +67,8 @@ public class CommandExecute extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
+    public void onMessageReceived(MessageReceivedEvent e) {
+        if (!e.isFromGuild() || e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
                 e.getMessage().getContentRaw().isEmpty()) return;
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (RebootCommand.reboot) return;
