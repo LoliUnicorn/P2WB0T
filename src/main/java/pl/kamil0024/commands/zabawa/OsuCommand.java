@@ -69,7 +69,7 @@ public class OsuCommand extends Command {
         cooldown = 5;
         this.shardManager = shardManager;
         this.eventWaiter = eventWaiter;
-        this.osu = Osu.getAPI("api");
+        this.osu = Osu.getAPI(Ustawienia.instance.osu.apiKey);
     }
 
     @Override
