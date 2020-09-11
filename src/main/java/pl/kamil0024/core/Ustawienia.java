@@ -46,6 +46,7 @@ public class Ustawienia {
     public Rangi rangi = new Rangi();
     public YouTrack yt = new YouTrack();
     public SpotifyCredentials spotify = new SpotifyCredentials();
+    public Osu osu = new Osu();
 
     public static class Roles {
         public String helperRole = def;
@@ -132,6 +133,55 @@ public class Ustawienia {
     public static class SpotifyCredentials {
         public String id;
         public String secret;
+    }
+
+    public static class Osu {
+        public String apiKey = def;
+        public String osuTD = "123";
+        public String osu9K = "123";
+        public String osuCOOPK = "123";
+        public String osu1K = "123";
+        public String osu3K = "123";
+        public String osu2K = "123";
+        public String osuV2 = "123";
+        public String osuLM = "123";
+        public String osuRD = "754088095812419607";
+        public String osuFI = "754087897157861476";
+        public String osuPF = "754087670774497321";
+        public String osuAO = "754087407858745426";
+        public String osuNC = "754087284705460225";
+        public String osuHT = "754087136470499359";
+        public String osuDT = "754086993469636668";
+        public String osuHD = "754086756953096252";
+        public String osuAP = "754086524882124820";
+        public String osuCN = "754085931304091690";
+        public String osu300 = "754070379135369266";
+        public String osu100 = "754070669141999856";
+        public String osu50 = "754071182390722591";
+        public String osumiss = "754085080045191269";
+        public String osukatu = "754072060547956887";
+        public String osugeki = "754071625904816349";
+        public String osuSS = "754072936809365544";
+        public String osuSSH = "754072596659699802";
+        public String osuS = "754074220140691696";
+        public String osuSH = "754072596659699802";
+        public String osuA = "754074551134060554";
+        public String osuB = "754072325875564661";
+        public String osuC = "754077064960802867";
+        public String osuD = "754080563765444828";
+        public String osuNF = "754083487908364502";
+        public String osuEZ = "754076116918206475";
+        public String osuHR = "754075313218125944";
+        public String osuSD = "754082760058077335";
+        public String osuRX = "754083953836687360";
+        public String osuFL = "754082584765530192";
+        public String osuSO = "754083148262015168";
+        public String osuTP = "754082949535760496";
+        public String osu4K = "754081129757278298";
+        public String osu5K = "754081308728230110";
+        public String osu6K = "754081407231459378";
+        public String osu7K = "754081524294615081";
+        public String osu8K = "754081658457817220";
     }
 
 
