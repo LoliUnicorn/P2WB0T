@@ -25,11 +25,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.commands.dews.RebootCommand;
+import pl.kamil0024.core.B0T;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -40,7 +42,6 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Error;
 import pl.kamil0024.core.util.*;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -48,6 +49,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CommandExecute extends ListenerAdapter {
+
+    private static Logger logger = LoggerFactory.getLogger(CommandExecute.class);
 
     ArgumentManager argumentManager;
     CommandManager commandManager;
@@ -169,8 +172,8 @@ public class CommandExecute extends ListenerAdapter {
             Error.usageError(cmdc);
         } catch (Exception omegalul) {
             omegalul.printStackTrace();
-            Log.newError("`%s` uzyl komendy %s (%s) ale wystapil blad: %s", e.getAuthor().getName(), c.getName(), c.getClass().getName(), omegalul);
-            Log.newError(omegalul);
+            Log.newError("`%s` uzyl komendy %s (%s) ale wystapil blad: %s", CommandExecute.class, e.getAuthor().getName(), c.getName(), c.getClass().getName(), omegalul);
+            Log.newError(omegalul, CommandExecute.class);
             e.getChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
         if (udaloSie && jegoPerm.getNumer() < PermLevel.DEVELOPER.getNumer()) setCooldown(e.getAuthor(), c);
@@ -236,7 +239,7 @@ public class CommandExecute extends ListenerAdapter {
         web.setMessage(msg);
         web.setType(WebhookUtil.LogType.CMD);
         web.send();
-        Log.debug(msg);
+        logger.debug(msg);
     }
 
     public void reloadConfig() {

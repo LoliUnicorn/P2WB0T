@@ -43,7 +43,7 @@ public class NieobecnosciModule implements Modul {
 
     @Override
     public boolean startUp() {
-        this.nieobecnosciListener = new NieobecnosciListener(api, nieobecnosciDao, nieobecnosciManager);
+        this.nieobecnosciListener = new NieobecnosciListener(nieobecnosciDao, nieobecnosciManager);
         api.addEventListener(nieobecnosciListener);
         setStart(true);
         return true;

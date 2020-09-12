@@ -82,7 +82,7 @@ public class MessageListener extends ListenerAdapter {
                 if (iss == null) break;
                 embedsToSend.add(generateEmbed(iss));
             } catch (Exception ex) {
-                Log.newError(ex);
+                Log.newError(ex, MessageListener.class);
             }
         }
         if (embedsToSend.size() == 0) return;

@@ -54,7 +54,7 @@ public class KaryJSON {
             this.object = new JSONObject(tokener).getJSONObject("list");
         } catch (Exception e) {
             e.printStackTrace();
-            Log.newError("Przy ladowaniu kary \n" + e.getLocalizedMessage());
+            Log.newError("Przy ladowaniu kary \n" + e.getLocalizedMessage(), KaryJSON.class);
         }
         loadKary();
     }

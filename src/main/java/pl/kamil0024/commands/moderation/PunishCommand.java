@@ -270,7 +270,7 @@ public class PunishCommand extends Command {
                     if (mute != null) {
                         if (mute.equalsIgnoreCase("Ta osoba jest już wyciszona!")) {
                             String msg = "Uzytkownik %s chcial wyciszyc %s, ale ten ma juz muta!";
-                            Log.newError(String.format(msg, UserUtil.getLogName(member), UserUtil.getLogName(osoba)));
+                            Log.newError(String.format(msg, UserUtil.getLogName(member), UserUtil.getLogName(osoba)), PunishCommand.class);
                         }
                         return;
                     }

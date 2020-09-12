@@ -21,6 +21,8 @@ package pl.kamil0024.core.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Main;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
@@ -34,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class Tlumaczenia {
+
+    private final Logger logger = LoggerFactory.getLogger(Tlumaczenia.class);
 
     @Getter private Properties languages = getProp();
     @Getter @Setter private String lang;
@@ -55,14 +59,16 @@ public class Tlumaczenia {
     
     public boolean load() {
         languages = getProp();
-        Log.debug(get("translation.load"));
+        logger.debug(get("translation.load"));
         return true;
     }
 
     public String get(String key) {
         if (languages == null) throw new NullPointerException("getProp() == null");
         String a = repla(languages.getProperty(key, key));
-        if (a.equals(key)) Log.newError("Key %s nie jest przetłumaczony", key);
+        if (a.equals(key)) {
+            Log.newError("Key %s nie jest przetłumaczony", Tlumaczenia.class, key);
+        }
         return a;
     }
 
@@ -91,7 +97,7 @@ public class Tlumaczenia {
                 replaceAll("Å\u009B", "ś").
                 replaceAll("Åº", "ź").
                 replaceAll("Å¼", "ż")
-                .replaceAll("Å\u0081", "ł");
+                .replaceAll("Å\u0081", "Ł");
     }
 
 }

@@ -90,7 +90,7 @@ import static pl.kamil0024.core.util.Statyczne.WERSJA;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class B0T {
 
-    static Logger logger = LoggerFactory.getLogger(B0T.class);
+    private static Logger logger = LoggerFactory.getLogger(B0T.class);
 
     @Getter private HashMap<String, Modul> moduls;
 
@@ -147,7 +147,7 @@ public class B0T {
 
         if (!cfg.exists()) {
             api.shutdown();
-            Log.newError("Nie ma pliku konfiguracyjnego!");
+            Log.newError("Nie ma pliku konfiguracyjnego!", B0T.class);
             System.exit(1);
         }
 
@@ -184,7 +184,7 @@ public class B0T {
         try {
             youTrack = ytbuilder.build();
         } catch (Exception e) {
-            Log.newError("Nie udało się połączyć z YouTrackiem!");
+            Log.newError("Nie udało się połączyć z YouTrackiem!", B0T.class);
             e.printStackTrace();
         }
 
@@ -307,7 +307,7 @@ public class B0T {
 
         if (api.getGuildById(Ustawienia.instance.bot.guildId) == null) {
             api.shutdown();
-            Log.newError("Nie ma bota na serwerze docelowym");
+            Log.newError("Nie ma bota na serwerze docelowym", B0T.class);
             System.exit(1);
         }
 
@@ -317,7 +317,7 @@ public class B0T {
 
     public void shutdownThread() {
         this.shutdownThread = new Thread(() -> {
-            Log.info("Zamykam...");
+            logger.info("Zamykam...");
             RebootCommand.reboot = true;
             api.setStatus(OnlineStatus.DO_NOT_DISTURB);
             api.setActivity(Activity.playing("Wyłącznie bota w toku..."));

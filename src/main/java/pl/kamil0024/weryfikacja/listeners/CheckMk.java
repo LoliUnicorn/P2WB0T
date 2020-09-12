@@ -42,7 +42,7 @@ public class CheckMk {
         if (created <= 0) {
             TextChannel txt = member.getJDA().getTextChannelById(Ustawienia.instance.channel.moddc);
             if (txt == null) {
-                Log.newError("Ustawienia.instance.channel.moddc == null");
+                Log.newError("Ustawienia.instance.channel.moddc == null", CheckMk.class);
                 return;
             }
             EmbedBuilder eb = new EmbedBuilder();

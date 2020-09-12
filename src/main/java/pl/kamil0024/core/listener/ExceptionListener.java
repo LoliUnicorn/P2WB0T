@@ -31,7 +31,7 @@ public class ExceptionListener extends ListenerAdapter {
 
     @Override
     public void onException(@Nonnull ExceptionEvent event) {
-        Log.newError(event.getCause());
+        Log.newError(event.getCause(), ExceptionListener.class);
     }
 
 }

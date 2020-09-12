@@ -116,7 +116,7 @@ public class PrivatePlayCommand extends Command {
             return false;
         } catch (Exception e) {
             context.send("Wystąpił błąd z API! " + e.getLocalizedMessage()).queue();
-            Log.newError(e);
+            Log.newError(e, PrivatePlayCommand.class);
             try {
                 if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
                     restAction.disconnect();

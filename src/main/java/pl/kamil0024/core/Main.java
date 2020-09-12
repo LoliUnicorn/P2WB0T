@@ -19,15 +19,18 @@
 
 package pl.kamil0024.core;
 
-import pl.kamil0024.core.logger.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Log.info("Startuje...");
+    private static Logger logger = LoggerFactory.getLogger(Main.class);
 
-        if (args.length != 1) {
-            Log.error("Uzycie: <bot token>");
+    public static void main(String[] args) {
+        logger.info("Startuje...");
+
+        if (args.length < 1) {
+            logger.error("Uzycie: <bot token>");
             System.exit(1);
         }
         new B0T(args[0]);

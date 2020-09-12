@@ -80,7 +80,7 @@ public class Zmiana {
     private static void sendEmbed(EmbedBuilder eb, JDA jda) {
         TextChannel txt = jda.getTextChannelById(Ustawienia.instance.channel.loginieobecnosci);
         if (txt == null) {
-            Log.newError("Ustawienia.instance.channel.loginieobecnosci == null");
+            Log.newError("Ustawienia.instance.channel.loginieobecnosci == null", Zmiana.class);
             return;
         }
         txt.sendMessage(eb.build()).queue();

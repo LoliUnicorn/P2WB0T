@@ -71,7 +71,7 @@ public class ShellCommand extends Command {
             process.destroyForcibly();
             return builder.toString();
         } catch (Exception e) {
-            Log.newError(e);
+            Log.newError(e, ShellCommand.class);
         }
         return null;
     }

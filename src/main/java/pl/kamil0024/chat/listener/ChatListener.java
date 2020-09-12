@@ -30,6 +30,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
@@ -56,6 +58,8 @@ import static java.nio.charset.StandardCharsets.*;
 @SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
 
+    private static Logger logger = LoggerFactory.getLogger(ChatListener.class);
+
     private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
     private static final String DISCORD_INVITE = "(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]";
 
@@ -78,7 +82,7 @@ public class ChatListener extends ListenerAdapter {
 
         InputStream res = Main.class.getClassLoader().getResourceAsStream("przeklenstwa.api");
         if (res == null) {
-            Log.newError("Plik przeklenstwa.api jest nullem");
+            Log.newError("Plik przeklenstwa.api jest nullem", ChatListener.class);
             throw new NullPointerException("Plik przeklenstwa.api jest nullem");
         }
 
@@ -89,7 +93,7 @@ public class ChatListener extends ListenerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (przeklenstwa.isEmpty()) Log.newError("Lista przeklenstw jest nullem!");
+        if (przeklenstwa.isEmpty()) Log.newError("Lista przeklenstw jest nullem!", ChatListener.class);
     }
 
     @Override
@@ -143,7 +147,7 @@ public class ChatListener extends ListenerAdapter {
 
             KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
             if (kara == null) {
-                Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem");
+                Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem", ChatListener.class);
             } else {
                 PunishCommand.putPun(kara,
                         Collections.singletonList(member),
@@ -172,7 +176,7 @@ public class ChatListener extends ListenerAdapter {
                 Role miniyt = member.getGuild().getRoleById("425670776272715776");
                 Role yt = member.getGuild().getRoleById("425670600049295360");
                 if (miniyt == null || yt == null) {
-                    Log.newError("Rola miniyt/yt w " + this.getClass().toString() + " jest nullem");
+                    Log.newError("Rola miniyt/yt jest nullem", ChatListener.class);
                     return;
                 }
                 if (!member.getRoles().contains(miniyt) || !member.getRoles().contains(yt)) {
@@ -197,13 +201,13 @@ public class ChatListener extends ListenerAdapter {
 
         if (!msg.getChannel().getId().equals("652927860943880224")) {
             if (caps >= 50 || emote >= 10) {
-                Log.debug("---------------------------");
-                Log.debug("user: " + msg.getAuthor().getId());
-                Log.debug("msg: " + takMsg);
-                Log.debug("int flooda: " + flood);
-                Log.debug("procent capsa " + caps);
-                Log.debug("int emotek: " + emote);
-                Log.debug("---------------------------");
+                logger.debug("---------------------------");
+                logger.debug("user: " + msg.getAuthor().getId());
+                logger.debug("msg: " + takMsg);
+                logger.debug("int flooda: " + flood);
+                logger.debug("procent capsa " + caps);
+                logger.debug("int emotek: " + emote);
+                logger.debug("---------------------------");
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();

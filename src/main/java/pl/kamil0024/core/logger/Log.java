@@ -19,6 +19,7 @@
 
 package pl.kamil0024.core.logger;
 
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.util.WebhookUtil;
 
 import javax.annotation.Nullable;
@@ -29,20 +30,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public class Log {
 
     public Log() { }
 
-    public static void newError(String msg, @Nullable Object... args) {
+    public static void newError(String msg, Class klasa, @Nullable Object... args) {
+        String format = String.format(msg, args);
         WebhookUtil web = new WebhookUtil();
-        web.setMessage(String.format(msg, args));
+        web.setMessage(format);
         web.setType(WebhookUtil.LogType.ERROR);
         web.send();
 
         error(msg, args);
+        LoggerFactory.getLogger(klasa).error(format);
     }
 
-    public static void newError(Throwable e) {
+    public static void newError(Throwable e, Class klasa) {
         StringWriter er = new StringWriter();
         e.printStackTrace(new PrintWriter(er));
 
@@ -67,14 +71,11 @@ public class Log {
             web.setMessage(sb.toString().replaceAll(" {4}at ", "") + "\n```");
             web.send();
         }
+        LoggerFactory.getLogger(klasa).error("Error", e);
     }
 
     public static void info(String msg, @Nullable Object... args) {
         log("INFO", msg, args);
-    }
-
-    public static void warn(String msg, @Nullable Object... args) {
-        log("WARN", msg, args);
     }
 
     public static void error(String msg, @Nullable Object... args) {

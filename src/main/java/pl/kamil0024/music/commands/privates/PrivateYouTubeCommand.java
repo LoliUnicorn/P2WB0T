@@ -178,7 +178,7 @@ public class PrivateYouTubeCommand extends Command {
                     });
         } catch (Exception e) {
             context.send("Wystąpił błąd z API! " + e.getLocalizedMessage());
-            Log.newError(e);
+            Log.newError(e, PrivateYouTubeCommand.class);
         }
 
         return true;

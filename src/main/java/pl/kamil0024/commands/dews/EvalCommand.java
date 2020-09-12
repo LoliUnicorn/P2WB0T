@@ -23,6 +23,8 @@ import com.google.inject.Inject;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.core.command.Command;
@@ -45,6 +47,8 @@ import pl.kamil0024.stats.StatsModule;
 import java.awt.*;
 
 public class EvalCommand extends Command {
+
+    private static Logger logger = LoggerFactory.getLogger(EvalCommand.class);
 
     @Inject private final EventWaiter eventWaiter;
     @Inject private final CommandManager commandManager;
@@ -132,7 +136,7 @@ public class EvalCommand extends Command {
         else eb.setColor(Color.red);
 
         if (String.valueOf(value).length() >= 1000) {
-            Log.debug(String.valueOf(value));
+            logger.debug(String.valueOf(value));
             value = "Output przekracza liczbę znaków. Zobacz konsole";
         }
 

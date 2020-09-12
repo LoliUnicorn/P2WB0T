@@ -67,7 +67,7 @@ public class ModLog extends ListenerAdapter {
         this.api = api;
         this.modlog = api.getTextChannelById(Ustawienia.instance.channel.modlog);
         if (modlog == null) {
-            Log.newError("Kanał do modlogów jest nullem");
+            Log.newError("Kanał do modlogów jest nullem", ModLog.class);
             throw new UnsupportedOperationException("Kanał do modlogów jest nullem");
         }
         this.caseDao = caseDao;
@@ -172,7 +172,7 @@ public class ModLog extends ListenerAdapter {
             if (typ == KaryEnum.TEMPBAN || typ == KaryEnum.TEMPMUTE) {
                 Long end = aCase.getEnd();
                 if (end == null) {
-                    Log.newError("Kara jest TEMPBAN || TEMPMUTE a getEnd() jest nullem ID:" + aCase.getKaraId());
+                    Log.newError("Kara jest TEMPBAN || TEMPMUTE a getEnd() jest nullem ID:" + aCase.getKaraId(), ModLog.class);
                     continue;
                 }
                 if (end - data.getTime() <= 0) {
@@ -180,7 +180,7 @@ public class ModLog extends ListenerAdapter {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
                         if (!bans.contains(u) && typ == KaryEnum.TEMPBAN) {
                             String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
-                            Log.newError(String.format(msg, u.getId(), aCase.getKaraId()));
+                            Log.newError(String.format(msg, u.getId(), aCase.getKaraId()), ModLog.class);
                             continue;
                         }
 
@@ -217,7 +217,7 @@ public class ModLog extends ListenerAdapter {
                     } catch (Exception e) {
                         e.printStackTrace();
                         String msg = "Nie udało się dać kary %s dla %s (ID: %s) bo: %s";
-                        Log.newError(String.format(msg, typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE, aCase.getKaranyId(), aCase.getKaraId(), e.getMessage()));
+                        Log.newError(String.format(msg, typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE, aCase.getKaranyId(), aCase.getKaraId(), e.getMessage()), ModLog.class);
                     }
                     if (typ == KaryEnum.TEMPMUTE) {
                         User u = api.retrieveUserById(aCase.getKaranyId()).complete();
@@ -225,7 +225,7 @@ public class ModLog extends ListenerAdapter {
                             try {
                                 Member m = g.retrieveMember(u).complete();
                                 if (MuteCommand.hasMute(m)) {
-                                    Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!");
+                                    Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!", ModLog.class);
                                 }
                             } catch (ErrorResponseException ignored) {}
                         }

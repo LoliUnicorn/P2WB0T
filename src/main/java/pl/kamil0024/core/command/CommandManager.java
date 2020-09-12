@@ -21,11 +21,16 @@ package pl.kamil0024.core.command;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kamil0024.core.B0T;
 import pl.kamil0024.core.logger.Log;
 
 import java.util.*;
 
 public class CommandManager extends ListenerAdapter {
+
+    private static Logger logger = LoggerFactory.getLogger(CommandManager.class);
 
     @Getter public Set<Command> registered;
     @Getter public Map<String, Command> commands;
@@ -43,7 +48,7 @@ public class CommandManager extends ListenerAdapter {
         if (command.getName() == null || command.getName().isEmpty()) throw new NullPointerException("Nazwa jest pusta! " + command.getClass().getName());
         registered.add(command);
         commands.put(command.toString(), command);
-        Log.debug("Rejestruje komende %s", command.getName());
+        logger.debug("Rejestruje komende {}", command.getName());
         registerAliases(command);
     }
 

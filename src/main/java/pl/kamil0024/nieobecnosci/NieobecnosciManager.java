@@ -71,7 +71,7 @@ public class NieobecnosciManager {
 
         TextChannel txt = msg.getGuild().getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
         if (txt == null) {
-            Log.newError("Kanał do nieobecnosci jest nullem!");
+            Log.newError("Kanał do nieobecnosci jest nullem!", NieobecnosciManager.class);
             return;
         }
 
@@ -116,7 +116,7 @@ public class NieobecnosciManager {
         TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.nieobecnosci);
 
         if (txt == null) {
-            Log.newError("Kanał do nieobecnosci jest nullem");
+            Log.newError("Kanał do nieobecnosci jest nullem", NieobecnosciManager.class);
             return;
         }
 
@@ -125,12 +125,12 @@ public class NieobecnosciManager {
             Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
             Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(nb.getUserId()).complete();
             if (mem == null) {
-                Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności");
+                Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
                 continue;
             }
 
             if (msg == null) {
-                Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!");
+                Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!", NieobecnosciManager.class);
                 continue;
             }
 
