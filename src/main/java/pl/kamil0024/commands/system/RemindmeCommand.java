@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.FutureTask;
 import java.util.stream.Collectors;
 
 public class RemindmeCommand extends Command {
@@ -68,12 +69,12 @@ public class RemindmeCommand extends Command {
                 context.send(context.getTranslate("remind.remindlist")).queue();
                 return false;
             }
-            ArrayList<EmbedBuilder> pages = new ArrayList<>();
+            ArrayList<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
 
             for (RemindConfig conf : rc) {
-                pages.add(getEmbed(conf).setColor(UserUtil.getColor(context.getMember())));
+                pages.add(new FutureTask<>(() -> getEmbed(conf).setColor(UserUtil.getColor(context.getMember()))));
             }
-            new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+            new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel());
             return true;
         }
 

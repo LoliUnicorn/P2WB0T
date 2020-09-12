@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -86,7 +87,11 @@ public class PunishCommand extends Command {
         if (arg.toLowerCase().equals("info")) {
             String arg1 = context.getArgs().get(1);
             if (arg1 == null) {
-                new EmbedPageintaor(getKaraList(karyJSON, context.getMember()), context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+                List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
+                for (EmbedBuilder embedBuilder : getKaraList(karyJSON, context.getMember())) {
+                    pages.add(new FutureTask<>(() -> embedBuilder));
+                }
+                new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel());
             } else {
                 Integer liczba = context.getParsed().getNumber(context.getArgs().get(1));
                 if (liczba == null || liczba > karyJSON.getKary().size() || liczba <= 0) {
@@ -156,7 +161,11 @@ public class PunishCommand extends Command {
         }
 
         if (numer == null) {
-            new EmbedPageintaor(getKaraList(karyJSON, context.getMember(), osoby), context.getUser(), eventWaiter, context.getJDA())
+            List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
+            for (EmbedBuilder embedBuilder : getKaraList(karyJSON, context.getMember(), osoby)) {
+                pages.add(new FutureTask<>(() -> embedBuilder));
+            }
+            new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120)
                     .setPun(true)
                     .create(msg);
             initWaiter(context, msg, osoby, context.getMessage());

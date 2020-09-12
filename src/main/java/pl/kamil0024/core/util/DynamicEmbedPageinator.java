@@ -30,7 +30,6 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.*;
 
 @SuppressWarnings("DuplicatedCode")
@@ -173,7 +172,7 @@ public class DynamicEmbedPageinator {
     }
 
     private boolean checkReaction(MessageReactionAddEvent event) {
-        if (event.getMessageIdLong() == botMsgId && !event.getReactionEmote().isEmote()) {
+        if (event.getMessageIdLong() == botMsgId && !event.getReactionEmote().isEmote() && !event.getUser().isBot()) {
             switch (event.getReactionEmote().getName()) {
                 case FIRST_EMOJI:
                 case LEFT_EMOJI:

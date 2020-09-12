@@ -29,6 +29,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
@@ -38,6 +39,7 @@ import pl.kamil0024.core.util.kary.KaryEnum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.FutureTask;
 
 public class HistoryCommand extends Command {
 
@@ -84,7 +86,7 @@ public class HistoryCommand extends Command {
             if (kara.getTypKary() == KaryEnum.TEMPMUTE) tempmutow++;
             if (kara.getTypKary() == KaryEnum.UNMUTE) unmutow++;
         }
-        List<EmbedBuilder> pages = new ArrayList<>();
+        List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setThumbnail(u.getAvatarUrl());
@@ -99,19 +101,21 @@ public class HistoryCommand extends Command {
         eb.addField(context.getTranslate("history.tempmute"), tempmutow + "", true);
         eb.addField(context.getTranslate("history.unmute"), unmutow + "", true);
         eb.addField(context.getTranslate("history.kick"), kickow + "", true);
-        pages.add(eb);
+        pages.add(new FutureTask<>(() -> eb));
 
         List<EmbedBuilder> historiaKar = new ArrayList<>();
         for (CaseConfig kara : kary) {
             EmbedBuilder ebb = ModLog.getEmbed(kara.getKara(), context.getShardManager());
-            boolean aktywna = kara.getKara().getAktywna() == null ? false : kara.getKara().getAktywna();
+            boolean aktywna = kara.getKara().getAktywna() != null && kara.getKara().getAktywna();
             ebb.addField("Aktywna?", aktywna ? "Tak" : "Nie", false);
             historiaKar.add(ebb);
         }
 
         Collections.reverse(historiaKar);
-        pages.addAll(historiaKar);
-        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+        for (EmbedBuilder embedBuilder : historiaKar) {
+            pages.add(new FutureTask<>(() -> embedBuilder));
+        }
+        new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel());
         return true;
     }
 

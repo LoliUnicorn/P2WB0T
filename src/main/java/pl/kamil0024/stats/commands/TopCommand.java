@@ -32,15 +32,13 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
-import pl.kamil0024.core.util.EmbedPageintaor;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.core.util.UsageException;
-import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.*;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.stats.entities.Statystyka;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.FutureTask;
 
 public class TopCommand extends Command {
 
@@ -116,8 +114,11 @@ public class TopCommand extends Command {
                 pages.add(eb);
                 rank++;
             }
-
-            new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA(), 240).create(msg);
+            List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
+            for (EmbedBuilder page : pages) {
+                futurePages.add(new FutureTask<>(() -> page));
+            }
+            new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 240).create(msg);
         }).start();
         return true;
     }

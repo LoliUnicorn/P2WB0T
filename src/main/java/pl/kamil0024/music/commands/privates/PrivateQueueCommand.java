@@ -30,6 +30,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.commands.PlayCommand;
@@ -39,6 +40,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.FutureTask;
 
 import static pl.kamil0024.music.commands.QueueCommand.longToTimespan;
 
@@ -80,7 +82,7 @@ public class PrivateQueueCommand extends Command {
         }
 
         try {
-            List<EmbedBuilder> traki = new ArrayList<>();
+            List<FutureTask<EmbedBuilder>> traki = new ArrayList<>();
 
             MusicResponse skip = restAction.getQueue();
             MusicResponse playing = restAction.getPlayingTrack();
@@ -94,14 +96,14 @@ public class PrivateQueueCommand extends Command {
             String json = playing.json.getJSONObject("data").toString();
             Track played = new Gson().fromJson(json, Track.class);
             if (played != null) {
-                traki.add(new DecodeTrack(json, true).create());
+                traki.add(new FutureTask<>(() -> new DecodeTrack(json, true).create()));
             }
 
             while (jsona.hasNext()) {
-                traki.add(new DecodeTrack(jsona.next().toString(), false).create());
+                traki.add(new FutureTask<>(() -> new DecodeTrack(jsona.next().toString(), false).create()));
             }
 
-            new EmbedPageintaor(traki, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+            new DynamicEmbedPageinator(traki, context.getUser(), eventWaiter, context.getJDA(), 60).create(context.getChannel());
             return true;
         } catch (Exception e) {
             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();

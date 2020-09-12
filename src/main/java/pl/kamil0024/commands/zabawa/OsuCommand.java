@@ -30,6 +30,7 @@ import com.oopsjpeg.osu4j.exception.OsuAPIException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.format.PeriodFormatter;
@@ -121,7 +122,7 @@ public class OsuCommand extends Command {
                     mes.editMessage(context.getTranslate("osu.topplay.empty")).queue();
                     return false;
                 }
-                renderScores(context, mes, wyniki);
+                renderScores(context, mes, wyniki, context.getSender());
             } catch (OsuAPIException e) {
                 mes.editMessage(context.getTranslate("osu.error")).queue();
                 return false;
@@ -137,7 +138,7 @@ public class OsuCommand extends Command {
                     mes.editMessage(context.getTranslate("osu.recentplay.empty")).queue();
                     return false;
                 }
-                renderScores(context, mes, wyniki);
+                renderScores(context, mes, wyniki, context.getSender());
             } catch (OsuAPIException e) {
                 mes.editMessage(context.getTranslate("osu.error")).queue();
                 return false;
@@ -147,12 +148,12 @@ public class OsuCommand extends Command {
         return false;
     }
 
-    private void renderScores(@NotNull CommandContext context, Message mes, java.util.List<OsuScore> wyniki) {
+    public void renderScores(@NotNull CommandContext context, Message mes, java.util.List<OsuScore> wyniki, User author) {
         java.util.List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
         for (OsuScore w : wyniki) {
             pages.add(new FutureTask<>(() -> renderScore(context, w)));
         }
-        new DynamicEmbedPageinator(pages, mes.getAuthor(), eventWaiter, mes.getJDA(), 120).create(mes);
+        new DynamicEmbedPageinator(pages, author, eventWaiter, mes.getJDA(), 120).create(mes);
     }
 
     @NotNull
