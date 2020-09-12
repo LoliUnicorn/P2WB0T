@@ -70,6 +70,8 @@ import pl.kamil0024.youtrack.YTModule;
 import pl.kamil0024.youtrack.YouTrack;
 import pl.kamil0024.youtrack.YouTrackBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -86,6 +88,8 @@ import static pl.kamil0024.core.util.Statyczne.WERSJA;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class B0T {
+
+    static Logger logger = LoggerFactory.getLogger(B0T.class);
 
     @Getter private HashMap<String, Modul> moduls;
 
@@ -137,7 +141,7 @@ public class B0T {
         argumentManager.registerAll();
         shutdownThread();
 
-        Log.info("Loguje v%s", Statyczne.CORE_VERSION);
+        logger.info("Loguje v{}", Statyczne.CORE_VERSION);
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
         if (!cfg.exists()) {
@@ -149,7 +153,7 @@ public class B0T {
         try {
             ustawienia = gson.fromJson(new FileReader(cfg), Ustawienia.class);
         } catch (Exception e) {
-            Log.error("Nie mozna odczytac konfiguracji\n%s", e);
+            logger.error("Nie mozna odczytac konfiguracji");
             System.exit(1);
         }
 
@@ -203,7 +207,7 @@ public class B0T {
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
             this.api = builder.build();
         } catch (LoginException e) {
-            Log.error("Nie udalo sie zalogowac!");
+            logger.error("Nie udalo sie zalogowac!");
             e.printStackTrace();
             System.exit(1);
         }
@@ -274,7 +278,7 @@ public class B0T {
         for (Modul modul : modulManager.getModules()) {
             try {
                 int commands = commandManager.getCommands().size();
-                Log.debug(tlumaczenia.get("module.loading", modul.getName()));
+                logger.debug(tlumaczenia.get("module.loading", modul.getName()));
                 boolean bol = false;
                 try {
                     bol = modul.startUp();
@@ -284,21 +288,21 @@ public class B0T {
                 }
                 commands = commandManager.getCommands().size() - commands;
                 if (!bol) {
-                    Log.error(tlumaczenia.get("module.loading.fail"));
+                    logger.error(tlumaczenia.get("module.loading.fail"));
                 } else {
-                    Log.debug(tlumaczenia.get("module.loading.success", modul.getName(), commands));
+                    logger.debug(tlumaczenia.get("module.loading.success", modul.getName(), commands));
                 }
 
                 moduls.put(modul.getName(), modul);
             } catch (Exception ignored) {
-                Log.error(tlumaczenia.get("module.loading.fail"));
+                logger.error(tlumaczenia.get("module.loading.fail"));
             }
         }
 
 
         api.setStatus(OnlineStatus.ONLINE);
         api.setActivity(Activity.playing(tlumaczenia.get("status.hi", WERSJA)));
-        Log.info("Zalogowano jako %s", shard.get().getSelfUser());
+        logger.info("Zalogowano jako {}", shard.get().getSelfUser());
 
         if (api.getGuildById(Ustawienia.instance.bot.guildId) == null) {
             api.shutdown();
