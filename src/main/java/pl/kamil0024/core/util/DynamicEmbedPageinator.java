@@ -19,6 +19,7 @@
 
 package pl.kamil0024.core.util;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
@@ -27,13 +28,14 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
+import java.util.concurrent.*;
 
-public class EmbedPageintaor {
-    
+@SuppressWarnings("DuplicatedCode")
+public class DynamicEmbedPageinator {
+
     private static final String FIRST_EMOJI = "\u23EE";
     private static final String LEFT_EMOJI = "\u25C0";
     private static final String RIGHT_EMOJI = "\u25B6";
@@ -42,7 +44,7 @@ public class EmbedPageintaor {
 
     private final JDA api;
     private final EventWaiter eventWaiter;
-    private final List<EmbedBuilder> pages;
+    private final List<FutureTask<EmbedBuilder>> pages;
     private int thisPage = 1;
     private boolean isPun;
 
@@ -51,23 +53,50 @@ public class EmbedPageintaor {
     private long userId;
     private int secound;
 
-    public EmbedPageintaor(List<EmbedBuilder> pages, User user, EventWaiter eventWaiter, JDA api, int secound) {
+    private boolean loading = true;
+    private boolean ended = false;
+    private boolean preload = true;
+
+    private static final ExecutorService mainExecutor = Executors.newFixedThreadPool(4);
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(mainExecutor::shutdown));
+    }
+
+    public DynamicEmbedPageinator(List<FutureTask<EmbedBuilder>> pages, User user, EventWaiter eventWaiter, JDA api, int secound) {
         this.eventWaiter = eventWaiter;
         this.pages = pages;
         this.userId = user.getIdLong();
         this.api = api;
         this.secound = secound;
+        if (this.preload) {
+            mainExecutor.submit(() -> {
+                ExecutorService executor = Executors.newFixedThreadPool(2, new NamedThreadFactory("PageLoader-" +
+                        userId + "-" + botMsgId + "-" + pages.size() + "-pages"));
+                pages.forEach(executor::execute);
+                while (!pages.stream().allMatch(FutureTask::isDone)) {
+                    try {
+                        if (ended) {
+                            pages.forEach(f -> f.cancel(true));
+                            break;
+                        }
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                executor.shutdownNow();
+                setLoading(false);
+            });
+        } else loading = false;
     }
 
-    public EmbedPageintaor(List<EmbedBuilder> pages, User user, EventWaiter eventWaiter, JDA api) {
-        this.eventWaiter = eventWaiter;
-        this.pages = pages;
-        this.userId = user.getIdLong();
-        this.api = api;
-        this.secound = 60;
+    private void setLoading(boolean loading) {
+        this.loading = loading;
+        if (botMsg != null) botMsg.editMessage(render(thisPage)).override(true).queue();
     }
 
-    public EmbedPageintaor create(MessageChannel channel) {
+    public DynamicEmbedPageinator create(MessageChannel channel) {
         channel.sendMessage(render(1)).override(true).queue(msg -> {
             botMsg = msg;
             botMsgId = msg.getIdLong();
@@ -79,7 +108,7 @@ public class EmbedPageintaor {
         return this;
     }
 
-    public EmbedPageintaor create(Message message) {
+    public DynamicEmbedPageinator create(Message message) {
         message.editMessage(render(1)).override(true).queue(msg -> {
             botMsg = msg;
             botMsgId = msg.getIdLong();
@@ -160,14 +189,51 @@ public class EmbedPageintaor {
     }
 
     private MessageEmbed render(int page) {
-        EmbedBuilder pageEmbed = pages.get(page - 1);
-        pageEmbed.setFooter(String.format("%s/%s", page, pages.size()), null);
-        return pageEmbed.build();
+        FutureTask<EmbedBuilder> pageEmbed = pages.get(page - 1);
+        EmbedBuilder eb;
+        if (!pageEmbed.isDone()) mainExecutor.submit(pageEmbed);
+        try {
+            if (page == 1) {
+                if (pageEmbed.get() == null) throw new IllegalStateException("pEmbed == null");
+                eb = new EmbedBuilder(pageEmbed.get().build());
+            }
+            else {
+                EmbedBuilder pEmbed = pageEmbed.get(5, TimeUnit.SECONDS);
+                if (pEmbed == null) throw new IllegalStateException("pEmbed == null");
+                eb = new EmbedBuilder(pEmbed.build());
+            }
+        } catch (TimeoutException e) {
+            botMsg.getChannel().sendMessage("Ta strona jest jeszcze wczytywana. Poczekaj chwilę\\!")
+                    .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
+            throw new LoadingException();
+        } catch (ExecutionException e) {
+            throw new LoadingException();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        eb.setFooter(String.format("%s/%s", page, pages.size()), null);
+        if (loading) eb.setFooter(String.format("%s/%s", page, pages.size())
+                + " ⌛", null);
+        return eb.build();
     }
 
-    public EmbedPageintaor setPun(boolean bol) {
+    public DynamicEmbedPageinator setPun(boolean bol) {
         isPun = bol;
         return this;
     }
-    
+
+    private static class LoadingException extends RuntimeException {
+        @Getter private final boolean firstPage;
+
+        LoadingException() {
+            this(false);
+        }
+
+        LoadingException(boolean firstPage) {
+            this.firstPage = firstPage;
+        }
+    }
+
 }

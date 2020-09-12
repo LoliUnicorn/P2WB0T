@@ -23,9 +23,9 @@
 
     <appender name="FILE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${LOGDIR}/filename.log</File>
+        <File>logs/log.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOGDIR}/debug.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
+            <FileNamePattern>logs/debug.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
             <MaxHistory>30</MaxHistory>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -48,5 +48,5 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="net.dv8tion" level="DEBUG"/>
+    <logger name="jda.internal" level="DEBUG"/>
 </configuration>

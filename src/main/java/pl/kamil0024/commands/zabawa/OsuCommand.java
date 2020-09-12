@@ -18,7 +18,6 @@
 package pl.kamil0024.commands.zabawa;
 
 import com.github.francesco149.koohii.Koohii;
-import com.google.common.eventbus.EventBus;
 import com.oopsjpeg.osu4j.GameMod;
 import com.oopsjpeg.osu4j.OsuBeatmap;
 import com.oopsjpeg.osu4j.OsuScore;
@@ -39,10 +38,7 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-import pl.kamil0024.core.util.EmbedPageintaor;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.core.util.NetworkUtil;
-import pl.kamil0024.core.util.UsageException;
+import pl.kamil0024.core.util.*;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -152,15 +148,11 @@ public class OsuCommand extends Command {
     }
 
     private void renderScores(@NotNull CommandContext context, Message mes, java.util.List<OsuScore> wyniki) {
-        java.util.List<EmbedBuilder> pages = new ArrayList<>();
+        java.util.List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
         for (OsuScore w : wyniki) {
-            try {
-                pages.add(renderScore(context, w));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            pages.add(new FutureTask<>(() -> renderScore(context, w)));
         }
-        new EmbedPageintaor(pages, mes.getAuthor(), eventWaiter, mes.getJDA(), 120).create(mes);
+        new DynamicEmbedPageinator(pages, mes.getAuthor(), eventWaiter, mes.getJDA(), 120).create(mes);
     }
 
     @NotNull
