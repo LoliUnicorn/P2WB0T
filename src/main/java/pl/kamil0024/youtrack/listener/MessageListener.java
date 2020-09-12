@@ -34,6 +34,7 @@ import pl.kamil0024.youtrack.models.Issue;
 import pl.kamil0024.youtrack.models.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -176,9 +177,9 @@ public class MessageListener extends ListenerAdapter {
             dodatkowe.appendLine("Wersja Minecrafta: " + wersjaMc.getValue().get(0).getName());
         }
 
-        if (tester.getValue() != null && !tester.getValue().isEmpty() && tester.getValue().get(0) != null) dodatkowe.appendLine("Tester: " + tester.getValue().get(0).getName());
-        if (wynikTestu.getValue() != null && !wynikTestu.getValue().isEmpty() && tester.getValue().get(0) != null) dodatkowe.appendLine("Wyniki Testu: " + wynikTestu.getValue().get(0).getName());
-        if (nickZglaszajacego.getValue() != null && !nickZglaszajacego.getValue().isEmpty() && nickZglaszajacego.getValue().get(0) != null) dodatkowe.appendLine("Nick Zgłaszającego: " + nickZglaszajacego.getValue().get(0).getName());
+        dodatkowe.appendLine("Tester: " + value(tester));
+        dodatkowe.appendLine("Wyniki Testu: " + value(wynikTestu));
+        dodatkowe.appendLine("Nick Zgłaszającego: " + value(nickZglaszajacego));
         eb.addField("Informacje Dodatkowe", dodatkowe.toString(), false);
         return eb.build();
     }
@@ -192,6 +193,14 @@ public class MessageListener extends ListenerAdapter {
             tak++;
         }
         return sb.toString();
+    }
+
+    private String value(@Nullable Issue.Field s) {
+        if (s == null) return "Brak";
+        try {
+            return s.getValue().get(0).getName();
+        } catch (NullPointerException ignored) { }
+        return "Brak";
     }
 
 }
