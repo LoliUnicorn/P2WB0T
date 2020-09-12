@@ -176,9 +176,9 @@ public class MessageListener extends ListenerAdapter {
             dodatkowe.appendLine("Wersja Minecrafta: " + wersjaMc.getValue().get(0).getName());
         }
 
-        if (tester != null) dodatkowe.appendLine("Tester: " + tester.getValue().get(0).getName());
-        if (wynikTestu != null) dodatkowe.appendLine("Wyniki Testu: " + wynikTestu.getValue().get(0).getName());
-        if (nickZglaszajacego != null) dodatkowe.appendLine("Nick Zgłaszającego: " + nickZglaszajacego.getValue().get(0).getName());
+        if (tester.getValue() != null && !tester.getValue().isEmpty() && tester.getValue().get(0) != null) dodatkowe.appendLine("Tester: " + tester.getValue().get(0).getName());
+        if (wynikTestu.getValue() != null && !wynikTestu.getValue().isEmpty() && tester.getValue().get(0) != null) dodatkowe.appendLine("Wyniki Testu: " + wynikTestu.getValue().get(0).getName());
+        if (nickZglaszajacego.getValue() != null && !nickZglaszajacego.getValue().isEmpty() && nickZglaszajacego.getValue().get(0) != null) dodatkowe.appendLine("Nick Zgłaszającego: " + nickZglaszajacego.getValue().get(0).getName());
         eb.addField("Informacje Dodatkowe", dodatkowe.toString(), false);
         return eb.build();
     }
