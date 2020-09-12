@@ -118,7 +118,7 @@ public class MessageListener extends ListenerAdapter {
             if (f.getName().equals("Priorytet")) priorytet = f;
             if (f.getName().equals("Typ")) typ = f;
             if (f.getName().equals("Status")) status = f;
-            if (f.getName().equals("Przypisane Do")) przypisane = f;
+            if (f.getName().equals("Przypisane do")) przypisane = f;
             if (f.getName().equals("Tryb Gry")) trybGry = f;
             if (f.getName().equals("Wersja Minecrafta")) wersjaMc = f;
             if (f.getName().equals("Serwer")) serwer = f;
