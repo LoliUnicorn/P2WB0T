@@ -209,7 +209,7 @@ public class CommandContext {
         }
 
         @Nullable
-        public Integer getNumber(String num) {
+        public Integer getNumber(@Nullable String num) {
             Integer n = null;
             try {
                 n = Integer.parseInt(num);
@@ -218,7 +218,7 @@ public class CommandContext {
         }
 
         @Nullable
-        public Double getDouble(String num) {
+        public Double getDouble(@Nullable String num) {
             Double n = null;
             try {
                 n = Double.parseDouble(num);

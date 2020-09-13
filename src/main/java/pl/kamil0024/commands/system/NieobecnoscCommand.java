@@ -34,6 +34,7 @@ import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.nieobecnosci.config.Zmiana;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -93,6 +94,11 @@ public class NieobecnoscCommand extends Command {
             List<EmbedBuilder> pages = new ArrayList<>();
             for (Nieobecnosc nieobecnosc : nbConf.getNieobecnosc()) {
                 EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
+                if (!nieobecnosc.isAktywna()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                    eb.addField("Data rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
+                    eb.addField("Data zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+                }
                 List<Zmiana> zmiany = nieobecnosc.getZmiany();
                 eb.addField("Ilość zmian:", zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
                 eb.addField("Ostatnia zmiana:",

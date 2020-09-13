@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
@@ -35,6 +36,7 @@ import pl.kamil0024.youtrack.models.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +105,11 @@ public class MessageListener extends ListenerAdapter {
         }
     }
 
-    private MessageEmbed generateEmbed(Issue i) {
+    public static MessageEmbed generateEmbed(Issue i) {
+        return generateEmbedBuilder(i).build();
+    }
+
+    public static EmbedBuilder generateEmbedBuilder(Issue i) {
         Issue.Field priorytet = null;
         Issue.Field typ = null;
         Issue.Field status = null;
@@ -115,6 +121,7 @@ public class MessageListener extends ListenerAdapter {
         Issue.Field wynikTestu = null;
         Issue.Field tester = null;
         Issue.Field nickZglaszajacego = null;
+        Issue.Field iloscMonet = null;
         for (Issue.Field f : i.getFields()) {
             if (f.getName().equals("Priorytet")) priorytet = f;
             if (f.getName().equals("Typ")) typ = f;
@@ -127,10 +134,11 @@ public class MessageListener extends ListenerAdapter {
             if (f.getName().equals("Tester")) tester = f;
             if (f.getName().equals("Wyniki Testu")) wynikTestu = f;
             if (f.getName().equals("Nick zgłaszającego")) nickZglaszajacego = f;
+            if (f.getName().equals("Ilość monet")) iloscMonet = f;
         }
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(i.getIdReadable());
+        eb.setAuthor(i.getIdReadable(), Ustawienia.instance.yt.url + "/issue/" + i.getIdReadable());
         eb.setTitle(i.getSummary());
         eb.setDescription(i.getDescription());
         eb.setColor(priorytet.getValue().get(0).getColor().getBackground());
@@ -162,43 +170,60 @@ public class MessageListener extends ListenerAdapter {
             case "Housing | Freebuild (stara edycja)":
             case "Build Battle":
             case "Forum":
-                bsb.appendLine("Tryb gry: " + trybGryValue);
+                bsb.appendLine("Tryb gry: " + value(trybGryValue));
                 break;
             case "Arcade Games":
                 bsb.appendLine("Tryb gry: Arcade Games");
                 if (arcade != null) value = listToString(arcade.getValue());
                 else value = "(Brak)";
-                bsb.appendLine(NICO + NICO + NICO + NICO + "- Tryb(-y) gier na arcade: " + value);
+                bsb.appendLine(NICO + NICO + NICO + NICO + "- Tryb(-y) gier na arcade: " + value(value));
                 break;
         }
 
         BetterStringBuilder dodatkowe = new BetterStringBuilder();
         if (!trybGryValue.equals("Forum") && !trybGryValue.equals("Lobby") && wersjaMc != null) {
-            dodatkowe.appendLine("Wersja Minecrafta: " + wersjaMc.getValue().get(0).getName());
+            dodatkowe.appendLine("Wersja Minecrafta: " + value(wersjaMc));
         }
 
         dodatkowe.appendLine("Tester: " + value(tester));
         dodatkowe.appendLine("Wyniki Testu: " + value(wynikTestu));
         dodatkowe.appendLine("Nick Zgłaszającego: " + value(nickZglaszajacego));
+        dodatkowe.appendLine("Ilość monet" + value(iloscMonet));
         eb.addField("Informacje Dodatkowe", dodatkowe.toString(), false);
-        return eb.build();
+        return eb;
     }
 
-    private String listToString(List<Issue.Field.FieldValue> lista) {
+    private static String listToString(List<Issue.Field.FieldValue> lista) {
         StringBuilder sb = new StringBuilder();
         int tak = 1;
         for (Issue.Field.FieldValue f : lista) {
-            sb.append(f.getName());
+            sb.append(value(f.getName()));
             if (tak != lista.size()) sb.append(", ");
             tak++;
         }
         return sb.toString();
     }
 
-    private String value(@Nullable Issue.Field s) {
+    private static String value(@Nullable Issue.Field s) {
         if (s == null) return "Brak";
         try {
-            return s.getValue().get(0).getName();
+            return value(s.getValue().get(0));
+        } catch (NullPointerException ignored) { }
+        return "Brak";
+    }
+
+    private static String value(@Nullable Issue.Field.FieldValue s) {
+        if (s == null) return "Brak";
+        try {
+            return value(s.getName());
+        } catch (NullPointerException ignored) { }
+        return "Brak";
+    }
+
+    private static String value(@Nullable String s) {
+        if (s == null) return "Brak";
+        try {
+            return MarkdownUtil.bold(s);
         } catch (NullPointerException ignored) { }
         return "Brak";
     }
