@@ -85,6 +85,7 @@ public class StatsCommand extends Command {
                 statystyka.setUsunietychWiadomosci(stat.getUsunietychWiadomosci() + statystyka.getUsunietychWiadomosci());
                 statystyka.setZbanowanych(stat.getZbanowanych() + statystyka.getZbanowanych());
                 statystyka.setZmutowanych(stat.getZmutowanych() + statystyka.getZmutowanych());
+                statystyka.setWyrzuconych(stat.getWyrzuconych() + statystyka.getWyrzuconych());
             }
         }
 

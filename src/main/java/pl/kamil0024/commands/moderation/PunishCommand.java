@@ -28,6 +28,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kamil0024.chat.listener.ChatListener;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.Ustawienia;
@@ -54,6 +57,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PunishCommand extends Command {
+
+    private static Logger logger = LoggerFactory.getLogger(PunishCommand.class);
 
     private final KaryJSON karyJSON;
     private final EventWaiter eventWaiter;
@@ -284,6 +289,8 @@ public class PunishCommand extends Command {
                         return;
                     }
                     break;
+                default:
+                    Log.newError("Typ " + jegoTier.getType().name() + " nie jest wpisany!", PunishCommand.class);
             }
             Kara.put(caseDao, karaBuilder, modLog);
         }

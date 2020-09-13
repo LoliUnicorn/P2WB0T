@@ -27,6 +27,7 @@ import lombok.Data;
 import org.json.JSONPropertyIgnore;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.bdate.util.Nullable;
+import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.stats.entities.Statystyka;
 
 import java.util.ArrayList;

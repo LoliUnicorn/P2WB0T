@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import pl.kamil0024.bdate.BDate;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +62,8 @@ public class UserStats {
             case SENDMESSAGE:
                 stats.setNapisanychWiadomosci(stats.getNapisanychWiadomosci() + count);
                 break;
+            default:
+                Log.newError("Typ statystyk " + statsType + " nie ma swojego casa!", UserStats.class);
         }
         getStatsMap().remove(day);
         getStatsMap().put(day, stats);
@@ -84,6 +87,5 @@ public class UserStats {
     public enum StatsType {
         MUTE, BAN, KICK, DELETEDMESSAGE, SENDMESSAGE
     }
-
 
 }
