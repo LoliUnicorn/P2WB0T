@@ -22,30 +22,26 @@
     <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer" />
 
     <property name="HOME_LOG" value="logs/app.log"/>
-    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${HOME_LOG}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <totalSizeCap>20GB</totalSizeCap>
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
+    <file>${HOME_LOG}</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+        <maxFileSize>10MB</maxFileSize>
+        <totalSizeCap>20GB</totalSizeCap>
+        <maxHistory>60</maxHistory>
+    </rollingPolicy>
 
-        <encoder>
-            <pattern>[%d{HH:mm:ss.SSS}] [%level] [%class{36}.%M %L] %msg\n</pattern>
-        </encoder>
-    </appender>
+    <encoder>
+        <pattern>[%d{HH:mm:ss.SSS}] [%level] [%class{36}.%M %L] %msg\n</pattern>
+    </encoder>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>[%d{HH:mm:ss.SSS}] [%colorize(%level)] [%class{36}.%M %L] %msg\n</pattern>
         </encoder>
-        <appender-ref ref="FILE-ROLLING"/>
     </appender>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-ROLLING"/>
     </root>
-
-    <logger name="jda.internal.requests" level="DEBUG"/>
 </configuration>

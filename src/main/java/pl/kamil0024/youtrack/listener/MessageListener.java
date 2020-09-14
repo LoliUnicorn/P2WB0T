@@ -188,7 +188,7 @@ public class MessageListener extends ListenerAdapter {
         dodatkowe.appendLine("Tester: " + value(tester));
         dodatkowe.appendLine("Wyniki Testu: " + value(wynikTestu));
         dodatkowe.appendLine("Nick Zgłaszającego: " + value(nickZglaszajacego));
-        dodatkowe.appendLine("Ilość monet" + value(iloscMonet));
+        dodatkowe.appendLine("Ilość monet: " + value(iloscMonet));
         eb.addField("Informacje Dodatkowe", dodatkowe.toString(), false);
         return eb;
     }

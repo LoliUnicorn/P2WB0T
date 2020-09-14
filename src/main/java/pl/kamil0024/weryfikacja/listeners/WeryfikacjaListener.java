@@ -58,7 +58,7 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || !event.isFromGuild()) return;
 
         String msg = event.getMessage().getContentRaw();
-        event.getMessage().delete().complete();
+        event.getMessage().delete().queue();
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
         if (dc == null) {
