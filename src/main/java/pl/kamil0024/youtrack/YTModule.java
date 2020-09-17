@@ -26,7 +26,6 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.youtrack.commands.IssuesCommand;
-import pl.kamil0024.youtrack.impl.YouTrackImpl;
 import pl.kamil0024.youtrack.listener.MessageListener;
 
 import java.util.ArrayList;

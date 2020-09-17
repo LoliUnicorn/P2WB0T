@@ -58,7 +58,7 @@ public class IssuesCommand extends Command {
         DateTime dt = new DateTime().minusDays(arg);
         List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();
         try {
-            for (Issue issue : youTrack.getIssues()) {
+            for (Issue issue : youTrack.retrieveIssues()) {
                 if (dt.isBefore(new DateTime(issue.getCreated()))) {
                     pages.add(new FutureTask<>(() -> MessageListener.generateEmbedBuilder(issue)));
                 }

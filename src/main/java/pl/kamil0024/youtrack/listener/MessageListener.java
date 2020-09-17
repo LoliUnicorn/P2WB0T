@@ -49,12 +49,11 @@ public class MessageListener extends ListenerAdapter {
     private static final Pattern ISSUE_ID = Pattern.compile("([A-Z0-9]+)-(\\d+)");
 
     private final YouTrack youTrack;
-    private List<Project> projects;
 
     public MessageListener(YouTrack youTrack) {
         this.youTrack = youTrack;
         try {
-            projects = youTrack.getProjects();
+            youTrack.retrieveProjects();
         } catch (APIException e) {
             e.printStackTrace();
         }
@@ -71,7 +70,7 @@ public class MessageListener extends ListenerAdapter {
             String id = issue.group(2);
             try {
                 boolean matches = false;
-                for (Project p : projects) {
+                for (Project p : youTrack.getProjects()) {
                     if (p.getShortName().equals(project)) {
                         matches = true;
                         break;
@@ -79,7 +78,7 @@ public class MessageListener extends ListenerAdapter {
                 }
                 if (!matches) break;
                 String iId = project + "-" + id;
-                List<Issue> issues = youTrack.getIssues(iId);
+                List<Issue> issues = youTrack.retrieveIssues(iId);
                 Issue iss = null;
                 for (Issue i : issues) if (i.getIdReadable().equals(iId)) iss = i;
                 if (iss == null) break;
@@ -223,7 +222,7 @@ public class MessageListener extends ListenerAdapter {
     private static String value(@Nullable String s) {
         if (s == null) return "Brak";
         try {
-            return MarkdownUtil.bold(s);
+            return "**" + s + "**";
         } catch (NullPointerException ignored) { }
         return "Brak";
     }
