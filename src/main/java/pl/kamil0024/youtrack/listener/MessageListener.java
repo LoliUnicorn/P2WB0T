@@ -147,10 +147,10 @@ public class MessageListener extends ListenerAdapter {
         String info = "Priorytet: %s\nTyp: %s\nStatus: %s\nPrzypisane do: %s";
         eb.addField("Podstawowe Informacje",
                 String.format(info,
-                        priorytet.getValue().get(0).getName(),
-                        typ.getValue().get(0).getName(),
-                        status.getValue().get(0).getName(),
-                        przypisane.getValue().get(0).getName()),
+                        value(priorytet),
+                        value(typ),
+                        value(status),
+                        value(przypisane)),
                 false);
         BetterStringBuilder bsb = new BetterStringBuilder();
         String trybGryValue = trybGry.getValue().get(0).getName();
@@ -204,27 +204,26 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private static String value(@Nullable Issue.Field s) {
-        if (s == null) return "Brak";
+        if (s == null) return "**Brak**";
+        int size = 1;
         try {
-            return value(s.getValue().get(0));
+            StringBuilder sb = new StringBuilder();
+            for (Issue.Field.FieldValue field : s.getValue()) {
+                sb.append(field.getName());
+                if (size < s.getValue().size()) sb.append(", ");
+                size++;
+            }
+            return value(sb.toString());
         } catch (NullPointerException ignored) { }
-        return "Brak";
-    }
-
-    private static String value(@Nullable Issue.Field.FieldValue s) {
-        if (s == null) return "Brak";
-        try {
-            return value(s.getName());
-        } catch (NullPointerException ignored) { }
-        return "Brak";
+        return "**Brak**";
     }
 
     private static String value(@Nullable String s) {
-        if (s == null) return "Brak";
+        if (s == null) return "**Brak**";
         try {
             return "**" + s + "**";
         } catch (NullPointerException ignored) { }
-        return "Brak";
+        return "**Brak**";
     }
 
 }

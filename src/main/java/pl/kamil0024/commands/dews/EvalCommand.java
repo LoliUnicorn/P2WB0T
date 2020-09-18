@@ -43,6 +43,7 @@ import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.StatsModule;
+import pl.kamil0024.youtrack.YouTrack;
 
 import java.awt.*;
 
@@ -67,8 +68,9 @@ public class EvalCommand extends Command {
     @Inject private final MultiDao multiDao;
     @Inject private final MusicModule musicModule;
     @Inject private final MusicAPI musicAPI;
+    @Inject private final YouTrack youTrack;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -90,6 +92,7 @@ public class EvalCommand extends Command {
         this.multiDao = multiDao;
         this.musicModule = musicModule;
         this.musicAPI = musicAPI;
+        this.youTrack = youTrack;
     }
 
     @Override
@@ -119,6 +122,7 @@ public class EvalCommand extends Command {
         shell.setVariable("multiDao", multiDao);
         shell.setVariable("musicModule", musicModule);
         shell.setVariable("musicAPI", musicAPI);
+        shell.setVariable("youTrack", youTrack);
 
         long ms = System.currentTimeMillis();
         Object value;

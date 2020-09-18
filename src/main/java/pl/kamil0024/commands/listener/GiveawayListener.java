@@ -19,7 +19,6 @@
 
 package pl.kamil0024.commands.listener;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -33,7 +32,6 @@ import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.GiveawayDao;
 import pl.kamil0024.core.database.config.GiveawayConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;

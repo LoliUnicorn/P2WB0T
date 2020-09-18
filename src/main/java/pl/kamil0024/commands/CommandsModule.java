@@ -25,6 +25,7 @@ import lombok.Data;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
+import pl.kamil0024.commands.listener.GuildListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
 import pl.kamil0024.commands.zabawa.OsuCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
@@ -44,6 +45,7 @@ import pl.kamil0024.commands.dews.*;
 import pl.kamil0024.commands.moderation.*;
 import pl.kamil0024.commands.system.*;
 import pl.kamil0024.core.database.*;
+import pl.kamil0024.youtrack.YouTrack;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -71,15 +73,17 @@ public class CommandsModule implements Modul {
     @Inject MultiDao multiDao;
     @Inject MusicAPI musicAPI;
     @Inject NieobecnosciManager nieobecnosciManager;
+    @Inject YouTrack youTrack;
 
     private boolean start = false;
     private ModLog modLog;
 
     // Listeners
-
     KolkoIKrzyzykManager kolkoIKrzyzykManager;
+    GuildListener guildListener;
+    GiveawayListener giveawayListener;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager, YouTrack youTrack) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -98,6 +102,7 @@ public class CommandsModule implements Modul {
         this.multiDao = multiDao;
         this.musicAPI = musicAPI;
         this.nieobecnosciManager = nieobecnosciManager;
+        this.youTrack = youTrack;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -105,8 +110,11 @@ public class CommandsModule implements Modul {
 
     @Override
     public boolean startUp() {
-        GiveawayListener giveawayListener = new GiveawayListener(giveawayDao, api);
+        giveawayListener = new GiveawayListener(giveawayDao, api);
         kolkoIKrzyzykManager = new KolkoIKrzyzykManager(api, eventWaiter);
+        guildListener = new GuildListener();
+
+        api.addEventListener(guildListener);
 
         cmd = new ArrayList<>();
 
@@ -114,7 +122,7 @@ public class CommandsModule implements Modul {
         cmd.add(new BotinfoCommand(commandManager, modulManager, musicAPI));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
-        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI));
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI, youTrack));
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());
@@ -158,6 +166,7 @@ public class CommandsModule implements Modul {
     @Override
     public boolean shutDown() {
         kolkoIKrzyzykManager.stop();
+        api.removeEventListener(guildListener);
         commandManager.unregisterCommands(cmd);
         setStart(false);
         return true;

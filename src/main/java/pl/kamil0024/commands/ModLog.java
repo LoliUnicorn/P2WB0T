@@ -265,11 +265,23 @@ public class ModLog extends ListenerAdapter {
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         EmbedBuilder eb = new EmbedBuilder();
         User u = api.retrieveUserById(kara.getKaranyId()).complete();
-        Member mem = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(kara.getAdmId()).complete();
+        Member mem = null;
+        User admUser = null;
+        String adm = "Nie można było pobrać administratora. Jego ID to: " + kara.getAdmId();
+        try {
+            mem = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(kara.getAdmId()).complete();
+        } catch (Exception ignored) {
+            try {
+                admUser = api.retrieveUserById(kara.getAdmId()).complete();
+            } catch (Exception ignored1) { }
+        }
+
         if (mem != null) eb.setColor(UserUtil.getColor(mem));
         eb.addField("Osoba karana", UserUtil.getFullName(u), false);
         eb.addField("Nick w mc", kara.getMcNick(), false);
-        eb.addField("Administrator", UserUtil.getFullName(mem.getUser()), false);
+        eb.addField("Administrator",
+                mem != null ? UserUtil.getFullName(mem.getUser()) : (admUser != null ? UserUtil.getFullName(admUser) : adm),
+                false);
         eb.addField("Powód", kara.getPowod(), false);
         if (u.getAvatarUrl() != null) eb.setThumbnail(u.getAvatarUrl());
         eb.addField("Nadano o", sfd.format(new Date(kara.getTimestamp())), false);

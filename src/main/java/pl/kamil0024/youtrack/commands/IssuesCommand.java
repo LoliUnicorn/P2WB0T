@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EventWaiter;
@@ -46,6 +47,7 @@ public class IssuesCommand extends Command {
         name = "issues";
         aliases.add("iss");
         permLevel = PermLevel.HELPER;
+        category = CommandCategory.YOUTRACK;
         this.eventWaiter = eventWaiter;
         this.youTrack = youTrack;
     }
