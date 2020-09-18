@@ -30,6 +30,8 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.bdate.util.BLanguage;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.TempbanCommand;
@@ -278,9 +280,9 @@ public class ModLog extends ListenerAdapter {
 
         if (mem != null) eb.setColor(UserUtil.getColor(mem));
         eb.addField("Osoba karana", UserUtil.getFullName(u), false);
-        eb.addField("Nick w mc", kara.getMcNick(), false);
+        eb.addField("Nick w mc", MarkdownSanitizer.escape(kara.getMcNick()), false);
         eb.addField("Administrator",
-                mem != null ? UserUtil.getFullName(mem.getUser()) : (admUser != null ? UserUtil.getFullName(admUser) : adm),
+                mem != null ? UserUtil.getFullName(mem.getUser()) : (admUser != null ? UserUtil.getLogName(admUser) : adm),
                 false);
         eb.addField("Powód", kara.getPowod(), false);
         if (u.getAvatarUrl() != null) eb.setThumbnail(u.getAvatarUrl());
@@ -319,7 +321,7 @@ public class ModLog extends ListenerAdapter {
         } else {
             eb.addField("Aktywna jako pun?", kara.getPunAktywna() ? "Tak" : "Nie", false);
             if (kara.getMessageUrl() != null) {
-                eb.addField("Kolega prosi o linka?", "[Klik](" + "https://discordapp.com/channels/" + kara.getMessageUrl() + ")", false);
+                eb.addField("Kolega prosi o linka?", "[Klik](" + "https://discord.com/channels/" + kara.getMessageUrl() + ")", false);
             }
         }
         if (seeAktywna) {

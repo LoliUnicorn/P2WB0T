@@ -63,7 +63,7 @@ public class Karainfo implements HttpHandler {
     public static CaseConfig format(CaseConfig cc, APIModule api) {
         UserinfoConfig userc = api.getUserConfig(cc.getKara().getKaranyId());
         UserinfoConfig admc = api.getUserConfig(cc.getKara().getAdmId());
-        cc.getKara().setMessageUrl("https://discordapp.com/channels/" + cc.getKara().getMessageUrl());
+        cc.getKara().setMessageUrl("https://discord.com/channels/" + cc.getKara().getMessageUrl());
 
         cc.getKara().setKaranyId(userc.getMcNick() == null ? userc.getFullname() : userc.getMcNick());
         cc.getKara().setAdmId(admc.getMcNick() == null ? admc.getFullname() : admc.getMcNick());

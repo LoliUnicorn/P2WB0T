@@ -124,8 +124,7 @@ public class Nieobecnosci implements HttpHandler {
         UserinfoConfig uc = api.getUserConfig(urlop.getUserId());
 
         urlop.setUserId(uc.getMcNick() == null ? uc.getFullname() : uc.getMcNick());
-        // FIXME: Jak będą problemy to przez to
-        urlop.setMsgId("https://discordapp.com/channels/422016694408577025/687775040065896495/" + urlop.getMsgId());
+        urlop.setMsgId("https://discord.com/channels/422016694408577025/687775040065896495/" + urlop.getMsgId());
         return urlop;
     }
 

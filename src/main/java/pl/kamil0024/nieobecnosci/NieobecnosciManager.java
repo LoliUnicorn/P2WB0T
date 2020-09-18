@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import pl.kamil0024.bdate.Timespan;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.system.CytujCommand;
@@ -96,7 +97,7 @@ public class NieobecnosciManager {
         eb.setAuthor(UserUtil.getMcNick(member), null, member.getUser().getAvatarUrl());
         eb.setThumbnail(member.getUser().getAvatarUrl());
 
-        eb.addField("Osoba zgłaszająca", UserUtil.getFullNameMc(member), false);
+        eb.addField("Osoba zgłaszająca", MarkdownSanitizer.escape(UserUtil.getFullNameMc(member)), false);
         eb.addField("Powód", nieobecnosc.getPowod(), false);
         if (nieobecnosc.isAktywna()) {
             eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);

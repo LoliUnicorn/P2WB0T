@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
@@ -68,7 +69,7 @@ public class UserinfoCommand extends Command {
         eb.setTimestamp(Instant.now());
         eb.setThumbnail(user.getAvatarUrl());
 
-        eb.addField("Nick", user.getAsMention() + " [" + UserUtil.getMcNick(member) + "]", false);
+        eb.addField("Nick", user.getAsMention() + " [" + MarkdownSanitizer.escape(UserUtil.getMcNick(member)) + "]", false);
 
         long date = new BDate().getTimestamp();
 
