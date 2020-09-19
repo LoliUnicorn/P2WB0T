@@ -31,7 +31,6 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.bdate.util.BLanguage;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.TempbanCommand;
@@ -120,6 +119,7 @@ public class ModLog extends ListenerAdapter {
 
             Kara kara = new Kara();
 
+            kara.setKaraId(caseDao.getAll().size() + 1);
             kara.setKaranyId(event.getId());
             kara.setMcNick(UserUtil.getMcNick(event));
             kara.setAdmId(k.getAdmId());
