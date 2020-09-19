@@ -390,6 +390,7 @@ public class ChatListener extends ListenerAdapter {
         whiteList.add("je");
         whiteList.add("jo");
         whiteList.add("jol");
+        whiteList.add("jes");
 
         for (String s : msg) {
             String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
