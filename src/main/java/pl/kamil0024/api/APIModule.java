@@ -532,6 +532,8 @@ public class APIModule implements Modul {
 
         routes.get("api/youtrack/reports", new YouTrackReport(api));
 
+        routes.get("api/react/history/{token}/{id}/{offset}", new HistoryDescById(caseDao));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()

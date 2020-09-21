@@ -425,6 +425,24 @@ public class PgMapper<T> {
         return data;
     }
 
+    public List<T> getDescKary(String userId, int offset) {
+        final List<T> data = new ArrayList<>();
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"kara\": {\"karanyId\": \"%s\"}}' ORDER BY cast(data->>'id' as integer) DESC LIMIT 5 OFFSET %d;", table.value(), userId, offset);
+        store.sql(msg, c -> {
+            final ResultSet resultSet = c.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        Log.error("Load error: %s", e);
+                    }
+                }
+            }
+        });
+        return data;
+    }
+
     public String getTableName() {
         return table.value();
     }
