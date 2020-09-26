@@ -46,7 +46,6 @@ public class StatsHandler implements HttpHandler {
         this.statsDao = statsDao;
     }
 
-
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
         if (!CheckToken.checkToken(ex)) return;
