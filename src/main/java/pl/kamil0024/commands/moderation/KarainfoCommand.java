@@ -35,7 +35,7 @@ public class KarainfoCommand extends Command {
     public KarainfoCommand(CaseDao caseDao) {
         name = "karainfo";
         aliases.add("infokara");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
 
         this.caseDao = caseDao;

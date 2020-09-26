@@ -46,7 +46,7 @@ public class Kara {
     private Boolean aktywna = true;
     private String messageUrl = null;
 
-    // Temp (mute|ban)
+    // Temp(mute|ban)
     private Long end;
     private String duration;
 

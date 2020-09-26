@@ -47,7 +47,7 @@ public class BanCommand extends Command {
     public BanCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "ban";
         aliases.add("akysz");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;

@@ -35,7 +35,7 @@ public class ResumeCommand extends Command {
         name = "resume";
         aliases.add("stop");
 
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

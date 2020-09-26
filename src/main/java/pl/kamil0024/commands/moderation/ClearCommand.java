@@ -43,7 +43,7 @@ public class ClearCommand extends Command {
     public ClearCommand(StatsModule statsModule) {
         name = "clear";
         aliases.add("purge");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
 
         this.statsModule = statsModule;

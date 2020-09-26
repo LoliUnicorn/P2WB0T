@@ -41,7 +41,7 @@ public class MultiCommand extends Command {
 
     public MultiCommand(MultiDao multiDao, EventWaiter eventWaiter) {
         name = "multi";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.multiDao = multiDao;
         this.eventWaiter = eventWaiter;

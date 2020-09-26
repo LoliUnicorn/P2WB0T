@@ -33,7 +33,7 @@ public class SkipCommand extends Command {
 
     public SkipCommand(MusicModule musicModule) {
         name = "skip";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

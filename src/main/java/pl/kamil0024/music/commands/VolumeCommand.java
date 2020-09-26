@@ -34,7 +34,7 @@ public class VolumeCommand extends Command {
 
     public VolumeCommand(MusicModule musicModule) {
         name = "volume";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

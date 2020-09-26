@@ -45,7 +45,7 @@ public class YouTubeCommand extends Command {
     public YouTubeCommand(MusicModule musicModule, EventWaiter eventWaiter) {
         name = "youtube";
         aliases.add("yt");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

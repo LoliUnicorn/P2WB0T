@@ -44,7 +44,7 @@ public class UnbanCommand extends Command {
 
     public UnbanCommand(CaseDao caseDao, ModLog modLog) {
         name = "unban";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;

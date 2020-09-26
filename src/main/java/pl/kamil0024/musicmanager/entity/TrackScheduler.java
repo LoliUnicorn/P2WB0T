@@ -40,7 +40,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    // haha @Data robi brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    // hahaha @Data robi brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 
     @Getter private AudioPlayer player;
     @Getter private AudioManager audioManager;
@@ -110,6 +110,7 @@ public class TrackScheduler extends AudioEventAdapter {
         getPlayer().removeListener(this);
         getAudioManager().closeAudioConnection();
         setAktualnaPiosenka(null);
+        getQueue().clear();
     }
 
     @Override

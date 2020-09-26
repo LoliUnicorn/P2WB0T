@@ -50,7 +50,7 @@ public class TempmuteCommand extends Command {
 
     public TempmuteCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "tempmute";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;

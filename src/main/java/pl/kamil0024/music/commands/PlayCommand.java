@@ -39,7 +39,7 @@ public class PlayCommand extends Command {
 
     public PlayCommand(MusicModule musicModule) {
         name = "play";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

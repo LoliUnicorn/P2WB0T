@@ -47,7 +47,7 @@ public class MuteCommand extends Command {
 
     public MuteCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "mute";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         this.caseDao = caseDao;
         this.modLog = modLog;
         this.statsModule = statsModule;

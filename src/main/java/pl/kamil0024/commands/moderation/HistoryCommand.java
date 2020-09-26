@@ -48,7 +48,7 @@ public class HistoryCommand extends Command {
 
     public HistoryCommand(CaseDao caseDao, EventWaiter eventWaiter) {
         name = "history";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.eventWaiter = eventWaiter;

@@ -25,9 +25,11 @@ import lombok.Getter;
 public enum PermLevel {
 
     MEMBER(0, "permlvl.member"),
-    HELPER(1, "permlvl.helper"),
-    MODERATOR(2, "permlvl.mod"),
-    ADMINISTRATOR(3, "permlvl.adm"),
+    STAZYSTA(1, "permlvl.staz"),
+    CHATMOD(2, "permlvl.chatmod"),
+    HELPER(3, "permlvl.helper"),
+    MODERATOR(4, "permlvl.mod"),
+    ADMINISTRATOR(5, "permlvl.adm"),
     DEVELOPER(10, "permlvl.dev");
 
     @Getter private final int numer;

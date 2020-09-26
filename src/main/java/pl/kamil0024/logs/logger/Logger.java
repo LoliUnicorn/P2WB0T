@@ -75,7 +75,7 @@ public class Logger extends ListenerAdapter {
             }
         }
         if (deletedBy != null) {
-            if (UserUtil.getPermLevel(deletedBy).getNumer() >= PermLevel.HELPER.getNumer()) {
+            if (UserUtil.getPermLevel(deletedBy).getNumer() >= PermLevel.CHATMOD.getNumer()) {
                 statsModule.getStatsCache().addUsunietychWiadomosci(deletedBy.getId(), 1);
             }
         }

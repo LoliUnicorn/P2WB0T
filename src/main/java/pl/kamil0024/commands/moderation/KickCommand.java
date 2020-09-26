@@ -48,7 +48,7 @@ public class KickCommand extends Command {
     public KickCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "kick";
         aliases.add("wyrzuc");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;

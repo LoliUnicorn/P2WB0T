@@ -82,6 +82,7 @@ public class GuildMusicManager extends AudioEventAdapter {
         getPlayer().removeListener(this);
         getAudioManager().closeAudioConnection();
         setAktualnaPiosenka(null);
+        getQueue().clear();
     }
 
     @Override

@@ -69,7 +69,7 @@ public class PunishCommand extends Command {
     public PunishCommand(KaryJSON karyJSON, EventWaiter eventWaiter, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "punish";
         aliases.add("pun");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.karyJSON = karyJSON;
         this.eventWaiter = eventWaiter;

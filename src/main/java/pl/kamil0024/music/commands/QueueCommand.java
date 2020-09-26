@@ -48,7 +48,7 @@ public class QueueCommand extends Command {
 
     public QueueCommand(MusicModule musicModule, EventWaiter eventWaiter) {
         name = "queue";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
 
         this.musicModule = musicModule;

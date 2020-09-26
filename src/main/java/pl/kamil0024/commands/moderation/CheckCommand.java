@@ -40,7 +40,7 @@ public class CheckCommand extends Command {
 
     public CheckCommand(CaseDao caseDao) {
         name = "check";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         cooldown = 5;
         this.caseDao = caseDao;

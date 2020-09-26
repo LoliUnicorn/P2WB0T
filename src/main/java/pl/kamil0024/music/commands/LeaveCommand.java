@@ -35,7 +35,7 @@ public class LeaveCommand extends Command {
         name = "leave";
         aliases.add("opusc");
         category = CommandCategory.MUSIC;
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         this.musicModule = musicModule;
     }
 

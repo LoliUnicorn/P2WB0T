@@ -33,7 +33,7 @@ public class LoopCommand extends Command {
 
     public LoopCommand(MusicModule musicModule) {
         name = "loop";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
         this.musicModule = musicModule;
     }

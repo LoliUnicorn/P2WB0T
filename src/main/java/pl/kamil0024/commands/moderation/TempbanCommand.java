@@ -47,7 +47,7 @@ public class TempbanCommand extends Command {
 
     public TempbanCommand(CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         name = "tempban";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;

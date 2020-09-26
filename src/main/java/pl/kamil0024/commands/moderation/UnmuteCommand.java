@@ -44,7 +44,7 @@ public class UnmuteCommand extends Command {
 
     public UnmuteCommand(CaseDao caseDao, ModLog modLog) {
         name = "unmute";
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
         this.modLog = modLog;
