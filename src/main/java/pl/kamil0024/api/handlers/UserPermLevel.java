@@ -21,6 +21,7 @@ package pl.kamil0024.api.handlers;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import lombok.Data;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
@@ -47,9 +48,20 @@ public class UserPermLevel implements HttpHandler {
             User u = api.retrieveUserById(user).complete();
             if (u == null) throw new Exception();
             PermLevel pl = UserUtil.getPermLevel(u);
-            Response.sendObjectResponse(ex, pl);
+            Response.sendObjectResponse(ex, new UserPermLevelClass(pl));
         } catch (Exception exception) {
             Response.sendErrorResponse(ex, "Error", "Złe id?");
+        }
+    }
+
+    @Data
+    public static class UserPermLevelClass {
+        private final String name;
+        private final int numer;
+
+        public UserPermLevelClass(PermLevel permLevel) {
+            this.name = permLevel.toString();
+            this.numer = permLevel.getNumer();
         }
     }
 
