@@ -69,7 +69,7 @@ public class Action {
             eb.addField("!UWAGA!", "Zgłoszenie może ukazać się fałszywe. Radze zajrzeć do kontekstu prowadzonej rozmowy", false);
         }
         if (!isDeleted) eb.addField("Link do wiadomości", String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
-
+        eb.setFooter("jakiś randomowy footer bo embedy się bugują na telefonie");
         TextChannel txt = msg.getJDA().getTextChannelById(Ustawienia.instance.channel.moddc);
         if (txt == null) throw new NullPointerException("Kanał do modów dc jest nullem");
         txt.sendMessage(eb.build()).queue(m -> {
