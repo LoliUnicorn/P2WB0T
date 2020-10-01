@@ -54,7 +54,7 @@ public class StatsHandler implements HttpHandler {
     }
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (!CheckToken.checkToken(ex)) return;
 
         int dni;
@@ -77,15 +77,19 @@ public class StatsHandler implements HttpHandler {
         }
 
         ArrayList<Statystyka> mem = new ArrayList<>();
-        List<StatsConfig> all = statsDao.getAll();
 
-        for (StatsConfig statsc : all) {
-            String mc = api.getUserConfig(statsc.getId()).getMcNick();
-            if (mc == null) continue;
-            if (mc.split(" ")[1].toLowerCase().equals(nick.toLowerCase())) {
-                mem = statsc.getStats();
-                break;
+        if (!id) {
+            List<StatsConfig> all = statsDao.getAll();
+            for (StatsConfig statsc : all) {
+                String mc = api.getUserConfig(statsc.getId()).getMcNick();
+                if (mc == null) continue;
+                if (mc.split(" ")[1].toLowerCase().equals(nick.toLowerCase())) {
+                    mem = statsc.getStats();
+                    break;
+                }
             }
+        } else {
+            mem = statsDao.get(nick).getStats();
         }
 
         if (mem.isEmpty()) {
