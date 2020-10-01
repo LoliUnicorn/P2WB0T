@@ -131,5 +131,5 @@ public class UserUtil {
     public static List<DiscordRank> getRanks(Member member) {
         return DiscordRank.getRanks(member);
     }
-
+    
 }

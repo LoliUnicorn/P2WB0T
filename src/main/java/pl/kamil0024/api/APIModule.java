@@ -24,9 +24,12 @@ import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
@@ -39,11 +42,19 @@ import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.UserUtil;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static io.undertow.Handlers.path;
 
@@ -64,8 +75,11 @@ public class APIModule implements Modul {
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;
+    private final Cache<ChatModUser> cdCache;
 
     private final Guild guild;
+
+    private ScheduledExecutorService executorSche;
 
     public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao) {
         this.api = api;
@@ -81,6 +95,10 @@ public class APIModule implements Modul {
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(-1);
+        this.cdCache = redisManager.new CacheRetriever<ChatModUser>() {}.getCache(-1);
+
+        executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::refreshChatmod, 0, 30, TimeUnit.MINUTES);
     }
 
     @Override
@@ -496,6 +514,7 @@ public class APIModule implements Modul {
          * @apiError {Boolean} error.description Długa odpowiedź błędu
          */
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
+        routes.get("api/stats/{token}/{dni}/id/{id}", new StatsHandler(statsDao, this, true));
 
         /**
          * @api {get} api/discord/:token/:nick/:ranga/:kod Weryfikacja
@@ -534,6 +553,7 @@ public class APIModule implements Modul {
 
         routes.get("api/react/history/{token}/{id}/{offset}", new HistoryDescById(caseDao));
         routes.get("api/react/permlevel/{token}", new UserPermLevel(api));
+        routes.get("api/react/chatmod/{token}/list", new ChatMod(api, this));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
@@ -588,12 +608,12 @@ public class APIModule implements Modul {
     }
     //#endregion User Cache
 
-    //#region Discord Cache
     @Nullable
     public DiscordInviteConfig getDiscordConfig(String nick) {
         return dcCache.getIfPresent(nick);
     }
 
+    //#region Discord Cache
     public void putDiscordConfig(String nick, String kod, String ranga) {
         DiscordInviteConfig dc = new DiscordInviteConfig(nick);
         dc.setKod(kod);
@@ -602,5 +622,53 @@ public class APIModule implements Modul {
     }
 
     //#endregion Discord Cache
+
+    //#region ChatMod Cache
+
+    public void refreshChatmod() {
+        Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+        if (g == null) {
+            Log.newError("Serwer docelowy jest nullem", APIModule.class);
+            return;
+        }
+        Role role = g.getRoleById(Ustawienia.instance.roles.chatMod);
+        if (role == null) {
+            Log.newError("Rola chatModa jest nullem!", APIModule.class);
+            return;
+        }
+        g.loadMembers().onSuccess((mem) -> mem.stream().filter(m -> m.getRoles().contains(role)).forEach(this::putChatModUser));
+    }
+
+    public Map<String, ChatModUser> getChatModUsers() {
+        return cdCache.asMap();
+    }
+
+    private void putChatModUser(Member mem) {
+        String nick = UserUtil.getMcNick(mem, true);
+        String prefix;
+        if (nick.contains("#")) {
+            prefix = "Brak zmienionego nicku";
+        } else {
+            try {
+                prefix = Objects.requireNonNull(mem.getNickname()).split(" ")[0];
+            } catch (Exception e) {
+                prefix = "Błąd przy pobieraniu nicku!";
+            }
+        }
+        ChatModUser cmd = new ChatModUser(nick, prefix, mem.getUser().getAvatarUrl(), mem.getUser().getName(), mem.getUser().getDiscriminator(), mem.getId());
+        cdCache.put(mem.getId(), cmd);
+    }
+
+    @Data
+    @AllArgsConstructor
+    public class ChatModUser {
+        private final String nick;
+        private final String prefix;
+        private final String avatar;
+        private final String username;
+        private final String tag;
+        private final String id;
+    }
+    //#endregion ChatMod Cache
 
 }

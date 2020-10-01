@@ -41,8 +41,7 @@ public class Log {
         web.setMessage(format);
         web.setType(WebhookUtil.LogType.ERROR);
         web.send();
-
-        error(msg, args);
+        error("[" + klasa.getCanonicalName() + "] " + msg, args);
         LoggerFactory.getLogger(klasa).error(format);
     }
 

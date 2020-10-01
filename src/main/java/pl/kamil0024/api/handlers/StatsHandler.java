@@ -40,10 +40,17 @@ public class StatsHandler implements HttpHandler {
 
     @Inject private APIModule api;
     @Inject private StatsDao statsDao;
+    @Inject private boolean id = false;
 
     public StatsHandler(StatsDao statsDao, APIModule apiModule) {
         this.api = apiModule;
         this.statsDao = statsDao;
+    }
+
+    public StatsHandler(StatsDao statsDao, APIModule apiModule, boolean id) {
+        this.api = apiModule;
+        this.statsDao = statsDao;
+        this.id = id;
     }
 
     @Override
