@@ -514,7 +514,7 @@ public class APIModule implements Modul {
          * @apiError {Boolean} error.description Długa odpowiedź błędu
          */
         routes.get("api/stats/{token}/{dni}/{nick}", new StatsHandler(statsDao, this));
-        routes.get("api/stats/{token}/{dni}/id/{id}", new StatsHandler(statsDao, this, true));
+        routes.get("api/stats/{token}/{dni}/id/{nick}", new StatsHandler(statsDao, this, true));
 
         /**
          * @api {get} api/discord/:token/:nick/:ranga/:kod Weryfikacja
@@ -598,7 +598,7 @@ public class APIModule implements Modul {
     private UserinfoConfig get(String id) {
         UserinfoConfig uc = new UserinfoConfig(id);
         User u = api.retrieveUserById(id).complete();
-        Member mem = guild.retrieveMember(u).complete();
+        Member mem = guild.retrieveMemberById(id).complete();
         if (mem != null) {
             if (mem.getNickname() != null) uc.setMcNick(mem.getNickname());
         }
