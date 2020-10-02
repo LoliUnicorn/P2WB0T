@@ -33,10 +33,10 @@ public class UserinfoConfig {
         this.id = id;
     }
 
-    @Getter @Setter private String id = "";
+    private String id = "";
 
-    @Getter @Setter private String mcNick = null;
-    @Getter @Setter private String fullname = "/";
+    private String mcNick = null;
+    private String fullname = "/";
 
     public String getWhateverName() {
         return getMcNick() == null ? getFullname() : getMcNick();
