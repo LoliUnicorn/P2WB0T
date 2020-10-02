@@ -554,7 +554,7 @@ public class APIModule implements Modul {
         routes.get("api/react/history/{token}/{id}/{offset}", new HistoryDescById(caseDao));
         routes.get("api/react/permlevel/{token}", new UserPermLevel(api));
         routes.get("api/react/chatmod/{token}/list", new ChatMod(api, this));
-        routes.get("api/react/userinfo/{id}", new UserInfo(api));
+        routes.get("api/react/userinfo/{token}/{id}", new UserInfo(api));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
