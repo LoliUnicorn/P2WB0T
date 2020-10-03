@@ -49,7 +49,7 @@ public class UserInfo implements HttpHandler {
             if (id.isEmpty()) throw new Exception();
 
             User user = api.retrieveUserById(id).complete();
-            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.botId))
+            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
                     .retrieveMemberById(id).complete();
             if (user == null) {
                 Response.sendErrorResponse(ex, "Błąd", "Taki użytkownik nie istnieje!");
