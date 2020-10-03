@@ -35,18 +35,22 @@ public class CheckToken implements HttpHandler {
     }
 
     public static boolean checkToken(HttpServerExchange ex) {
-        String token = ex.getQueryParameters().get("token").getFirst();
-        if (token.isEmpty()) {
+        try {
+            String token = ex.getQueryParameters().get("token").getFirst();
+            if (token.isEmpty()) {
+                Response.sendErrorResponse(ex, "Zły token", "Token jest pusty?");
+                return false;
+            }
+
+            if (!Ustawienia.instance.api.tokens.contains(token)) {
+                Response.sendErrorResponse(ex, "Zły token", "Token jest nieprawidłowy.");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
             Response.sendErrorResponse(ex, "Zły token", "Token jest pusty?");
             return false;
         }
-
-        if (!Ustawienia.instance.api.tokens.contains(token)) {
-            Response.sendErrorResponse(ex, "Zły token", "Token jest nieprawidłowy.");
-            return false;
-        }
-
-        return true;
     }
 
 }

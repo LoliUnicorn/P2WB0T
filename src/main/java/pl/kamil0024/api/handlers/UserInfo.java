@@ -59,6 +59,7 @@ public class UserInfo implements HttpHandler {
             fake.setUsername(user.getName());
             fake.setAvatar(user.getAvatarUrl());
             if (mem != null) {
+                fake.setPLvl(new UserPermLevel.UserPermLevelClass(UserUtil.getPermLevel(mem)));
                 String tak = UserUtil.getMcNick(mem);
                 fake.setNick(tak.equals("-") ? "" : tak);
                 List<FakeRole> roles = new ArrayList<>();
@@ -70,8 +71,8 @@ public class UserInfo implements HttpHandler {
             Response.sendObjectResponse(ex, fake);
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Nie udało się wysłać requesta! " + e.getMessage());
+            e.printStackTrace();
         }
-
     }
 
     @Data
@@ -83,6 +84,7 @@ public class UserInfo implements HttpHandler {
         private String nick = null;
         private String avatar;
         private List<FakeRole> roles = new ArrayList<>();
+        private UserPermLevel.UserPermLevelClass pLvl = null;
     }
 
     @Data
