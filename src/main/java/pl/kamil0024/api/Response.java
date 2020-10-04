@@ -50,7 +50,7 @@ public class Response {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkIp(HttpServerExchange ex) {
         String host = ex.getSourceAddress().getAddress().getHostAddress();
-        if (host.isEmpty() || !Ustawienia.instance.api.whitelist.contains(host))) {
+        if (host.isEmpty() || !Ustawienia.instance.api.whitelist.contains(host)) {
             sendErrorResponse(ex, "Brak autoryzacji", "ip " + host + " nie jest wpisane na liste!");
             return false;
         }
