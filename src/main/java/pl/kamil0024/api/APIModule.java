@@ -555,7 +555,6 @@ public class APIModule implements Modul {
         routes.get("api/react/chatmod/{token}/list", new ChatMod(api, this));
         routes.get("api/react/userinfo/{token}/{id}", new UserInfo(api));
 
-
         routes.post("api/ticket/create", new TicketHandler(ticketDao, 0));
         routes.get("api/ticket/getbyid/{id}", new TicketHandler(ticketDao, 1));
         routes.get("api/ticket/getbynick/{id}", new TicketHandler(ticketDao, 2));

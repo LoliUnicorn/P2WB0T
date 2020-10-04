@@ -41,14 +41,22 @@ public class TicketConfig {
 
     private String admId;
     private String userId;
-    private String userNick;
+    private String userNick = null;
     private int ocena = -1;
     private String temat;
     private boolean problemRozwiazany = false;
     private String uwaga;
 
-    public boolean exist() {
+    public boolean isEdited() {
         return getOcena() != 1;
+    }
+
+    public boolean exist() {
+        return getAdmId() != null && getUserId() != null;
+    }
+
+    public String getUrl() {
+        return "https://discord.p2w.pl/ticket/" + id;
     }
 
 }

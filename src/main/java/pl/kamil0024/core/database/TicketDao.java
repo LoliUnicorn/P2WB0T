@@ -20,9 +20,11 @@
 package pl.kamil0024.core.database;
 
 import gg.amy.pgorm.PgMapper;
-import org.jetbrains.annotations.Nullable;
+import net.dv8tion.jda.api.entities.Member;
 import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.TicketConfig;
+import pl.kamil0024.core.util.BetterStringBuilder;
+import pl.kamil0024.core.util.UserUtil;
 
 import java.util.List;
 
@@ -56,6 +58,44 @@ public class TicketDao implements Dao<TicketConfig> {
 
     public List<TicketConfig> getByNick(String nick) {
         return mapper.getTicketByNick(nick);
+    }
+
+    public synchronized TicketConfig getByRandomId() {
+        int n = 12;
+        String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        StringBuilder sb = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+            int index
+                    = (int)(alphaNumericString.length()
+                    * Math.random());
+            sb.append(alphaNumericString
+                    .charAt(index));
+        }
+        return new TicketConfig(sb.toString());
+    }
+
+    public void sendMessage(Member member, String admId) {
+        try {
+            TicketConfig tc = getByRandomId();
+            tc.setAdmId(admId);
+            tc.setUserId(member.getId());
+            String nick = UserUtil.getMcNick(member);
+            tc.setUserNick(nick.equals("-") ? null : nick);
+
+            BetterStringBuilder msg = new BetterStringBuilder();
+            msg.appendLine("Cześć,\n");
+            msg.appendLine("Twoja prośba o pomoc w naszym nowym systemie właśnie została zakończona. " +
+                    "Bylibyśmy wdzięczni, gdybyś poświęcił chwilę nad uzupełnieniem ankiety znajdującej się tutaj: " +
+                    tc.getUrl());
+            msg.appendLine("\n\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
+
+            save(tc);
+            member.getUser().openPrivateChannel().complete().sendMessage(msg.toString()).complete();
+        } catch (Exception ignored) { }
     }
 
 }
