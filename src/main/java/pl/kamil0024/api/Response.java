@@ -24,6 +24,7 @@ import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import pl.kamil0024.core.Ustawienia;
 
 import java.nio.charset.StandardCharsets;
 
@@ -49,7 +50,7 @@ public class Response {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkIp(HttpServerExchange ex) {
         String host = ex.getSourceAddress().getAddress().getHostAddress();
-        if (host.isEmpty() || !host.equals("127.0.0.1")) {
+        if (host.isEmpty() || !Ustawienia.instance.api.whitelist.contains(host))) {
             sendErrorResponse(ex, "Brak autoryzacji", "ip " + host + " nie jest wpisane na liste!");
             return false;
         }
