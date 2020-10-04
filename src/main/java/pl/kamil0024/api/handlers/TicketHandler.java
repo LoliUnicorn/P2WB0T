@@ -25,6 +25,8 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
 
+import java.util.Date;
+
 public class TicketHandler implements HttpHandler {
 
     private final TicketDao ticketDao;
@@ -42,27 +44,23 @@ public class TicketHandler implements HttpHandler {
         if (type == 0) {
             try {
                 String id = ex.getRequestHeaders().get("id").getFirst();
-                String admId = ex.getRequestHeaders().get("admId").getFirst();
-                String userId = ex.getRequestHeaders().get("userId").getFirst();
-                String userNick = ex.getRequestHeaders().get("userNick").getFirst();
-                int ocena = Integer.parseInt(ex.getRequestHeaders().get("ocena").getFirst());
-                String temat = ex.getRequestHeaders().get("temat").getFirst();
-                boolean problemRozwiazany = Boolean.parseBoolean(ex.getRequestHeaders().get("problemRozwiazany").getFirst());
+                int ocena = Integer.parseInt(ex.getRequestHeaders().get("rating").getFirst());
+                String temat = ex.getRequestHeaders().get("tematPomocy").getFirst();
+                boolean problemRozwiazany = Boolean.parseBoolean(ex.getRequestHeaders().get("pomocUdana").getFirst());
                 String uwaga = null;
                 try {
-                    uwaga = ex.getRequestHeaders().get("uwaga").getFirst();
+                    uwaga = ex.getRequestHeaders().get("uwagi").getFirst();
                 } catch (NullPointerException ignored) {}
-                TicketConfig tc = new TicketConfig(id);
-                tc.setAdmId(admId);
-                tc.setUserId(userId);
-                tc.setUserNick(userNick);
+                TicketConfig tc = ticketDao.get(id);
+                if (!tc.exist()) {
+                    Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
+                    return;
+                }
                 tc.setOcena(ocena);
                 tc.setTemat(temat);
                 tc.setProblemRozwiazany(problemRozwiazany);
+                tc.setCompleteTime(new Date().getTime());
                 if (uwaga != null) tc.setUwaga(uwaga);
-                if (ticketDao.get(id).getOcena() == -1) {
-                    throw new UnsupportedOperationException("ID nie może się doublować!");
-                }
                 Response.sendResponse(ex, "Pomyślnie zapisano");
                 ticketDao.save(tc);
             } catch (Exception e) {
@@ -72,15 +70,22 @@ public class TicketHandler implements HttpHandler {
 
         try {
             String id = ex.getQueryParameters().get("id").getFirst();
+            int offset = 0;
+            try {
+                offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());;
+            } catch (NumberFormatException ignored) { }
             switch (type) {
                 case 1:
                     Response.sendObjectResponse(ex, ticketDao.get(id));
                     break;
                 case 2:
-                    Response.sendObjectResponse(ex, ticketDao.getByNick(id));
+                    Response.sendObjectResponse(ex, ticketDao.getByNick(id, offset));
                     break;
                 case 3:
-                    Response.sendObjectResponse(ex, ticketDao.getById(id));
+                    Response.sendObjectResponse(ex, ticketDao.getById(id, offset));
+                    break;
+                case 4:
+                    Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset));
                     break;
                 default:
                     throw new UnsupportedOperationException("Zły int type");

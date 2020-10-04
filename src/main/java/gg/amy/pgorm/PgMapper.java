@@ -451,9 +451,9 @@ public class PgMapper<T> {
         return primaryKey.value();
     }
 
-    public List<T> getTicketById(String userId) {
+    public List<T> getTicketById(String userId, int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"karanyId\": \"%s\"}'", table.value(), userId);
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userId\": \"%s\"}' LIMIT 10 OFFSET %d;", table.value(), userId, offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {
@@ -469,9 +469,27 @@ public class PgMapper<T> {
         return data;
     }
 
-    public List<T> getTicketByNick(String nick) {
+    public List<T> getTicketByNick(String nick, int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userNick\": \"%s\"}'", table.value(), nick);
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userNick\": \"%s\"}' LIMIT 10 OFFSET %d;", table.value(), nick, offset);
+        store.sql(msg, c -> {
+            final ResultSet resultSet = c.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        Log.error("Load error: %s", e);
+                    }
+                }
+            }
+        });
+        return data;
+    }
+
+    public List<T> getAllTickets(int offset) {
+        final List<T> data = new ArrayList<>();
+        String msg = String.format("SELECT * FROM %s LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

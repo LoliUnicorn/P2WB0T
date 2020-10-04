@@ -46,6 +46,8 @@ public class TicketConfig {
     private String temat;
     private boolean problemRozwiazany = false;
     private String uwaga;
+    private long createdTime;
+    private long completeTime;
 
     public boolean isEdited() {
         return getOcena() != 1;

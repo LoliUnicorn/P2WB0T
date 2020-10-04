@@ -26,6 +26,7 @@ import pl.kamil0024.core.database.config.TicketConfig;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
 
+import java.util.Date;
 import java.util.List;
 
 public class TicketDao implements Dao<TicketConfig> {
@@ -52,12 +53,16 @@ public class TicketDao implements Dao<TicketConfig> {
         return mapper.loadAll();
     }
 
-    public List<TicketConfig> getById(String id) {
-        return mapper.getTicketById(id);
+    public List<TicketConfig> getById(String id, int offset) {
+        return mapper.getTicketById(id, offset);
     }
 
-    public List<TicketConfig> getByNick(String nick) {
-        return mapper.getTicketByNick(nick);
+    public List<TicketConfig> getByNick(String nick, int offset) {
+        return mapper.getTicketByNick(nick, offset);
+    }
+
+    public List<TicketConfig> getAllTickets(int offset) {
+        return mapper.getAllTickets(offset);
     }
 
     public synchronized TicketConfig getByRandomId() {
@@ -83,6 +88,7 @@ public class TicketDao implements Dao<TicketConfig> {
             TicketConfig tc = getByRandomId();
             tc.setAdmId(admId);
             tc.setUserId(member.getId());
+            tc.setCreatedTime(new Date().getTime());
             String nick = UserUtil.getMcNick(member);
             tc.setUserNick(nick.equals("-") ? null : nick);
 
@@ -90,7 +96,7 @@ public class TicketDao implements Dao<TicketConfig> {
             msg.appendLine("Cześć,\n");
             msg.appendLine("Twoja prośba o pomoc w naszym nowym systemie właśnie została zakończona. " +
                     "Bylibyśmy wdzięczni, gdybyś poświęcił chwilę nad uzupełnieniem ankiety znajdującej się tutaj: " +
-                    tc.getUrl());
+                    tc.getUrl() + "\n. Czas na uzupełnienie ankiety wynosi 1 (jeden) dzień.");
             msg.appendLine("\n\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
 
             save(tc);

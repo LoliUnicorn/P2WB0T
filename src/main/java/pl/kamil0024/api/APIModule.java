@@ -556,9 +556,10 @@ public class APIModule implements Modul {
         routes.get("api/react/userinfo/{token}/{id}", new UserInfo(api));
 
         routes.post("api/ticket/create", new TicketHandler(ticketDao, 0));
-        routes.get("api/ticket/getbyid/{id}", new TicketHandler(ticketDao, 1));
-        routes.get("api/ticket/getbynick/{id}", new TicketHandler(ticketDao, 2));
-        routes.get("api/ticket/getbyuserid/{id}", new TicketHandler(ticketDao, 3));
+        routes.get("api/ticket/getbyid/{id}/{offset}", new TicketHandler(ticketDao, 1));
+        routes.get("api/ticket/getbynick/{id}/{offset}", new TicketHandler(ticketDao, 2));
+        routes.get("api/ticket/getbyuserid/{id}/{offset}", new TicketHandler(ticketDao, 3));
+        routes.get("api/ticket/getall/{offset}", new TicketHandler(ticketDao, 4));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
