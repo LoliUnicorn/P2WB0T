@@ -451,6 +451,42 @@ public class PgMapper<T> {
         return primaryKey.value();
     }
 
+    public List<T> getTicketById(String userId) {
+        final List<T> data = new ArrayList<>();
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"karanyId\": \"%s\"}'", table.value(), userId);
+        store.sql(msg, c -> {
+            final ResultSet resultSet = c.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        Log.error("Load error: %s", e);
+                    }
+                }
+            }
+        });
+        return data;
+    }
+
+    public List<T> getTicketByNick(String nick) {
+        final List<T> data = new ArrayList<>();
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userNick\": \"%s\"}'", table.value(), nick);
+        store.sql(msg, c -> {
+            final ResultSet resultSet = c.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        Log.error("Load error: %s", e);
+                    }
+                }
+            }
+        });
+        return data;
+    }
+
     // Ugly hack to allow bringing an optional out of a lambda
     private final class OptionalHolder {
         // This is intentionally done. . _.
@@ -461,4 +497,5 @@ public class PgMapper<T> {
             value = Optional.ofNullable(data);
         }
     }
+
 }

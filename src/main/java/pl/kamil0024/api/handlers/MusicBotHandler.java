@@ -51,9 +51,7 @@ public class MusicBotHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange ex) throws Exception {
-        if (!Response.checkIp(ex)) {
-            return;
-        }
+        if (!Response.checkIp(ex)) { return; }
         try {
             Integer port = Integer.valueOf(ex.getQueryParameters().get("port").getFirst());
             String id = ex.getQueryParameters().get("clientid").getFirst();

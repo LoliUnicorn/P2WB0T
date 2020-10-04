@@ -46,6 +46,7 @@ public class Response {
         ex.getResponseSender().send(gson.toJson(new ToJSON(true, null, null, data)), StandardCharsets.UTF_8);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkIp(HttpServerExchange ex) {
         String host = ex.getSourceAddress().getAddress().getHostAddress();
         if (host.isEmpty() || !host.equals("127.0.0.1")) {

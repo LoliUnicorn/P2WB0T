@@ -36,10 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.api.handlers.*;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
 import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.database.NieobecnosciDao;
-import pl.kamil0024.core.database.StatsDao;
-import pl.kamil0024.core.database.VoiceStateDao;
+import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.logger.Log;
@@ -72,6 +69,7 @@ public class APIModule implements Modul {
     @Inject private RedisManager redisManager;
     @Inject private NieobecnosciDao nieobecnosciDao;
     @Inject private StatsDao statsDao;
+    @Inject private TicketDao ticketDao;
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;
@@ -81,7 +79,7 @@ public class APIModule implements Modul {
 
     private ScheduledExecutorService executorSche;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -92,6 +90,7 @@ public class APIModule implements Modul {
         this.nieobecnosciDao = nieobecnosciDao;
         this.statsDao = statsDao;
         this.voiceStateDao = voiceStateDao;
+        this.ticketDao = ticketDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(-1);
@@ -555,6 +554,12 @@ public class APIModule implements Modul {
         routes.get("api/react/permlevel/{token}", new UserPermLevel(api));
         routes.get("api/react/chatmod/{token}/list", new ChatMod(api, this));
         routes.get("api/react/userinfo/{token}/{id}", new UserInfo(api));
+
+
+        routes.post("api/ticket/create", new TicketHandler(ticketDao, 0));
+        routes.post("api/ticket/getbyid/{id}", new TicketHandler(ticketDao, 1));
+        routes.post("api/ticket/getbynick/{id}", new TicketHandler(ticketDao, 2));
+        routes.post("api/ticket/getbyuserid/{id}", new TicketHandler(ticketDao, 3));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

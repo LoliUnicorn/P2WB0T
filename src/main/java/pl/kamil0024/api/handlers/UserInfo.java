@@ -49,13 +49,14 @@ public class UserInfo implements HttpHandler {
             if (id.isEmpty()) throw new Exception();
 
             User user = api.retrieveUserById(id).complete();
-            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
-                    .retrieveMemberById(id).complete();
-            if (user == null) {
-                Response.sendErrorResponse(ex, "Błąd", "Taki użytkownik nie istnieje!");
-                return;
-            }
+            Member mem = null;
+            try {
+                mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
+                        .retrieveMemberById(id).complete();
+            } catch(Exception ignored) { }
+
             FakeUser fake = new FakeUser();
+            fake.setId(id);
             fake.setUsername(user.getName());
             fake.setAvatar(user.getAvatarUrl());
             if (mem != null) {
@@ -83,6 +84,7 @@ public class UserInfo implements HttpHandler {
         private String username;
         private String nick = null;
         private String avatar;
+        private String id;
         private List<FakeRole> roles = new ArrayList<>();
         private UserPermLevel.UserPermLevelClass pLvl = null;
     }

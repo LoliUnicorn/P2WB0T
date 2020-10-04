@@ -246,6 +246,7 @@ public class B0T {
         StatsDao         statsDao            = new StatsDao(databaseManager);
                     this.voiceStateDao       = new VoiceStateDao(databaseManager);
         MultiDao         multiDao            = new MultiDao(databaseManager);
+        TicketDao        ticketDao           = new TicketDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -260,14 +261,14 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, musicAPI);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao);
 
         modulManager.getModules().add(new LogsModule(api, statsModule));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
