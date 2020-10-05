@@ -66,6 +66,7 @@ import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 import pl.kamil0024.stats.StatsModule;
+import pl.kamil0024.ticket.TicketModule;
 import pl.kamil0024.weryfikacja.WeryfikacjaModule;
 import pl.kamil0024.youtrack.YTModule;
 import pl.kamil0024.youtrack.YouTrack;
@@ -273,6 +274,7 @@ public class B0T {
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao));
+        modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
         if (youTrack != null) {
             modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
         }

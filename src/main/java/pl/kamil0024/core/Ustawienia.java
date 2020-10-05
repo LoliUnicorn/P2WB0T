@@ -47,6 +47,7 @@ public class Ustawienia {
     public YouTrack yt = new YouTrack();
     public SpotifyCredentials spotify = new SpotifyCredentials();
     public Osu osu = new Osu();
+    public Ticket ticket = new Ticket();
 
     public static class Roles {
         public String helperRole = def;
@@ -185,5 +186,10 @@ public class Ustawienia {
         public String osu8K = "754081658457817220";
     }
 
+    public static class Ticket {
+        public String createChannelCategory = def;
+        public String vcToCreate = def;
+        public String notificationChannel = def;
+    }
 
 }

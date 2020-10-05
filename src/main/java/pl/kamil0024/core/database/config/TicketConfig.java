@@ -19,6 +19,7 @@
 
 package pl.kamil0024.core.database.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gg.amy.pgorm.annotations.GIndex;
 import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
@@ -57,6 +58,7 @@ public class TicketConfig {
         return getAdmId() != null && getUserId() != null;
     }
 
+    @JsonIgnore
     public String getUrl() {
         return "https://discord.p2w.pl/ticket/" + id;
     }
