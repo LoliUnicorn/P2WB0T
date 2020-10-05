@@ -19,6 +19,7 @@
 
 package pl.kamil0024.ticket.listener;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -30,6 +31,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
@@ -96,15 +98,7 @@ public class VoiceChatListener extends ListenerAdapter {
                 ctc.setUserId(event.getMember().getId());
                 ticketRedisManager.putChannelConfig(ctc);
 
-                String msg = messages.get(event.getMember().getId());
-                if (msg != null) {
-                    TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
-                    try {
-                        txt.retrieveMessageById(msg).complete().delete().complete();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                deleteMessage(event.getMember().getId(), event.getJDA());
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.newError("Nie udało się stworzyć kanału do ticketa!", VoiceChatListener.class);
@@ -153,6 +147,7 @@ public class VoiceChatListener extends ListenerAdapter {
                         msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
                     }
                     Message mmsg = txt.sendMessage(msg).complete();
+                    deleteMessage(memId, event.getJDA());
                     messages.put(memId, mmsg.getId());
                 }
             }
@@ -212,6 +207,17 @@ public class VoiceChatListener extends ListenerAdapter {
                 Log.newError("Nie udało się usunąć kanału z ticketem!", VoiceChatListener.class);
                 Log.newError(e, VoiceChatListener.class);
             }
+        }
+    }
+
+    public void deleteMessage(String id, JDA jda) {
+        TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
+        try {
+            String msg = messages.get(id);
+            if (msg == null) return;
+            xd.retrieveMessageById(msg).complete().delete().complete();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
