@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
@@ -87,13 +88,24 @@ public class VoiceChatListener extends ListenerAdapter {
         if (event.getChannelJoined().getId().equals(Ustawienia.instance.ticket.vcToCreate)) {
             try {
                 String[] name = event.getChannelLeft().getName().split(" ");
-                VoiceChannel vc = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
-                        .setParent(guild.getCategoryById(Ustawienia.instance.ticket.createChannelCategory))
+                Category cate = Objects.requireNonNull(guild.getCategoryById(Ustawienia.instance.ticket.createChannelCategory));
+
+                ChannelAction<VoiceChannel> action = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
+                        .setParent(cate)
                         .addMemberPermissionOverride(event.getMember().getIdLong(),
-                                Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK),
+                                Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL),
                                 0)
-                        .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK))
-                        .complete();
+                        .addRolePermissionOverride(561102835715145728L,
+                                Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)
+                                , 0)
+                        .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL));
+
+                for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
+                    if (permissionOverride.getPermissionHolder() != null) {
+                        action = action.addPermissionOverride(permissionOverride.getPermissionHolder(), permissionOverride.getAllowed(), permissionOverride.getDenied());
+                    }
+                }
+                VoiceChannel vc = action.complete();
                 guild.moveVoiceMember(event.getMember(), vc).queue();
 
                 List<AuditLogEntry> audit = event.getGuild().retrieveAuditLogs().type(ActionType.MEMBER_VOICE_MOVE).complete();
