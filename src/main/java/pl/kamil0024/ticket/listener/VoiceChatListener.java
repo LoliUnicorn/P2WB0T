@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
@@ -116,18 +117,18 @@ public class VoiceChatListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         String id = event.getChannelJoined().getId();
+        String memId = event.getMember().getId();
         if (event.getChannelJoined().getId().equals(id)) {
             ChannelTicketConfig ctc = ticketRedisManager.getChannel(event.getChannelJoined().getId());
             if (ctc != null && ctc.getAdmId() == null && UserUtil.getPermLevel(event.getMember()).getNumer() > 0) {
                 ctc.setAdmId(event.getMember().getId());
                 ticketRedisManager.removeChannel(id);
                 ticketRedisManager.putChannelConfig(ctc);
+                return;
             }
         }
-
         if (!event.getChannelJoined().getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            String memId = event.getMember().getId();
             GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();
             if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
                 long time = new Date().getTime();
@@ -138,7 +139,7 @@ public class VoiceChatListener extends ListenerAdapter {
                         Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
                         return;
                     }
-                    cooldown.put(memId, time + 30000);
+                    cooldown.put(memId, new DateTime().plusMinutes(10).getMillis());
                     String msg = "użytkownik <@%s> czeka na ";
                     String name = event.getChannelJoined().getName().toLowerCase();
                     if (name.contains("discord")) {
