@@ -131,7 +131,6 @@ public class VoiceChatListener extends ListenerAdapter {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();
             if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
-                long time = new Date().getTime();
                 Long col = cooldown.get(memId);
                 if (col == null || col - new Date().getTime() <= 0) {
                     TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
@@ -140,7 +139,7 @@ public class VoiceChatListener extends ListenerAdapter {
                         return;
                     }
                     cooldown.put(memId, new DateTime().plusMinutes(10).getMillis());
-                    String msg = "użytkownik <@%s> czeka na ";
+                    String msg = String.format("użytkownik <@%s> czeka na ", memId);
                     String name = event.getChannelJoined().getName().toLowerCase();
                     if (name.contains("discord")) {
                         msg += "kanale pomocy serwera Discord!";
