@@ -120,7 +120,9 @@ public class ChatListener extends ListenerAdapter {
         String czystaWiadomosc = msg.getContentRaw();
         String[] split = czystaWiadomosc.split("\n");
         if (czystaWiadomosc.startsWith("> ") && split.length >= 1) {
-            czystaWiadomosc = czystaWiadomosc.replaceAll(split[0], "");
+            try {
+                czystaWiadomosc = czystaWiadomosc.replaceAll(split[0], "");
+            } catch (Exception ignored) { }
         }
 
         String msgRaw = czystaWiadomosc.replaceAll("<@!?([0-9])*>", "")

@@ -25,6 +25,7 @@ import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.TicketConfig;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.ticket.config.ChannelTicketConfig;
 
 import java.util.Date;
 import java.util.List;
@@ -83,12 +84,14 @@ public class TicketDao implements Dao<TicketConfig> {
         return new TicketConfig(sb.toString());
     }
 
-    public void sendMessage(Member member, String admId) {
+    public void sendMessage(Member member, String admId, ChannelTicketConfig conf) {
         try {
             TicketConfig tc = getByRandomId();
             tc.setAdmId(admId);
             tc.setUserId(member.getId());
-            tc.setCreatedTime(new Date().getTime());
+            long date = new Date().getTime();
+            tc.setCreatedTime(date);
+            tc.setTimestamp(date - conf.getCreatedTime());
             String nick = UserUtil.getMcNick(member);
             tc.setUserNick(nick.equals("-") ? null : nick);
 
@@ -96,7 +99,7 @@ public class TicketDao implements Dao<TicketConfig> {
             msg.appendLine("Cześć,\n");
             msg.appendLine("Twoja prośba o pomoc w naszym nowym systemie właśnie została zakończona. " +
                     "Bylibyśmy wdzięczni, gdybyś poświęcił chwilę nad uzupełnieniem ankiety znajdującej się tutaj: " +
-                    tc.getUrl() + "\n. Czas na uzupełnienie ankiety wynosi 1 (jeden) dzień.");
+                    tc.getUrl() + "\\. Czas na uzupełnienie ankiety wynosi 1 (jeden) dzień.");
             msg.appendLine("\n\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
 
             save(tc);

@@ -49,6 +49,7 @@ public class TicketConfig {
     private String uwaga;
     private long createdTime;
     private long completeTime;
+    private long timestamp;
 
     public boolean isEdited() {
         return getOcena() != 1;

@@ -28,13 +28,9 @@ import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.EventWaiter;
@@ -44,23 +40,25 @@ import pl.kamil0024.ticket.config.TicketRedisManager;
 
 import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class VoiceChatListener extends ListenerAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(VoiceChatListener.class);
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
+
+    private final HashMap<String, Long> cooldown; // daj to później do redisa
+    private final HashMap<String, String> messages;
 
     public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter) {
         this.ticketDao = ticketDao;
         this.ticketRedisManager = ticketRedisManager;
         this.eventWaiter = eventWaiter;
+        this.cooldown = new HashMap<>();
+        this.messages = new HashMap<>();
     }
 
     @Override
@@ -95,6 +93,16 @@ public class VoiceChatListener extends ListenerAdapter {
                 ctc.setCreatedTime(new Date().getTime());
                 ctc.setUserId(event.getMember().getId());
                 ticketRedisManager.putChannelConfig(ctc);
+
+                String msg = messages.get(event.getMember().getId());
+                if (msg != null) {
+                    TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
+                    try {
+                        txt.retrieveMessageById(msg).complete().delete().complete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.newError("Nie udało się stworzyć kanału do ticketa!", VoiceChatListener.class);
@@ -116,6 +124,37 @@ public class VoiceChatListener extends ListenerAdapter {
                 ticketRedisManager.putChannelConfig(ctc);
             }
         }
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            String memId = event.getMember().getId();
+            GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();
+            if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
+                long time = new Date().getTime();
+                Long col = cooldown.get(memId);
+                if (col == null || col - new Date().getTime() <= 0) {
+                    TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
+                    if (txt == null) {
+                        Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
+                        return;
+                    }
+                    cooldown.put(memId, time + 30000);
+                    String msg = "użytkownik <@%s> czeka na ";
+                    String name = event.getChannelJoined().getName().toLowerCase();
+                    if (name.contains("discord")) {
+                        msg += "kanale pomocy serwera Discord!";
+                    } else if (name.contains("p2w")) {
+                        msg += "kanale pomocy forum P2W";
+                    } else if (name.contains("minecraft")) {
+                        msg += "kanale pomocy serwera Minecraft";
+                    } else {
+                        msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
+                    }
+                    Message mmsg = txt.sendMessage(msg).complete();
+                    messages.put(memId, mmsg.getId());
+                }
+            }
+        }, 30, 0, TimeUnit.SECONDS);
+
     }
 
     @Override
@@ -128,7 +167,6 @@ public class VoiceChatListener extends ListenerAdapter {
 
         String id = event.getChannel().getId();
         ChannelTicketConfig conf = ticketRedisManager.getChannel(id);
-        ticketRedisManager.removeChannel(id);
         if (conf != null) {
             String st = "<@%s>, czy chcesz wysłać ankietę dotyczącą tego zgłoszenia do gracza <@%s>?";
             Message msg = txt.sendMessage(String.format(st, conf.getAdmId(), conf.getUserId()))
@@ -138,6 +176,7 @@ public class VoiceChatListener extends ListenerAdapter {
             Emote green = event.getJDA().getEmoteById(Ustawienia.instance.emote.green);
             msg.addReaction(Objects.requireNonNull(green)).queue();
             msg.addReaction(Objects.requireNonNull(red)).queue();
+            ticketRedisManager.removeChannel(id);
             eventWaiter.waitForEvent(MessageReactionAddEvent.class,
                     (e) -> e.getUser().getId().equals(conf.getAdmId()),
                     (e) -> {
@@ -145,7 +184,7 @@ public class VoiceChatListener extends ListenerAdapter {
                             msg.delete().queue();
                             return;
                         }
-                        ticketDao.sendMessage(event.getGuild().retrieveMemberById(conf.getUserId()).complete(), conf.getAdmId());
+                        ticketDao.sendMessage(event.getGuild().retrieveMemberById(conf.getUserId()).complete(), conf.getAdmId(), conf);
                         msg.delete().queue();
                     },
                     30, TimeUnit.SECONDS,
