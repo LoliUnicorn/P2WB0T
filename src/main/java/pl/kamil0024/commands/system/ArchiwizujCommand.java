@@ -24,13 +24,11 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.managers.ChannelManager;
-import pl.kamil0024.core.Main;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

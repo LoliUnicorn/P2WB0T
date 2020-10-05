@@ -73,7 +73,7 @@ public class CommandExecute extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
         if (!e.isFromGuild() || e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
                 e.getMessage().getContentRaw().isEmpty()) return;
-        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
+        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId) && Ustawienia.instance.devs.contains(e.getGuild().getOwner().getId())) return;
         if (RebootCommand.reboot) return;
 
         String prefix = Ustawienia.instance.prefix;
@@ -119,9 +119,7 @@ public class CommandExecute extends ListenerAdapter {
                         .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
                 return;
             }
-
         }
-
 
         if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
             if (jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {

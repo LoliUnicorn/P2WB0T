@@ -42,6 +42,7 @@ import pl.kamil0024.ticket.config.TicketRedisManager;
 
 import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -62,12 +63,11 @@ public class VoiceChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
-        logger.debug("Event wykonany\n" + event.getChannelJoined().getId());
         Guild guild = event.getGuild();
         if (event.getChannelJoined().getId().equals(Ustawienia.instance.ticket.vcToCreate)) {
-            logger.debug("tworzę kanał...");
             try {
-                VoiceChannel vc = guild.createVoiceChannel("ticket")
+                String[] name = event.getChannelLeft().getName().split(" ");
+                VoiceChannel vc = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
                         .setParent(guild.getCategoryById(Ustawienia.instance.ticket.createChannelCategory))
                         .addMemberPermissionOverride(event.getMember().getIdLong(),
                                 Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK),
@@ -81,7 +81,7 @@ public class VoiceChatListener extends ListenerAdapter {
                 for (AuditLogEntry auditlog : audit) {
                     if (auditlog.getType() == ActionType.MEMBER_VOICE_MOVE
                             && auditlog.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1))
-                            && vc.getId().equals(auditlog.getOption(AuditLogOption.CHANNEL)) && !auditlog.getUser().isBot()) {
+                            && Ustawienia.instance.ticket.vcToCreate.equals(auditlog.getOption(AuditLogOption.CHANNEL)) && !auditlog.getUser().isBot()) {
                         adm = auditlog.getUser();
                         break;
                     }
@@ -110,12 +110,15 @@ public class VoiceChatListener extends ListenerAdapter {
             Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
             return;
         }
+
         String id = event.getChannel().getId();
         ChannelTicketConfig conf = ticketRedisManager.getChannel(id);
         ticketRedisManager.removeChannel(id);
         if (conf != null) {
             String st = "<@%s>, czy chcesz wysłać ankietę dotyczącą tego zgłoszenia do gracza <@%s>?";
-            Message msg = txt.sendMessage(String.format(st, conf.getAdmId(), conf.getUserId())).complete();
+            Message msg = txt.sendMessage(String.format(st, conf.getAdmId(), conf.getUserId()))
+                    .allowedMentions(Collections.singleton(Message.MentionType.USER))
+                    .complete();
             Emote red = event.getJDA().getEmoteById(Ustawienia.instance.emote.red);
             Emote green = event.getJDA().getEmoteById(Ustawienia.instance.emote.green);
             msg.addReaction(Objects.requireNonNull(green)).queue();
@@ -128,6 +131,7 @@ public class VoiceChatListener extends ListenerAdapter {
                             return;
                         }
                         ticketDao.sendMessage(event.getGuild().retrieveMemberById(conf.getUserId()).complete(), conf.getAdmId());
+                        msg.delete().queue();
                     },
                     30, TimeUnit.SECONDS,
                     () -> msg.delete().queue());
