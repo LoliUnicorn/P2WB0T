@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.audit.AuditLogOption;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -37,6 +38,7 @@ import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.EventWaiter;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 
@@ -101,6 +103,19 @@ public class VoiceChatListener extends ListenerAdapter {
             return;
         }
         checkRemoveTicket(event.getChannelLeft());
+    }
+
+    @Override
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+        String id = event.getChannelJoined().getId();
+        if (event.getChannelJoined().getId().equals(id)) {
+            ChannelTicketConfig ctc = ticketRedisManager.getChannel(event.getChannelJoined().getId());
+            if (ctc != null && ctc.getAdmId() == null && UserUtil.getPermLevel(event.getMember()).getNumer() > 0) {
+                ctc.setAdmId(event.getMember().getId());
+                ticketRedisManager.removeChannel(id);
+                ticketRedisManager.putChannelConfig(ctc);
+            }
+        }
     }
 
     @Override
