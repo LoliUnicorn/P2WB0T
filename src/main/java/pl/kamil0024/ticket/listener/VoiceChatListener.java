@@ -20,6 +20,7 @@
 package pl.kamil0024.ticket.listener;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -36,6 +37,8 @@ import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.redis.Cache;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
@@ -47,22 +50,35 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class VoiceChatListener extends ListenerAdapter {
 
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
+    private final ShardManager api;
 
     private final HashMap<String, Long> cooldown; // daj to później do redisa
     private final HashMap<String, String> messages;
 
-    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter) {
+    private HashMap<String, List<String>> adms;
+
+    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter, ShardManager api) {
+        this.api = api;
         this.ticketDao = ticketDao;
         this.ticketRedisManager = ticketRedisManager;
         this.eventWaiter = eventWaiter;
         this.cooldown = new HashMap<>();
         this.messages = new HashMap<>();
+        this.adms = new HashMap<>();
+
+        Role chatMod = api.getRoleById(Ustawienia.instance.roles.chatMod);
+        Role ekipa = api.getRoleById("561102835715145728");
+        Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
+                .loadMembers().onSuccess(m -> m.stream()
+                    .filter(mem -> mem.getRoles().contains(chatMod) || mem.getRoles().contains(ekipa))
+                    .collect(Collectors.toList()).forEach(member -> adms.put(member.getId(), member.getRoles().stream().map(Role::getId).collect(Collectors.toList()))));
     }
 
     @Override
@@ -107,47 +123,52 @@ public class VoiceChatListener extends ListenerAdapter {
             return;
         }
         checkRemoveTicket(event.getChannelLeft());
+        channelJoin(event.getMember(), event.getChannelJoined());
     }
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
-        String id = event.getChannelJoined().getId();
-        String memId = event.getMember().getId();
-        if (event.getChannelJoined().getId().equals(id)) {
-            ChannelTicketConfig ctc = ticketRedisManager.getChannel(event.getChannelJoined().getId());
-            if (ctc != null && ctc.getAdmId() == null && UserUtil.getPermLevel(event.getMember()).getNumer() > 0) {
-                ctc.setAdmId(event.getMember().getId());
+        channelJoin(event.getMember(), event.getChannelJoined());
+    }
+
+    private void channelJoin(Member mem, VoiceChannel channelJoined) {
+        String id = channelJoined.getId();
+        String memId = mem.getId();
+        ChannelTicketConfig ctc = ticketRedisManager.getChannel(channelJoined.getId());
+        if (ctc != null) {
+            if (ctc.getAdmId() == null && UserUtil.getPermLevel(mem).getNumer() > 0) {
+                ctc.setAdmId(mem.getId());
                 ticketRedisManager.removeChannel(id);
                 ticketRedisManager.putChannelConfig(ctc);
                 return;
             }
         }
-        if (!event.getChannelJoined().getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
+        if (!channelJoined.getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
 
         Runnable task = () -> {
-            GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();
+            GuildVoiceState state = channelJoined.getGuild().retrieveMemberById(memId).complete().getVoiceState();
             if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
                 Long col = cooldown.get(memId);
                 if (col == null || col - new Date().getTime() <= 0) {
-                    TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
+                    TextChannel txt = channelJoined.getGuild().getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
                     if (txt == null) {
                         Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
                         return;
                     }
                     cooldown.put(memId, new DateTime().plusMinutes(10).getMillis());
                     String msg = String.format("użytkownik <@%s> czeka na ", memId);
-                    String name = event.getChannelJoined().getName().toLowerCase();
+                    String name = channelJoined.getName().toLowerCase();
                     if (name.contains("discord")) {
-                        msg += "kanale pomocy serwera Discord!";
+                        msg += "kanale pomocy serwera Discord!\n\n" + getMentions(channelJoined.getGuild(), Ustawienia.instance.roles.chatMod);
                     } else if (name.contains("p2w")) {
-                        msg += "kanale pomocy forum P2W";
+                        msg += "kanale pomocy forum P2W\n\n" + getMentions(channelJoined.getGuild(), "561102835715145728");
                     } else if (name.contains("minecraft")) {
-                        msg += "kanale pomocy serwera Minecraft";
+                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(channelJoined.getGuild(), "561102835715145728");
                     } else {
                         msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
                     }
                     Message mmsg = txt.sendMessage(msg).complete();
-                    deleteMessage(memId, event.getJDA());
+                    deleteMessage(memId, channelJoined.getJDA());
                     messages.put(memId, mmsg.getId());
                 }
             }
@@ -195,6 +216,7 @@ public class VoiceChatListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceLeave(@Nonnull GuildVoiceLeaveEvent event) {
         checkRemoveTicket(event.getChannelLeft());
+        deleteMessage(event.getMember().getId(), event.getJDA());
     }
 
     private void checkRemoveTicket(VoiceChannel voiceChannel) {
@@ -219,6 +241,26 @@ public class VoiceChatListener extends ListenerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getMentions(Guild g, String... roleId) {
+        List<String> users = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : adms.entrySet()) {
+            for (String s : roleId) {
+                if (entry.getValue().contains(s)) {
+                    OnlineStatus mem = g.retrieveMemberById(entry.getKey()).complete().getOnlineStatus();
+                    if (mem == OnlineStatus.IDLE || mem == OnlineStatus.INVISIBLE || mem == OnlineStatus.OFFLINE) {
+                        continue;
+                    }
+                    users.add(entry.getKey());
+                }
+            }
+        }
+        users.remove("322644408799461377");
+        users.remove("760876062606360627");
+        StringBuilder mentionS = new StringBuilder();
+        users.forEach(us -> mentionS.append(String.format("<@%s> ", us)));
+        return mentionS.toString();
     }
 
 }

@@ -40,16 +40,16 @@ public class TicketConfig {
     @PrimaryKey
     private String id = "";
 
-    private String admId;
-    private String userId;
-    private String userNick = null;
-    private int ocena = -1;
+    private String admId; // id administratora
+    private String userId;  // id użytkownika
+    private String userNick = null; // nick użytkownika
+    private int ocena = -1; // ocena 1-5
     private String temat;
     private boolean problemRozwiazany = false;
     private String uwaga;
-    private long createdTime;
-    private long completeTime;
-    private long timestamp;
+    private long createdTime; // kiedy stworzono ticketa
+    private long completeTime; // kiedy wypełniono ankiete
+    private long timestamp; // w ile rozwiązano ticketa
 
     public boolean isEdited() {
         return getOcena() != 1;

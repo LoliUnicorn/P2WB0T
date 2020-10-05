@@ -208,6 +208,7 @@ public class B0T {
             builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
             this.api = builder.build();
+            api.getGatewayIntents();
         } catch (LoginException e) {
             logger.error("Nie udalo sie zalogowac!");
             e.printStackTrace();
