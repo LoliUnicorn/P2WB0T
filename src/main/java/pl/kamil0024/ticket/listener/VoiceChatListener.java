@@ -43,6 +43,7 @@ import javax.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class VoiceChatListener extends ListenerAdapter {
@@ -128,7 +129,8 @@ public class VoiceChatListener extends ListenerAdapter {
             }
         }
         if (!event.getChannelJoined().getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+
+        Runnable task = () -> {
             GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();
             if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
                 Long col = cooldown.get(memId);
@@ -154,8 +156,9 @@ public class VoiceChatListener extends ListenerAdapter {
                     messages.put(memId, mmsg.getId());
                 }
             }
-        }, 30, 0, TimeUnit.SECONDS);
-
+        };
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+        ses.schedule(task, 30, TimeUnit.SECONDS);
     }
 
     @Override
