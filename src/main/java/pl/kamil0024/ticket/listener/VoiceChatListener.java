@@ -20,6 +20,9 @@
 package pl.kamil0024.ticket.listener;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.audit.AuditLogOption;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -38,7 +41,9 @@ import pl.kamil0024.ticket.config.ChannelTicketConfig;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 
 import javax.annotation.Nonnull;
+import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -70,8 +75,20 @@ public class VoiceChatListener extends ListenerAdapter {
                         .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK))
                         .complete();
                 guild.moveVoiceMember(event.getMember(), vc).queue();
+
+                List<AuditLogEntry> audit = event.getGuild().retrieveAuditLogs().type(ActionType.MEMBER_VOICE_MOVE).complete();
+                User adm = null;
+                for (AuditLogEntry auditlog : audit) {
+                    if (auditlog.getType() == ActionType.MEMBER_VOICE_MOVE
+                            && auditlog.getTimeCreated().isAfter(OffsetDateTime.now().minusMinutes(1))
+                            && vc.getId().equals(auditlog.getOption(AuditLogOption.CHANNEL)) && !auditlog.getUser().isBot()) {
+                        adm = auditlog.getUser();
+                        break;
+                    }
+                }
+
                 ChannelTicketConfig ctc = new ChannelTicketConfig();
-                ctc.setAdmId("");
+                if (adm != null) ctc.setAdmId(adm.getId());
                 ctc.setChannelId(vc.getId());
                 ctc.setCreatedTime(new Date().getTime());
                 ctc.setUserId(event.getMember().getId());
@@ -94,7 +111,6 @@ public class VoiceChatListener extends ListenerAdapter {
             return;
         }
         String id = event.getChannel().getId();
-        logger.debug("id usuniętego kanału: " + id);
         ChannelTicketConfig conf = ticketRedisManager.getChannel(id);
         ticketRedisManager.removeChannel(id);
         if (conf != null) {
@@ -125,7 +141,6 @@ public class VoiceChatListener extends ListenerAdapter {
     }
 
     private void checkRemoveTicket(VoiceChannel voiceChannel) {
-        logger.debug("Próbuję usunąć: " + voiceChannel.getId());
         if (voiceChannel.getMembers().size() == 0
                 && voiceChannel.getParent().getId().equals(Ustawienia.instance.ticket.createChannelCategory)
                 && !voiceChannel.getId().equals(Ustawienia.instance.ticket.vcToCreate)) {
