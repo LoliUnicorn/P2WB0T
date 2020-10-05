@@ -125,6 +125,7 @@ public class VoiceChatListener extends ListenerAdapter {
             }
         }
 
+        if (!event.getChannelJoined().getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             String memId = event.getMember().getId();
             GuildVoiceState state = event.getGuild().retrieveMemberById(memId).complete().getVoiceState();

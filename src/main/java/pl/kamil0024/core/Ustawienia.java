@@ -190,6 +190,7 @@ public class Ustawienia {
         public String createChannelCategory = def;
         public String vcToCreate = def;
         public String notificationChannel = def;
+        public String strefaPomocy = def;
     }
 
 }
