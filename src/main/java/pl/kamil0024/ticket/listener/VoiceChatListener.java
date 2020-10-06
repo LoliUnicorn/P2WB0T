@@ -55,18 +55,19 @@ import java.util.stream.Collectors;
 
 public class VoiceChatListener extends ListenerAdapter {
 
+    private final static long EKIPA_ID = 561102835715145728L;
+    private final static long RAW_PERMS = Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL);
+
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
-    private final ShardManager api;
 
-    private final HashMap<String, Long> cooldown; // daj to później do redisa
+    private final HashMap<String, Long> cooldown; // TODO: daj to później do redisa
     private final HashMap<String, String> messages;
 
-    private HashMap<String, List<String>> adms;
+    private final HashMap<String, List<String>> adms;
 
     public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter, ShardManager api) {
-        this.api = api;
         this.ticketDao = ticketDao;
         this.ticketRedisManager = ticketRedisManager;
         this.eventWaiter = eventWaiter;
@@ -77,9 +78,12 @@ public class VoiceChatListener extends ListenerAdapter {
         Role chatMod = api.getRoleById(Ustawienia.instance.roles.chatMod);
         Role ekipa = api.getRoleById("561102835715145728");
         Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
-                .loadMembers().onSuccess(m -> m.stream()
-                    .filter(mem -> mem.getRoles().contains(chatMod) || mem.getRoles().contains(ekipa))
-                    .collect(Collectors.toList()).forEach(member -> adms.put(member.getId(), member.getRoles().stream().map(Role::getId).collect(Collectors.toList()))));
+                .loadMembers().onSuccess(m -> {
+                    m.stream().filter(mem -> mem.getRoles().contains(chatMod) || mem.getRoles().contains(ekipa))
+                                .forEach(member -> adms.put(member.getId(), member.getRoles().stream().map(Role::getId).collect(Collectors.toList())));
+                    Log.debug("tak1: " + getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
+                    Log.debug("tak2: " + getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), String.valueOf(EKIPA_ID)));
+        });
     }
 
     @Override
@@ -92,13 +96,9 @@ public class VoiceChatListener extends ListenerAdapter {
 
                 ChannelAction<VoiceChannel> action = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
                         .setParent(cate)
-                        .addMemberPermissionOverride(event.getMember().getIdLong(),
-                                Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL),
-                                0)
-                        .addRolePermissionOverride(561102835715145728L,
-                                Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)
-                                , 0)
-                        .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL));
+                        .addMemberPermissionOverride(event.getMember().getIdLong(), RAW_PERMS, 0)
+                        .addRolePermissionOverride(EKIPA_ID, RAW_PERMS, 0)
+                        .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, RAW_PERMS);
 
                 for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
                     if (permissionOverride.getPermissionHolder() != null) {
@@ -173,9 +173,9 @@ public class VoiceChatListener extends ListenerAdapter {
                     if (name.contains("discord")) {
                         msg += "kanale pomocy serwera Discord!\n\n" + getMentions(channelJoined.getGuild(), Ustawienia.instance.roles.chatMod);
                     } else if (name.contains("p2w")) {
-                        msg += "kanale pomocy forum P2W\n\n" + getMentions(channelJoined.getGuild(), "561102835715145728");
+                        msg += "kanale pomocy forum P2W\n\n" + getMentions(channelJoined.getGuild(), String.valueOf(EKIPA_ID));
                     } else if (name.contains("minecraft")) {
-                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(channelJoined.getGuild(), "561102835715145728");
+                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(channelJoined.getGuild(), String.valueOf(EKIPA_ID));
                     } else {
                         msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
                     }
