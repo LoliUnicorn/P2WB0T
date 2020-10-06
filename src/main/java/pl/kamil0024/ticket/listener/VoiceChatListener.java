@@ -35,6 +35,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.kamil0024.core.B0T;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
@@ -57,7 +60,7 @@ public class VoiceChatListener extends ListenerAdapter {
 
     private final static long EKIPA_ID = 561102835715145728L;
     private final static long RAW_PERMS = Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL);
-
+    private static Logger logger = LoggerFactory.getLogger(VoiceChatListener.class);
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
@@ -81,8 +84,8 @@ public class VoiceChatListener extends ListenerAdapter {
                 .loadMembers().onSuccess(m -> {
                     m.stream().filter(mem -> mem.getRoles().contains(chatMod) || mem.getRoles().contains(ekipa))
                                 .forEach(member -> adms.put(member.getId(), member.getRoles().stream().map(Role::getId).collect(Collectors.toList())));
-                    Log.debug("tak1: " + getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
-                    Log.debug("tak2: " + getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), String.valueOf(EKIPA_ID)));
+                    logger.error(getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
+                    logger.error(getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
         });
     }
 
