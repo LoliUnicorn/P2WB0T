@@ -60,7 +60,7 @@ public class TicketModule implements Modul {
     @Override
     public boolean startUp() {
         cmd = new ArrayList<>();
-        vcl = new VoiceChatListener(ticketDao, ticketRedisManager, eventWaiter, api);
+        vcl = new VoiceChatListener(ticketDao, ticketRedisManager, eventWaiter);
         api.addEventListener(vcl);
         return true;
     }

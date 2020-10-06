@@ -20,7 +20,6 @@
 package pl.kamil0024.ticket.listener;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -33,16 +32,10 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import pl.kamil0024.core.B0T;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.redis.Cache;
-import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
@@ -54,13 +47,11 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class VoiceChatListener extends ListenerAdapter {
 
     private final static long EKIPA_ID = 561102835715145728L;
     private final static long RAW_PERMS = Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL);
-    private static Logger logger = LoggerFactory.getLogger(VoiceChatListener.class);
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
@@ -68,27 +59,15 @@ public class VoiceChatListener extends ListenerAdapter {
     private final HashMap<String, Long> cooldown; // TODO: daj to później do redisa
     private final HashMap<String, String> messages;
 
-    private final HashMap<String, List<String>> adms;
-
-    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter, ShardManager api) {
+    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter) {
         this.ticketDao = ticketDao;
         this.ticketRedisManager = ticketRedisManager;
         this.eventWaiter = eventWaiter;
         this.cooldown = new HashMap<>();
         this.messages = new HashMap<>();
-        this.adms = new HashMap<>();
-
-        Role chatMod = api.getRoleById(Ustawienia.instance.roles.chatMod);
-        Role ekipa = api.getRoleById("561102835715145728");
-        Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
-                .loadMembers().onSuccess(m -> {
-                    m.stream().filter(mem -> mem.getRoles().contains(chatMod) || mem.getRoles().contains(ekipa))
-                                .forEach(member -> adms.put(member.getId(), member.getRoles().stream().map(Role::getId).collect(Collectors.toList())));
-                    logger.error(getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
-                    logger.error(getMentions(api.getGuildById(Ustawienia.instance.bot.guildId), Ustawienia.instance.roles.chatMod));
-        });
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
         Guild guild = event.getGuild();
@@ -158,6 +137,7 @@ public class VoiceChatListener extends ListenerAdapter {
                 return;
             }
         }
+        //noinspection ConstantConditions
         if (!channelJoined.getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
 
         Runnable task = () -> {
@@ -174,11 +154,11 @@ public class VoiceChatListener extends ListenerAdapter {
                     String msg = String.format("użytkownik <@%s> czeka na ", memId);
                     String name = channelJoined.getName().toLowerCase();
                     if (name.contains("discord")) {
-                        msg += "kanale pomocy serwera Discord!\n\n" + getMentions(channelJoined.getGuild(), Ustawienia.instance.roles.chatMod);
+                        msg += "kanale pomocy serwera Discord!";
                     } else if (name.contains("p2w")) {
-                        msg += "kanale pomocy forum P2W\n\n" + getMentions(channelJoined.getGuild(), String.valueOf(EKIPA_ID));
+                        msg += "kanale pomocy forum P2W";
                     } else if (name.contains("minecraft")) {
-                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(channelJoined.getGuild(), String.valueOf(EKIPA_ID));
+                        msg += "kanale pomocy serwera Minecraft";
                     } else {
                         msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
                     }
@@ -212,6 +192,7 @@ public class VoiceChatListener extends ListenerAdapter {
             msg.addReaction(Objects.requireNonNull(green)).queue();
             msg.addReaction(Objects.requireNonNull(red)).queue();
             ticketRedisManager.removeChannel(id);
+            //noinspection ConstantConditions
             eventWaiter.waitForEvent(MessageReactionAddEvent.class,
                     (e) -> e.getUser().getId().equals(conf.getAdmId()),
                     (e) -> {
@@ -234,6 +215,7 @@ public class VoiceChatListener extends ListenerAdapter {
         deleteMessage(event.getMember().getId(), event.getJDA());
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void checkRemoveTicket(VoiceChannel voiceChannel) {
         if (voiceChannel.getMembers().size() == 0
                 && voiceChannel.getParent().getId().equals(Ustawienia.instance.ticket.createChannelCategory)
@@ -251,31 +233,11 @@ public class VoiceChatListener extends ListenerAdapter {
         TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
         try {
             String msg = messages.get(id);
-            if (msg == null) return;
+            if (msg == null || xd == null) return;
             xd.retrieveMessageById(msg).complete().delete().complete();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getMentions(Guild g, String... roleId) {
-        List<String> users = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : adms.entrySet()) {
-            for (String s : roleId) {
-                if (entry.getValue().contains(s)) {
-                    OnlineStatus mem = g.retrieveMemberById(entry.getKey()).complete().getOnlineStatus();
-                    if (mem == OnlineStatus.IDLE || mem == OnlineStatus.INVISIBLE || mem == OnlineStatus.OFFLINE) {
-                        continue;
-                    }
-                    users.add(entry.getKey());
-                }
-            }
-        }
-        users.remove("322644408799461377");
-        users.remove("760876062606360627");
-        StringBuilder mentionS = new StringBuilder();
-        users.forEach(us -> mentionS.append(String.format("<@%s> ", us)));
-        return mentionS.toString();
     }
 
 }

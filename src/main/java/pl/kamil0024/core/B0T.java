@@ -32,8 +32,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.slf4j.spi.LoggerFactoryBinder;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
@@ -88,7 +88,7 @@ import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "OptionalGetWithoutIsPresent"})
 public class B0T {
 
     private static Logger logger = LoggerFactory.getLogger(B0T.class);
@@ -128,11 +128,7 @@ public class B0T {
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
+        HostnameVerifier allHostsValid = (hostname, session) -> true;
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         //#endregion fix self-assigne certs
         moduls = new HashMap<>();
@@ -194,8 +190,7 @@ public class B0T {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token,
                     GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_VOICE_STATES,
                     GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS,
-                    GatewayIntent.GUILD_PRESENCES);
+                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS);
             builder.setShardsTotal(1);
             builder.setShards(0, 0);
             builder.setEnableShutdownHook(false);
@@ -205,7 +200,7 @@ public class B0T {
             builder.addEventListeners(eventWaiter, new ExceptionListener());
             builder.setBulkDeleteSplittingEnabled(false);
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
-            builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS);
+            builder.enableCache(CacheFlag.EMOTE);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
             this.api = builder.build();
             api.getGatewayIntents();
@@ -217,6 +212,7 @@ public class B0T {
 
         while(api.getShards().stream().allMatch(s -> s.getStatus() != JDA.Status.CONNECTED)) {
             try {
+                //noinspection BusyWait
                 Thread.sleep(100);
             } catch (InterruptedException ignored) { }
         }
@@ -303,7 +299,6 @@ public class B0T {
                 logger.error(tlumaczenia.get("module.loading.fail"));
             }
         }
-
 
         api.setStatus(OnlineStatus.ONLINE);
         api.setActivity(Activity.playing(tlumaczenia.get("status.hi", WERSJA)));
