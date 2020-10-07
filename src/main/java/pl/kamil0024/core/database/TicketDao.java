@@ -118,7 +118,7 @@ public class TicketDao implements Dao<TicketConfig> {
             msg.appendLine("Twoja prośba o pomoc w naszym nowym systemie właśnie została zakończona. " +
                     "Bylibyśmy wdzięczni, gdybyś poświęcił chwilę nad uzupełnieniem ankiety znajdującej się tutaj: " +
                     TicketConfig.getUrl(tc) + "\\. Czas na uzupełnienie ankiety wynosi 1 (jeden) dzień.");
-            msg.appendLine("\n\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
+            msg.appendLine("\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
 
             save(tc);
             member.getUser().openPrivateChannel().complete().sendMessage(msg.toString()).complete();
