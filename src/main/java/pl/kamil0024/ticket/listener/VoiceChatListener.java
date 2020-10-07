@@ -75,11 +75,11 @@ public class VoiceChatListener extends ListenerAdapter {
             try {
                 String[] name = event.getChannelLeft().getName().split(" ");
                 Category cate = Objects.requireNonNull(guild.getCategoryById(Ustawienia.instance.ticket.createChannelCategory));
-
                 ChannelAction<VoiceChannel> action = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
                         .setParent(cate)
                         .addMemberPermissionOverride(event.getMember().getIdLong(), RAW_PERMS, 0)
                         .addRolePermissionOverride(EKIPA_ID, RAW_PERMS, 0)
+                        .addMemberPermissionOverride(event.getJDA().getSelfUser().getIdLong(), Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL), 0)
                         .addRolePermissionOverride(guild.getPublicRole().getIdLong(), 0, RAW_PERMS);
 
                 for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
