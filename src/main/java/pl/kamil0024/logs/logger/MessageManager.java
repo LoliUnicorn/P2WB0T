@@ -23,17 +23,17 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import pl.kamil0024.core.redis.Cache;
+import pl.kamil0024.core.redis.RedisManager;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MessageManager extends ListenerAdapter {
 
-    @Getter public Map<String, FakeMessage> map;
+    @Getter private final Cache<FakeMessage> map;
 
-    public MessageManager() {
-        map = new HashMap<>();
+    public MessageManager(RedisManager redisManager) {
+        this.map = redisManager.new CacheRetriever<FakeMessage>() {}.getCache(-1);
     }
 
     public void add(Message message) {
@@ -41,17 +41,17 @@ public class MessageManager extends ListenerAdapter {
     }
 
     public void edit(Message message) {
-        map.remove(message.getId());
+        map.invalidate(message.getId());
         add(message);
     }
 
     public boolean exists(String id) {
-        return map.get(id) != null;
+        return map.getIfPresent(id) != null;
     }
 
     public FakeMessage get(String id) {
         if (!exists(id)) return null;
-        return map.get(id);
+        return map.getIfPresent(id);
     }
 
     @Override

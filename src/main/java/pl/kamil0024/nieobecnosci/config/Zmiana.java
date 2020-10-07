@@ -77,6 +77,12 @@ public class Zmiana {
         sendEmbed(eb, member.getJDA());
     }
 
+    public static void startNieobecnosci(Nieobecnosc nb, Member member) {
+        EmbedBuilder eb = NieobecnosciManager.getEmbed(nb, member);
+        eb.setFooter("Nieobecność się rozpoczeła!");
+        sendEmbed(eb, member.getJDA());
+    }
+
     private static void sendEmbed(EmbedBuilder eb, JDA jda) {
         TextChannel txt = jda.getTextChannelById(Ustawienia.instance.channel.loginieobecnosci);
         if (txt == null) {
@@ -94,13 +100,15 @@ public class Zmiana {
                 return "Zmiana powodu";
             case CANCEL:
                 return "Anulowanie nieobecności";
+            case START:
+                return "Start nieobecności";
             default:
                 return en.toString();
         }
     }
 
     public enum Enum {
-        ENDTIME, REASON, CANCEL
+        ENDTIME, REASON, CANCEL, START
     }
 
 }

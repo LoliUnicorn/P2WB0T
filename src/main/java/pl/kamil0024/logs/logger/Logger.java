@@ -21,7 +21,6 @@ package pl.kamil0024.logs.logger;
 
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.audit.AuditLogOption;
@@ -42,8 +41,6 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Logger extends ListenerAdapter {
 
@@ -84,7 +81,7 @@ public class Logger extends ListenerAdapter {
         if (content.length() > 1024) { content = content.substring(0, 1024); }
         eb.addField("Treść wiadomości:", content, false);
         sendLog(eb);
-        manager.getMap().remove(event.getMessageId());
+        manager.getMap().invalidate(event.getMessageId());
     }
 
     @Override

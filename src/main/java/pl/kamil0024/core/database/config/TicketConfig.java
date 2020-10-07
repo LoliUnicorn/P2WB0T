@@ -41,7 +41,8 @@ public class TicketConfig {
     private String id = "";
 
     private String admId; // id administratora
-    private String userId;  // id użytkownika
+    private String admNick;
+    private String userId = null; // id użytkownika
     private String userNick = null; // nick użytkownika
     private int ocena = -1; // ocena 1-5
     private String temat;
@@ -51,17 +52,21 @@ public class TicketConfig {
     private long completeTime; // kiedy wypełniono ankiete
     private long timestamp; // w ile rozwiązano ticketa
 
-    public boolean isEdited() {
-        return getOcena() != 1;
-    }
+    private boolean spam = false;
+    private String spamAdm = null;
 
-    public boolean exist() {
-        return getAdmId() != null && getUserId() != null;
+    public static boolean isEdited(TicketConfig tc) {
+        return tc.getOcena() != 1;
     }
 
     @JsonIgnore
-    public String getUrl() {
-        return "https://discord.p2w.pl/ticket/" + id;
+    public static boolean exist(TicketConfig tc) {
+        return tc.getAdmId() != null && tc.getUserId() != null;
+    }
+
+    @JsonIgnore
+    public static String getUrl(TicketConfig tc) {
+        return "https://discord.p2w.pl/ticket/" + tc.id;
     }
 
 }

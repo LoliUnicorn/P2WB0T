@@ -21,13 +21,12 @@ package pl.kamil0024.logs;
 
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
-import pl.kamil0024.logs.logger.ClearCache;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.logs.logger.Logger;
 import pl.kamil0024.logs.logger.MessageManager;
 import pl.kamil0024.stats.StatsModule;
 
 import javax.inject.Inject;
-import java.util.Timer;
 
 public class LogsModule implements Modul {
     
@@ -38,19 +37,19 @@ public class LogsModule implements Modul {
     private MessageManager messageManager;
     private Logger logger;
     private StatsModule statsModule;
+    private RedisManager redisManager;
 
-    public LogsModule(ShardManager api, StatsModule statsModule) {
+    public LogsModule(ShardManager api, StatsModule statsModule, RedisManager redisManager) {
         this.api = api;
         this.statsModule = statsModule;
+        this.redisManager = redisManager;
     }
     
     @Override
     public boolean startUp() {
-        messageManager = new MessageManager();
+        messageManager = new MessageManager(redisManager);
         logger = new Logger(messageManager, api, statsModule);
         api.addEventListener(messageManager, logger);
-        Timer t = new Timer();
-        t.schedule(new ClearCache(messageManager), 10000);
         setStart(true);
         return true;
     }

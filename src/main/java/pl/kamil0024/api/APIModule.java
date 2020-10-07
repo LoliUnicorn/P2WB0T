@@ -560,6 +560,8 @@ public class APIModule implements Modul {
         routes.get("api/ticket/getbynick/{id}/{offset}", new TicketHandler(ticketDao, 2));
         routes.get("api/ticket/getbyuserid/{id}/{offset}", new TicketHandler(ticketDao, 3));
         routes.get("api/ticket/getall/{id}/{offset}", new TicketHandler(ticketDao, 4));
+        routes.get("api/ticket/spam", new TicketHandler(ticketDao, 5));
+        routes.get("api/ticket/getspam", new TicketHandler(ticketDao, 6));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

@@ -260,7 +260,7 @@ public class B0T {
 
         APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao);
 
-        modulManager.getModules().add(new LogsModule(api, statsModule));
+        modulManager.getModules().add(new LogsModule(api, statsModule, redisManager));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));

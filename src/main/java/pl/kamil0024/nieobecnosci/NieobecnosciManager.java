@@ -87,6 +87,7 @@ public class NieobecnosciManager {
         xd.getNieobecnosc().add(nb);
         nieobecnosciDao.save(xd);
         msg.delete().queue();
+        Zmiana.startNieobecnosci(nb, msg.getMember());
     }
 
     public static EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member) {

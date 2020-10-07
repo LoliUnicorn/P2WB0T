@@ -200,7 +200,9 @@ public class VoiceChatListener extends ListenerAdapter {
                             msg.delete().queue();
                             return;
                         }
-                        ticketDao.sendMessage(event.getGuild().retrieveMemberById(conf.getUserId()).complete(), conf.getAdmId(), conf);
+                        ticketDao.sendMessage(event.getGuild().retrieveMemberById(conf.getUserId()).complete(),
+                                event.getGuild().retrieveMemberById(conf.getAdmId()).complete(),
+                                conf);
                         msg.delete().queue();
                     },
                     30, TimeUnit.SECONDS,

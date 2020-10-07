@@ -52,7 +52,7 @@ public class TicketHandler implements HttpHandler {
                     uwaga = ex.getRequestHeaders().get("uwagi").getFirst();
                 } catch (NullPointerException ignored) {}
                 TicketConfig tc = ticketDao.get(id);
-                if (!tc.exist()) {
+                if (!TicketConfig.exist(tc)) {
                     Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
                     return;
                 }
@@ -68,11 +68,43 @@ public class TicketHandler implements HttpHandler {
             }
         }
 
+        if (type == 5) {
+            try {
+                String id = ex.getRequestHeaders().get("id").getFirst();
+                String admNick = ex.getRequestHeaders().get("admNick").getFirst();
+                TicketConfig tc = ticketDao.get(id);
+                if (!TicketConfig.exist(tc)) {
+                    Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
+                    return;
+                }
+                tc.setSpam(true);
+                tc.setSpamAdm(admNick);
+                Response.sendResponse(ex, "Pomyślnie zapisano");
+                ticketDao.save(tc);
+            } catch (Exception e) {
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+        }
+
+        if (type == 6) {
+            try {
+                String id = ex.getRequestHeaders().get("userId").getFirst();
+                TicketConfig tc = ticketDao.getSpam(id);
+                if (tc == null) {
+                    Response.sendResponse(ex, "Ten gracz jest czysty");
+                    return;
+                }
+                Response.sendObjectResponse(ex, tc);
+            } catch (Exception e) {
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+        }
+
         try {
             String id = ex.getQueryParameters().get("id").getFirst();
             int offset = 0;
             try {
-                offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());;
+                offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());
             } catch (NumberFormatException ignored) { }
             switch (type) {
                 case 1:

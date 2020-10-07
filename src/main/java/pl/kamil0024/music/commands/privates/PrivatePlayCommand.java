@@ -162,7 +162,7 @@ public class PrivatePlayCommand extends Command {
                 String nick = member.getNickname();
                 if (nick == null) continue;
 
-                if (nick.startsWith("[POM]") || nick.startsWith("[MOD]") || nick.startsWith("[ADM]")) {
+                if (nick.startsWith("[POM]") || nick.startsWith("[MOD]") || nick.startsWith("[ADM]") || nick.startsWith("[STAŻ]")) {
                     return false;
                 }
 
