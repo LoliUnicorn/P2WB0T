@@ -19,15 +19,12 @@
 
 package pl.kamil0024.api.handlers;
 
-import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import okhttp3.internal.connection.Exchange;
 import org.json.JSONObject;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.util.Date;
 
