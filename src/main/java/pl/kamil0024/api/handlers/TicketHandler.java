@@ -21,9 +21,11 @@ package pl.kamil0024.api.handlers;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import okhttp3.internal.connection.Exchange;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.Date;
 
@@ -43,6 +45,8 @@ public class TicketHandler implements HttpHandler {
 
         if (type == 0) {
             try {
+                String body = Response.getBody(ex.getInputStream());
+                Log.debug("body: " + body);
                 String id = ex.getRequestHeaders().get("id").getFirst();
                 int ocena = Integer.parseInt(ex.getRequestHeaders().get("rating").getFirst());
                 String temat = ex.getRequestHeaders().get("tematPomocy").getFirst();
