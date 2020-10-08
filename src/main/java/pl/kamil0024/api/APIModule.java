@@ -51,7 +51,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static io.undertow.Handlers.path;
 
@@ -59,17 +58,17 @@ import static io.undertow.Handlers.path;
 @SuppressWarnings("DanglingJavadoc")
 public class APIModule implements Modul {
 
-    private VoiceStateDao voiceStateDao;
-    private MusicAPI musicAPI;
-    private ShardManager api;
+    private final VoiceStateDao voiceStateDao;
+    private final MusicAPI musicAPI;
+    private final ShardManager api;
     private boolean start = false;
     Undertow server;
 
-    @Inject private CaseDao caseDao;
-    @Inject private RedisManager redisManager;
-    @Inject private NieobecnosciDao nieobecnosciDao;
-    @Inject private StatsDao statsDao;
-    @Inject private TicketDao ticketDao;
+    @Inject private final CaseDao caseDao;
+    @Inject private final RedisManager redisManager;
+    @Inject private final NieobecnosciDao nieobecnosciDao;
+    @Inject private final StatsDao statsDao;
+    @Inject private final TicketDao ticketDao;
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;

@@ -45,7 +45,7 @@ public class TicketHandler implements HttpHandler {
 
         if (type == 0) {
             try {
-              
+
                 String body = Response.getBody(ex.getInputStream());
                 Log.debug("body: " + body);
                 String id = ex.getRequestHeaders().get("id").getFirst();

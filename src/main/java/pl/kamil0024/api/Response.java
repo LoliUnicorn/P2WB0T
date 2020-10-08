@@ -26,7 +26,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.kamil0024.core.Ustawienia;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public class Response {
 
@@ -55,6 +59,11 @@ public class Response {
             return false;
         }
         return true;
+    }
+
+    public static String getBody(InputStream is) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        return br.lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
     @Data
