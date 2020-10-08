@@ -66,6 +66,7 @@ public class TicketHandler implements HttpHandler {
             } catch (Exception e) {
                 Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
             }
+            return;
         }
 
         if (type == 5) {
@@ -84,6 +85,7 @@ public class TicketHandler implements HttpHandler {
             } catch (Exception e) {
                 Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
             }
+            return;
         }
 
         if (type == 6) {
@@ -98,6 +100,7 @@ public class TicketHandler implements HttpHandler {
             } catch (Exception e) {
                 Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
             }
+            return;
         }
 
         try {
