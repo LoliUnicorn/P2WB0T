@@ -19,9 +19,11 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import okhttp3.internal.connection.Exchange;
+import org.json.JSONObject;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
@@ -45,17 +47,15 @@ public class TicketHandler implements HttpHandler {
 
         if (type == 0) {
             try {
-
-                String body = Response.getBody(ex.getInputStream());
-                Log.debug("body: " + body);
-                String id = ex.getRequestHeaders().get("id").getFirst();
-                int ocena = Integer.parseInt(ex.getRequestHeaders().get("rating").getFirst());
-                String temat = ex.getRequestHeaders().get("tematPomocy").getFirst();
-                boolean problemRozwiazany = Boolean.parseBoolean(ex.getRequestHeaders().get("pomocUdana").getFirst());
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                String id = json.getString("id");
+                int ocena = json.getInt("rating");
+                String temat = json.getString("tematPomocy");
+                boolean problemRozwiazany = json.getBoolean("pomocUdana");
                 String uwaga = null;
                 try {
-                    uwaga = ex.getRequestHeaders().get("uwagi").getFirst();
-                } catch (NullPointerException ignored) {}
+                    uwaga = json.getString("uwagi");
+                } catch (Exception ignored) {}
                 TicketConfig tc = ticketDao.get(id);
                 if (!TicketConfig.exist(tc)) {
                     Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
@@ -76,8 +76,9 @@ public class TicketHandler implements HttpHandler {
 
         if (type == 5) {
             try {
-                String id = ex.getRequestHeaders().get("id").getFirst();
-                String admNick = ex.getRequestHeaders().get("admNick").getFirst();
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                String id = json.getString("id");
+                String admNick = json.getString("admNick");
                 TicketConfig tc = ticketDao.get(id);
                 if (!TicketConfig.exist(tc)) {
                     Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
