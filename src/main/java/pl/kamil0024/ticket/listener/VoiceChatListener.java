@@ -36,6 +36,8 @@ import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.redis.Cache;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
@@ -56,15 +58,15 @@ public class VoiceChatListener extends ListenerAdapter {
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
 
-    private final HashMap<String, Long> cooldown; // TODO: daj to później do redisa
-    private final HashMap<String, String> messages;
+    private final Cache<Long> cooldownCache;
+    private final Cache<String> messagesCache;
 
-    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter) {
+    public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter, RedisManager redisManager) {
         this.ticketDao = ticketDao;
         this.ticketRedisManager = ticketRedisManager;
         this.eventWaiter = eventWaiter;
-        this.cooldown = new HashMap<>();
-        this.messages = new HashMap<>();
+        this.cooldownCache = redisManager.new CacheRetriever<Long>() {}.getCache(-1);
+        this.messagesCache = redisManager.new CacheRetriever<String>() {}.getCache(-1);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -143,14 +145,14 @@ public class VoiceChatListener extends ListenerAdapter {
         Runnable task = () -> {
             GuildVoiceState state = channelJoined.getGuild().retrieveMemberById(memId).complete().getVoiceState();
             if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
-                Long col = cooldown.get(memId);
+                Long col = cooldownCache.getIfPresent(memId);
                 if (col == null || col - new Date().getTime() <= 0) {
                     TextChannel txt = channelJoined.getGuild().getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
                     if (txt == null) {
                         Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
                         return;
                     }
-                    cooldown.put(memId, new DateTime().plusMinutes(10).getMillis());
+                    cooldownCache.put(memId, new DateTime().plusMinutes(10).getMillis());
                     String msg = String.format("użytkownik <@%s> czeka na ", memId);
                     String name = channelJoined.getName().toLowerCase();
                     if (name.contains("discord")) {
@@ -164,7 +166,7 @@ public class VoiceChatListener extends ListenerAdapter {
                     }
                     Message mmsg = txt.sendMessage(msg).complete();
                     deleteMessage(memId, channelJoined.getJDA());
-                    messages.put(memId, mmsg.getId());
+                    messagesCache.put(memId, mmsg.getId());
                 }
             }
         };
@@ -234,7 +236,7 @@ public class VoiceChatListener extends ListenerAdapter {
     public void deleteMessage(String id, JDA jda) {
         TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
         try {
-            String msg = messages.get(id);
+            String msg = messagesCache.getIfPresent(id);
             if (msg == null || xd == null) return;
             xd.retrieveMessageById(msg).complete().delete().complete();
         } catch (Exception e) {

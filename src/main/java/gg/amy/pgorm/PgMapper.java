@@ -519,7 +519,7 @@ public class PgMapper<T> {
 
     public List<T> getAllTickets(int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s LIMIT 10 OFFSET %d;", table.value(), offset);
+        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

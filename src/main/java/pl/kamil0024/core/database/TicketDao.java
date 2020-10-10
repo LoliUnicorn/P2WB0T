@@ -115,10 +115,11 @@ public class TicketDao implements Dao<TicketConfig> {
 
             BetterStringBuilder msg = new BetterStringBuilder();
             msg.appendLine("Cześć,\n");
-            msg.appendLine("Twoja prośba o pomoc w naszym nowym systemie właśnie została zakończona. " +
-                    "Bylibyśmy wdzięczni, gdybyś poświęcił chwilę nad uzupełnieniem ankiety znajdującej się tutaj: " +
-                    TicketConfig.getUrl(tc) + "\\. Czas na uzupełnienie ankiety wynosi 1 (jeden) dzień.");
-            msg.appendLine("\nDziękujemy za wszystkie opinie i chęć polepszania systemu!");
+            msg.appendLine("twoja prośba o pomoc została zamknięta przez administratora! " +
+                    "Dbamy o jakość świadczonej przez nas pomocy oraz staramy się polepszać oferowane przez nas usługi, " +
+                    "prosimy więc o wypełnienie krótkiej ankiety pod poniższym linkiem:");
+            msg.appendLine(TicketConfig.getUrl(tc));
+            msg.appendLine("\nCzas na uzupełnienie ankiety wynosi 1 (jeden) dzień. Z góry dziękujemy za poświęcony czas!");
 
             save(tc);
             member.getUser().openPrivateChannel().complete().sendMessage(msg.toString()).complete();
