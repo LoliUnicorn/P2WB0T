@@ -82,6 +82,10 @@ public class TicketDao implements Dao<TicketConfig> {
         return reverse(mapper.getAllTickets(offset));
     }
 
+    public List<TicketConfig> getAllTicketsSpam(int offset) {
+        return reverse(mapper.getAllTickets(offset));
+    }
+
     public synchronized TicketConfig getByRandomId() {
         int n = 12;
         String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
