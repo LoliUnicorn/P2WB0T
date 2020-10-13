@@ -128,7 +128,11 @@ public class TicketHandler implements HttpHandler {
         }
 
         try {
-            String id = ex.getQueryParameters().get("id").getFirst();
+            String id = "0";
+            try {
+                id = ex.getQueryParameters().get("id").getFirst();
+            } catch (NullPointerException ignored) { }
+            
             int offset = 0;
             try {
                 offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());
