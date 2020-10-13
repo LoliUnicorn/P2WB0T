@@ -563,7 +563,7 @@ public class PgMapper<T> {
             msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' AND NOT((data->>'readBy')::jsonb ? '%s') ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), admId, offset);
         }
         store.sql(msg, c -> {
-            final ResultSet resultSet = c.executeQuery();
+            final ResultSet resultSet = c.getResultSet();
             if (resultSet.isBeforeFirst()) {
                 while(resultSet.next()) {
                     try {
