@@ -237,15 +237,15 @@ public class ChatListener extends ListenerAdapter {
         action.setPewnosc(false);
         action.setDeleted(false);
 
-        if (skrotyCount(takMsg.toLowerCase().split(" "))) {
-            action.setKara(Action.ListaKar.SKROTY);
-            action.send();
-            return;
-        }
-        if (skrotyCount(new String[] {takMsg.toLowerCase()})) {
-            action.setKara(Action.ListaKar.SKROTY);
-            action.send();
-        }
+//        if (skrotyCount(takMsg.toLowerCase().split(" "))) {
+//            action.setKara(Action.ListaKar.SKROTY);
+//            action.send();
+//            return;
+//        }
+//        if (skrotyCount(new String[] {takMsg.toLowerCase()})) {
+//            action.setKara(Action.ListaKar.SKROTY);
+//            action.send();
+//        }
 
         for (String s : getPrzeklenstwa()) {
             if (przeklenstwa.toLowerCase().contains(s) || przeklenstwa.replaceAll(" ", "").toLowerCase().contains(s)) {

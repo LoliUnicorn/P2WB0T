@@ -480,7 +480,7 @@ public class PgMapper<T> {
 
     public List<T> getTicketByNick(String nick, int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userNick\": \"%s\"}' LIMIT 10 OFFSET %d;", table.value(), nick, offset);
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"userNick\": \"%s\"}' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), nick, offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {
@@ -519,7 +519,7 @@ public class PgMapper<T> {
 
     public T getTicketsSpam(int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"spam\": true}' LIMIT 10 OFFSET %d;", table.value(), offset);
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"spam\": true}' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {
@@ -540,7 +540,7 @@ public class PgMapper<T> {
 
     public List<T> getAllTickets(int offset) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' LIMIT 10 OFFSET %d;", table.value(), offset);
+        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {
