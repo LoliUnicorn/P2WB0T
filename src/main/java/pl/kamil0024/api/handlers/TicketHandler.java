@@ -126,6 +126,19 @@ public class TicketHandler implements HttpHandler {
             }
             return;
         }
+        
+        if (type == 9) {
+            try {
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                String admId = json.getString("admId");
+                boolean read = json.getBoolean("read");
+                int offset = json.getInt("offset");
+                Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset, admId, read));
+            } catch (Exception e) {
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+            return;
+        }
 
         try {
             String id = "0";
@@ -153,11 +166,6 @@ public class TicketHandler implements HttpHandler {
                 case 7:
                     Response.sendObjectResponse(ex, ticketDao.getAllTicketsSpam(offset));
                     break;
-                case 9:
-                    JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
-                    String admId = json.getString("admId");
-                    boolean read = json.getBoolean("read");
-                    Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset, admId, read));
                 default:
                     throw new UnsupportedOperationException("Zły int type");
             }
