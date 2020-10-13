@@ -132,7 +132,7 @@ public class TicketHandler implements HttpHandler {
             try {
                 id = ex.getQueryParameters().get("id").getFirst();
             } catch (NullPointerException ignored) { }
-            
+
             int offset = 0;
             try {
                 offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());
