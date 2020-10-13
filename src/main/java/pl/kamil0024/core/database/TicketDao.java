@@ -71,19 +71,23 @@ public class TicketDao implements Dao<TicketConfig> {
     }
 
     public List<TicketConfig> getById(String id, int offset) {
-        return reverse(mapper.getTicketById(id, offset));
+        return mapper.getTicketById(id, offset);
     }
 
     public List<TicketConfig> getByNick(String nick, int offset) {
-        return reverse(mapper.getTicketByNick(nick, offset));
+        return mapper.getTicketByNick(nick, offset);
     }
 
     public List<TicketConfig> getAllTickets(int offset) {
-        return reverse(mapper.getAllTickets(offset));
+        return mapper.getAllTickets(offset);
+    }
+
+    public List<TicketConfig> getAllTickets(int offset, String admId) {
+        return mapper.getAllTicketsByFiltr(offset, admId);
     }
 
     public List<TicketConfig> getAllTicketsSpam(int offset) {
-        return reverse(mapper.getAllTickets(offset));
+        return mapper.getTicketsSpam(offset);
     }
 
     public synchronized TicketConfig getByRandomId() {

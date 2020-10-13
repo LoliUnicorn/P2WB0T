@@ -26,6 +26,9 @@ import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table("ticket")
 @GIndex({"id"})
 @Data
@@ -51,6 +54,7 @@ public class TicketConfig {
     private long createdTime; // kiedy stworzono ticketa
     private long completeTime; // kiedy wypełniono ankiete
     private long timestamp; // w ile rozwiązano ticketa
+    private List<String> readBy = new ArrayList<>();
 
     private boolean spam = false;
     private String spamAdm = null;

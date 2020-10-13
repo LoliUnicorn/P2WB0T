@@ -517,7 +517,7 @@ public class PgMapper<T> {
         return data.get(0);
     }
 
-    public T getTicketsSpam(int offset) {
+    public List<T> getTicketsSpam(int offset) {
         final List<T> data = new ArrayList<>();
         String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"spam\": true}' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
@@ -535,12 +535,31 @@ public class PgMapper<T> {
         if (data.isEmpty()) {
             return null;
         }
-        return data.get(0);
+        return data;
     }
 
     public List<T> getAllTickets(int offset) {
         final List<T> data = new ArrayList<>();
         String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), offset);
+        store.sql(msg, c -> {
+            final ResultSet resultSet = c.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                while(resultSet.next()) {
+                    try {
+                        data.add(loadFromResultSet(resultSet));
+                    } catch(final IllegalStateException e) {
+                        Log.error("Load error: %s", e);
+                    }
+                }
+            }
+        });
+        return data;
+    }
+
+    public List<T> getAllTicketsByFiltr(int offset, String admId) {
+        final List<T> data = new ArrayList<>();
+
+        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' AND data->>'readBy' LIKE '%%\"%s\"%%' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), admId, offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

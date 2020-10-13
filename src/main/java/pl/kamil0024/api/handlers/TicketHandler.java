@@ -107,6 +107,25 @@ public class TicketHandler implements HttpHandler {
             return;
         }
 
+        if (type == 8) {
+            try {
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                String id = json.getString("id");
+                String admId = json.getString("admId");
+                TicketConfig tc = ticketDao.get(id);
+                if (!TicketConfig.exist(tc)) {
+                    Response.sendErrorResponse(ex, "Błąd!", "Nie ma ticketa o takim ID!");
+                    return;
+                }
+                tc.getReadBy().add(admId);
+                Response.sendResponse(ex, "Pomyślnie zapisano");
+                ticketDao.save(tc);
+            } catch (Exception e) {
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+            return;
+        }
+
         try {
             String id = ex.getQueryParameters().get("id").getFirst();
             int offset = 0;
@@ -124,6 +143,12 @@ public class TicketHandler implements HttpHandler {
                     Response.sendObjectResponse(ex, ticketDao.getById(id, offset));
                     break;
                 case 4:
+                    try {
+                        JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                        String admId = json.getString("admId");
+                        Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset, admId));
+                        break;
+                    } catch (Exception ignored) { }
                     Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset));
                     break;
                 case 7:
