@@ -82,8 +82,8 @@ public class TicketDao implements Dao<TicketConfig> {
         return mapper.getAllTickets(offset);
     }
 
-    public List<TicketConfig> getAllTickets(int offset, String admId) {
-        return mapper.getAllTicketsByFiltr(offset, admId);
+    public List<TicketConfig> getAllTickets(int offset, String admId, boolean read) {
+        return mapper.getAllTicketsByFiltr(offset, admId, read);
     }
 
     public List<TicketConfig> getAllTicketsSpam(int offset) {

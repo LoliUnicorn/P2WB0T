@@ -556,10 +556,10 @@ public class PgMapper<T> {
         return data;
     }
 
-    public List<T> getAllTicketsByFiltr(int offset, String admId) {
+    public List<T> getAllTicketsByFiltr(int offset, String admId, boolean read) {
         final List<T> data = new ArrayList<>();
-
-        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' AND data->>'readBy' LIKE '%%\"%s\"%%' ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), admId, offset);
+        String lol = read ? "AND (data->>'readBy')::jsonb ? '%s'" : "AND NOT((data->>'readBy')::jsonb ? '%s')";
+        String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' " + lol + " ORDER BY data->>'createdTime' DESC LIMIT 10 OFFSET %d;", table.value(), admId, offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

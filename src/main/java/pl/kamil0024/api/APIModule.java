@@ -563,6 +563,7 @@ public class APIModule implements Modul {
         routes.post("api/ticket/spam", new TicketHandler(ticketDao, 5));
         routes.get("api/ticket/getspam", new TicketHandler(ticketDao, 6));
         routes.post("api/ticket/read", new TicketHandler(ticketDao, 8));
+        routes.post("api/ticket/getreads", new TicketHandler(ticketDao, 9));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
