@@ -158,6 +158,7 @@ public class TicketHandler implements HttpHandler {
                     throw new UnsupportedOperationException("Zły int type");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
         }
     }
