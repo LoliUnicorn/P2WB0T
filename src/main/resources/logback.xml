@@ -21,15 +21,6 @@
     <property scope="context" name="COLORIZER_COLORS" value="boldred@,yellow@,green@,blue@,cyan@" />
     <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer" />
 
-    <property name="HOME_LOG" value="logs/app.log"/>
-    <file>${HOME_LOG}</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-        <maxFileSize>10MB</maxFileSize>
-        <totalSizeCap>20GB</totalSizeCap>
-        <maxHistory>60</maxHistory>
-    </rollingPolicy>
-
     <encoder>
         <pattern>[%d{HH:mm:ss.SSS}] [%level] [%class{36}.%M %L] %msg\n</pattern>
     </encoder>
@@ -40,8 +31,14 @@
         </encoder>
     </appender>
 
+    <logger name="n.d.jda.internal.requests.Requester" level="OFF"/>
+	<logger name="jda.internal.requests.Requester" level="OFF"/>
+	<logger name="net.dv8tion.jda.internal.requests.equester.java" level="OFF"/>
+	
+	<logger name="n.d.j.i.r.ratelimit.BotRateLimiter" level="OFF"/>
+	<logger name="net.dv8tion.jda.internal.requests.ratelimit.BotRateLimiter" level="OFF"/>
+
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE-ROLLING"/>
     </root>
 </configuration>
