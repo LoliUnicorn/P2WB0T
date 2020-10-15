@@ -161,7 +161,7 @@ public class TicketHandler implements HttpHandler {
                     break;
                 case 3:
                     List<TicketConfig> lista = ticketDao.getById(id, offset);
-                    List<TicketConfig> sortedList = new ArrayList();
+                    List<TicketConfig> sortedList = new ArrayList<>();
                     for (TicketConfig ticketConfig : lista) {
                         if (ticketConfig.getOcena() == -1) {
                             sortedList.add(ticketConfig);
