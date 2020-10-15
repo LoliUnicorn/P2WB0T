@@ -23,11 +23,13 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
+import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.util.UserUtil;
 
@@ -54,11 +56,18 @@ public class UserInfo implements HttpHandler {
                 mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId))
                         .retrieveMemberById(id).complete();
             } catch(Exception ignored) { }
-
             FakeUser fake = new FakeUser();
+            try {
+                Guild.Ban ban = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveBan(user).complete();
+                if (ban != null) {
+                    fake.setBanned(true);
+                }
+            } catch (Exception ignored) { }
+            if (mem != null) fake.setMuted(MuteCommand.hasMute(mem));
             fake.setId(id);
             fake.setUsername(user.getName());
             fake.setAvatar(user.getAvatarUrl());
+            fake.setTag(user.getDiscriminator());
             if (mem != null) {
                 fake.setPLvl(new UserPermLevel.UserPermLevelClass(UserUtil.getPermLevel(mem)));
                 String tak = UserUtil.getMcNick(mem);
@@ -85,6 +94,10 @@ public class UserInfo implements HttpHandler {
         private String nick = null;
         private String avatar;
         private String id;
+        private String tag;
+        private boolean muted = false;
+        private boolean banned = false;
+        private String lastcase = null;
         private List<FakeRole> roles = new ArrayList<>();
         private UserPermLevel.UserPermLevelClass pLvl = null;
     }

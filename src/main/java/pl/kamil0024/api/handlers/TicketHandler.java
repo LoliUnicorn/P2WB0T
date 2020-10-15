@@ -26,7 +26,9 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TicketHandler implements HttpHandler {
 
@@ -158,7 +160,16 @@ public class TicketHandler implements HttpHandler {
                     Response.sendObjectResponse(ex, ticketDao.getByNick(id, offset));
                     break;
                 case 3:
-                    Response.sendObjectResponse(ex, ticketDao.getById(id, offset));
+                    List<TicketConfig> lista = ticketDao.getById(id, offset);
+                    List<TicketConfig> sortedList = new ArrayList();
+                    for (TicketConfig ticketConfig : lista) {
+                        if (ticketConfig.getOcena() == -1) {
+                            sortedList.add(ticketConfig);
+                            lista.remove(ticketConfig);
+                        }
+                    }
+                    sortedList.addAll(lista);
+                    Response.sendObjectResponse(ex, sortedList);
                     break;
                 case 4:
                     Response.sendObjectResponse(ex, ticketDao.getAllTickets(offset));
