@@ -45,18 +45,18 @@ public class CaseRedisManager {
     @Setter private long lastUpdate = 0;
 
     private final CaseDao caseDao;
-    private final Cache<Integer> redisKaryWRoku;
-    private final Cache<Integer> redisWTygodniu;
-    private final Cache<Integer> redisOstatnieKary24h;
+    private final Cache<String> redisKaryWRoku;
+    private final Cache<String> redisWTygodniu;
+    private final Cache<String> redisOstatnieKary24h;
 
     private ScheduledExecutorService executorSche;
 
     public CaseRedisManager(RedisManager redisManager, CaseDao caseDao) {
         this.caseDao = caseDao;
 
-        this.redisKaryWRoku = redisManager.new CacheRetriever<Integer>(){}.getCache(-1);
-        this.redisWTygodniu = redisManager.new CacheRetriever<Integer>(){}.getCache(-1);
-        this.redisOstatnieKary24h = redisManager.new CacheRetriever<Integer>(){}.getCache(-1);
+        this.redisKaryWRoku = redisManager.new CacheRetriever<String>(){}.getCache(-1);
+        this.redisWTygodniu = redisManager.new CacheRetriever<String>(){}.getCache(-1);
+        this.redisOstatnieKary24h = redisManager.new CacheRetriever<String>(){}.getCache(-1);
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
@@ -104,15 +104,15 @@ public class CaseRedisManager {
         }
 
         for (Map.Entry<Integer, Integer> entry : karyWMiesiacu.entrySet()) {
-            redisKaryWRoku.put(String.valueOf(entry.getKey()), entry.getValue());
+            redisKaryWRoku.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
         }
 
         for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-            redisWTygodniu.put(String.valueOf(entry.getKey()), entry.getValue());
+            redisWTygodniu.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
         }
 
         for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) {
-            redisOstatnieKary24h.put(String.valueOf(entry.getKey()), entry.getValue());
+            redisOstatnieKary24h.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
         }
 
     }

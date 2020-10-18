@@ -19,6 +19,7 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ import lombok.Data;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
+import pl.kamil0024.core.logger.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,28 +47,34 @@ public class RedisChatModStats implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) {
         if (!Response.checkIp(ex)) { return; }
 
-        SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy");
-        CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
-        List<RenderToCharts> charts = new ArrayList<>();
+        try {
+            SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy");
+            CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
+            List<RenderToCharts> charts = new ArrayList<>();
 
-        Map<String, Integer> karyWTygodniu = redis.getRedisWTygodniu().asMap();
+            Map<String, String> karyWTygodniu = redis.getRedisWTygodniu().asMap();
 //        Map<String, Integer> karyWRoku = redis.getRedisKaryWRoku().asMap();
 //        Map<String, Integer> karyDzisiaj = redis.getRedisOstatnieKary24h().asMap();
 
-        RenderToCharts renderToCharts = new RenderToCharts();
-        List<String> labels = new ArrayList<>();
-        List<Integer> data = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : karyWTygodniu.entrySet()) {
-            String[] key = entry.getKey().split(":");
-            Date d = new Date(Long.parseLong(key[key.length - 1]));
-            labels.add(sfd.format(d));
-            data.add(entry.getValue());
-        }
-        renderToCharts.setLabels(labels);
-        renderToCharts.getDatasets().add(new Datasets("Lista kar", "#1150d6", data));
-        charts.add(renderToCharts);
+            RenderToCharts renderToCharts = new RenderToCharts();
+            List<String> labels = new ArrayList<>();
+            List<Integer> data = new ArrayList<>();
+            for (Map.Entry<String, String> entry : karyWTygodniu.entrySet()) {
+                String[] key = entry.getValue().split("-");
+                Log.debug(new Gson().toJson(key));
+                Date d = new Date(Long.parseLong(key[0]));
+                labels.add(sfd.format(d));
+                data.add(Integer.parseInt(key[1]));
+            }
+            renderToCharts.setLabels(labels);
+            renderToCharts.getDatasets().add(new Datasets("Lista kar", "#1150d6", data));
+            charts.add(renderToCharts);
 
-        Response.sendObjectResponse(ex, charts);
+            Response.sendObjectResponse(ex, charts);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta");
+        }
     }
 
     @Data
