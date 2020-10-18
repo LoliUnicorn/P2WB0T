@@ -77,7 +77,7 @@ public class APIModule implements Modul {
 
     private final Guild guild;
 
-    private ScheduledExecutorService executorSche;
+    private final ScheduledExecutorService executorSche;
 
     public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao) {
         this.api = api;
@@ -569,6 +569,8 @@ public class APIModule implements Modul {
         routes.post("api/ticket/read", new TicketHandler(ticketDao, 8));
         routes.post("api/ticket/getreads", new TicketHandler(ticketDao, 9));
 
+        routes.get("api/react/stats/chatmod", new RedisChatModStats(redisStatsManager));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()
@@ -675,7 +677,7 @@ public class APIModule implements Modul {
 
     @Data
     @AllArgsConstructor
-    public class ChatModUser {
+    public static class ChatModUser {
         private final String nick;
         private final String prefix;
         private final String avatar;
