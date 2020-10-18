@@ -35,6 +35,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.api.handlers.*;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
+import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
@@ -101,6 +102,9 @@ public class APIModule implements Modul {
 
     @Override
     public boolean startUp() {
+        RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao);
+        redisStatsManager.load();
+
         RoutingHandler routes = new RoutingHandler();
 
         /**
