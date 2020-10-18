@@ -57,7 +57,8 @@ public class RedisChatModStats implements HttpHandler {
         List<String> labels = new ArrayList<>();
         List<Integer> data = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : karyWTygodniu.entrySet()) {
-            Date d = new Date(Long.parseLong(entry.getKey()));
+            String[] key = entry.getKey().split(":");
+            Date d = new Date(Long.parseLong(key[key.length - 1]));
             labels.add(sfd.format(d));
             data.add(entry.getValue());
         }
