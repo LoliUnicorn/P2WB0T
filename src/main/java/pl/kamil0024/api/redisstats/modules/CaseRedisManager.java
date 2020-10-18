@@ -75,7 +75,7 @@ public class CaseRedisManager {
             int kary = (karyWMiesiacu.getOrDefault(h, 0)) + 1;
             karyWMiesiacu.put(h, kary);
 
-            if (dt.isAfter(now.minusDays(7))) {
+            if (dt.isAfter(now.minusDays(8))) {
                 cal.setTime(new Date(dt.getMillis()));
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);

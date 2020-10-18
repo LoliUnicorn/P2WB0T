@@ -19,15 +19,14 @@
 
 package pl.kamil0024.api.handlers;
 
-import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.joda.time.DateTime;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
-import pl.kamil0024.core.logger.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,16 +52,17 @@ public class RedisChatModStats implements HttpHandler {
             List<RenderToCharts> charts = new ArrayList<>();
 
             Map<Long, Integer> karyWTygodniu = redis.getMapWTygodniu();
-    //        Map<String, Integer> karyWRoku = redis.getRedisKaryWRoku().asMap();
-    //        Map<String, Integer> karyDzisiaj = redis.getRedisOstatnieKary24h().asMap();
+            Map<Integer, Integer> karyWRoku = redis.getMapKaryWRoku();
+            Map<Integer, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
+
+            charts.add(getCharts(karyWRoku, "rok"));
+            charts.add(getCharts(karyDzisiaj, "dzisiaj"));
 
             RenderToCharts renderToCharts = new RenderToCharts();
             List<String> labels = new ArrayList<>();
             List<Integer> data = new ArrayList<>();
             List<Datasets> datasets = new ArrayList<>();
             for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-                Log.debug("key: " + entry.getKey());
-                Log.debug("value: " + entry.getValue());
                 Date d = new Date(entry.getKey());
                 labels.add(sfd.format(d));
                 data.add(entry.getValue());
@@ -95,6 +95,37 @@ public class RedisChatModStats implements HttpHandler {
         private String label;
         private String color;
         private List<Integer> data;
+    }
+
+    private RenderToCharts getCharts(Map<Integer, Integer> map, String typ) {
+        RenderToCharts renderToCharts = new RenderToCharts();
+        List<String> labels = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        List<Datasets> datasets = new ArrayList<>();
+        String kolor = "#1150d6";
+        int rok = new DateTime().getYear();
+        switch (typ) {
+            case "rok":
+                kolor = "#de23e8";
+                for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                    labels.add(entry.getKey() + "." + rok);
+                    data.add(entry.getValue());
+                }
+                break;
+            case "dzisiaj":
+                kolor = "#1ad97d";
+                for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                    labels.add(entry.getKey() + ":00");
+                    data.add(entry.getValue());
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Zły typ");
+        }
+        renderToCharts.setLabels(labels);
+        datasets.add(new Datasets("Lista kar", kolor, data));
+        renderToCharts.setDatasets(datasets);
+        return renderToCharts;
     }
 
 }
