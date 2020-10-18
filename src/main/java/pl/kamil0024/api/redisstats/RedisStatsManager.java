@@ -39,7 +39,6 @@ public class RedisStatsManager {
 
     public void load() {
         caseRedisManager = new CaseRedisManager(redisManager, caseDao);
-        caseRedisManager.load();
     }
 
 }
