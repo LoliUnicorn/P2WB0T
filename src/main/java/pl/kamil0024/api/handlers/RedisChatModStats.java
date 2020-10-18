@@ -52,7 +52,7 @@ public class RedisChatModStats implements HttpHandler {
             CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
             List<RenderToCharts> charts = new ArrayList<>();
 
-            Map<String, String> karyWTygodniu = redis.getRedisWTygodniu().asMap();
+            Map<Long, Integer> karyWTygodniu = redis.getMapWTygodniu();
     //        Map<String, Integer> karyWRoku = redis.getRedisKaryWRoku().asMap();
     //        Map<String, Integer> karyDzisiaj = redis.getRedisOstatnieKary24h().asMap();
 
@@ -60,12 +60,12 @@ public class RedisChatModStats implements HttpHandler {
             List<String> labels = new ArrayList<>();
             List<Integer> data = new ArrayList<>();
             List<Datasets> datasets = new ArrayList<>();
-            for (Map.Entry<String, String> entry : karyWTygodniu.entrySet()) {
-                String[] key = entry.getValue().split("-");
-                Log.debug(new Gson().toJson(key));
-                Date d = new Date(Long.parseLong(key[0]));
+            for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
+                Log.debug("key: " + entry.getKey());
+                Log.debug("value: " + entry.getValue());
+                Date d = new Date(entry.getKey());
                 labels.add(sfd.format(d));
-                data.add(Integer.parseInt(key[1]));
+                data.add(entry.getValue());
             }
             renderToCharts.setLabels(labels);
             datasets.add(new Datasets("Lista kar", "#1150d6", data));

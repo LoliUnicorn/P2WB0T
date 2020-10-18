@@ -24,9 +24,6 @@ import lombok.Setter;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.redis.Cache;
-import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.kary.Kara;
 
 import java.util.Calendar;
@@ -43,40 +40,25 @@ public class CaseRedisManager {
     @Setter private long lastUpdate = 0;
 
     private final CaseDao caseDao;
-    private final Cache<String> redisKaryWRoku;
-    private final Cache<String> redisWTygodniu;
-    private final Cache<String> redisOstatnieKary24h;
+    private final Map<Integer, Integer> mapKaryWRoku;
+    private final Map<Long, Integer> mapWTygodniu;
+    private final Map<Integer, Integer> mapOstatnieKary24h;
 
     private ScheduledExecutorService executorSche;
 
-    public CaseRedisManager(RedisManager redisManager, CaseDao caseDao) {
+    public CaseRedisManager(CaseDao caseDao) {
         this.caseDao = caseDao;
 
-        this.redisKaryWRoku = redisManager.new CacheRetriever<String>(){}.getCache(-1);
-        this.redisWTygodniu = redisManager.new CacheRetriever<String>(){}.getCache(-1);
-        this.redisOstatnieKary24h = redisManager.new CacheRetriever<String>(){}.getCache(-1);
+        this.mapKaryWRoku = new HashMap<>();
+        this.mapWTygodniu = new HashMap<>();
+        this.mapOstatnieKary24h = new HashMap<>();
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
-
-        try {
-            redisKaryWRoku.invalidateAll();
-            redisWTygodniu.invalidateAll();
-            redisOstatnieKary24h.invalidateAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void load() {
-        Log.debug("Ładuje statystyki do redisa...");
         setLastUpdate(new Date().getTime());
-        try {
-            redisKaryWRoku.invalidateAll();
-            redisWTygodniu.invalidateAll();
-            redisOstatnieKary24h.invalidateAll();
-        } catch (Exception ignored) { }
 
         Map<Integer, Integer> karyWMiesiacu = new HashMap<>();
         Map<Long, Integer> karyWTygodniu = new HashMap<>();
@@ -111,15 +93,15 @@ public class CaseRedisManager {
         }
 
         for (Map.Entry<Integer, Integer> entry : karyWMiesiacu.entrySet()) {
-            redisKaryWRoku.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
+            mapKaryWRoku.put(entry.getKey(), entry.getValue());
         }
 
         for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-            redisWTygodniu.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
+            mapWTygodniu.put(entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) {
-            redisOstatnieKary24h.put(String.valueOf(entry.getKey()), entry.getKey() + "-" + entry.getValue());
+        for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) { ;
+            mapOstatnieKary24h.put(entry.getKey(), entry.getValue());
         }
 
     }
