@@ -27,8 +27,7 @@ import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.kary.Kara;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CaseRedisManager {
 
@@ -43,20 +42,55 @@ public class CaseRedisManager {
 
     public void load() {
         Map<Integer, Integer> karyWMiesiacu = new HashMap<>();
+        Map<Long, Integer> karyWTygodniu = new HashMap<>();
+
+        Map<Integer, Integer> ostatnieKary24h = new HashMap<>();
+        Calendar cal = Calendar.getInstance();
+
+        DateTime now = new DateTime();
         for (CaseConfig caseConfig : caseDao.getAll()) {
             Kara kara = caseConfig.getKara();
             DateTime dt = new DateTime(kara.getTimestamp());
+            
             int h = dt.getMonthOfYear();
-            int kary = karyWMiesiacu.getOrDefault(h, 0);
-            kary++;
+            int kary = (karyWMiesiacu.getOrDefault(h, 0)) + 1;
             karyWMiesiacu.put(h, kary);
+
+            if (dt.isAfter(now.minusDays(7))) {
+                cal.setTime(new Date(dt.getMillis()));
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long ms = cal.toInstant().toEpochMilli();
+                karyWTygodniu.put(ms, (karyWTygodniu.getOrDefault(ms, 0)) + 1);
+            }
+
+            if (dt.isAfter(now.minusDays(1)) && dt.getDayOfYear() == now.getDayOfYear()) {
+                int hofday = dt.getHourOfDay();
+                ostatnieKary24h.put(hofday, (ostatnieKary24h.getOrDefault(dt.getHourOfDay(), 0)) + 1);
+            }
+
         }
+
         for (Map.Entry<Integer, Integer> entry : karyWMiesiacu.entrySet()) {
-            Log.debug("Miesiac: " + entry.getKey());
-            Log.debug("Kary: " + entry.getValue());
-            Log.debug("--------------------");
             save(entry.getKey(), entry.getValue());
         }
+
+        Log.debug("=-=-= Kary W Tygodniu =-=-=-");
+        for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
+            Log.debug("Dzień: " + new Date(entry.getKey()));
+            Log.debug("Kary: " + entry.getValue());
+        }
+        Log.debug("=-=-= Kary W Tygodniu =-=-=-");
+
+        Log.debug("=-=-= Kary Dzisiaj =-=-=-");
+        for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) {
+            Log.debug("Godzina: " + entry.getKey() + ":00");
+            Log.debug("Kary: " + entry.getValue());
+        }
+        Log.debug("=-=-= Kary Dzisiaj =-=-=-");
+
     }
 
     public Integer get(String key) {
