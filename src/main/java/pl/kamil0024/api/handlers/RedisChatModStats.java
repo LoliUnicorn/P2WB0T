@@ -53,12 +53,13 @@ public class RedisChatModStats implements HttpHandler {
             List<RenderToCharts> charts = new ArrayList<>();
 
             Map<String, String> karyWTygodniu = redis.getRedisWTygodniu().asMap();
-//        Map<String, Integer> karyWRoku = redis.getRedisKaryWRoku().asMap();
-//        Map<String, Integer> karyDzisiaj = redis.getRedisOstatnieKary24h().asMap();
+    //        Map<String, Integer> karyWRoku = redis.getRedisKaryWRoku().asMap();
+    //        Map<String, Integer> karyDzisiaj = redis.getRedisOstatnieKary24h().asMap();
 
             RenderToCharts renderToCharts = new RenderToCharts();
             List<String> labels = new ArrayList<>();
             List<Integer> data = new ArrayList<>();
+            List<Datasets> datasets = new ArrayList<>();
             for (Map.Entry<String, String> entry : karyWTygodniu.entrySet()) {
                 String[] key = entry.getValue().split("-");
                 Log.debug(new Gson().toJson(key));
@@ -67,7 +68,8 @@ public class RedisChatModStats implements HttpHandler {
                 data.add(Integer.parseInt(key[1]));
             }
             renderToCharts.setLabels(labels);
-            renderToCharts.getDatasets().add(new Datasets("Lista kar", "#1150d6", data));
+            datasets.add(new Datasets("Lista kar", "#1150d6", data));
+            renderToCharts.setDatasets(datasets);
             charts.add(renderToCharts);
 
             Response.sendObjectResponse(ex, charts);

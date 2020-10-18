@@ -19,10 +19,8 @@
 
 package pl.kamil0024.api.redisstats.modules;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.tools.ant.taskdefs.EchoXML;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
@@ -60,6 +58,15 @@ public class CaseRedisManager {
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
+
+        try {
+            redisKaryWRoku.invalidateAll();
+            redisWTygodniu.invalidateAll();
+            redisOstatnieKary24h.invalidateAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void load() {
