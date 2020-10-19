@@ -68,21 +68,20 @@ public class DowodCommand extends Command {
         if (arg == null) throw new UsageException();
         if (equalsIgnoreCase(typ, "list", "lista")) {
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
-
+            List<EmbedBuilder> pages = new ArrayList<>();
             CaseConfig cc = caseDao.get(arg);
             if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
                 for (Dowod dowod : cc.getKara().getDowody()) {
-                    futurePages.add(new FutureTask<>(() -> {
-                        EmbedBuilder eb = new EmbedBuilder();
-                        eb.setImage(dowod.getImage());
-                        eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setImage(dowod.getImage());
+                    eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
 
-                        if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
-                        if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
-                        eb.addField(null, "ID Zgłoszenia: " + dowod.getImage(), false);
-                        return eb;
-                    }));
+                    if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
+                    if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
+                    eb.addField(null, "ID Zgłoszenia: " + dowod.getImage(), false);
+                    pages.add(eb);
                 }
+                pages.forEach(p -> futurePages.add(new FutureTask<>(() -> p)));
             } else {
                 context.send("Nie ma żadnych dowodów w ten sprawie!").queue();
                 return false;
@@ -93,7 +92,7 @@ public class DowodCommand extends Command {
 
         if (equalsIgnoreCase(typ, "remove", "delete", "usun", "usuń")) {
             try {
-                int num = Integer.parseInt(arg);
+                int num = Integer.parseInt(context.getArgs().get(2));
                 if (num <= 0) throw new Exception();
                 CaseConfig kara = caseDao.get(num);
                 if (kara.getKara() == null) {
@@ -129,16 +128,18 @@ public class DowodCommand extends Command {
         String tekstPowodu = context.getArgsToString(1);
 
         if (tekstPowodu != null && !tekstPowodu.isEmpty()) {
-            content += tekstPowodu + "\n\n";
+            content += tekstPowodu;
         }
         List<Message.Attachment> at = context.getMessage().getAttachments();
         if (!at.isEmpty()) {
             d.setImage(at.stream().findAny().get().getUrl());
         }
-        if (!content.isEmpty() && d.getImage() == null) {
+
+        if (content.isEmpty() && d.getImage() == null) {
             context.send("Content dowodu nie może być pusty!").queue();
             return false;
         }
+        
         d.setContent(content);
         d.setUser(context.getUser().getId());
         d.setId(Dowod.getNextId(cc.getKara().getDowody()));
