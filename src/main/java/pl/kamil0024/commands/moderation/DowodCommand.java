@@ -70,7 +70,7 @@ public class DowodCommand extends Command {
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
 
             CaseConfig cc = caseDao.get(arg);
-            if (cc.getKara().getDowody() != null) {
+            if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
                 for (Dowod dowod : cc.getKara().getDowody()) {
                     futurePages.add(new FutureTask<>(() -> {
                         EmbedBuilder eb = new EmbedBuilder();
@@ -83,6 +83,9 @@ public class DowodCommand extends Command {
                         return eb;
                     }));
                 }
+            } else {
+                context.send("Nie ma żadnych dowodów w ten sprawie!").queue();
+                return false;
             }
             new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 2137).create(context.getChannel());
             return true;
@@ -123,15 +126,16 @@ public class DowodCommand extends Command {
 
         Dowod d = new Dowod();
         String content = "";
+        String tekstPowodu = context.getArgsToString(1);
 
-        if (typ != null && !typ.isEmpty()) {
-            content += typ + "\n\n";
+        if (tekstPowodu != null && !tekstPowodu.isEmpty()) {
+            content += tekstPowodu + "\n\n";
         }
         List<Message.Attachment> at = context.getMessage().getAttachments();
         if (!at.isEmpty()) {
             d.setImage(at.stream().findAny().get().getUrl());
         }
-        if (!content.isEmpty()) {
+        if (!content.isEmpty() && d.getImage() == null) {
             context.send("Content dowodu nie może być pusty!").queue();
             return false;
         }
@@ -146,6 +150,7 @@ public class DowodCommand extends Command {
     }
 
     private boolean equalsIgnoreCase(String typ, String... s) {
+        if (typ == null || typ.isEmpty()) return false;
         for (String s1 : s) {
             if (typ.equalsIgnoreCase(s1)) {
                 return true;
