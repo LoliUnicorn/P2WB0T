@@ -47,16 +47,16 @@ public class RedisChatModStats implements HttpHandler {
             CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
             List<RenderToCharts> charts = new ArrayList<>();
 
-            Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu());
+            Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu(), true);
             Map<Integer, Integer> karyWRoku = redis.getMapKaryWRoku();
             Map<Integer, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
-            Map<Long, Integer> karyWMiesiacu = redis.getMapKaryWMiesiacu();
+            Map<Long, Integer> karyWMiesiacu = sortByKey(redis.getMapKaryWMiesiacu(), false);
 
             charts.add(getCharts(karyWRoku, "rok"));
             charts.add(getCharts(karyDzisiaj, "dzisiaj"));
-
-            charts.add(getCharts(karyWTygodniu, new SimpleDateFormat("dd.MM.yyyy")));
-            charts.add(getCharts(karyWMiesiacu, new SimpleDateFormat("dd.MM.yyyy")));
+            
+            charts.add(getCharts(sortByKey(karyWTygodniu, false), new SimpleDateFormat("dd.MM.yyyy")));
+            charts.add(getCharts(sortByKey(karyWMiesiacu, false), new SimpleDateFormat("dd.MM.yyyy")));
 
             Response.sendObjectResponse(ex, charts);
         } catch (Exception e) {
@@ -130,11 +130,11 @@ public class RedisChatModStats implements HttpHandler {
         return renderToCharts;
     }
 
-    private Map<Long, Integer> sortByKey(Map<Long, Integer> hm) {
+    private Map<Long, Integer> sortByKey(Map<Long, Integer> hm, boolean grow) {
         List<Map.Entry<Long, Integer> > list =
                 new LinkedList<>(hm.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        Collections.reverse(list);
+        list.sort(Map.Entry.comparingByKey());
+        if (grow) Collections.reverse(list);
         Map<Long, Integer> temp = new LinkedHashMap<>();
         for (Map.Entry<Long, Integer> aa : list) {
             temp.put(aa.getKey(), aa.getValue());

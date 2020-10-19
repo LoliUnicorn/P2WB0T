@@ -29,6 +29,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
@@ -37,6 +38,7 @@ import pl.kamil0024.core.util.kary.Dowod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,6 +69,7 @@ public class DowodCommand extends Command {
 
         if (arg == null) throw new UsageException();
         if (equalsIgnoreCase(typ, "list", "lista")) {
+            Color c = UserUtil.getColor(context.getMember());
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
             List<EmbedBuilder> pages = new ArrayList<>();
             CaseConfig cc = caseDao.get(arg);
@@ -74,6 +77,7 @@ public class DowodCommand extends Command {
                 for (Dowod dowod : cc.getKara().getDowody()) {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setImage(dowod.getImage());
+                    eb.setColor(c);
                     eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
 
                     if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
@@ -92,16 +96,18 @@ public class DowodCommand extends Command {
 
         if (equalsIgnoreCase(typ, "remove", "delete", "usun", "usuń")) {
             try {
-                int num = Integer.parseInt(context.getArgs().get(2));
-                if (num <= 0) throw new Exception();
-                CaseConfig kara = caseDao.get(num);
+                CaseConfig kara = caseDao.get(arg);
                 if (kara.getKara() == null) {
                     context.send("Nie ma kary o takim ID!").queue();
                     return false;
                 }
-                if (kara.getKara().getDowody() == null) kara.getKara().setDowody(new ArrayList<>());
+                if (kara.getKara().getDowody() == null) {
+                    Log.debug("tak");
+                    kara.getKara().setDowody(new ArrayList<>());
+                }
 
-                Dowod d = Dowod.getDowodById(num, kara.getKara().getDowody());
+                Log.debug("id: " + context.getArgs().get(2));
+                Dowod d = Dowod.getDowodById(Integer.parseInt(context.getArgs().get(2)), kara.getKara().getDowody());
                 if (d == null) {
                     context.send("Nie ma dowodu o takim ID!").queue();
                     return false;
