@@ -78,7 +78,7 @@ public class DowodCommand extends Command {
 
                     if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
                     if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
-                    eb.addField(null, "ID Zgłoszenia: " + dowod.getImage(), false);
+                    eb.addField(" ", "ID Zgłoszenia: " + dowod.getId(), false);
                     pages.add(eb);
                 }
                 pages.forEach(p -> futurePages.add(new FutureTask<>(() -> p)));
@@ -139,7 +139,7 @@ public class DowodCommand extends Command {
             context.send("Content dowodu nie może być pusty!").queue();
             return false;
         }
-        
+
         d.setContent(content);
         d.setUser(context.getUser().getId());
         d.setId(Dowod.getNextId(cc.getKara().getDowody()));
