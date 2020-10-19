@@ -29,10 +29,7 @@ import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RedisChatModStats implements HttpHandler {
 
@@ -47,30 +44,19 @@ public class RedisChatModStats implements HttpHandler {
         if (!Response.checkIp(ex)) { return; }
 
         try {
-            SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy");
             CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
             List<RenderToCharts> charts = new ArrayList<>();
 
-            Map<Long, Integer> karyWTygodniu = redis.getMapWTygodniu();
+            Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu());
             Map<Integer, Integer> karyWRoku = redis.getMapKaryWRoku();
             Map<Integer, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
+            Map<Long, Integer> karyWMiesiacu = redis.getMapKaryWMiesiacu();
 
             charts.add(getCharts(karyWRoku, "rok"));
             charts.add(getCharts(karyDzisiaj, "dzisiaj"));
 
-            RenderToCharts renderToCharts = new RenderToCharts();
-            List<String> labels = new ArrayList<>();
-            List<Integer> data = new ArrayList<>();
-            List<Datasets> datasets = new ArrayList<>();
-            for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-                Date d = new Date(entry.getKey());
-                labels.add(sfd.format(d));
-                data.add(entry.getValue());
-            }
-            renderToCharts.setLabels(labels);
-            datasets.add(new Datasets("Lista kar", "#1150d6", data));
-            renderToCharts.setDatasets(datasets);
-            charts.add(renderToCharts);
+            charts.add(getCharts(karyWTygodniu, new SimpleDateFormat("dd.MM.yyyy")));
+            charts.add(getCharts(karyWMiesiacu, new SimpleDateFormat("dd.MM.yyyy")));
 
             Response.sendObjectResponse(ex, charts);
         } catch (Exception e) {
@@ -126,6 +112,34 @@ public class RedisChatModStats implements HttpHandler {
         datasets.add(new Datasets("Lista kar", kolor, data));
         renderToCharts.setDatasets(datasets);
         return renderToCharts;
+    }
+
+    private RenderToCharts getCharts(Map<Long, Integer> map, SimpleDateFormat sfd) {
+        RenderToCharts renderToCharts = new RenderToCharts();
+        List<String> labels = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        List<Datasets> datasets = new ArrayList<>();
+        for (Map.Entry<Long, Integer> entry : map.entrySet()) {
+            Date d = new Date(entry.getKey());
+            labels.add(sfd.format(d));
+            data.add(entry.getValue());
+        }
+        renderToCharts.setLabels(labels);
+        datasets.add(new Datasets("Kary", "#1150d6", data));
+        renderToCharts.setDatasets(datasets);
+        return renderToCharts;
+    }
+
+    private Map<Long, Integer> sortByKey(Map<Long, Integer> hm) {
+        List<Map.Entry<Long, Integer> > list =
+                new LinkedList<>(hm.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        Collections.reverse(list);
+        Map<Long, Integer> temp = new LinkedHashMap<>();
+        for (Map.Entry<Long, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
     }
 
 }

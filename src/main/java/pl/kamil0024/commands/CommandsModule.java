@@ -140,6 +140,7 @@ public class CommandsModule implements Modul {
         cmd.add(new MultiCommand(multiDao, eventWaiter));
         cmd.add(new PogodaCommand());
         cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
+        cmd.add(new OsuCommand(api, eventWaiter));
 
         // Moderacyjne:
         cmd.add(new StatusCommand(eventWaiter));
@@ -154,7 +155,7 @@ public class CommandsModule implements Modul {
         cmd.add(new MuteCommand(caseDao, modLog, statsModule));
         cmd.add(new HistoryCommand(caseDao, eventWaiter));
         cmd.add(new NieobecnoscCommand(nieobecnosciManager, eventWaiter, nieobecnosciDao));
-        cmd.add(new OsuCommand(api, eventWaiter));
+        cmd.add(new DowodCommand(caseDao, eventWaiter));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);

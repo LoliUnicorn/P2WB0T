@@ -43,6 +43,7 @@ public class CaseRedisManager {
     private final Map<Integer, Integer> mapKaryWRoku;
     private final Map<Long, Integer> mapWTygodniu;
     private final Map<Integer, Integer> mapOstatnieKary24h;
+    private final Map<Long, Integer> mapKaryWMiesiacu;
 
     private ScheduledExecutorService executorSche;
 
@@ -52,16 +53,22 @@ public class CaseRedisManager {
         this.mapKaryWRoku = new HashMap<>();
         this.mapWTygodniu = new HashMap<>();
         this.mapOstatnieKary24h = new HashMap<>();
+        this.mapKaryWMiesiacu = new HashMap<Long, Integer>();
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
     }
 
     public void load() {
+        getMapKaryWRoku().clear();
+        getMapOstatnieKary24h().clear();
+        getMapWTygodniu().clear();
+
         setLastUpdate(new Date().getTime());
 
-        Map<Integer, Integer> karyWMiesiacu = new HashMap<>();
+        Map<Integer, Integer> kryWRoku = new HashMap<>();
         Map<Long, Integer> karyWTygodniu = new HashMap<>();
+        Map<Long, Integer> karyWMiesiacu = new HashMap<>();
 
         Map<Integer, Integer> ostatnieKary24h = new HashMap<>();
         Calendar cal = Calendar.getInstance();
@@ -72,15 +79,15 @@ public class CaseRedisManager {
             DateTime dt = new DateTime(kara.getTimestamp());
             
             int h = dt.getMonthOfYear();
-            int kary = (karyWMiesiacu.getOrDefault(h, 0)) + 1;
-            karyWMiesiacu.put(h, kary);
+            int kary = (kryWRoku.getOrDefault(h, 0)) + 1;
+            kryWRoku.put(h, kary);
 
+            cal.setTime(new Date(dt.getMillis()));
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
             if (dt.isAfter(now.minusDays(8))) {
-                cal.setTime(new Date(dt.getMillis()));
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
                 long ms = cal.toInstant().toEpochMilli();
                 karyWTygodniu.put(ms, (karyWTygodniu.getOrDefault(ms, 0)) + 1);
             }
@@ -90,18 +97,27 @@ public class CaseRedisManager {
                 ostatnieKary24h.put(hofday, (ostatnieKary24h.getOrDefault(dt.getHourOfDay(), 0)) + 1);
             }
 
+            if (dt.getMonthOfYear() == now.getMonthOfYear() && dt.getYear() == now.getYear()) {
+                long ms = cal.toInstant().toEpochMilli();
+                karyWMiesiacu.put(ms, (karyWMiesiacu.getOrDefault(ms, 0)) + 1);
+            }
+
         }
 
-        for (Map.Entry<Integer, Integer> entry : karyWMiesiacu.entrySet()) {
-            mapKaryWRoku.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<Integer, Integer> entry : kryWRoku.entrySet()) {
+            this.mapKaryWRoku.put(entry.getKey(), entry.getValue());
         }
 
         for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-            mapWTygodniu.put(entry.getKey(), entry.getValue());
+            this.mapWTygodniu.put(entry.getKey(), entry.getValue());
         }
 
         for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) { ;
             mapOstatnieKary24h.put(entry.getKey(), entry.getValue());
+        }
+
+        for (Map.Entry<Long, Integer> entry : karyWMiesiacu.entrySet()) {
+            mapKaryWMiesiacu.put(entry.getKey(), entry.getValue());
         }
 
     }
