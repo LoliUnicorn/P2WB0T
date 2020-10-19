@@ -55,7 +55,7 @@ public class DowodCommand extends Command {
     public DowodCommand(CaseDao caseDao, EventWaiter eventWaiter) {
         name = "dowod";
         aliases.add("dowody");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
 
         this.caseDao = caseDao;
