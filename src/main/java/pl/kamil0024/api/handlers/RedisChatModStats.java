@@ -19,6 +19,7 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
+import pl.kamil0024.core.logger.Log;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -56,7 +58,8 @@ public class RedisChatModStats implements HttpHandler {
 
                 Map<String, List<Integer>> dataChatmodMiesiac = new HashMap<>();
 
-                Map<Long, List<ChatModStatsConfig>> chatmodRok = redis.getMapChatmodWMiesiacu();
+                Map<Long, List<ChatModStatsConfig>> chatmodRok = redis.getMapChatmodWRoku();
+                Log.debug(new Gson().toJson(chatmodRok));
 
                 RenderToCharts rtc = new RenderToCharts();
                 List<Datasets> datasets = new ArrayList<>();
@@ -84,7 +87,7 @@ public class RedisChatModStats implements HttpHandler {
 
         try {
             Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu(), true);
-            Map<Long, Integer> karyWRoku = redis.getMapKaryWRoku();
+            Map<Long, Integer> karyWRoku = sortByKey(redis.getMapKaryWRoku(), true);
             Map<Long, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
             Map<Long, Integer> karyWMiesiacu = sortByKey(redis.getMapKaryWMiesiacu(), false);
 
