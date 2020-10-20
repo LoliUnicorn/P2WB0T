@@ -60,7 +60,13 @@ public class CaseRedisManager {
         this.mapChatmodWRoku = new HashMap<>();
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
+        executorSche.scheduleAtFixedRate(() -> {
+            try {
+                load();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.HOURS);
     }
 
     public void load() {
