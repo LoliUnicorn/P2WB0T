@@ -29,16 +29,11 @@ public class RedisStatsManager {
 
     private final RedisManager redisManager;
     private final CaseDao caseDao;
-
-    private CaseRedisManager caseRedisManager;
-
+    private final CaseRedisManager caseRedisManager;
     public RedisStatsManager(RedisManager redisManager, CaseDao caseDao) {
         this.redisManager = redisManager;
         this.caseDao = caseDao;
-    }
-
-    public void load() {
-        caseRedisManager = new CaseRedisManager(caseDao);
+        this.caseRedisManager = new CaseRedisManager(caseDao);
     }
 
 }

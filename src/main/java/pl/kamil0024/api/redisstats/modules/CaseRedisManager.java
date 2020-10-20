@@ -69,7 +69,7 @@ public class CaseRedisManager {
         }, 0, 1, TimeUnit.HOURS);
     }
 
-    public void load() {
+    public synchronized void load() {
         getMapKaryWRoku().clear();
         getMapOstatnieKary24h().clear();
         getMapWTygodniu().clear();
@@ -105,9 +105,7 @@ public class CaseRedisManager {
             } else {
                 for (ChatModStatsConfig config : lista) {
                     if (config.getId().equals(chatmodId)) {
-                        lista.remove(config);
                         config.setLiczbaKar(config.getLiczbaKar() + 1);
-                        lista.add(config);
                     }
                 }
             }
@@ -142,9 +140,7 @@ public class CaseRedisManager {
                 } else {
                     for (ChatModStatsConfig config : listaMsc) {
                         if (config.getId().equals(chatmodId)) {
-                            lista.remove(config);
                             config.setLiczbaKar(config.getLiczbaKar() + 1);
-                            lista.add(config);
                         }
                     }
                 }

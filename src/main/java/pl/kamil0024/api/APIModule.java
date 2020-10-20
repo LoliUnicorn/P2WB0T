@@ -103,7 +103,6 @@ public class APIModule implements Modul {
     @Override
     public boolean startUp() {
         RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao);
-        redisStatsManager.load();
 
         RoutingHandler routes = new RoutingHandler();
 
