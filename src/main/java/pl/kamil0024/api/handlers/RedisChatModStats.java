@@ -53,6 +53,9 @@ public class RedisChatModStats implements HttpHandler {
             boolean pa = Boolean.parseBoolean(ex.getQueryParameters().get("chatmod").getFirst());
             if (pa) {
                 Map<Long, List<ChatModStatsConfig>> chatmodMiesiac = sortByKey(redis.getMapChatmodWMiesiacu());
+
+                Map<String, List<Integer>> dataChatmodMiesiac = new HashMap<>();
+
                 Map<Long, List<ChatModStatsConfig>> chatmodRok = redis.getMapChatmodWMiesiacu();
 
                 RenderToCharts rtc = new RenderToCharts();
@@ -62,8 +65,13 @@ public class RedisChatModStats implements HttpHandler {
                 for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodRok.entrySet()) {
                     labels.add(sdf.format(new Date(entry.getKey())));
                     for (ChatModStatsConfig confEntry : entry.getValue()) {
-                        datasets.add(new Datasets(confEntry.getNick(), randomColor(), Collections.singletonList(confEntry.getLiczbaKar())));
+                        List<Integer> data = dataChatmodMiesiac.getOrDefault(confEntry.getNick(), new ArrayList<>());
+                        data.add(confEntry.getLiczbaKar());
+                        dataChatmodMiesiac.put(confEntry.getNick(), data);
                     }
+                }
+                for (Map.Entry<String, List<Integer>> entry : dataChatmodMiesiac.entrySet()) {
+                    datasets.add(new Datasets(entry.getKey(), randomColor(), entry.getValue()));
                 }
 
                 rtc.setLabels(labels);
