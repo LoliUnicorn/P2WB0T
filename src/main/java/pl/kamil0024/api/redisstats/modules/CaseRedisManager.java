@@ -96,19 +96,22 @@ public class CaseRedisManager {
 
             String chatmodId = kara.getAdmId();
             List<ChatModStatsConfig> lista = chatModWRoku.getOrDefault(h, new ArrayList<>());
+
             if (lista.isEmpty() || !ChatModStatsConfig.containsId(chatmodId, lista)) {
                 ChatModStatsConfig cst = new ChatModStatsConfig();
                 cst.setLiczbaKar(1);
                 cst.setId(chatmodId);
                 lista.add(cst);
-            }
-            for (ChatModStatsConfig config : lista) {
-                if (config.getId().equals(chatmodId)) {
-                    lista.remove(config);
-                    config.setLiczbaKar(config.getLiczbaKar() + 1);
-                    lista.add(config);
+            } else {
+                for (ChatModStatsConfig config : lista) {
+                    if (config.getId().equals(chatmodId)) {
+                        lista.remove(config);
+                        config.setLiczbaKar(config.getLiczbaKar() + 1);
+                        lista.add(config);
+                    }
                 }
             }
+
             chatModWRoku.put(h, lista);
 
             cal.setTime(new Date(dt.getMillis()));
@@ -136,12 +139,13 @@ public class CaseRedisManager {
                     cst.setId(chatmodId);
                     cst.setLiczbaKar(1);
                     lista.add(cst);
-                }
-                for (ChatModStatsConfig config : listaMsc) {
-                    if (config.getId().equals(chatmodId)) {
-                        lista.remove(config);
-                        config.setLiczbaKar(config.getLiczbaKar() + 1);
-                        lista.add(config);
+                } else {
+                    for (ChatModStatsConfig config : listaMsc) {
+                        if (config.getId().equals(chatmodId)) {
+                            lista.remove(config);
+                            config.setLiczbaKar(config.getLiczbaKar() + 1);
+                            lista.add(config);
+                        }
                     }
                 }
                 chatmodWMiesiacu.put(ms, lista);
