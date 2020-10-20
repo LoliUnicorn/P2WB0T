@@ -80,6 +80,9 @@ public class KaryListener extends ListenerAdapter {
                 }
 
                 if (event.getReactionEmote().getId().equals("623630774171729931")) {
+                    try {
+                        msg.delete().complete();
+                    } catch (Exception ignored) { }
                     entry.getMsg().delete().queue();
                     getEmbedy().remove(entry);
                     return;
