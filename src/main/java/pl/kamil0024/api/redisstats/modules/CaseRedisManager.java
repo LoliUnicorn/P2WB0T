@@ -133,6 +133,7 @@ public class CaseRedisManager {
                         lista.remove(config);
                         config.setLiczbaKar(config.getLiczbaKar() + 1);
                         lista.add(config);
+                        exist = true;
                     }
                     if (!exist) {
                         ChatModStatsConfig cst = new ChatModStatsConfig();
