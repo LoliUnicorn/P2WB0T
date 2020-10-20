@@ -175,7 +175,7 @@ public class CaseRedisManager {
                 }
             }
         }
-        
+
         mapKaryWRoku.putAll(kryWRoku);
         mapWTygodniu.putAll(karyWTygodniu);
         mapOstatnieKary24h.putAll(ostatnieKary24h);
