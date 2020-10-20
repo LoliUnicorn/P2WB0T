@@ -43,6 +43,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
+import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -219,8 +220,12 @@ public class PunishCommand extends Command {
     private static boolean check(CommandContext context, Member osoba) {
         return Kara.check(context, osoba.getUser()) == null && !MuteCommand.hasMute(osoba);
     }
-    
+
     public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
+        putPun(kara, osoby, member, txt, caseDao, modLog, statsModule, null);
+    }
+
+    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
             List<CaseConfig> cc = caseDao.getAllPunAktywne(osoba.getId());

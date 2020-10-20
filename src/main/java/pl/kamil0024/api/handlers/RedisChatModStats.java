@@ -47,16 +47,16 @@ public class RedisChatModStats implements HttpHandler {
             CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
             List<RenderToCharts> charts = new ArrayList<>();
 
-            Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu());
-            Map<Integer, Integer> karyWRoku = redis.getMapKaryWRoku();
-            Map<Integer, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
-            Map<Long, Integer> karyWMiesiacu = redis.getMapKaryWMiesiacu();
+            Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu(), true);
+            Map<Long, Integer> karyWRoku = redis.getMapKaryWRoku();
+            Map<Long, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
+            Map<Long, Integer> karyWMiesiacu = sortByKey(redis.getMapKaryWMiesiacu(), false);
 
             charts.add(getCharts(karyWRoku, "rok"));
-            charts.add(getCharts(karyDzisiaj, "dzisiaj"));
+            charts.add(getCharts(sortByKey(karyDzisiaj, false), "dzisiaj"));
 
-            charts.add(getCharts(karyWTygodniu, new SimpleDateFormat("dd.MM.yyyy")));
-            charts.add(getCharts(karyWMiesiacu, new SimpleDateFormat("dd.MM.yyyy")));
+            charts.add(getCharts(sortByKey(karyWTygodniu, false), new SimpleDateFormat("dd.MM.yyyy")));
+            charts.add(getCharts(sortByKey(karyWMiesiacu, false), new SimpleDateFormat("dd.MM.yyyy")));
 
             Response.sendObjectResponse(ex, charts);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class RedisChatModStats implements HttpHandler {
         private List<Integer> data;
     }
 
-    private RenderToCharts getCharts(Map<Integer, Integer> map, String typ) {
+    private RenderToCharts getCharts(Map<Long, Integer> map, String typ) {
         RenderToCharts renderToCharts = new RenderToCharts();
         List<String> labels = new ArrayList<>();
         List<Integer> data = new ArrayList<>();
@@ -93,14 +93,14 @@ public class RedisChatModStats implements HttpHandler {
         switch (typ) {
             case "rok":
                 kolor = "#de23e8";
-                for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                for (Map.Entry<Long, Integer> entry : map.entrySet()) {
                     labels.add(entry.getKey() + "." + rok);
                     data.add(entry.getValue());
                 }
                 break;
             case "dzisiaj":
                 kolor = "#1ad97d";
-                for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                for (Map.Entry<Long, Integer> entry : map.entrySet()) {
                     labels.add(entry.getKey() + ":00");
                     data.add(entry.getValue());
                 }
@@ -109,7 +109,7 @@ public class RedisChatModStats implements HttpHandler {
                 throw new UnsupportedOperationException("Zły typ");
         }
         renderToCharts.setLabels(labels);
-        datasets.add(new Datasets("Lista kar", kolor, data));
+        datasets.add(new Datasets("Kary", kolor, data));
         renderToCharts.setDatasets(datasets);
         return renderToCharts;
     }
@@ -130,11 +130,11 @@ public class RedisChatModStats implements HttpHandler {
         return renderToCharts;
     }
 
-    private Map<Long, Integer> sortByKey(Map<Long, Integer> hm) {
-        List<Map.Entry<Long, Integer> > list =
+    private Map<Long, Integer> sortByKey(Map<Long, Integer> hm, boolean grow) {
+        List<Map.Entry<Long, Integer>> list =
                 new LinkedList<>(hm.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        Collections.reverse(list);
+        list.sort(Map.Entry.comparingByKey());
+        if (grow) Collections.reverse(list);
         Map<Long, Integer> temp = new LinkedHashMap<>();
         for (Map.Entry<Long, Integer> aa : list) {
             temp.put(aa.getKey(), aa.getValue());

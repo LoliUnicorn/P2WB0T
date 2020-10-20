@@ -29,6 +29,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
@@ -37,6 +38,7 @@ import pl.kamil0024.core.util.kary.Dowod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +55,7 @@ public class DowodCommand extends Command {
     public DowodCommand(CaseDao caseDao, EventWaiter eventWaiter) {
         name = "dowod";
         aliases.add("dowody");
-        permLevel = PermLevel.HELPER;
+        permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
 
         this.caseDao = caseDao;
@@ -67,22 +69,26 @@ public class DowodCommand extends Command {
 
         if (arg == null) throw new UsageException();
         if (equalsIgnoreCase(typ, "list", "lista")) {
+            Color c = UserUtil.getColor(context.getMember());
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
-
+            List<EmbedBuilder> pages = new ArrayList<>();
             CaseConfig cc = caseDao.get(arg);
-            if (cc.getKara().getDowody() != null) {
+            if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
                 for (Dowod dowod : cc.getKara().getDowody()) {
-                    futurePages.add(new FutureTask<>(() -> {
-                        EmbedBuilder eb = new EmbedBuilder();
-                        eb.setImage(dowod.getImage());
-                        eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setImage(dowod.getImage());
+                    eb.setColor(c);
+                    eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
 
-                        if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
-                        if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
-                        eb.addField(null, "ID Zgłoszenia: " + dowod.getImage(), false);
-                        return eb;
-                    }));
+                    if (dowod.getContent() != null && !dowod.getContent().isEmpty()) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
+                    if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
+                    eb.addField(" ", "ID Zgłoszenia: " + dowod.getId(), false);
+                    pages.add(eb);
                 }
+                pages.forEach(p -> futurePages.add(new FutureTask<>(() -> p)));
+            } else {
+                context.send("Nie ma żadnych dowodów w ten sprawie!").queue();
+                return false;
             }
             new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 2137).create(context.getChannel());
             return true;
@@ -90,16 +96,16 @@ public class DowodCommand extends Command {
 
         if (equalsIgnoreCase(typ, "remove", "delete", "usun", "usuń")) {
             try {
-                int num = Integer.parseInt(arg);
-                if (num <= 0) throw new Exception();
-                CaseConfig kara = caseDao.get(num);
+                CaseConfig kara = caseDao.get(arg);
                 if (kara.getKara() == null) {
                     context.send("Nie ma kary o takim ID!").queue();
                     return false;
                 }
-                if (kara.getKara().getDowody() == null) kara.getKara().setDowody(new ArrayList<>());
+                if (kara.getKara().getDowody() == null) {
+                    kara.getKara().setDowody(new ArrayList<>());
+                }
 
-                Dowod d = Dowod.getDowodById(num, kara.getKara().getDowody());
+                Dowod d = Dowod.getDowodById(Integer.parseInt(context.getArgs().get(2)), kara.getKara().getDowody());
                 if (d == null) {
                     context.send("Nie ma dowodu o takim ID!").queue();
                     return false;
@@ -123,18 +129,21 @@ public class DowodCommand extends Command {
 
         Dowod d = new Dowod();
         String content = "";
+        String tekstPowodu = context.getArgsToString(1);
 
-        if (typ != null && !typ.isEmpty()) {
-            content += typ + "\n\n";
+        if (tekstPowodu != null && !tekstPowodu.isEmpty()) {
+            content += tekstPowodu;
         }
         List<Message.Attachment> at = context.getMessage().getAttachments();
         if (!at.isEmpty()) {
             d.setImage(at.stream().findAny().get().getUrl());
         }
-        if (!content.isEmpty()) {
+
+        if (content.isEmpty() && d.getImage() == null) {
             context.send("Content dowodu nie może być pusty!").queue();
             return false;
         }
+
         d.setContent(content);
         d.setUser(context.getUser().getId());
         d.setId(Dowod.getNextId(cc.getKara().getDowody()));
@@ -146,6 +155,7 @@ public class DowodCommand extends Command {
     }
 
     private boolean equalsIgnoreCase(String typ, String... s) {
+        if (typ == null || typ.isEmpty()) return false;
         for (String s1 : s) {
             if (typ.equalsIgnoreCase(s1)) {
                 return true;

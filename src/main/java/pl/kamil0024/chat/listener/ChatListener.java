@@ -42,6 +42,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.Emoji;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
 import java.io.*;
@@ -66,12 +67,12 @@ public class ChatListener extends ListenerAdapter {
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
 
     @Inject private ShardManager api;
-    @Inject private KaryJSON karyJSON;
-    @Inject private CaseDao caseDao;
-    @Inject private ModLog modLog;
-    @Inject private StatsModule statsModule;
+    @Inject private final KaryJSON karyJSON;
+    @Inject private final CaseDao caseDao;
+    @Inject private final ModLog modLog;
+    @Inject private final StatsModule statsModule;
 
-    @Getter private List<String> przeklenstwa;
+    @Getter private final List<String> przeklenstwa;
 
     public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.api = api;
@@ -148,6 +149,7 @@ public class ChatListener extends ListenerAdapter {
 //                msg.getChannel().sendMessage(String.format("<@%s>, ładnie to tak przeklinać?", msg.getAuthor().getId())).queue();
 
             KaryJSON.Kara kara = karyJSON.getByName("Wszelkiej maści wyzwiska, obraza, wulgaryzmy, prowokacje, groźby i inne formy przemocy");
+            Dowod d = new Dowod(1, msg.getGuild().getSelfMember().getId(), msg.getContentDisplay(), null);
             if (kara == null) {
                 Log.newError("Powod przy nadawaniu kary za przeklenstwa jest nullem", ChatListener.class);
             } else {
@@ -155,7 +157,7 @@ public class ChatListener extends ListenerAdapter {
                         Collections.singletonList(member),
                         member.getGuild().getSelfMember(),
                         msg.getTextChannel(),
-                        caseDao, modLog, statsModule);
+                        caseDao, modLog, statsModule, d);
                 return;
             }
         }
