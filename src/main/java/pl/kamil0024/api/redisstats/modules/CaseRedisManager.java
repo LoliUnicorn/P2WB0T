@@ -22,14 +22,13 @@ package pl.kamil0024.api.redisstats.modules;
 import lombok.Getter;
 import lombok.Setter;
 import org.joda.time.DateTime;
+import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.kary.Kara;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +44,9 @@ public class CaseRedisManager {
     private final Map<Long, Integer> mapOstatnieKary24h;
     private final Map<Long, Integer> mapKaryWMiesiacu;
 
+    private final Map<String, Integer> mapChatmodWMiesiacu;
+    private final Map<String, Integer> mapChatmodWRoku;
+
     private ScheduledExecutorService executorSche;
 
     public CaseRedisManager(CaseDao caseDao) {
@@ -53,7 +55,9 @@ public class CaseRedisManager {
         this.mapKaryWRoku = new HashMap<>();
         this.mapWTygodniu = new HashMap<>();
         this.mapOstatnieKary24h = new HashMap<>();
-        this.mapKaryWMiesiacu = new HashMap<Long, Integer>();
+        this.mapKaryWMiesiacu = new HashMap<>();
+        this.mapChatmodWMiesiacu = new HashMap<>();
+        this.mapChatmodWRoku = new HashMap<>();
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::load, 0, 1, TimeUnit.HOURS);
@@ -70,6 +74,9 @@ public class CaseRedisManager {
         Map<Long, Integer> karyWTygodniu = new HashMap<>();
         Map<Long, Integer> karyWMiesiacu = new HashMap<>();
 
+        Map<Long, List<ChatModStatsConfig>> chatmodWMiesiacu = new HashMap<>();
+        Map<Long, List<ChatModStatsConfig>> chatModWRoku = new HashMap<>();
+
         Map<Long, Integer> ostatnieKary24h = new HashMap<>();
         Calendar cal = Calendar.getInstance();
 
@@ -77,10 +84,20 @@ public class CaseRedisManager {
         for (CaseConfig caseConfig : caseDao.getAll()) {
             Kara kara = caseConfig.getKara();
             DateTime dt = new DateTime(kara.getTimestamp());
-            
+
             long h = dt.getMonthOfYear();
-            int kary = (kryWRoku.getOrDefault(h, 0)) + 1;
-            kryWRoku.put(h, kary);
+            kryWRoku.put(h, (kryWRoku.getOrDefault(h, 0)) + 1);
+
+            String chatmodId = kara.getAdmId();
+            List<ChatModStatsConfig> lista = chatModWRoku.getOrDefault(h, new ArrayList<>());
+            for (ChatModStatsConfig config : lista) {
+                if (config.getId().equals(chatmodId)) {
+                    lista.remove(config);
+                    config.setLiczbaKar(config.getLiczbaKar() + 1);
+                    lista.add(config);
+                }
+            }
+            chatModWRoku.put(h, lista);
 
             cal.setTime(new Date(dt.getMillis()));
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -100,8 +117,17 @@ public class CaseRedisManager {
             if (dt.getMonthOfYear() == now.getMonthOfYear() && dt.getYear() == now.getYear()) {
                 long ms = cal.toInstant().toEpochMilli();
                 karyWMiesiacu.put(ms, (karyWMiesiacu.getOrDefault(ms, 0)) + 1);
-            }
 
+                List<ChatModStatsConfig> listaMsc = chatmodWMiesiacu.getOrDefault(ms, new ArrayList<>());
+                for (ChatModStatsConfig config : listaMsc) {
+                    if (config.getId().equals(chatmodId)) {
+                        lista.remove(config);
+                        config.setLiczbaKar(config.getLiczbaKar() + 1);
+                        lista.add(config);
+                    }
+                }
+                chatmodWMiesiacu.put(ms, lista);
+            }
         }
 
         for (Map.Entry<Long, Integer> entry : kryWRoku.entrySet()) {
@@ -119,6 +145,25 @@ public class CaseRedisManager {
         for (Map.Entry<Long, Integer> entry : karyWMiesiacu.entrySet()) {
             mapKaryWMiesiacu.put(entry.getKey(), entry.getValue());
         }
+
+        Log.debug("-----------------------");
+        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatModWRoku.entrySet()) {
+            Log.debug("Miesiąc: " + entry.getKey());
+            for (ChatModStatsConfig entry2 : entry.getValue()) {
+                Log.debug("ChatMod: " + entry2.getId());
+                Log.debug("Liczba kar: " + entry2.getLiczbaKar());
+            }
+        }
+        Log.debug("-----------------------");
+        
+        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodWMiesiacu.entrySet()) {
+            Log.debug("Data: " + new Date(entry.getKey()));
+            for (ChatModStatsConfig entry2 : entry.getValue()) {
+                Log.debug("ChatMod: " + entry2.getId());
+                Log.debug("Liczba kar: " + entry2.getLiczbaKar());
+            }
+        }
+        Log.debug("-----------------------");
 
     }
 }
