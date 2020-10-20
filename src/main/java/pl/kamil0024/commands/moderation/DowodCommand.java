@@ -80,7 +80,7 @@ public class DowodCommand extends Command {
                     eb.setColor(c);
                     eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
 
-                    if (dowod.getContent() != null) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
+                    if (dowod.getContent() != null && !dowod.getContent().isEmpty()) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
                     if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
                     eb.addField(" ", "ID Zgłoszenia: " + dowod.getId(), false);
                     pages.add(eb);
@@ -102,11 +102,9 @@ public class DowodCommand extends Command {
                     return false;
                 }
                 if (kara.getKara().getDowody() == null) {
-                    Log.debug("tak");
                     kara.getKara().setDowody(new ArrayList<>());
                 }
 
-                Log.debug("id: " + context.getArgs().get(2));
                 Dowod d = Dowod.getDowodById(Integer.parseInt(context.getArgs().get(2)), kara.getKara().getDowody());
                 if (d == null) {
                     context.send("Nie ma dowodu o takim ID!").queue();
