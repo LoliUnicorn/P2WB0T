@@ -32,6 +32,7 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
 
@@ -63,7 +64,6 @@ public class KaryListener extends ListenerAdapter {
         if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
         if (event.getMember().getUser().isBot()) return;
 
-
         check(event);
     }
 
@@ -79,7 +79,20 @@ public class KaryListener extends ListenerAdapter {
                     return;
                 }
 
-                Member mem = event.getGuild().retrieveMemberById(entry.getMsg().getAuthor().getId()).complete();
+                if (event.getReactionEmote().getId().equals("623630774171729931")) {
+                    entry.getMsg().delete().queue();
+                    getEmbedy().remove(entry);
+                    return;
+                }
+
+                String msgContent = msg.getContentDisplay();
+                msg.delete().queue();
+
+                Member mem = null;
+                try {
+                    mem = event.getGuild().retrieveMemberById(entry.getMsg().getAuthor().getId()).complete();
+                } catch (Exception ignored) { }
+
                 if (mem == null) {
                     event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik wyszedł z serwera??")
                             .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
@@ -97,7 +110,12 @@ public class KaryListener extends ListenerAdapter {
                     continue;
                 }
 
-                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule);
+                Dowod d = new Dowod();
+                d.setId(1);
+                d.setUser(event.getMember().getId());
+                d.setContent(msgContent);
+
+                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d);
                 getEmbedy().remove(entry);
                 msg.delete().queue();
             }

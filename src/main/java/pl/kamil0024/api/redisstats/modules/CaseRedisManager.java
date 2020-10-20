@@ -40,9 +40,9 @@ public class CaseRedisManager {
     @Setter private long lastUpdate = 0;
 
     private final CaseDao caseDao;
-    private final Map<Integer, Integer> mapKaryWRoku;
+    private final Map<Long, Integer> mapKaryWRoku;
     private final Map<Long, Integer> mapWTygodniu;
-    private final Map<Integer, Integer> mapOstatnieKary24h;
+    private final Map<Long, Integer> mapOstatnieKary24h;
     private final Map<Long, Integer> mapKaryWMiesiacu;
 
     private ScheduledExecutorService executorSche;
@@ -66,11 +66,11 @@ public class CaseRedisManager {
 
         setLastUpdate(new Date().getTime());
 
-        Map<Integer, Integer> kryWRoku = new HashMap<>();
+        Map<Long, Integer> kryWRoku = new HashMap<>();
         Map<Long, Integer> karyWTygodniu = new HashMap<>();
         Map<Long, Integer> karyWMiesiacu = new HashMap<>();
 
-        Map<Integer, Integer> ostatnieKary24h = new HashMap<>();
+        Map<Long, Integer> ostatnieKary24h = new HashMap<>();
         Calendar cal = Calendar.getInstance();
 
         DateTime now = new DateTime();
@@ -78,7 +78,7 @@ public class CaseRedisManager {
             Kara kara = caseConfig.getKara();
             DateTime dt = new DateTime(kara.getTimestamp());
             
-            int h = dt.getMonthOfYear();
+            long h = dt.getMonthOfYear();
             int kary = (kryWRoku.getOrDefault(h, 0)) + 1;
             kryWRoku.put(h, kary);
 
@@ -93,8 +93,8 @@ public class CaseRedisManager {
             }
 
             if (dt.isAfter(now.minusDays(1)) && dt.getDayOfYear() == now.getDayOfYear()) {
-                int hofday = dt.getHourOfDay();
-                ostatnieKary24h.put(hofday, (ostatnieKary24h.getOrDefault(dt.getHourOfDay(), 0)) + 1);
+                long hofday = dt.getHourOfDay();
+                ostatnieKary24h.put(hofday, (ostatnieKary24h.getOrDefault(hofday, 0)) + 1);
             }
 
             if (dt.getMonthOfYear() == now.getMonthOfYear() && dt.getYear() == now.getYear()) {
@@ -104,7 +104,7 @@ public class CaseRedisManager {
 
         }
 
-        for (Map.Entry<Integer, Integer> entry : kryWRoku.entrySet()) {
+        for (Map.Entry<Long, Integer> entry : kryWRoku.entrySet()) {
             this.mapKaryWRoku.put(entry.getKey(), entry.getValue());
         }
 
@@ -112,7 +112,7 @@ public class CaseRedisManager {
             this.mapWTygodniu.put(entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<Integer, Integer> entry : ostatnieKary24h.entrySet()) { ;
+        for (Map.Entry<Long, Integer> entry : ostatnieKary24h.entrySet()) { ;
             mapOstatnieKary24h.put(entry.getKey(), entry.getValue());
         }
 

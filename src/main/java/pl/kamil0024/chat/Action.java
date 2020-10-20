@@ -75,6 +75,7 @@ public class Action {
         txt.sendMessage(eb.build()).queue(m -> {
                 m.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
                 m.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
+                m.addReaction(msg.getAuthor().getJDA().getEmoteById("623630774171729931")).queue();
                 setBotMsg(m.getId());
                 KaryListener.getEmbedy().add(this);
         });
