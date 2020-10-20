@@ -31,7 +31,6 @@ import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
 import pl.kamil0024.core.logger.Log;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -54,6 +53,7 @@ public class RedisChatModStats implements HttpHandler {
         try {
             boolean pa = Boolean.parseBoolean(ex.getQueryParameters().get("chatmod").getFirst());
             if (pa) {
+                int rok = new DateTime().getYear();
                 Map<Long, List<ChatModStatsConfig>> chatmodMiesiac = sortByKey(redis.getMapChatmodWMiesiacu());
 
                 Map<String, List<Integer>> dataChatmodMiesiac = new HashMap<>();
@@ -66,7 +66,7 @@ public class RedisChatModStats implements HttpHandler {
                 List<String> labels = new ArrayList<>();
 
                 for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodRok.entrySet()) {
-                    labels.add(sdf.format(new Date(entry.getKey())));
+                    labels.add(entry.getKey() + "." + rok);
                     for (ChatModStatsConfig confEntry : entry.getValue()) {
                         List<Integer> data = dataChatmodMiesiac.getOrDefault(confEntry.getNick(), new ArrayList<>());
                         data.add(confEntry.getLiczbaKar());
@@ -74,6 +74,9 @@ public class RedisChatModStats implements HttpHandler {
                     }
                 }
                 for (Map.Entry<String, List<Integer>> entry : dataChatmodMiesiac.entrySet()) {
+                    if (entry.getValue().size() > labels.size()) {
+                        continue;
+                    }
                     datasets.add(new Datasets(entry.getKey(), randomColor(), entry.getValue()));
                 }
 
