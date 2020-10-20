@@ -91,10 +91,18 @@ public class CaseRedisManager {
             String chatmodId = kara.getAdmId();
             List<ChatModStatsConfig> lista = chatModWRoku.getOrDefault(h, new ArrayList<>());
             for (ChatModStatsConfig config : lista) {
+                boolean exist = false;
                 if (config.getId().equals(chatmodId)) {
                     lista.remove(config);
                     config.setLiczbaKar(config.getLiczbaKar() + 1);
                     lista.add(config);
+                    exist = true;
+                }
+                if (!exist) {
+                    ChatModStatsConfig cst = new ChatModStatsConfig();
+                    cst.setLiczbaKar(1);
+                    cst.setId(chatmodId);
+                    lista.add(cst);
                 }
             }
             chatModWRoku.put(h, lista);
@@ -120,10 +128,16 @@ public class CaseRedisManager {
 
                 List<ChatModStatsConfig> listaMsc = chatmodWMiesiacu.getOrDefault(ms, new ArrayList<>());
                 for (ChatModStatsConfig config : listaMsc) {
+                    boolean exist = false;
                     if (config.getId().equals(chatmodId)) {
                         lista.remove(config);
                         config.setLiczbaKar(config.getLiczbaKar() + 1);
                         lista.add(config);
+                    }
+                    if (!exist) {
+                        ChatModStatsConfig cst = new ChatModStatsConfig();
+                        cst.setId(chatmodId);
+                        cst.setLiczbaKar(1);
                     }
                 }
                 chatmodWMiesiacu.put(ms, lista);
@@ -155,7 +169,7 @@ public class CaseRedisManager {
             }
         }
         Log.debug("-----------------------");
-        
+
         for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodWMiesiacu.entrySet()) {
             Log.debug("Data: " + new Date(entry.getKey()));
             for (ChatModStatsConfig entry2 : entry.getValue()) {
