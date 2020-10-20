@@ -26,13 +26,17 @@ import lombok.Data;
 import org.joda.time.DateTime;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
+import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 public class RedisChatModStats implements HttpHandler {
 
+    private final Random rand = new Random();
     RedisStatsManager redisStatsManager;
 
     public RedisChatModStats(RedisStatsManager redisStatsManager) {
@@ -42,11 +46,35 @@ public class RedisChatModStats implements HttpHandler {
     @Override
     public void handleRequest(HttpServerExchange ex) {
         if (!Response.checkIp(ex)) { return; }
+        CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
+        List<RenderToCharts> charts = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            boolean pa = Boolean.parseBoolean(ex.getQueryParameters().get("chatmod").getFirst());
+            if (pa) {
+                Map<Long, List<ChatModStatsConfig>> chatmodMiesiac = sortByKey(redis.getMapChatmodWMiesiacu());
+                Map<Long, List<ChatModStatsConfig>> chatmodRok = redis.getMapChatmodWMiesiacu();
+
+                RenderToCharts rtc = new RenderToCharts();
+                List<Datasets> datasets = new ArrayList<>();
+                List<String> labels = new ArrayList<>();
+
+                for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodRok.entrySet()) {
+                    labels.add(sdf.format(new Date(entry.getKey())));
+                    for (ChatModStatsConfig confEntry : entry.getValue()) {
+                        datasets.add(new Datasets(confEntry.getNick(), randomColor(), Collections.singletonList(confEntry.getLiczbaKar())));
+                    }
+                }
+
+                rtc.setLabels(labels);
+                rtc.setDatasets(datasets);
+                charts.add(rtc);
+                Response.sendObjectResponse(ex, charts);
+                return;
+            }
+        } catch (Exception ignored) { }
 
         try {
-            CaseRedisManager redis = redisStatsManager.getCaseRedisManager();
-            List<RenderToCharts> charts = new ArrayList<>();
-
             Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu(), true);
             Map<Long, Integer> karyWRoku = redis.getMapKaryWRoku();
             Map<Long, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
@@ -55,8 +83,8 @@ public class RedisChatModStats implements HttpHandler {
             charts.add(getCharts(karyWRoku, "rok"));
             charts.add(getCharts(sortByKey(karyDzisiaj, false), "dzisiaj"));
 
-            charts.add(getCharts(sortByKey(karyWTygodniu, false), new SimpleDateFormat("dd.MM.yyyy")));
-            charts.add(getCharts(sortByKey(karyWMiesiacu, false), new SimpleDateFormat("dd.MM.yyyy")));
+            charts.add(getCharts(sortByKey(karyWTygodniu, false), sdf));
+            charts.add(getCharts(sortByKey(karyWMiesiacu, false), sdf));
 
             Response.sendObjectResponse(ex, charts);
         } catch (Exception e) {
@@ -140,6 +168,22 @@ public class RedisChatModStats implements HttpHandler {
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
+    }
+
+    private Map<Long, List<ChatModStatsConfig>> sortByKey(Map<Long, List<ChatModStatsConfig>> map) {
+        List<Map.Entry<Long, List<ChatModStatsConfig>>> list = new ArrayList<>(map.entrySet());
+        list.sort(Collections.reverseOrder(Map.Entry.comparingByKey()));
+
+        Map<Long, List<ChatModStatsConfig>> res = new LinkedHashMap<>();
+        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : list) {
+            res.put(entry.getKey(), entry.getValue());
+        }
+        return res;
+    }
+
+    private String randomColor() {
+        int rand_num = rand.nextInt(0xffffff + 1);
+        return String.format("#%06x", rand_num);
     }
 
 }

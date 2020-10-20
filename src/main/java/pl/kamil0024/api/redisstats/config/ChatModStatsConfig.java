@@ -28,6 +28,7 @@ public class ChatModStatsConfig {
     public ChatModStatsConfig() { }
 
     private String id;
+    private String nick;
     private int liczbaKar = 0;
 
     public static boolean containsId(String id, List<ChatModStatsConfig> c) {

@@ -20,6 +20,7 @@
 package pl.kamil0024.api.redisstats;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.redis.RedisManager;
@@ -30,10 +31,11 @@ public class RedisStatsManager {
     private final RedisManager redisManager;
     private final CaseDao caseDao;
     private final CaseRedisManager caseRedisManager;
-    public RedisStatsManager(RedisManager redisManager, CaseDao caseDao) {
+
+    public RedisStatsManager(RedisManager redisManager, CaseDao caseDao, ShardManager api) {
         this.redisManager = redisManager;
         this.caseDao = caseDao;
-        this.caseRedisManager = new CaseRedisManager(caseDao);
+        this.caseRedisManager = new CaseRedisManager(caseDao, api);
     }
 
 }

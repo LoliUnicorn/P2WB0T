@@ -21,11 +21,14 @@ package pl.kamil0024.api.redisstats.modules;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.joda.time.DateTime;
 import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;
 
 import java.util.*;
@@ -44,13 +47,15 @@ public class CaseRedisManager {
     private final Map<Long, Integer> mapOstatnieKary24h;
     private final Map<Long, Integer> mapKaryWMiesiacu;
 
-    private final Map<String, Integer> mapChatmodWMiesiacu;
-    private final Map<String, Integer> mapChatmodWRoku;
+    private final Map<Long, List<ChatModStatsConfig>> mapChatmodWMiesiacu;
+    private final Map<Long, List<ChatModStatsConfig>> mapChatmodWRoku;
 
     private ScheduledExecutorService executorSche;
+    private ShardManager api;
 
-    public CaseRedisManager(CaseDao caseDao) {
+    public CaseRedisManager(CaseDao caseDao, ShardManager api) {
         this.caseDao = caseDao;
+        this.api = api;
 
         this.mapKaryWRoku = new HashMap<>();
         this.mapWTygodniu = new HashMap<>();
@@ -75,6 +80,8 @@ public class CaseRedisManager {
         getMapWTygodniu().clear();
 
         setLastUpdate(new Date().getTime());
+
+        Map<String, String> nicknames = new HashMap<>();
 
         Map<Long, Integer> kryWRoku = new HashMap<>();
         Map<Long, Integer> karyWTygodniu = new HashMap<>();
@@ -101,6 +108,19 @@ public class CaseRedisManager {
                 ChatModStatsConfig cst = new ChatModStatsConfig();
                 cst.setLiczbaKar(1);
                 cst.setId(chatmodId);
+                String nick = nicknames.get(chatmodId);
+                if (nick == null) {
+                    User u = api.retrieveUserById(chatmodId).complete();
+                    try {
+                        String n = UserUtil.getMcNick(api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(chatmodId).complete(), true);
+                        nicknames.put(chatmodId, n);
+                        cst.setNick(n);
+                    } catch (Exception e) {
+                        String n = UserUtil.getName(u);
+                        nicknames.put(chatmodId, n);
+                        cst.setNick(n);
+                    }
+                } else cst.setNick(nick);
                 lista.add(cst);
             } else {
                 for (ChatModStatsConfig config : lista) {
@@ -148,40 +168,12 @@ public class CaseRedisManager {
             }
         }
 
-        for (Map.Entry<Long, Integer> entry : kryWRoku.entrySet()) {
-            this.mapKaryWRoku.put(entry.getKey(), entry.getValue());
-        }
-
-        for (Map.Entry<Long, Integer> entry : karyWTygodniu.entrySet()) {
-            this.mapWTygodniu.put(entry.getKey(), entry.getValue());
-        }
-
-        for (Map.Entry<Long, Integer> entry : ostatnieKary24h.entrySet()) { ;
-            mapOstatnieKary24h.put(entry.getKey(), entry.getValue());
-        }
-
-        for (Map.Entry<Long, Integer> entry : karyWMiesiacu.entrySet()) {
-            mapKaryWMiesiacu.put(entry.getKey(), entry.getValue());
-        }
-
-        Log.debug("-----------------------");
-        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatModWRoku.entrySet()) {
-            Log.debug("Miesiąc: " + entry.getKey());
-            for (ChatModStatsConfig entry2 : entry.getValue()) {
-                Log.debug("ChatMod: " + entry2.getId());
-                Log.debug("Liczba kar: " + entry2.getLiczbaKar());
-            }
-        }
-        Log.debug("-----------------------");
-
-        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodWMiesiacu.entrySet()) {
-            Log.debug("Data: " + new Date(entry.getKey()));
-            for (ChatModStatsConfig entry2 : entry.getValue()) {
-                Log.debug("ChatMod: " + entry2.getId());
-                Log.debug("Liczba kar: " + entry2.getLiczbaKar());
-            }
-        }
-        Log.debug("-----------------------");
+        mapKaryWRoku.putAll(kryWRoku);
+        mapWTygodniu.putAll(karyWTygodniu);
+        mapOstatnieKary24h.putAll(ostatnieKary24h);
+        mapKaryWMiesiacu.putAll(karyWMiesiacu);
+        mapChatmodWMiesiacu.putAll(chatmodWMiesiacu);
+        mapChatmodWRoku.putAll(chatModWRoku);
 
     }
 }
