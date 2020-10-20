@@ -21,11 +21,22 @@ package pl.kamil0024.api.redisstats.config;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ChatModStatsConfig {
     public ChatModStatsConfig() { }
 
     private String id;
     private int liczbaKar = 0;
+
+    public static boolean containsId(String id, List<ChatModStatsConfig> c) {
+        for (ChatModStatsConfig e : c) {
+            if (e.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

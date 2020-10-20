@@ -90,19 +90,17 @@ public class CaseRedisManager {
 
             String chatmodId = kara.getAdmId();
             List<ChatModStatsConfig> lista = chatModWRoku.getOrDefault(h, new ArrayList<>());
+            if (lista.isEmpty() || !ChatModStatsConfig.containsId(chatmodId, lista)) {
+                ChatModStatsConfig cst = new ChatModStatsConfig();
+                cst.setLiczbaKar(1);
+                cst.setId(chatmodId);
+                lista.add(cst);
+            }
             for (ChatModStatsConfig config : lista) {
-                boolean exist = false;
                 if (config.getId().equals(chatmodId)) {
                     lista.remove(config);
                     config.setLiczbaKar(config.getLiczbaKar() + 1);
                     lista.add(config);
-                    exist = true;
-                }
-                if (!exist) {
-                    ChatModStatsConfig cst = new ChatModStatsConfig();
-                    cst.setLiczbaKar(1);
-                    cst.setId(chatmodId);
-                    lista.add(cst);
                 }
             }
             chatModWRoku.put(h, lista);
@@ -127,18 +125,17 @@ public class CaseRedisManager {
                 karyWMiesiacu.put(ms, (karyWMiesiacu.getOrDefault(ms, 0)) + 1);
 
                 List<ChatModStatsConfig> listaMsc = chatmodWMiesiacu.getOrDefault(ms, new ArrayList<>());
+                if (listaMsc.isEmpty() || !ChatModStatsConfig.containsId(chatmodId, listaMsc)) {
+                    ChatModStatsConfig cst = new ChatModStatsConfig();
+                    cst.setId(chatmodId);
+                    cst.setLiczbaKar(1);
+                    lista.add(cst);
+                }
                 for (ChatModStatsConfig config : listaMsc) {
-                    boolean exist = false;
                     if (config.getId().equals(chatmodId)) {
                         lista.remove(config);
                         config.setLiczbaKar(config.getLiczbaKar() + 1);
                         lista.add(config);
-                        exist = true;
-                    }
-                    if (!exist) {
-                        ChatModStatsConfig cst = new ChatModStatsConfig();
-                        cst.setId(chatmodId);
-                        cst.setLiczbaKar(1);
                     }
                 }
                 chatmodWMiesiacu.put(ms, lista);
