@@ -168,6 +168,14 @@ public class CaseRedisManager {
             }
         }
 
+        for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatModWRoku.entrySet()) {
+            for (ChatModStatsConfig chatModStatsConfig : entry.getValue()) {
+                if (chatModStatsConfig.getNick() == null || chatModStatsConfig.getNick().isEmpty()) {
+                    chatModWRoku.remove(entry.getKey());
+                }
+            }
+        }
+
         mapKaryWRoku.putAll(kryWRoku);
         mapWTygodniu.putAll(karyWTygodniu);
         mapOstatnieKary24h.putAll(ostatnieKary24h);

@@ -19,6 +19,7 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
@@ -28,8 +29,8 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
+import pl.kamil0024.core.logger.Log;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -52,18 +53,19 @@ public class RedisChatModStats implements HttpHandler {
         try {
             boolean pa = Boolean.parseBoolean(ex.getQueryParameters().get("chatmod").getFirst());
             if (pa) {
+                int rok = new DateTime().getYear();
                 Map<Long, List<ChatModStatsConfig>> chatmodMiesiac = sortByKey(redis.getMapChatmodWMiesiacu());
 
                 Map<String, List<Integer>> dataChatmodMiesiac = new HashMap<>();
 
-                Map<Long, List<ChatModStatsConfig>> chatmodRok = redis.getMapChatmodWMiesiacu();
+                Map<Long, List<ChatModStatsConfig>> chatmodRok = sortByKey(redis.getMapChatmodWRoku());
 
                 RenderToCharts rtc = new RenderToCharts();
                 List<Datasets> datasets = new ArrayList<>();
                 List<String> labels = new ArrayList<>();
 
                 for (Map.Entry<Long, List<ChatModStatsConfig>> entry : chatmodRok.entrySet()) {
-                    labels.add(sdf.format(new Date(entry.getKey())));
+                    labels.add(entry.getKey() + "." + rok);
                     for (ChatModStatsConfig confEntry : entry.getValue()) {
                         List<Integer> data = dataChatmodMiesiac.getOrDefault(confEntry.getNick(), new ArrayList<>());
                         data.add(confEntry.getLiczbaKar());
@@ -71,6 +73,9 @@ public class RedisChatModStats implements HttpHandler {
                     }
                 }
                 for (Map.Entry<String, List<Integer>> entry : dataChatmodMiesiac.entrySet()) {
+                    if (entry.getValue().size() > labels.size()) {
+                        continue;
+                    }
                     datasets.add(new Datasets(entry.getKey(), randomColor(), entry.getValue()));
                 }
 
@@ -84,7 +89,7 @@ public class RedisChatModStats implements HttpHandler {
 
         try {
             Map<Long, Integer> karyWTygodniu = sortByKey(redis.getMapWTygodniu(), true);
-            Map<Long, Integer> karyWRoku = redis.getMapKaryWRoku();
+            Map<Long, Integer> karyWRoku = sortByKey(redis.getMapKaryWRoku(), true);
             Map<Long, Integer> karyDzisiaj = redis.getMapOstatnieKary24h();
             Map<Long, Integer> karyWMiesiacu = sortByKey(redis.getMapKaryWMiesiacu(), false);
 

@@ -120,7 +120,9 @@ public class KaryListener extends ListenerAdapter {
 
                 PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d);
                 getEmbedy().remove(entry);
-                msg.delete().queue();
+                try {
+                    msg.delete().complete();
+                } catch (Exception ignored) { }
             }
 
         } catch (ConcurrentModificationException ignored) {
