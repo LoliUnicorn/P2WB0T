@@ -58,4 +58,9 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
         }).collect(Collectors.toList());
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 54a7fac129c05a757b3d90c7142c8da9347004ba
 }
