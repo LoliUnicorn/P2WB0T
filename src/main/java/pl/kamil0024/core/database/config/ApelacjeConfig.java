@@ -44,7 +44,7 @@ public class ApelacjeConfig {
     private String slusznaBlokada;
     private String dodatkowaUwaga = null;
     private String unbanned;
-    
+
     private long createdTime;
 
 }
