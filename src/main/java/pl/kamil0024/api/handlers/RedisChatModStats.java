@@ -59,7 +59,6 @@ public class RedisChatModStats implements HttpHandler {
                 Map<String, List<Integer>> dataChatmodMiesiac = new HashMap<>();
 
                 Map<Long, List<ChatModStatsConfig>> chatmodRok = sortByKey(redis.getMapChatmodWRoku());
-                Log.debug(new Gson().toJson(chatmodRok));
 
                 RenderToCharts rtc = new RenderToCharts();
                 List<Datasets> datasets = new ArrayList<>();
