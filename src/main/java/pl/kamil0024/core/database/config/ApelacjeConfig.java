@@ -43,8 +43,8 @@ public class ApelacjeConfig {
     private String reason;
     private String slusznaBlokada;
     private String dodatkowaUwaga = null;
-
-    private boolean unbanned;
+    private String unbanned;
+    
     private long createdTime;
 
 }

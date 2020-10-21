@@ -54,7 +54,7 @@ public class ApelacjeHandler implements HttpHandler {
                 dodatkowaUwaga = json.getString("dodatkowaUwaga");
             } catch (Exception ignored) { }
 
-            boolean unbanned = json.getBoolean("unbanned");
+            String unbanned = json.getString("unbanned");
             long createdTime = new Date().getTime();
 
             if (apelacjeDao.get(id) != null) {
