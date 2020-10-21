@@ -70,6 +70,7 @@ public class APIModule implements Modul {
     @Inject private final NieobecnosciDao nieobecnosciDao;
     @Inject private final StatsDao statsDao;
     @Inject private final TicketDao ticketDao;
+    @Inject private final ApelacjeDao apelacjeDao;
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;
@@ -77,9 +78,9 @@ public class APIModule implements Modul {
 
     private final Guild guild;
 
-    private ScheduledExecutorService executorSche;
+    private final ScheduledExecutorService executorSche;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -91,6 +92,7 @@ public class APIModule implements Modul {
         this.statsDao = statsDao;
         this.voiceStateDao = voiceStateDao;
         this.ticketDao = ticketDao;
+        this.apelacjeDao = apelacjeDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(-1);
@@ -102,8 +104,7 @@ public class APIModule implements Modul {
 
     @Override
     public boolean startUp() {
-        RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao);
-        redisStatsManager.load();
+        RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao, api);
 
         RoutingHandler routes = new RoutingHandler();
 
@@ -569,6 +570,10 @@ public class APIModule implements Modul {
         routes.post("api/ticket/read", new TicketHandler(ticketDao, 8));
         routes.post("api/ticket/getreads", new TicketHandler(ticketDao, 9));
 
+        routes.get("api/react/stats/chatmod", new RedisChatModStats(redisStatsManager));
+
+        routes.post("api/react/apelacje/put", new ApelacjeHandler(apelacjeDao));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()
@@ -675,7 +680,7 @@ public class APIModule implements Modul {
 
     @Data
     @AllArgsConstructor
-    public class ChatModUser {
+    public static class ChatModUser {
         private final String nick;
         private final String prefix;
         private final String avatar;

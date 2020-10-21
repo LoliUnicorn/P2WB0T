@@ -17,22 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.api.redisstats.config;
+package pl.kamil0024.core.database.config;
 
+import gg.amy.pgorm.annotations.GIndex;
+import gg.amy.pgorm.annotations.PrimaryKey;
+import gg.amy.pgorm.annotations.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
+@Table("apelacje")
+@GIndex({"id"})
 @Data
-public class CaseRedisConfig {
-    public CaseRedisConfig() { }
+@AllArgsConstructor
+public class ApelacjeConfig {
+    public ApelacjeConfig() { }
 
-    public List<GodzinaStats> godziny;
+    public ApelacjeConfig(String id) { this.id = id; }
 
-    @Data
-    public class GodzinaStats {
-        private int godzina;
-        private int zgloszen;
-    }
+    @PrimaryKey
+    private String id;
+
+    private String bannedNick;
+    private String admNick;
+    private String apelacjeNick;
+    private String reason;
+    private String slusznaBlokada;
+    private String dodatkowaUwaga = null;
+    private String unbanned;
+
+    private long createdTime;
 
 }

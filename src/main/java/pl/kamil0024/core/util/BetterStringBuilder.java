@@ -23,11 +23,9 @@ import lombok.Getter;
 
 public class BetterStringBuilder {
 
-    @Getter Number lines;
     @Getter StringBuilder stringBuilder;
 
     public BetterStringBuilder() {
-        this.lines = 0;
         this.stringBuilder = new StringBuilder();
     }
 

@@ -17,25 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.api.redisstats;
+package pl.kamil0024.api.redisstats.config;
 
-import lombok.Getter;
-import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
-import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.redis.RedisManager;
+import lombok.Data;
 
-@Getter
-public class RedisStatsManager {
+import java.util.List;
 
-    private final RedisManager redisManager;
-    private final CaseDao caseDao;
-    private final CaseRedisManager caseRedisManager;
+@Data
+public class ChatModStatsConfig {
+    public ChatModStatsConfig() { }
 
-    public RedisStatsManager(RedisManager redisManager, CaseDao caseDao, ShardManager api) {
-        this.redisManager = redisManager;
-        this.caseDao = caseDao;
-        this.caseRedisManager = new CaseRedisManager(caseDao, api);
+    private String id;
+    private String nick;
+    private int liczbaKar = 0;
+
+    public static boolean containsId(String id, List<ChatModStatsConfig> c) {
+        for (ChatModStatsConfig e : c) {
+            if (e.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

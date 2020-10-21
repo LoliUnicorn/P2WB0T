@@ -327,6 +327,10 @@ public class ModLog extends ListenerAdapter {
         if (seeAktywna) {
             eb.addField("Aktywna?", kara.getAktywna() ? "Tak" : "Nie", false);
         }
+        if (kara.getDowody() != null && kara.getDowody().size() != 0) {
+            eb.addField("Dowody", "Do tej kary dołączono dowody. Aby je wyświetlić użyj komendy `dowod " + kara.getKaraId() + " list`", false);
+        }
+        eb.addField("Aktywna?", kara.getAktywna() ? "Tak" : "Nie", false);
         return eb;
     }
 

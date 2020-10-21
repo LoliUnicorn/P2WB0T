@@ -29,6 +29,7 @@ import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.util.UserUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -52,6 +53,9 @@ public class Kara {
 
     // przy nadawaniu puna
     private Boolean punAktywna = false;
+
+    // dowody
+    private List<Dowod> dowody = new ArrayList<>();
 
     public static String check(CommandContext context, User karany) {
         if (UserUtil.getPermLevel(context.getMember()).getNumer() <= UserUtil.getPermLevel(karany).getNumer()) {
