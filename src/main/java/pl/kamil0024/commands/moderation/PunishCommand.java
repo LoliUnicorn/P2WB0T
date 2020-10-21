@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.kamil0024.chat.listener.ChatListener;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.Ustawienia;
@@ -49,17 +48,12 @@ import pl.kamil0024.core.util.kary.KaryEnum;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PunishCommand extends Command {
-
-    private static Logger logger = LoggerFactory.getLogger(PunishCommand.class);
 
     private final KaryJSON karyJSON;
     private final EventWaiter eventWaiter;
@@ -188,6 +182,7 @@ public class PunishCommand extends Command {
         Emote green = CommandExecute.getReaction(context.getUser(), true);
         msg.addReaction(Objects.requireNonNull(green)).queue();
         msg.addReaction(Objects.requireNonNull(red)).queue();
+        //noinspection ConstantConditions
         eventWaiter.waitForEvent(MessageReactionAddEvent.class,
                 (event) -> event.getUser().getId().equals(context.getUser().getId()) && event.getMessageId().equals(msg.getId()),
                 (event) -> {
@@ -265,6 +260,7 @@ public class PunishCommand extends Command {
                 karaBuilder.setEnd(dur);
                 karaBuilder.setDuration(jegoTier.getDuration());
             }
+            if (dowod != null) karaBuilder.setDowody(Collections.singletonList(dowod));
 
             switch (jegoTier.getType()) {
                 case KICK:

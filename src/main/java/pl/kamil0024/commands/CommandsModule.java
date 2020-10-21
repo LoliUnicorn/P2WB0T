@@ -75,6 +75,7 @@ public class CommandsModule implements Modul {
     @Inject NieobecnosciManager nieobecnosciManager;
     @Inject YouTrack youTrack;
     @Inject TicketDao ticketDao;
+    @Inject ApelacjeDao apelacjeDao;
 
     private boolean start = false;
     private ModLog modLog;
@@ -84,7 +85,7 @@ public class CommandsModule implements Modul {
     GuildListener guildListener;
     GiveawayListener giveawayListener;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager, YouTrack youTrack, TicketDao ticketDao) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -105,6 +106,7 @@ public class CommandsModule implements Modul {
         this.nieobecnosciManager = nieobecnosciManager;
         this.youTrack = youTrack;
         this.ticketDao = ticketDao;
+        this.apelacjeDao = apelacjeDao;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
@@ -124,7 +126,7 @@ public class CommandsModule implements Modul {
         cmd.add(new BotinfoCommand(commandManager, modulManager, musicAPI));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
-        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI, youTrack, ticketDao));
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI, youTrack, ticketDao, apelacjeDao))
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());
