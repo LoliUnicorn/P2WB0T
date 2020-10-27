@@ -46,6 +46,8 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class CommandExecute extends ListenerAdapter {
@@ -129,12 +131,13 @@ public class CommandExecute extends ListenerAdapter {
         if (Ustawienia.instance.disabledCommand.contains(e.getChannel().getId())) {
             if (jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
                 zareaguj(e.getMessage(), e.getAuthor(), false);
-                new Thread(() -> {
+                Runnable task = () -> {
                     try {
-                        Thread.sleep(3000);
                         e.getMessage().clearReactions().complete();
                     } catch (Exception ignored) { }
-                }).start();
+                };
+                ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+                ses.schedule(task, 3, TimeUnit.SECONDS);
                 return;
             }
         }
