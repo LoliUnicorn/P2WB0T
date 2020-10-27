@@ -76,7 +76,7 @@ public class KaryListener extends ListenerAdapter {
                 if (event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
                     msg.delete().complete();
                     getEmbedy().remove(entry);
-                    return;
+                    continue;
                 }
 
                 if (event.getReactionEmote().getId().equals("623630774171729931")) {
@@ -85,10 +85,15 @@ public class KaryListener extends ListenerAdapter {
                     } catch (Exception ignored) { }
                     entry.getMsg().delete().queue();
                     getEmbedy().remove(entry);
-                    return;
+                    continue;
                 }
 
                 String msgContent = msg.getContentDisplay();
+                Dowod d = new Dowod();
+                d.setId(1);
+                d.setUser(event.getMember().getId());
+                d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + msgContent);
+                d.setImage(null);
                 msg.delete().queue();
 
                 Member mem = null;
@@ -112,11 +117,6 @@ public class KaryListener extends ListenerAdapter {
                     event.getChannel().sendMessage(event.getMember().getAsMention() + ", kara `" + entry.getKara().getPowod() + "` jest źle wpisana!").queue();
                     continue;
                 }
-
-                Dowod d = new Dowod();
-                d.setId(1);
-                d.setUser(event.getMember().getId());
-                d.setContent(msgContent);
 
                 PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d);
                 getEmbedy().remove(entry);

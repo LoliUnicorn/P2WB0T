@@ -213,7 +213,7 @@ public class DynamicEmbedPageinator {
             throw new RuntimeException(e);
         }
         eb.setFooter(String.format("%s/%s", page, pages.size()), null);
-        if (loading) eb.setFooter(String.format("%s/%s", page, pages.size())
+        if (loading && pages.size() > 1) eb.setFooter(String.format("%s/%s", page, pages.size())
                 + " ⌛", null);
         return eb.build();
     }

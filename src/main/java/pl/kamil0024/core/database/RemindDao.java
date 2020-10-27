@@ -20,6 +20,7 @@
 package pl.kamil0024.core.database;
 
 import gg.amy.pgorm.PgMapper;
+import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.Dao;
 import pl.kamil0024.core.database.config.RemindConfig;
 
@@ -33,7 +34,6 @@ public class RemindDao implements Dao<RemindConfig> {
         if (databaseManager == null) throw new IllegalStateException("databaseManager == null");
         mapper = databaseManager.getPgStore().mapSync(RemindConfig.class);
     }
-
 
     @Override
     public RemindConfig get(String id) {
@@ -55,8 +55,12 @@ public class RemindDao implements Dao<RemindConfig> {
         mapper.delete(Integer.parseInt(toCos.getId()));
     }
 
-    public String getNextId() {
-        return String.valueOf(getAll().size() + 1);
+    public synchronized String getNextId() {
+        int lastId = 0;
+        for (RemindConfig entry : getAll()) {
+            lastId = Math.max(Integer.parseInt(entry.getId()), lastId);
+        }
+        return String.valueOf(lastId + 1);
     }
 
 }

@@ -20,7 +20,6 @@
 package pl.kamil0024.commands.system;
 
 import com.google.inject.Inject;
-import com.google.inject.internal.cglib.core.$HashCodeCustomizer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -30,9 +29,7 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.RemindDao;
-import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.database.config.RemindConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 
 import java.awt.*;
@@ -40,14 +37,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.FutureTask;
-import java.util.stream.Collectors;
 
 public class RemindmeCommand extends Command {
 
-    @Inject private RemindDao remindDao;
-    @Inject private EventWaiter eventWaiter;
+    @Inject private final RemindDao remindDao;
+    @Inject private final EventWaiter eventWaiter;
 
     public RemindmeCommand(RemindDao remindDao, EventWaiter eventWaiter) {
         name = "remind";
@@ -138,7 +133,7 @@ public class RemindmeCommand extends Command {
         for (RemindConfig remind : remindDao.getAll()) {
             if (remind.getCzas() - teraz <= 0) {
                 BetterStringBuilder sb = new BetterStringBuilder();
-                sb.appendLine("⏰ **Przypomnienie**: " + remind.getTresc());
+                sb.appendLine("⏰ **Przypomnienie**:" + remind.getTresc());
                 sb.appendLine("Przypomnienie ustawione w tej wiadomości:");
                 sb.append(remind.getMsg());
 

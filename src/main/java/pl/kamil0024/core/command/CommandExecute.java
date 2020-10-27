@@ -27,11 +27,11 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kamil0024.commands.dews.RebootCommand;
-import pl.kamil0024.core.B0T;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CommandExecute extends ListenerAdapter {
 
-    private static Logger logger = LoggerFactory.getLogger(CommandExecute.class);
+    private final Logger logger = LoggerFactory.getLogger(CommandExecute.class);
 
     ArgumentManager argumentManager;
     CommandManager commandManager;
@@ -72,8 +72,10 @@ public class CommandExecute extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
         if (!e.isFromGuild() || e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
-                e.getMessage().getContentRaw().isEmpty()) return;
-        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId) && Ustawienia.instance.devs.contains(e.getGuild().getOwner().getId())) return;
+                e.getMessage().getContentRaw().isEmpty()) {
+            logger.debug("Nie można wykonać komendy dla " + UserUtil.getLogName(e.getAuthor()));
+            return;
+        }
         if (RebootCommand.reboot) return;
 
         String prefix = Ustawienia.instance.prefix;
@@ -101,7 +103,10 @@ public class CommandExecute extends ListenerAdapter {
             }
         }
 
-        if (c == null) { return; }
+        if (c == null) {
+            logger.debug("Nie ma takiej komendy " + UserUtil.getLogName(e.getAuthor()) + " `" + cmd + "`");
+            return;
+        }
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
@@ -182,6 +187,7 @@ public class CommandExecute extends ListenerAdapter {
         } catch (Exception ignored) {}
     }
 
+    @NotNull
     public static Emote getReaction(User user, boolean bol) {
         try {
             Guild g = user.getJDA().getGuildById(Ustawienia.instance.bot.guildId);
@@ -192,7 +198,10 @@ public class CommandExecute extends ListenerAdapter {
 
             if (em == null) throw new IllegalArgumentException("emote == null");
             return em;
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            Log.newError(e, CommandExecute.class);
+        }
+        //noinspection ConstantConditions
         return null;
     }
 
