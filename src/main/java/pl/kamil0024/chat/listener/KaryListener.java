@@ -24,6 +24,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
@@ -88,11 +90,10 @@ public class KaryListener extends ListenerAdapter {
                     continue;
                 }
 
-                String msgContent = msg.getContentDisplay();
                 Dowod d = new Dowod();
                 d.setId(1);
                 d.setUser(event.getMember().getId());
-                d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + msgContent);
+                d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + MarkdownSanitizer.escape(entry.getMsg().getContentDisplay()));
                 d.setImage(null);
                 msg.delete().queue();
 

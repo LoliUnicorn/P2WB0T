@@ -279,7 +279,7 @@ public class ModLog extends ListenerAdapter {
         }
 
         if (mem != null) eb.setColor(UserUtil.getColor(mem));
-        eb.addField("Osoba karana", UserUtil.getFullName(u), false);
+        eb.addField("Osoba karana", MarkdownSanitizer.escape(UserUtil.getFullName(u)), false);
         eb.addField("Nick w mc", MarkdownSanitizer.escape(kara.getMcNick()), false);
         eb.addField("Administrator",
                 mem != null ? UserUtil.getFullName(mem.getUser()) : (admUser != null ? UserUtil.getLogName(admUser) : adm),

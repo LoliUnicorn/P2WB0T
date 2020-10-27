@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,9 +71,9 @@ public class McpremiumCommand extends Command {
             StringBuilder tekstDalej = new StringBuilder();
             for (int i = 0; i < xd.split(" ").length; i++) {
                 if (i == 0)
-                    tekstPierw.append(xd.split(" ")[i]);
+                    tekstPierw.append(MarkdownSanitizer.escape(xd.split(" ")[i]));
                 else {
-                    tekstDalej.append(xd.split(" ")[i]);
+                    tekstDalej.append(MarkdownSanitizer.escape(xd.split(" ")[i]));
                     if (i + 1 < xd.split(" ").length) tekstDalej.append(" ");
                 }
             }
@@ -86,7 +87,7 @@ public class McpremiumCommand extends Command {
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(UserUtil.getColor(context.getMember()));
-        eb.addField(context.getTranslate("mcpremium.name"),"`" +  name + "`", false);
+        eb.addField(context.getTranslate("mcpremium.name"), MarkdownSanitizer.escape(name), false);
         eb.addField(context.getTranslate("mcpremium.uuid"), formatUuid(Objects.requireNonNull(uuid)), false);
         eb.addField(context.getTranslate("mcpremium.namemc"), "[namemc.com](https://namemc.com/profile/" + uuid + ")", false);
         eb.setFooter(context.getTranslate("mcpremium.info") + " " + name);

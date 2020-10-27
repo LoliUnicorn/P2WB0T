@@ -48,8 +48,8 @@ import java.util.concurrent.TimeUnit;
 
 public class NieobecnosciManager {
 
-    @Inject private ShardManager api;
-    @Inject private NieobecnosciDao nieobecnosciDao;
+    @Inject private final ShardManager api;
+    @Inject private final NieobecnosciDao nieobecnosciDao;
 
     public NieobecnosciManager(ShardManager api, NieobecnosciDao nieobecnosciDao) {
         this.api = api;
@@ -98,7 +98,7 @@ public class NieobecnosciManager {
         eb.setAuthor(UserUtil.getMcNick(member), null, member.getUser().getAvatarUrl());
         eb.setThumbnail(member.getUser().getAvatarUrl());
 
-        eb.addField("Osoba zgłaszająca", MarkdownSanitizer.escape(UserUtil.getFullNameMc(member)), false);
+        eb.addField("Osoba zgłaszająca", member.getAsMention() + " " + MarkdownSanitizer.escape(UserUtil.getMcNick(member)), false);
         eb.addField("Powód", nieobecnosc.getPowod(), false);
         if (nieobecnosc.isAktywna()) {
             eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
