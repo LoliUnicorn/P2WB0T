@@ -75,7 +75,13 @@ public class CommandExecute extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
         if (!e.isFromGuild() || e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().isWebhookMessage() ||
                 e.getMessage().getContentRaw().isEmpty()) {
-            logger.debug("Nie można wykonać komendy dla " + UserUtil.getLogName(e.getAuthor()));
+            logger.debug("Nie można wykonać komendy dla");
+            logger.debug(!e.isFromGuild() + "");
+            logger.debug(e.getAuthor().isBot() + "");
+            logger.debug(e.getAuthor().isFake() + "");
+            logger.debug(e.getMessage().isWebhookMessage() + "");
+            logger.debug(e.getMessage().getContentRaw().isEmpty() + "");
+            logger.debug("------------------------------");
             return;
         }
         if (RebootCommand.reboot) return;
