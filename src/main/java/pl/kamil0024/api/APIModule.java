@@ -573,6 +573,7 @@ public class APIModule implements Modul {
         routes.get("api/react/stats/chatmod", new RedisChatModStats(redisStatsManager));
 
         routes.post("api/react/apelacje/put", new ApelacjeHandler(apelacjeDao));
+        routes.get("api/react/apelacje/get/{id}", new ApelacjeHandler(apelacjeDao, 1));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

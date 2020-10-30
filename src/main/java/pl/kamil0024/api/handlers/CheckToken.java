@@ -27,7 +27,7 @@ import pl.kamil0024.core.Ustawienia;
 public class CheckToken implements HttpHandler {
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (checkToken(ex)) {
             Response.sendResponse(ex, "Token jest dobry");
         }
