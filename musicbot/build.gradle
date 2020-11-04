@@ -60,7 +60,7 @@ dependencies {
     compile 'io.undertow:undertow-servlet:2.0.28.Final'
     compile 'io.undertow:undertow-websockets-jsr:2.0.28.Final'
 
-    implementation 'com.sedmelluq:lavaplayer:1.3.50'
+    implementation 'com.sedmelluq:lavaplayer:1.3.55'
     implementation 'com.sedmelluq:lavaplayer-ext-youtube-rotator:0.2.3'
     implementation 'com.github.KAMIL0024:Bdate:-SNAPSHOT'
 
