@@ -68,7 +68,7 @@ public class ApelacjeHandler implements HttpHandler {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji już istnieje.");
                     return;
                 }
-                if (type === 1 && aa == null) {
+                if (type == 1 && aa == null) {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji nie istnieje.");
                     return;
                 }
