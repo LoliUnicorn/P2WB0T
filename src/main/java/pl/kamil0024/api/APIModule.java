@@ -574,6 +574,7 @@ public class APIModule implements Modul {
 
         routes.post("api/react/apelacje/put", new ApelacjeHandler(apelacjeDao));
         routes.get("api/react/apelacje/get/{id}", new ApelacjeHandler(apelacjeDao, 1));
+        routes.post("api/react/apelacje/edit", new ApelacjeHandler(apelacjeDao, 2));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
