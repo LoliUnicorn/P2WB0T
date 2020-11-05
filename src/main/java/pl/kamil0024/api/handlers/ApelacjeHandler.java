@@ -47,6 +47,25 @@ public class ApelacjeHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) {
         if (!Response.checkIp(ex)) { return; }
 
+        if (type == 3) {
+            try {
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                String filtr = json.getString("filtr");
+                String value = json.getString("value");
+                int offset = json.getInt("offset");
+
+                if (filtr.equalsIgnoreCase("all")) Response.sendObjectResponse(ex, apelacjeDao.getAll(offset));
+
+                if (filtr.equalsIgnoreCase("nick")) Response.sendObjectResponse(ex, apelacjeDao.getAllByNick(value, offset));
+
+                Response.sendErrorResponse(ex, "Błąd!", "filtr typu " + filtr + " jest nieprawidłowy");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+            return;
+        }
+
         if (type == 0 || type == 2) {
             try {
                 JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
@@ -68,7 +87,8 @@ public class ApelacjeHandler implements HttpHandler {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji już istnieje.");
                     return;
                 }
-                if (type == 1 && aa == null) {
+                
+                if (type == 2 && aa == null) {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji nie istnieje.");
                     return;
                 }

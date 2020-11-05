@@ -51,6 +51,14 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
         return mapper.loadAll();
     }
 
+    public List<ApelacjeConfig> getAll(int offset) {
+        return mapper.getAllApelacje(offset);
+    }
+
+    public List<ApelacjeConfig> getAllByNick(String nick, int offset) {
+        return mapper.getAllApelacjeByNick(nick, offset);
+    }
+
     public static List<ApelacjeConfig> getFromMonth(List<ApelacjeConfig> apelacje, int month, int year) {
         return apelacje.stream().filter(a -> {
             DateTime dt = new DateTime(a.getCreatedTime());
