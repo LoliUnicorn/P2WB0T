@@ -131,7 +131,7 @@ public class ApelacjeHandler implements HttpHandler {
         }
 
         if (type == 4) {
-            Response.sendObjectResponse(ex, ApelacjeDao.getFromWeek(getAll(), new DateTime()));
+            Response.sendObjectResponse(ex, ApelacjeDao.getFromWeek(apelacjeDao.getAll(), new DateTime()));
         }
 
     }
