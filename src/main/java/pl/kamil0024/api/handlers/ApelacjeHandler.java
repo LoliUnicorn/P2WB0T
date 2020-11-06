@@ -19,6 +19,7 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import org.json.JSONObject;
@@ -87,7 +88,7 @@ public class ApelacjeHandler implements HttpHandler {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji już istnieje.");
                     return;
                 }
-                
+
                 if (type == 2 && aa == null) {
                     Response.sendErrorResponse(ex, "Błąd!", "Takie ID apelacji nie istnieje.");
                     return;
@@ -126,6 +127,10 @@ public class ApelacjeHandler implements HttpHandler {
                 e.printStackTrace();
                 Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
             }
+        }
+
+        if (type == 4) {
+            Response.sendObjectResponse(ex, apelacjeDao.getFromWeekJson());
         }
 
     }

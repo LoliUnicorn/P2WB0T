@@ -29,7 +29,6 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.api.redisstats.config.ChatModStatsConfig;
 import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
-import pl.kamil0024.core.logger.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
