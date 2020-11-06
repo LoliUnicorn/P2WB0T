@@ -22,8 +22,10 @@ package pl.kamil0024.core.database;
 import com.google.gson.Gson;
 import gg.amy.pgorm.PgMapper;
 import org.joda.time.DateTime;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.config.ApelacjeConfig;
 import pl.kamil0024.core.database.config.Dao;
+import pl.kamil0024.core.logger.Log;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,9 +85,16 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
                 .collect(Collectors.toList());
 
         for (ApelacjeConfig a : filtr) {
-            List<ApelacjeConfig> fmap = map.getOrDefault(a.getAdmNick(), new ArrayList<>());
-            fmap.add(a);
-            map.put(a.getAdmNick(), fmap);
+            Integer dzien = Ustawienia.instance.apelacje.dni.get(a.getApelacjeNick());
+            if (dzien != null) {
+                List<ApelacjeConfig> fmap = map.getOrDefault(a.getApelacjeNick(), new ArrayList<>());
+                if (new DateTime(a.getCreatedTime()).getDayOfWeek() != dzien) {
+                    fmap.add(a);
+                    map.put(a.getApelacjeNick(), fmap);
+                }
+            } else {
+                Log.newError("Nick " + a.getApelacjeNick() + " ma apelacje o id " + a.getId() + ", ale nie ma go w configu!", ApelacjeDao.class);
+            }
         }
         return map;
     }

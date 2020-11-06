@@ -20,7 +20,9 @@ package pl.kamil0024.core;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("ALL")
 public class Ustawienia {
@@ -48,6 +50,7 @@ public class Ustawienia {
     public SpotifyCredentials spotify = new SpotifyCredentials();
     public Osu osu = new Osu();
     public Ticket ticket = new Ticket();
+    public Apelacje apelacje = new Apelacje();
 
     public static class Roles {
         public String helperRole = def;
@@ -191,6 +194,10 @@ public class Ustawienia {
         public String vcToCreate = def;
         public String notificationChannel = def;
         public String strefaPomocy = def;
+    }
+
+    public static class Apelacje {
+        public Map<String, Integer> dni = new HashMap<>();
     }
 
 }
