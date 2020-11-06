@@ -85,10 +85,10 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
                 .collect(Collectors.toList());
 
         for (ApelacjeConfig a : filtr) {
-            Integer dzien = Ustawienia.instance.apelacje.dni.get(a.getApelacjeNick());
-            if (dzien != null) {
+            List<Integer> dzien = Ustawienia.instance.apelacje.dni.getOrDefault(a.getApelacjeNick(), new ArrayList<>());
+            if (dzien != null && !dzien.isEmpty()) {
                 List<ApelacjeConfig> fmap = map.getOrDefault(a.getApelacjeNick(), new ArrayList<>());
-                if (new DateTime(a.getCreatedTime()).getDayOfWeek() != dzien) {
+                if (!dzien.contains(new DateTime(a.getCreatedTime()).getDayOfWeek())) {
                     fmap.add(a);
                     map.put(a.getApelacjeNick(), fmap);
                 }

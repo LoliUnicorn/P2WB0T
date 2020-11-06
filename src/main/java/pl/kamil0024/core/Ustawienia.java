@@ -197,7 +197,7 @@ public class Ustawienia {
     }
 
     public static class Apelacje {
-        public Map<String, Integer> dni = new HashMap<>();
+        public Map<String, List<Integer>> dni = new HashMap<>();
     }
 
 }
