@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.ApelacjeDao;
 import pl.kamil0024.core.database.config.ApelacjeConfig;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 
@@ -130,7 +131,7 @@ public class ApelacjeHandler implements HttpHandler {
         }
 
         if (type == 4) {
-            Response.sendObjectResponse(ex, apelacjeDao.getFromWeekJson());
+            Response.sendObjectResponse(ex, ApelacjeDao.getFromWeek(apelacjeDao.getAll(), new DateTime()));
         }
 
     }
