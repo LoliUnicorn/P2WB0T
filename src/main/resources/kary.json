@@ -111,7 +111,25 @@
       }
     },
     "6": {
-      "name": "Wulgaryzmy kierowane do czlonków administracji",
+      "name": "Niestosowne, niecenzuralne oraz nieprzyzwoite nazewnictwo sieci, jak i wulgarne oraz nieodpowiednie zachowanie (niewłaściwe nazewnictwo, ubliżanie, grożenie i wszelkie tego typu zachowania) skierowane wobec administratorów serwerów P2W.pl",
+      "tier_1": {
+        "maxWarns": 1,
+        "type": "Tempban",
+        "time": "1d"
+      },
+      "tier_2": {
+        "maxWarns": 2,
+        "type": "Tempban",
+        "time": "2d"
+      },
+      "tier_3": {
+        "maxWarns": 3,
+        "type": "Tempban",
+        "time": "3d"
+      }
+    },
+    "26": {
+      "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
       "tier_1": {
         "maxWarns": 1,
         "type": "Tempmute",
@@ -119,23 +137,13 @@
       },
       "tier_2": {
         "maxWarns": 2,
-        "type": "Tempmute",
-        "time": "5h"
+        "type": "Tempban",
+        "time": "1d"
       },
       "tier_3": {
-        "maxWarns": 4,
-        "type": "Tempmute",
-        "time": "6h"
-      },
-      "tier_4": {
-        "maxWarns": 6,
+        "maxWarns": 3,
         "type": "Tempban",
-        "time": "3d"
-      },
-      "tier_5": {
-        "maxWarns": 8,
-        "type": "Tempban",
-        "time": "5d"
+        "time": "2d"
       }
     },
     "7": {
@@ -241,24 +249,6 @@
       }
     },
     "16": {
-      "name": "Pisanie obraźliwych lub nieetycznych skrótów (w zależności od sytuacji i kontekstu)",
-      "tier_1": {
-        "maxWarns": 1,
-        "type": "Tempmute",
-        "time": "1h"
-      },
-      "tier_2": {
-        "maxWarns": 2,
-        "type": "Tempmute",
-        "time": "1h"
-      },
-      "tier_3": {
-        "maxWarns": 3,
-        "type": "Tempmute",
-        "time": "5h"
-      }
-    },
-    "17": {
       "name": "Brak kultury na publicznych lub prywatnych kanałach głosowych",
       "tier_1": {
         "maxWarns": 1,
@@ -266,7 +256,7 @@
         "time": "3h"
       }
     },
-    "18": {
+    "17": {
       "name": "Celowe utrudnianie rozmowy na publicznych lub prywatnych kanałach głosowych, wliczając w to puszczanie muzyki, bindów lub dmuchanie w mikrofon",
       "tier_1": {
         "maxWarns": 1,
@@ -274,7 +264,7 @@
         "time": "3h"
       }
     },
-    "19": {
+    "18": {
       "name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
       "tier_1": {
         "maxWarns": 1,
@@ -282,7 +272,7 @@
         "time": "5h"
       }
     },
-    "20": {
+    "19": {
       "name": "Wulgarna lub nieodpowiednia nazwa kanału głosowego",
       "tier_1": {
         "maxWarns": 1,
@@ -290,7 +280,7 @@
         "time": "3h"
       }
     },
-    "21": {
+    "20": {
       "name": "Używanie modulatorów głosu i programów podobnych",
       "tier_1": {
         "maxWarns": 1,
@@ -298,7 +288,7 @@
         "time": "3h"
       }
     },
-    "22": {
+    "21": {
       "name": "Dublowanie kont przebywających na serwisie Discord",
       "tier_1": {
         "maxWarns": 1,
@@ -321,7 +311,7 @@
         "time": "8h"
       }
     },
-    "23": {
+    "22": {
       "name": "Reklamowanie serwerów w żaden sposób niepowiązanych z siecią serwerów P2W.pl w wiadomości prywatnej",
       "tier_1": {
         "maxWarns": 1,
@@ -339,7 +329,7 @@
         "time": "7d"
       }
     },
-    "24": {
+    "23": {
       "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
       "tier_1": {
         "maxWarns": 1,
@@ -357,7 +347,7 @@
         "time": "2d"
       }
     },
-    "25": {
+    "24": {
       "name": "Zaśmiecanie chatu",
       "tier_1": {
         "maxWarns": 1,
@@ -381,42 +371,6 @@
       }
     },
     "26": {
-      "name": "Niestosowne, niecenzuralne oraz nieprzyzwoite nazewnictwo sieci, jak i wulgarne oraz nieodpowiednie zachowanie (niewłaściwe nazewnictwo, ubliżanie, grożenie i wszelkie tego typu zachowania) skierowane wobec administratorów serwerów P2W.pl",
-      "tier_1": {
-        "maxWarns": 1,
-        "type": "Tempban",
-        "time": "1d"
-      },
-      "tier_2": {
-        "maxWarns": 2,
-        "type": "Tempban",
-        "time": "2d"
-      },
-      "tier_3": {
-        "maxWarns": 3,
-        "type": "Tempban",
-        "time": "3d"
-      }
-    },
-    "27": {
-      "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
-      "tier_1": {
-        "maxWarns": 1,
-        "type": "Tempmute",
-        "time": "3h"
-      },
-      "tier_2": {
-        "maxWarns": 2,
-        "type": "Tempban",
-        "time": "1d"
-      },
-      "tier_3": {
-        "maxWarns": 3,
-        "type": "Tempban",
-        "time": "2d"
-      }
-    },
-    "28": {
       "name": "Wykorzystywanie błędów Discorda, jak i wszelakich bugów botów znajdujących się na serwerze Discord sieci P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -439,7 +393,7 @@
         "time": "3d"
       }
     },
-    "29": {
+    "27": {
       "name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szeroko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem.",
       "tier_1": {
         "maxWarns": 1,
