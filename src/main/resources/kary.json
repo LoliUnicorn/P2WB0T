@@ -128,7 +128,7 @@
         "time": "3d"
       }
     },
-    "26": {
+    "7": {
       "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
       "tier_1": {
         "maxWarns": 1,
@@ -146,7 +146,7 @@
         "time": "2d"
       }
     },
-    "7": {
+    "8": {
       "name": "Reklama stron, serwisów lub serwerów gier/Discord niepowiązanych w żaden sposób z P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -154,7 +154,7 @@
         "time": "7d"
       }
     },
-    "8": {
+    "9": {
       "name": "Rozpowszechnianie danych osobowych, adresów zamieszkania i innych wrażliwych informacji",
       "tier_1": {
         "maxWarns": 1,
@@ -162,7 +162,7 @@
         "time": "-"
       }
     },
-    "9": {
+    "10": {
       "name": "Działanie na szkodę sieci serwerów P2W.pl",
       "tier_1": {
         "maxWarns": 1,
@@ -170,7 +170,7 @@
         "time": "-"
       }
     },
-    "10": {
+    "11": {
       "name": "Podszywanie się pod graczy lub członków ekipy P2W",
       "tier_1": {
         "maxWarns": 1,
@@ -178,7 +178,7 @@
         "time": "3d"
       }
     },
-    "11": {
+    "12": {
       "name": "Proszenie o przywileje, bonusy lub rangi",
       "tier_1": {
         "maxWarns": 1,
@@ -186,7 +186,7 @@
         "time": "2h"
       }
     },
-    "12": {
+    "13": {
       "name": "Wulgarny i/lub nieodpowiedni nickname (z połączonego konta Minecraft)",
       "tier_1": {
         "maxWarns": 1,
@@ -194,7 +194,7 @@
         "time": "-"
       }
     },
-    "13": {
+    "14": {
       "name": "Wulgarny, nieodpowiedni lub reklamujący serwery gry Minecraft/strony powiązane z tą tematyką awatar, status, aktualnie włączona gra na Discord",
       "tier_1": {
         "maxWarns": 1,
@@ -217,7 +217,7 @@
         "time": "3h"
       }
     },
-    "14": {
+    "15": {
       "name": "Rozsyłanie scamlinków na kanałach tekstowych",
       "tier_1": {
         "maxWarns": 1,
@@ -225,7 +225,7 @@
         "time": "3d"
       }
     },
-    "15": {
+    "16": {
       "name": "Oznaczanie grup administracyjnych lub członków ekipy bez powodu, spam oznaczeniami utrudniający funkcjonowanie innym użytkownikom serwisu",
       "tier_1": {
         "maxWarns": 1,
@@ -248,7 +248,7 @@
         "time": "5d"
       }
     },
-    "16": {
+    "17": {
       "name": "Brak kultury na publicznych lub prywatnych kanałach głosowych",
       "tier_1": {
         "maxWarns": 1,
@@ -256,7 +256,7 @@
         "time": "3h"
       }
     },
-    "17": {
+    "18": {
       "name": "Celowe utrudnianie rozmowy na publicznych lub prywatnych kanałach głosowych, wliczając w to puszczanie muzyki, bindów lub dmuchanie w mikrofon",
       "tier_1": {
         "maxWarns": 1,
@@ -264,7 +264,7 @@
         "time": "3h"
       }
     },
-    "18": {
+    "19": {
       "name": "Nagrywanie osób na kanale bez ich wcześniejszej zgody",
       "tier_1": {
         "maxWarns": 1,
@@ -272,7 +272,7 @@
         "time": "5h"
       }
     },
-    "19": {
+    "20": {
       "name": "Wulgarna lub nieodpowiednia nazwa kanału głosowego",
       "tier_1": {
         "maxWarns": 1,
@@ -280,7 +280,7 @@
         "time": "3h"
       }
     },
-    "20": {
+    "21": {
       "name": "Używanie modulatorów głosu i programów podobnych",
       "tier_1": {
         "maxWarns": 1,
@@ -288,7 +288,7 @@
         "time": "3h"
       }
     },
-    "21": {
+    "22": {
       "name": "Dublowanie kont przebywających na serwisie Discord",
       "tier_1": {
         "maxWarns": 1,
@@ -311,7 +311,7 @@
         "time": "8h"
       }
     },
-    "22": {
+    "23": {
       "name": "Reklamowanie serwerów w żaden sposób niepowiązanych z siecią serwerów P2W.pl w wiadomości prywatnej",
       "tier_1": {
         "maxWarns": 1,
@@ -329,7 +329,7 @@
         "time": "7d"
       }
     },
-    "23": {
+    "24": {
       "name": "Próba wymiany środków serwerowych, itemów, lub sprzedaży konta znajdujących się na sieci serwerów P2W.pl w zamian za walutę realną",
       "tier_1": {
         "maxWarns": 1,
@@ -347,7 +347,7 @@
         "time": "2d"
       }
     },
-    "24": {
+    "25": {
       "name": "Zaśmiecanie chatu",
       "tier_1": {
         "maxWarns": 1,
