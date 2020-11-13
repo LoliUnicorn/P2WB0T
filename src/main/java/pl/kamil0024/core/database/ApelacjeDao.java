@@ -19,7 +19,6 @@
 
 package pl.kamil0024.core.database;
 
-import com.google.gson.Gson;
 import gg.amy.pgorm.PgMapper;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
@@ -62,10 +61,6 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
         return mapper.getAllApelacjeByNick(nick, offset);
     }
 
-    public String getFromWeekJson() {
-        return new Gson().toJson(getFromWeek(getAll(), new DateTime()));
-    }
-
     public static List<ApelacjeConfig> getFromMonth(List<ApelacjeConfig> apelacje, int month, int year) {
         return apelacje.stream().filter(a -> {
             DateTime dt = new DateTime(a.getCreatedTime());
@@ -73,11 +68,11 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
         }).collect(Collectors.toList());
     }
 
-    public static HashMap<String, List<ApelacjeConfig>> getFromWeek(List<ApelacjeConfig> all, DateTime dt) {
+    public static HashMap<String, List<ApelacjeConfig>> getFrom(List<ApelacjeConfig> all, DateTime dt, int days) {
         Calendar cal = Calendar.getInstance();
         HashMap<String, List<ApelacjeConfig>> map = new HashMap<>();
 
-        long start = dt.minusDays(7).getMillis();
+        long start = dt.minusDays(days).getMillis();
         long end = dt.getMillis();
 
         List<ApelacjeConfig> filtr = all.stream()

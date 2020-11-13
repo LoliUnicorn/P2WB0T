@@ -131,7 +131,19 @@ public class ApelacjeHandler implements HttpHandler {
         }
 
         if (type == 4) {
-            Response.sendObjectResponse(ex, ApelacjeDao.getFromWeek(apelacjeDao.getAll(), new DateTime()));
+            Response.sendObjectResponse(ex, ApelacjeDao.getFrom(apelacjeDao.getAll(), new DateTime(), 7));
+        }
+
+        if (type == 5) {
+            try {
+                JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
+                int year = json.getInt("year");
+                int month = json.getInt("month");
+                Response.sendObjectResponse(ex, ApelacjeDao.getFromMonth(apelacjeDao.getAll(), month, year));
+            } catch (Exception e) {
+                Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
+            }
+
         }
 
     }
