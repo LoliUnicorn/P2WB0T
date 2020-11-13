@@ -77,6 +77,7 @@ public class ApelacjeHandler implements HttpHandler {
                 String apelacjeNick = json.getString("apelacjeNick");
                 String reason = json.getString("reason");
                 String slusznaBlokada = json.getString("slusznaBlokada");
+                long apelacjaCreated = json.getLong("apelacjaCreated");
                 String dodatkowaUwaga = null;
                 try {
                     dodatkowaUwaga = json.getString("dodatkowaUwaga");
@@ -104,6 +105,7 @@ public class ApelacjeHandler implements HttpHandler {
                 ac.setUnbanned(unbanned);
                 ac.setReason(reason);
                 ac.setSlusznaBlokada(slusznaBlokada);
+                ac.setCreatedApelacja(apelacjaCreated);
 
                 Response.sendResponse(ex, "Pomyślnie zapisano");
                 apelacjeDao.save(ac);

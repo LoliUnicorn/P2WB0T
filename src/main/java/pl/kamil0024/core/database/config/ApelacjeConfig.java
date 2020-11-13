@@ -45,6 +45,7 @@ public class ApelacjeConfig {
     private String dodatkowaUwaga = null;
     private String unbanned;
 
+    private long createdApelacja;
     private long createdTime;
 
 }

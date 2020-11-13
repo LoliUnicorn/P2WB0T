@@ -63,7 +63,7 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
 
     public static List<ApelacjeConfig> getFromMonth(List<ApelacjeConfig> apelacje, int month, int year) {
         return apelacje.stream().filter(a -> {
-            DateTime dt = new DateTime(a.getCreatedTime());
+            DateTime dt = new DateTime(a.getCreatedApelacja());
             return dt.getMonthOfYear() == month && dt.getYear() == year;
         }).collect(Collectors.toList());
     }
@@ -76,14 +76,14 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
         long end = dt.getMillis();
 
         List<ApelacjeConfig> filtr = all.stream()
-                .filter(ape -> d(ape.getCreatedTime(), cal) <= end && d(ape.getCreatedTime(), cal) >= start)
+                .filter(ape -> d(ape.getCreatedApelacja(), cal) <= end && d(ape.getCreatedApelacja(), cal) >= start)
                 .collect(Collectors.toList());
 
         for (ApelacjeConfig a : filtr) {
             List<Integer> dzien = Ustawienia.instance.apelacje.dni.getOrDefault(a.getApelacjeNick(), new ArrayList<>());
             if (dzien != null && !dzien.isEmpty()) {
                 List<ApelacjeConfig> fmap = map.getOrDefault(a.getApelacjeNick(), new ArrayList<>());
-                if (!dzien.contains(new DateTime(a.getCreatedTime()).getDayOfWeek())) {
+                if (!dzien.contains(new DateTime(a.getCreatedApelacja()).getDayOfWeek())) {
                     fmap.add(a);
                     map.put(a.getApelacjeNick(), fmap);
                 }
