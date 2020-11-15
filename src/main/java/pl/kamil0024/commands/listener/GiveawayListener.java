@@ -32,6 +32,7 @@ import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.GiveawayDao;
 import pl.kamil0024.core.database.config.GiveawayConfig;
+import pl.kamil0024.core.logger.Log;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -161,13 +162,18 @@ public class GiveawayListener {
                     }
                 }
 
+                Log.debug("Lista ludzi: " + listaLudzi);
+
                 if (config.getWygranychOsob() <= listaLudzi.size()) config.setWinners(listaLudzi);
                 else {
-                    while (config.getWygranychOsob() < wygrani.size()) {
+                    Log.debug("while");
+                    while (config.getWygranychOsob() != wygrani.size()) {
                         String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
+                        Log.debug("Dodaje " + wygral + " do wygranych ludzi");
                         wygrani.add(wygral);
                         listaLudzi.remove(wygral);
                     }
+                    Log.debug("Kończę while");
                 }
 
                 config.setWinners(wygrani);

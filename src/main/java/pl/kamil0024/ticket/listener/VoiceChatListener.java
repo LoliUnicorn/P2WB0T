@@ -237,14 +237,12 @@ public class VoiceChatListener extends ListenerAdapter {
     }
 
     public void deleteMessage(String id, JDA jda) {
-        TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
         try {
+            TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
             String msg = messagesCache.getIfPresent(id);
             if (msg == null || xd == null) return;
             xd.retrieveMessageById(msg).complete().delete().complete();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) { }
     }
 
 }
