@@ -37,6 +37,7 @@ import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
 import pl.kamil0024.commands.moderation.PunishCommand;
 import pl.kamil0024.core.Main;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.logger.Log;
@@ -99,7 +100,7 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        
+        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
@@ -109,6 +110,7 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageUpdate(@Nonnull GuildMessageUpdateEvent e) {
+        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") ||  e.getChannel().getId().equals("573873102757429256")) return;

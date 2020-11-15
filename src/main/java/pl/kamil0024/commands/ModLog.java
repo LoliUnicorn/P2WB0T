@@ -119,7 +119,7 @@ public class ModLog extends ListenerAdapter {
 
             Kara kara = new Kara();
 
-            kara.setKaraId(caseDao.getAll().size() + 1);
+            kara.setKaraId(Kara.getNextId(caseDao.getAll()));
             kara.setKaranyId(event.getId());
             kara.setMcNick(UserUtil.getMcNick(event));
             kara.setAdmId(k.getAdmId());

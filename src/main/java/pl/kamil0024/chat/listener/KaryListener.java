@@ -62,7 +62,8 @@ public class KaryListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-        if (!event.getChannel().getId().equals(Ustawienia.instance.channel.moddc)) return;
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)
+                || !event.getChannel().getId().equals(Ustawienia.instance.channel.moddc)) return;
         if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
         if (event.getMember().getUser().isBot()) return;
 

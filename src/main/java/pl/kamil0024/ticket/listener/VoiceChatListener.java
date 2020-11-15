@@ -72,6 +72,7 @@ public class VoiceChatListener extends ListenerAdapter {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         Guild guild = event.getGuild();
         if (event.getChannelJoined().getId().equals(Ustawienia.instance.ticket.vcToCreate)) {
             try {
@@ -124,6 +125,7 @@ public class VoiceChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         channelJoin(event.getMember(), event.getChannelJoined());
     }
 
@@ -176,6 +178,7 @@ public class VoiceChatListener extends ListenerAdapter {
 
     @Override
     public void onVoiceChannelDelete(VoiceChannelDeleteEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         TextChannel txt = event.getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
         if (txt == null) {
             Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);

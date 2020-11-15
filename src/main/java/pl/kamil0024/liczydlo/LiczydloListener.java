@@ -108,7 +108,7 @@ public class LiczydloListener extends ListenerAdapter {
         try {
             int liczba = Integer.parseInt(msg.getContentDisplay());
             String format = "Ostatnia zarejestrowana osoba: %s\nNastępna wiadomość powinna mieć treść: %s";
-            txt.getManager().setTopic(String.format(format, msg.getAuthor().getAsMention(), liczba+1)).queue();
+            txt.getManager().setTopic(String.format(format, msg.getAuthor().getAsMention(), liczba+1)).complete();
         } catch (Exception ignored) {}
     }
 

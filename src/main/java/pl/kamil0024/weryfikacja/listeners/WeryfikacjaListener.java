@@ -114,12 +114,26 @@ public class WeryfikacjaListener extends ListenerAdapter {
 
         String nickname = "[" + ranga.getName().toUpperCase() + "]";
 
-        if (ranga.getName().toLowerCase().equals("youtuber")) { nickname = "[YT]"; }
-        if (ranga.getName().toLowerCase().equals("miniyt")) { nickname = "[MiniYT]"; }
-        if (ranga.getName().toLowerCase().equals("gracz")) { nickname = ""; }
-        if (ranga.getName().toLowerCase().equals("pomocnik")) { nickname = "[POM]"; }
-        if (ranga.getName().toLowerCase().equals("stażysta")) { nickname = "[STAŻ]"; }
-        if (ranga.getName().toLowerCase().equals("build team")) { nickname = "[BUILD TEAM]"; }
+        switch (ranga.getName().toLowerCase()) {
+            case "youtuber":
+                nickname = "[YT]";
+                break;
+            case "miniyt":
+                nickname = "[MiniYT]";
+                break;
+            case "gracz":
+                nickname = "";
+                break;
+            case "pomocnik":
+                nickname = "[POM]";
+                break;
+            case "stażysta":
+                nickname = "[STAŻ]";
+                break;
+            case "team team":
+                nickname = "[BUILD TEAM]";
+                break;
+        }
 
         Member mem = event.getMember();
         if (mem != null) {

@@ -41,6 +41,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Data
 public class GiveawayListener {
@@ -123,6 +124,7 @@ public class GiveawayListener {
     }
 
     private synchronized void xd() {
+        Random rand = new Random();
         List<GiveawayConfig> kc = giveawayDao.getAll();
         kc.removeIf(k -> !k.isAktywna());
 
@@ -147,35 +149,34 @@ public class GiveawayListener {
             }
 
             if (msg != null && end) {
-                ArrayList<String> mozeWygraja = new ArrayList<>();
-                ArrayList<String> wygrani = new ArrayList<>();
+                List<String> listaLudzi = new ArrayList<>();
+                List<String> wygrani = new ArrayList<>();
 
                 for (MessageReaction rec : msg.getReactions()) {
                     if (rec.getReactionEmote().isEmoji() && rec.getReactionEmote().getEmoji().equals(TADA)) {
-                        for (User user : rec.retrieveUsers().complete()) {
-                            if (!user.isBot()) mozeWygraja.add(user.getId());
-                        }
+                        listaLudzi = rec.retrieveUsers().complete().stream()
+                                .filter(u -> !u.isBot())
+                                .map(User::getId)
+                                .collect(Collectors.toList());
                     }
                 }
-                int i = 0;
-                while (i < config.getWygranychOsob()) {
-                    try {
-                        if (!mozeWygraja.isEmpty()) {
-                            Random rand = new Random();
-                            String wygral = mozeWygraja.get(rand.nextInt(mozeWygraja.size() - 1 == 0 ? 1 : mozeWygraja.size() - 1));
-                            wygrani.add(wygral);
-                            mozeWygraja.remove(wygral);
-                        }
-                    } catch (Exception e) { e.printStackTrace(); }
-                    i++;
+
+                if (config.getWygranychOsob() <= listaLudzi.size()) config.setWinners(listaLudzi);
+                else {
+                    while (config.getWygranychOsob() < wygrani.size()) {
+                        String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
+                        wygrani.add(wygral);
+                        listaLudzi.remove(wygral);
+                    }
                 }
+
                 config.setWinners(wygrani);
                 giveawayDao.save(config);
                 msg.clearReactions().queue();
 
                 StringBuilder sb = new StringBuilder();
                 String f = "<@%s>";
-                String link = "https://discordapp.com/channels/%s/%s/%s";
+                String link = "https://discord.com/channels/%s/%s/%s";
                 link = String.format(link, Ustawienia.instance.bot.guildId, config.getKanalId(), config.getMessageId());
                 for (String winner : config.getWinners()) {
                     sb.append(String.format(f, winner)).append("`,` ");

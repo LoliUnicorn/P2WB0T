@@ -48,6 +48,7 @@ public class LeaveVcListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceMove(@Nonnull GuildVoiceMoveEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (!event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
             return;
         }
@@ -60,6 +61,7 @@ public class LeaveVcListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceLeave(@Nonnull GuildVoiceLeaveEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         Guild guild = event.getGuild();
         if (!guild.getId().equals(Ustawienia.instance.bot.guildId)) {
             return;

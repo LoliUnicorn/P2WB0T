@@ -77,7 +77,11 @@ public class CommandExecute extends ListenerAdapter {
                 e.getMessage().getContentRaw().isEmpty()) {
             return;
         }
-        if (RebootCommand.reboot) return;
+        if (RebootCommand.reboot) {
+            e.getChannel().sendMessage("Bot jest podczas restartowania...").queue();
+            zareaguj(e.getMessage(), e.getAuthor(), false);
+            return;
+        }
 
         String prefix = Ustawienia.instance.prefix;
 
@@ -104,10 +108,7 @@ public class CommandExecute extends ListenerAdapter {
             }
         }
 
-        if (c == null) {
-            logger.debug("Nie ma takiej komendy " + UserUtil.getLogName(e.getAuthor()) + " `" + cmd + "`");
-            return;
-        }
+        if (c == null) return;
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {

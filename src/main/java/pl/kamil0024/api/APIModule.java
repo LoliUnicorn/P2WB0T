@@ -95,7 +95,7 @@ public class APIModule implements Modul {
         this.apelacjeDao = apelacjeDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
-        this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(-1);
+        this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache();
         this.cdCache = redisManager.new CacheRetriever<ChatModUser>() {}.getCache(-1);
 
         executorSche = Executors.newSingleThreadScheduledExecutor();
