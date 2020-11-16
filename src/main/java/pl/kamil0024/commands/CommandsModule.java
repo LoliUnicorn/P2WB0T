@@ -161,7 +161,7 @@ public class CommandsModule implements Modul {
         cmd.add(new DowodCommand(caseDao, eventWaiter));
 
         cmd.add(new OgloszenieCommand());
-        
+
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
         return true;
