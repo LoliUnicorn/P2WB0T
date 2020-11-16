@@ -21,7 +21,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.console.ConsoleCommandContext;
 import pl.kamil0024.core.util.UsageException;
 
 import java.util.ArrayList;
