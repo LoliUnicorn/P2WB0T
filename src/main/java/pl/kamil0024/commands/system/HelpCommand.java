@@ -37,6 +37,7 @@ public class HelpCommand extends Command {
     public HelpCommand(CommandManager commandManager) {
         name = "help";
         aliases = Arrays.asList("komendybota", "pomoc");
+        enabledInRekru = true;
         this.commandManager = commandManager;
     }
 
@@ -54,6 +55,7 @@ public class HelpCommand extends Command {
             for (CommandCategory cate : CommandCategory.values()) {
                 StringBuffer komendy = new StringBuffer();
                 for (Map.Entry<String, Command> cmd : commandManager.getCommands().entrySet()) {
+                    if ((!context.executedInRekru() && cmd.getValue().isOnlyInRekru()) || (context.executedInRekru() && !cmd.getValue().isEnabledInRekru())) continue;
                     if (cmd.getValue().getPermLevel().getNumer() <= UserUtil.getPermLevel(context.getMember()).getNumer()) {
                         if (cmd.getValue().getCategory() == cate) { komendy.append(cmd.getKey()).append("`,` "); }
                     }
@@ -90,9 +92,8 @@ public class HelpCommand extends Command {
 
     public static EmbedBuilder getUsage(CommandContext context, @Nullable Command command) {
         Command cmd;
-        if (command == null) {
-            cmd = context.getCommand();
-        } else cmd = command;
+        if (command == null) cmd = context.getCommand();
+        else cmd = command;
 
         EmbedBuilder eb = new EmbedBuilder();
         StringBuffer desc = new StringBuffer();

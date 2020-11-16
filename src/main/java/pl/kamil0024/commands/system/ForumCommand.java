@@ -33,6 +33,7 @@ public class ForumCommand extends Command {
     public ForumCommand() {
         name = "forum";
         cooldown = 60;
+        enabledInRekru = true;
     }
 
     @Override

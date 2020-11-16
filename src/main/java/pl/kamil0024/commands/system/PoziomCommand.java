@@ -31,6 +31,7 @@ public class PoziomCommand extends Command {
     public PoziomCommand() {
         name = "poziom";
         category = CommandCategory.SYSTEM;
+        enabledInRekru = true;
     }
 
     @Override

@@ -67,6 +67,7 @@ public class OsuCommand extends Command {
         this.shardManager = shardManager;
         this.eventWaiter = eventWaiter;
         this.osu = Osu.getAPI(Ustawienia.instance.osu.apiKey);
+        enabledInRekru = true;
     }
 
     @Override

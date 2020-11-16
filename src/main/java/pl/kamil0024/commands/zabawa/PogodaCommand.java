@@ -35,6 +35,7 @@ public class PogodaCommand extends Command {
         aliases.add("weather");
         category = CommandCategory.ZABAWA;
         cooldown = 30;
+        enabledInRekru = true;
     }
 
     @Override

@@ -48,6 +48,7 @@ public class UserinfoCommand extends Command {
         name = "userinfo";
         aliases.add("infouser");
         cooldown = 60;
+        enabledInRekru = true;
     }
 
     @Override

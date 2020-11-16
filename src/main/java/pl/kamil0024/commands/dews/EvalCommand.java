@@ -77,6 +77,7 @@ public class EvalCommand extends Command {
         aliases.add("ev");
         category = CommandCategory.DEVS;
         permLevel = PermLevel.DEVELOPER;
+        enabledInRekru = true;
         this.eventWaiter = eventWaiter;
         this.commandManager = commandManager;
         this.caseDao = caseDao;

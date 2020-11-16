@@ -39,6 +39,7 @@ public class McpremiumCommand extends Command {
     public McpremiumCommand() {
         name = "mcpremium";
         cooldown = 10;
+        enabledInRekru = true;
     }
 
     @Override

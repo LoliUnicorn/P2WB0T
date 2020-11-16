@@ -36,6 +36,7 @@ public class RebootCommand extends Command {
         name = "reboot";
         permLevel = PermLevel.DEVELOPER;
         category = CommandCategory.DEVS;
+        enabledInRekru = true;
     }
 
     @Override

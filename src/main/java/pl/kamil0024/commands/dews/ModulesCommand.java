@@ -48,6 +48,7 @@ public class ModulesCommand extends Command {
         aliases.add("modul");
         permLevel = PermLevel.DEVELOPER;
         category = CommandCategory.DEVS;
+        enabledInRekru = true;
 
         this.modulManager = modulManager;
     }

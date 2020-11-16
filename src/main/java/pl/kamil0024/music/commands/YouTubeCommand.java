@@ -47,6 +47,7 @@ public class YouTubeCommand extends Command {
         aliases.add("yt");
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
 
         this.musicModule = musicModule;
         this.eventWaiter = eventWaiter;

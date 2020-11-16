@@ -34,6 +34,7 @@ public class ResumeCommand extends Command {
     public ResumeCommand(MusicModule musicModule) {
         name = "resume";
         aliases.add("stop");
+        enabledInRekru = true;
 
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;

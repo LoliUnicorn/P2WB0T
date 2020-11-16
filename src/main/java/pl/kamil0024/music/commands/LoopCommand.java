@@ -35,6 +35,7 @@ public class LoopCommand extends Command {
         name = "loop";
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
         this.musicModule = musicModule;
     }
 

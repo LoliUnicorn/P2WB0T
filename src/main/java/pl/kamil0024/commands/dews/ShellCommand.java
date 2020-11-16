@@ -37,6 +37,7 @@ public class ShellCommand extends Command {
         name = "shell";
         category = CommandCategory.DEVS;
         permLevel = PermLevel.DEVELOPER;
+        enabledInRekru = true;
     }
 
     @Override

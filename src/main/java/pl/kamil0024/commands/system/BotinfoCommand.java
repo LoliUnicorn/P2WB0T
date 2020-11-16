@@ -52,6 +52,7 @@ public class BotinfoCommand extends Command {
         name = "botinfo";
         aliases = Arrays.asList("botstat", "botstats");
         cooldown = 5;
+        enabledInRekru = true;
 
         this.commandManager = commandManager;
         this.modulManager = modulManager;

@@ -40,6 +40,7 @@ public class CytujCommand extends Command {
         name = "cytuj";
         permLevel = PermLevel.HELPER;
         cooldown = 30;
+        enabledInRekru = true;
     }
 
     @Override

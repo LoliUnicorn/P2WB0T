@@ -77,6 +77,10 @@ public class CommandExecute extends ListenerAdapter {
                 e.getMessage().getContentRaw().isEmpty()) {
             return;
         }
+        boolean inRekru = e.getGuild().getId().equals(Ustawienia.instance.rekrutacyjny.guildId);
+
+        if (!inRekru && !e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
+
         if (RebootCommand.reboot) {
             e.getChannel().sendMessage("Bot jest podczas restartowania...").queue();
             zareaguj(e.getMessage(), e.getAuthor(), false);
@@ -91,8 +95,7 @@ public class CommandExecute extends ListenerAdapter {
         String msg = e.getMessage().getContentRaw();
         String[] args = msg.split(" ");
 
-        if (args.length == 0) return;
-        if (!args[0].startsWith(prefix)) return;
+        if (args.length == 0 || !args[0].startsWith(prefix)) return;
 
         String cmd = args[0].replaceAll(prefix, "").toLowerCase();
         if (cmd.isEmpty()) return;
@@ -111,16 +114,19 @@ public class CommandExecute extends ListenerAdapter {
         if (c == null) return;
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
-        if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
-//            try {
-//                VoiceChannel vc = PlayCommand.getVc(e.getMember());
-//                if (vc.getParent() != null && vc.getParent().getName().toLowerCase().equals("prywatne kanały")) {
-//                    e.getChannel().sendMessage("Funkcja jest w fazie **BETA** i jest dostępna od rangi [VIP]").queue();
-//                    zareaguj(e.getMessage(), e.getAuthor(), false);
-//                    return;
-//                }
-//            } catch (Exception ignored) {}
+        if (inRekru && !c.isEnabledInRekru()) {
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", ta komenda nie jest dostępna na tym serwerze!").queue();
+            zareaguj(e.getMessage(), e.getAuthor(), false);
+            return;
+        }
 
+        if (!inRekru && c.isOnlyInRekru()) {
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", ta komenda jest dostępna tylko na serwerze rekrutacyjnym!").queue();
+            zareaguj(e.getMessage(), e.getAuthor(), false);
+            return;
+        }
+
+        if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
             if (!e.getChannel().getId().equals("426864003562864641") && jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", komend muzycznych musisz używać na <#426864003562864641>!")
                         .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));

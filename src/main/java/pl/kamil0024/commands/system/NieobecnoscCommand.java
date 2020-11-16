@@ -55,6 +55,7 @@ public class NieobecnoscCommand extends Command {
         this.nieobecnosciManager = nieobecnosciManager;
         this.eventWaiter = eventWaiter;
         this.nieobecnosciDao = nieobecnosciDao;
+        enabledInRekru = true;
     }
 
     @Override

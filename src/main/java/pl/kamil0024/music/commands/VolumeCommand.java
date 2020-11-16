@@ -36,6 +36,7 @@ public class VolumeCommand extends Command {
         name = "volume";
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
 
         this.musicModule = musicModule;
     }

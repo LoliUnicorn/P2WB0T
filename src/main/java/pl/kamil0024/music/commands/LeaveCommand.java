@@ -37,6 +37,7 @@ public class LeaveCommand extends Command {
         category = CommandCategory.MUSIC;
         permLevel = PermLevel.STAZYSTA;
         this.musicModule = musicModule;
+        enabledInRekru = true;
     }
 
     @Override

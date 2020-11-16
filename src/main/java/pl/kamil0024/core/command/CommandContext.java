@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.arguments.Args;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.util.Tlumaczenia;
@@ -174,6 +175,10 @@ public class CommandContext {
 
     public ShardManager getShardManager() {
         return event.getJDA().getShardManager();
+    }
+
+    public boolean executedInRekru() {
+        return event.getGuild().getId().equals(Ustawienia.instance.rekrutacyjny.guildId);
     }
 
     @Override

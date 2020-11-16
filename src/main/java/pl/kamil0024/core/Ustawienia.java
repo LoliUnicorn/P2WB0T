@@ -51,6 +51,7 @@ public class Ustawienia {
     public Osu osu = new Osu();
     public Ticket ticket = new Ticket();
     public Apelacje apelacje = new Apelacje();
+    public Rekrutacyjny rekrutacyjny = new Rekrutacyjny();
 
     public static class Roles {
         public String helperRole = def;
@@ -198,6 +199,12 @@ public class Ustawienia {
 
     public static class Apelacje {
         public Map<String, List<Integer>> dni = new HashMap<>();
+    }
+
+    public static class Rekrutacyjny {
+        public String guildId;
+        public String ogloszeniaId;
+        public String nieobecnosciId;
     }
 
 }

@@ -34,12 +34,10 @@ public abstract class Command {
     @Getter protected CommandCategory category = CommandCategory.SYSTEM;
     @Getter protected PermLevel permLevel = PermLevel.MEMBER;
     @Getter protected List<String> aliases = new ArrayList<>();
-    
-    protected boolean execute(@NotNull CommandContext context) throws Exception, UsageException {
-        throw new UnsupportedOperationException("Komenda nie ma zaimplementowanej funkcji execute()");
-    }
+    @Getter protected boolean enabledInRekru = false;
+    @Getter protected boolean onlyInRekru = false;
 
-    protected boolean consoleExecute(ConsoleCommandContext context) {
+    protected boolean execute(@NotNull CommandContext context) throws Exception, UsageException {
         throw new UnsupportedOperationException("Komenda nie ma zaimplementowanej funkcji execute()");
     }
 

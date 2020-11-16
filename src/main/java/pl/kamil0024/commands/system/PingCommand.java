@@ -32,6 +32,7 @@ public class PingCommand extends Command {
     public PingCommand() {
         name = "ping";
         cooldown = 15;
+        enabledInRekru = true;
     }
 
     @Override

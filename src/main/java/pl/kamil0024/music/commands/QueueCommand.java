@@ -50,6 +50,7 @@ public class QueueCommand extends Command {
         name = "queue";
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
 
         this.musicModule = musicModule;
         this.eventWaiter = eventWaiter;

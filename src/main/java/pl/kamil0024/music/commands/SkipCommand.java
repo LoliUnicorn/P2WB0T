@@ -35,6 +35,7 @@ public class SkipCommand extends Command {
         name = "skip";
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
 
         this.musicModule = musicModule;
     }

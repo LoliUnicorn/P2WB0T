@@ -41,6 +41,7 @@ public class PlayCommand extends Command {
         name = "play";
         permLevel = PermLevel.STAZYSTA;
         category = CommandCategory.MUSIC;
+        enabledInRekru = true;
 
         this.musicModule = musicModule;
     }

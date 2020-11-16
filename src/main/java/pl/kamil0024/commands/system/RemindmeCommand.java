@@ -50,6 +50,7 @@ public class RemindmeCommand extends Command {
         permLevel = PermLevel.HELPER;
         this.remindDao = remindDao;
         this.eventWaiter = eventWaiter;
+        enabledInRekru = true;
     }
 
     @Override
