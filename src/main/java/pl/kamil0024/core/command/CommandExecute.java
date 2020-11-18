@@ -81,12 +81,6 @@ public class CommandExecute extends ListenerAdapter {
 
         if (!inRekru && !e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
 
-        if (RebootCommand.reboot) {
-            e.getChannel().sendMessage("Bot jest podczas restartowania...").queue();
-            zareaguj(e.getMessage(), e.getAuthor(), false);
-            return;
-        }
-
         String prefix = Ustawienia.instance.prefix;
 
         UserConfig uc = userConfig.get(e.getAuthor().getId());
@@ -112,6 +106,13 @@ public class CommandExecute extends ListenerAdapter {
         }
 
         if (c == null) return;
+
+        if (RebootCommand.reboot) {
+            e.getChannel().sendMessage("Bot jest podczas restartowania...").queue();
+            zareaguj(e.getMessage(), e.getAuthor(), false);
+            return;
+        }
+
         PermLevel jegoPerm = UserUtil.getPermLevel(e.getAuthor());
 
         if (inRekru && !c.isEnabledInRekru()) {

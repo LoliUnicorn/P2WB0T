@@ -39,7 +39,7 @@ public class AnkietaHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange ex) {
-
+        if (!Response.checkIp(ex)) { return; }
         try {
             JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
             AnkietaConfig conf = gson.fromJson(json.toString(), AnkietaConfig.class);

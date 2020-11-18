@@ -25,7 +25,9 @@ import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Table("ankieta")
@@ -45,14 +47,18 @@ public class AnkietaConfig {
     private String description;
 
     // OpcjaNumer1 = 5 (głosów)
-    private Map<Opcja, Integer> opcje = new HashMap<>();
+    private List<Opcja> opcje = new ArrayList<>();
+
+    // id - ilość głosów
+    private Map<Integer, Integer> glosy = new HashMap<>();
 
     private long createdAt;
     private long sendAt;
 
     @Data
     @AllArgsConstructor
-    public static class Opcja {
+    public class Opcja {
+        private final int id;
         private final String text;
         private final String emoji;
     }
