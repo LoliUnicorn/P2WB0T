@@ -20,7 +20,6 @@
 package pl.kamil0024.commands.rekrutacyjny;
 
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.Webhook;
 import pl.kamil0024.core.Ustawienia;
@@ -54,7 +53,7 @@ public class OgloszenieCommand extends Command {
             context.send("Nie mam odpowiednich permisji do " + txt.getAsMention() + "! (wysyłanie linków, czytanie/pisanie wiadomości, zarządzanie webhookami)").queue();
             return false;
         }
-        String arg = context.getArgs().get(0);
+        String arg = context.getArgsToString(0);
         if (arg == null || arg.trim().isEmpty()) {
             context.send("Musisz podać argument!").queue();
             return false;
@@ -63,6 +62,7 @@ public class OgloszenieCommand extends Command {
         Webhook web = txt.retrieveWebhooks().complete().stream().findAny().orElse(txt.createWebhook("P2WBOT - Ogłoszenia").complete());
         if (web == null) throw new NullPointerException("Webhook jest nullem!");
         WebhookUtil wu = new WebhookUtil();
+        wu.setUrl(web.getUrl().replaceAll("discord\\.com", "discordapp.com"));
         wu.setMessage(context.getGuild().getPublicRole().getAsMention() + "\n" + arg);
         wu.setName(context.getMember().getNickname() == null ? context.getUser().getName() : context.getMember().getNickname());
         wu.setAvatar(context.getUser().getAvatarUrl());
