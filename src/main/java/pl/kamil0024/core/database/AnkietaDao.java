@@ -112,7 +112,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setFooter("ID: " + config.getId() + " | Ostatnia aktualizacja");
         eb.setTimestamp(Instant.now());
-        if (config.getSendAt() < d.getTime()) {
+        if (config.getSendAt() > d.getTime()) {
             eb.setColor(Color.magenta);
             eb.setDescription("Tutaj będzie ankieta :D");
             return eb;
@@ -130,6 +130,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
         BetterStringBuilder bsb = new BetterStringBuilder();
         if (config.isAktywna()) {
             eb.setColor(Color.cyan);
+            if (config.getDescription() != null) eb.setDescription(config.getDescription());
             eb.addField("Ankieta rozpoczęta o", sdf.format(new Date(config.getSendAt())), false);
             eb.addField("Koniec ankiety o", sdf.format(new Date(config.getEndAt())) + "(" + new BDate(ModLog.getLang()).difference(config.getEndAt()) + ")", false);
             eb.addField("Opcje ankiety", "1." + (config.isMultiOptions() ? "Możesz zaznaczyć kilka opcji" : "Możesz zaznaczyć tylko jedną opcje"), false);
@@ -162,9 +163,11 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
                 msg.editMessage(generateEmbed(ac).build()).queue();
 
                 if (time >= ac.getEndAt()) {
+                    ac.setAktywna(false);
                     try {
                         msg.clearReactions().complete();
                     } catch (Exception ignored) { }
+                    save(ac);
                 }
 
             } catch (Exception e) {
@@ -176,7 +179,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
         if (e.getChannel().getId().equals(Ustawienia.instance.rekrutacyjny.ankietyId)) {
-            AnkietaConfig ankiety = mapper.loadRaw("SELECT * FROM ankieta WHERE data::jsonb @> '{\"messageId\": ?}'", e.getMessageId()).stream().findFirst().orElse(null);
+            AnkietaConfig ankiety = mapper.loadRaw(String.format("SELECT * FROM ankieta WHERE data::jsonb @> '{\"messageId\": \"%s\"}'", e.getMessageId())).stream().findFirst().orElse(null);
             if (ankiety == null) return;
 
             if (!ankiety.isMultiOptions()) {
