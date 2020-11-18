@@ -40,8 +40,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -125,6 +123,7 @@ public class NieobecnosciManager {
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
             long now = new Date().getTime();
             Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
+            // fixme: inne id
             Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(nb.getUserId()).complete();
             if (mem == null) {
                 Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
@@ -132,6 +131,7 @@ public class NieobecnosciManager {
             }
 
             if (msg == null) {
+                // fixme: stworz wiadomosc
                 Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!", NieobecnosciManager.class);
                 continue;
             }

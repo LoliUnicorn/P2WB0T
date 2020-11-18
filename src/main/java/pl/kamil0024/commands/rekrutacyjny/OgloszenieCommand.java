@@ -20,12 +20,15 @@
 package pl.kamil0024.commands.rekrutacyjny;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Webhook;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.util.WebhookUtil;
 
 public class OgloszenieCommand extends Command {
 
@@ -43,15 +46,30 @@ public class OgloszenieCommand extends Command {
     public boolean execute(CommandContext context) {
         TextChannel txt = context.getJDA().getTextChannelById(Ustawienia.instance.rekrutacyjny.ogloszeniaId);
         if (txt == null) {
-            context.send("Kanał do ogłoszeń jest nullem").queue();;
+            context.send("Kanał do ogłoszeń jest nullem").queue();
             Log.newError("Kanał do ogłoszeń jest nullem", getClass());
             return false;
         }
-        if (!txt.canTalk() || !context.getGuild().getSelfMember().hasPermission(txt, Permission.MESSAGE_EMBED_LINKS)) {
-            context.send("Nie mam odpowiednich permisji do " + txt.getAsMention() + "!").queue();
+        if (!txt.canTalk() || !context.getGuild().getSelfMember().hasPermission(txt, Permission.MESSAGE_EMBED_LINKS, Permission.MANAGE_WEBHOOKS)) {
+            context.send("Nie mam odpowiednich permisji do " + txt.getAsMention() + "! (wysyłanie linków, czytanie/pisanie wiadomości, zarządzanie webhookami)").queue();
             return false;
         }
-        context.send("hej").queue();
+        String arg = context.getArgs().get(0);
+        if (arg == null || arg.trim().isEmpty()) {
+            context.send("Musisz podać argument!").queue();
+            return false;
+        }
+
+        Webhook web = txt.retrieveWebhooks().complete().stream().findAny().orElse(txt.createWebhook("P2WBOT - Ogłoszenia").complete());
+        if (web == null) throw new NullPointerException("Webhook jest nullem!");
+        WebhookUtil wu = new WebhookUtil();
+        wu.setMessage(context.getGuild().getPublicRole().getAsMention() + "\n" + arg);
+        wu.setName(context.getMember().getNickname() == null ? context.getUser().getName() : context.getMember().getNickname());
+        wu.setAvatar(context.getUser().getAvatarUrl());
+
+        wu.sendNormalMessage();
+
+        context.send("Pomyślnie wysłano ogłoszenie!").queue();
         return true;
     }
 

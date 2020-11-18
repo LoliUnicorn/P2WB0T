@@ -43,6 +43,7 @@ public class WebhookUtil {
     String name;
     String message;
     String avatar;
+    String url;
     WebhookEmbed embed;
     String time = new SimpleDateFormat("MM.dd HH:mm:ss").format(Calendar.getInstance().getTime());
 
@@ -55,8 +56,19 @@ public class WebhookUtil {
 
         if (name == null) builder.setUsername(getType().slownie);
         if (avatar == null) builder.setAvatarUrl(getAvatar());
-
         if (!getMessage().isEmpty()) builder.setContent(String.format("[%s] %s", getTime(), getMessage()));
+        if (getEmbed() != null) builder.addEmbeds(getEmbed());
+        client.send(builder.build());
+        client.close();
+    }
+
+    public void sendNormalMessage() {
+        if (getUrl() == null) throw new NullPointerException("getUrl() == null");
+        WebhookClient client = WebhookClient.withUrl(getUrl());
+        WebhookMessageBuilder builder = new WebhookMessageBuilder();
+        if (name == null) builder.setUsername(getType().slownie);
+        if (avatar == null) builder.setAvatarUrl(getAvatar());
+        if (!getMessage().isEmpty()) builder.setContent(getMessage());
         if (getEmbed() != null) builder.addEmbeds(getEmbed());
 
         client.send(builder.build());

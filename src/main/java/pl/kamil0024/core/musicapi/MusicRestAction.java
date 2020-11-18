@@ -21,8 +21,6 @@ package pl.kamil0024.core.musicapi;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import org.jetbrains.annotations.Nullable;
-import pl.kamil0024.music.commands.QueueCommand;
 
 import java.io.IOException;
 
