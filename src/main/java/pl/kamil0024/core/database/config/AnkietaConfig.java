@@ -57,7 +57,7 @@ public class AnkietaConfig {
 
     @Data
     @AllArgsConstructor
-    public class Opcja {
+    public static class Opcja {
         private final int id;
         private final String text;
         private final String emoji;
