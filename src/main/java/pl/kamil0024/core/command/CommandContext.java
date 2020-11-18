@@ -150,7 +150,6 @@ public class CommandContext {
         return tlumaczenia.get(key, parsedArgi.toArray(new String[]{}));
     }
 
-    @Nullable
     public String getArgsToString(Integer num) {
         StringBuffer args = new StringBuffer();
         int size = 1;

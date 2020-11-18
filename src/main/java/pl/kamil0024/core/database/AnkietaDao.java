@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
 
@@ -133,7 +134,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
             if (config.getDescription() != null) eb.setDescription(config.getDescription());
             eb.addField("Ankieta rozpoczęta o", sdf.format(new Date(config.getSendAt())), false);
             eb.addField("Koniec ankiety o", sdf.format(new Date(config.getEndAt())) + "(" + new BDate(ModLog.getLang()).difference(config.getEndAt()) + ")", false);
-            eb.addField("Opcje ankiety", "1." + (config.isMultiOptions() ? "Możesz zaznaczyć kilka opcji" : "Możesz zaznaczyć tylko jedną opcje"), false);
+            eb.addField("Opcje ankiety", "1. " + (config.isMultiOptions() ? "Możesz zaznaczyć kilka opcji" : "Możesz zaznaczyć tylko jedną opcje"), false);
             for (AnkietaConfig.Opcja opcja : config.getOpcje()) {
                 bsb.appendLine(opcja.getEmoji() + " **-** " + MarkdownSanitizer.escape(opcja.getText()));
             }
@@ -160,15 +161,31 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
                 Message msg = txt.retrieveMessageById(ac.getMessageId()).complete();
                 if (msg == null) throw new NullPointerException("Wiadomość ankiety o ID " + ac.getId() + " jest nullem");
 
-                msg.editMessage(generateEmbed(ac).build()).queue();
-
                 if (time >= ac.getEndAt()) {
                     ac.setAktywna(false);
+
+                    for (MessageReaction reaction : msg.getReactions()) {
+                        if (reaction.getReactionEmote().isEmoji()) {
+
+                            for (AnkietaConfig.Opcja opcja : ac.getOpcje()) {
+                                Log.debug(opcja.getEmoji() + " == " + reaction.getReactionEmote().getEmoji());
+                                if (opcja.getEmoji().equals(reaction.getReactionEmote().getEmoji())) {
+                                    Log.debug("true");
+                                    int glosy = ac.getGlosy().getOrDefault(opcja.getId(), 0);
+                                    ac.getGlosy().put(opcja.getId(), glosy + 1);
+                                }
+                            }
+
+                        }
+                    }
+                    
                     try {
                         msg.clearReactions().complete();
                     } catch (Exception ignored) { }
                     save(ac);
                 }
+
+                msg.editMessage(generateEmbed(ac).build()).queue();
 
             } catch (Exception e) {
                 Log.newError(e, getClass());
@@ -178,17 +195,17 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
-        if (e.getChannel().getId().equals(Ustawienia.instance.rekrutacyjny.ankietyId)) {
+        if (e.getChannel().getId().equals(Ustawienia.instance.rekrutacyjny.ankietyId) && !e.getUser().isBot()) {
             AnkietaConfig ankiety = mapper.loadRaw(String.format("SELECT * FROM ankieta WHERE data::jsonb @> '{\"messageId\": \"%s\"}'", e.getMessageId())).stream().findFirst().orElse(null);
             if (ankiety == null) return;
 
             if (!ankiety.isMultiOptions()) {
-                List<User> users = new ArrayList<>();
+                int emotes = 0;
                 Message msg = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
                 for (MessageReaction react : msg.getReactions()) {
-                    users.addAll(react.retrieveUsers().complete());
+                    emotes += react.retrieveUsers().complete().stream().filter(re -> re.getId().equals(e.getUserId())).collect(Collectors.toList()).size();
                 }
-                if (users.contains(e.getUser())) {
+                if (emotes >= 2) {
                     msg.removeReaction(e.getReactionEmote().getEmoji(), e.getUser()).complete();
                 }
             }
