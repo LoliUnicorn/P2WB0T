@@ -32,17 +32,6 @@ public class AnkietaDao implements Dao<AnkietaConfig> {
     public AnkietaDao(DatabaseManager databaseManager) {
         if (databaseManager == null) throw new IllegalStateException("databaseManager == null");
         mapper = databaseManager.getPgStore().mapSync(AnkietaConfig.class);
-        pl.kamil0024.core.database.config.AnkietaConfig a = new pl.kamil0024.core.database.config.AnkietaConfig();
-        a.setAutorId("xd");
-        a.setId("xd");
-        a.setDescription("kekW");
-        a.setCreatedAt(0);
-        a.setSendAt(0);
-        a.getOpcje().add(new pl.kamil0024.core.database.config.AnkietaConfig.Opcja(1, "wybór 1", "😂"));
-        a.getOpcje().add(new pl.kamil0024.core.database.config.AnkietaConfig.Opcja(2, "wybór 2", "😢"));
-        a.getGlosy().put(1, 0);
-        a.getGlosy().put(2, 0);
-        save(a);
     }
 
     @Override
