@@ -46,7 +46,6 @@ public class AnkietaConfig {
     private String autorId;
     private String description;
 
-    // OpcjaNumer1 = 5 (głosów)
     private List<Opcja> opcje = new ArrayList<>();
 
     // id - ilość głosów
@@ -56,8 +55,14 @@ public class AnkietaConfig {
     private long sendAt;
 
     @Data
-    @AllArgsConstructor
+//    @AllArgsConstructor // Nie chciało przejść do jsona
     public static class Opcja {
+        public Opcja(int id, String text, String emoji) {
+            this.id = id;
+            this.text = text;
+            this.emoji = emoji;
+        }
+        
         private final int id;
         private final String text;
         private final String emoji;
