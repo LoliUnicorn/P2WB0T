@@ -243,7 +243,7 @@ public class B0T {
         MultiDao         multiDao            = new MultiDao(databaseManager);
         TicketDao        ticketDao           = new TicketDao(databaseManager);
         ApelacjeDao      apelacjeDao         = new ApelacjeDao(databaseManager);
-        AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager);
+        AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager, api);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);

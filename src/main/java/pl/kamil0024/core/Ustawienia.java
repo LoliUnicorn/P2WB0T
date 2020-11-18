@@ -205,6 +205,7 @@ public class Ustawienia {
         public String guildId;
         public String ogloszeniaId;
         public String nieobecnosciId;
+        public String ankietyId;
     }
 
 }

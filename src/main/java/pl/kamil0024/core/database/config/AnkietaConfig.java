@@ -45,6 +45,7 @@ public class AnkietaConfig {
     private String id;
     private String autorId;
     private String description;
+    private String messageId;
 
     private List<Opcja> opcje = new ArrayList<>();
 
@@ -53,9 +54,12 @@ public class AnkietaConfig {
 
     private long createdAt;
     private long sendAt;
+    private long endAt;
+
+    private boolean multiOptions = false;
+    private boolean aktywna = true;
 
     @Data
-//    @AllArgsConstructor // Nie chciało przejść do jsona
     public static class Opcja {
         public Opcja() { }
 
