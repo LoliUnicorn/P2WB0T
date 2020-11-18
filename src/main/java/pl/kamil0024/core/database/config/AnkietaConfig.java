@@ -62,7 +62,7 @@ public class AnkietaConfig {
             this.text = text;
             this.emoji = emoji;
         }
-        
+
         private final int id;
         private final String text;
         private final String emoji;
