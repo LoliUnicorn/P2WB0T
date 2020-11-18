@@ -71,8 +71,9 @@ public class EvalCommand extends Command {
     @Inject private final YouTrack youTrack;
     @Inject private final TicketDao ticketDao;
     @Inject private final ApelacjeDao apelacjeDao;
+    @Inject private final AnkietaDao ankietaDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -98,6 +99,7 @@ public class EvalCommand extends Command {
         this.youTrack = youTrack;
         this.ticketDao = ticketDao;
         this.apelacjeDao = apelacjeDao;
+        this.ankietaDao = ankietaDao;
     }
 
     @Override
@@ -130,6 +132,7 @@ public class EvalCommand extends Command {
         shell.setVariable("youTrack", youTrack);
         shell.setVariable("ticketDao", ticketDao);
         shell.setVariable("apelacjeDao", apelacjeDao);
+        shell.setVariable("ankietaDao", ankietaDao);
 
         long ms = System.currentTimeMillis();
         Object value;

@@ -19,7 +19,6 @@
 
 package pl.kamil0024.api.handlers;
 
-import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import org.json.JSONObject;

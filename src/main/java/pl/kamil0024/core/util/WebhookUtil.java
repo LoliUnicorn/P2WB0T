@@ -54,8 +54,10 @@ public class WebhookUtil {
         WebhookClient client = WebhookClient.withUrl(getType().url);
         WebhookMessageBuilder builder = new WebhookMessageBuilder();
 
-        if (name == null) builder.setUsername(getType().slownie);
-        if (avatar == null) builder.setAvatarUrl(getAvatar());
+        if (getName() == null) builder.setUsername(getType().slownie);
+        else builder.setUsername(getName());
+
+        if (avatar != null) builder.setAvatarUrl(getAvatar());
         if (!getMessage().isEmpty()) builder.setContent(String.format("[%s] %s", getTime(), getMessage()));
         if (getEmbed() != null) builder.addEmbeds(getEmbed());
         client.send(builder.build());
@@ -66,8 +68,8 @@ public class WebhookUtil {
         if (getUrl() == null) throw new NullPointerException("getUrl() == null");
         WebhookClient client = WebhookClient.withUrl(getUrl());
         WebhookMessageBuilder builder = new WebhookMessageBuilder();
-        if (name == null) builder.setUsername(getType().slownie);
-        if (avatar == null) builder.setAvatarUrl(getAvatar());
+        if (name != null) builder.setUsername(getType().slownie);
+        if (avatar != null) builder.setAvatarUrl(getAvatar());
         if (!getMessage().isEmpty()) builder.setContent(getMessage());
         if (getEmbed() != null) builder.addEmbeds(getEmbed());
 

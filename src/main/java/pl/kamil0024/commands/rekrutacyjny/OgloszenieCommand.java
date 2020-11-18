@@ -63,7 +63,7 @@ public class OgloszenieCommand extends Command {
         if (web == null) throw new NullPointerException("Webhook jest nullem!");
         WebhookUtil wu = new WebhookUtil();
         wu.setUrl(web.getUrl().replaceAll("discord\\.com", "discordapp.com"));
-        wu.setMessage(context.getGuild().getPublicRole().getAsMention() + "\n" + arg);
+        wu.setMessage(arg + "\n" + context.getGuild().getPublicRole().getAsMention());
         wu.setName(context.getMember().getNickname() == null ? context.getUser().getName() : context.getMember().getNickname());
         wu.setAvatar(context.getUser().getAvatarUrl());
 

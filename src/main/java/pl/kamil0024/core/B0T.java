@@ -243,6 +243,7 @@ public class B0T {
         MultiDao         multiDao            = new MultiDao(databaseManager);
         TicketDao        ticketDao           = new TicketDao(databaseManager);
         ApelacjeDao      apelacjeDao         = new ApelacjeDao(databaseManager);
+        AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -257,22 +258,20 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, musicAPI);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao, ankietaDao);
 
         modulManager.getModules().add(new LogsModule(api, statsModule, redisManager));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao));
         modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
-        if (youTrack != null) {
-            modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
-        }
+        if (youTrack != null) modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
 
         for (Modul modul : modulManager.getModules()) {
             try {

@@ -71,6 +71,7 @@ public class APIModule implements Modul {
     @Inject private final StatsDao statsDao;
     @Inject private final TicketDao ticketDao;
     @Inject private final ApelacjeDao apelacjeDao;
+    @Inject private final AnkietaDao ankietaDao;
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;
@@ -80,7 +81,7 @@ public class APIModule implements Modul {
 
     private final ScheduledExecutorService executorSche;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -93,6 +94,7 @@ public class APIModule implements Modul {
         this.voiceStateDao = voiceStateDao;
         this.ticketDao = ticketDao;
         this.apelacjeDao = apelacjeDao;
+        this.ankietaDao = ankietaDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(-1);
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache();
@@ -578,6 +580,8 @@ public class APIModule implements Modul {
         routes.get("api/react/apelacje/get/{id}", new ApelacjeHandler(apelacjeDao, 1));
         routes.get("api/react/apelacje/getstats", new ApelacjeHandler(apelacjeDao, 4));
         routes.post("api/react/apelacje/getmonthstats", new ApelacjeHandler(apelacjeDao, 5));
+
+        routes.post("api/react/ankiety/post", new AnkietaHandler(ankietaDao));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
