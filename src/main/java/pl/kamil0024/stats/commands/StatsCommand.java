@@ -46,7 +46,7 @@ public class StatsCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("552580366200864778")) {
+        if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("550961672714452993")) {
             context.send("Nie możesz tego użyć!").queue();
             return false;
         }

@@ -44,6 +44,7 @@ public class AnkietaHandler implements HttpHandler {
             JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
             AnkietaConfig conf = gson.fromJson(json.toString(), AnkietaConfig.class);
             ankietaDao.save(conf);
+            Response.sendResponse(ex, "Pomyślnie zapisano");
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Nie udało się wysłać requesta! " + e.getMessage());
         }
