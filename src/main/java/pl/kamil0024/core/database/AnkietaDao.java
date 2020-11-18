@@ -38,11 +38,9 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -133,7 +131,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
             eb.setColor(Color.cyan);
             if (config.getDescription() != null) eb.setDescription(config.getDescription());
             eb.addField("Ankieta rozpoczęta o", sdf.format(new Date(config.getSendAt())), false);
-            eb.addField("Koniec ankiety o", sdf.format(new Date(config.getEndAt())) + "(" + new BDate(ModLog.getLang()).difference(config.getEndAt()) + ")", false);
+            eb.addField("Koniec ankiety o", sdf.format(new Date(config.getEndAt())) + " (" + new BDate(ModLog.getLang()).difference(config.getEndAt()) + ")", false);
             eb.addField("Opcje ankiety", "1. " + (config.isMultiOptions() ? "Możesz zaznaczyć kilka opcji" : "Możesz zaznaczyć tylko jedną opcje"), false);
             for (AnkietaConfig.Opcja opcja : config.getOpcje()) {
                 bsb.appendLine(opcja.getEmoji() + " **-** " + MarkdownSanitizer.escape(opcja.getText()));
@@ -166,16 +164,12 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
 
                     for (MessageReaction reaction : msg.getReactions()) {
                         if (reaction.getReactionEmote().isEmoji()) {
-
                             for (AnkietaConfig.Opcja opcja : ac.getOpcje()) {
-                                Log.debug(opcja.getEmoji() + " == " + reaction.getReactionEmote().getEmoji());
                                 if (opcja.getEmoji().equals(reaction.getReactionEmote().getEmoji())) {
-                                    Log.debug("true");
                                     int glosy = ac.getGlosy().getOrDefault(opcja.getId(), 0);
-                                    ac.getGlosy().put(opcja.getId(), glosy + 1);
+                                    ac.getGlosy().put(opcja.getId(), glosy + reaction.getCount());
                                 }
                             }
-
                         }
                     }
                     
@@ -203,13 +197,10 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
                 int emotes = 0;
                 Message msg = e.getChannel().retrieveMessageById(e.getMessageId()).complete();
                 for (MessageReaction react : msg.getReactions()) {
-                    emotes += react.retrieveUsers().complete().stream().filter(re -> re.getId().equals(e.getUserId())).collect(Collectors.toList()).size();
+                    emotes += (int) react.retrieveUsers().complete().stream().filter(re -> re.getId().equals(e.getUserId())).count();
                 }
-                if (emotes >= 2) {
-                    msg.removeReaction(e.getReactionEmote().getEmoji(), e.getUser()).complete();
-                }
+                if (emotes >= 2) msg.removeReaction(e.getReactionEmote().getEmoji(), e.getUser()).complete();
             }
-
         }
     }
 

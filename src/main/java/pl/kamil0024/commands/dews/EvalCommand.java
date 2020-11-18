@@ -19,6 +19,7 @@
 
 package pl.kamil0024.commands.dews;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -133,6 +134,7 @@ public class EvalCommand extends Command {
         shell.setVariable("ticketDao", ticketDao);
         shell.setVariable("apelacjeDao", apelacjeDao);
         shell.setVariable("ankietaDao", ankietaDao);
+        shell.setVariable("gson", new Gson());
 
         long ms = System.currentTimeMillis();
         Object value;
