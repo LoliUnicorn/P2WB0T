@@ -57,15 +57,17 @@ public class AnkietaConfig {
     @Data
 //    @AllArgsConstructor // Nie chciało przejść do jsona
     public static class Opcja {
+        public Opcja() { }
+
         public Opcja(int id, String text, String emoji) {
             this.id = id;
             this.text = text;
             this.emoji = emoji;
         }
 
-        private final int id;
-        private final String text;
-        private final String emoji;
+        private int id;
+        private String text;
+        private String emoji;
     }
 
 }
