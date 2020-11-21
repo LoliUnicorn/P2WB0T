@@ -30,8 +30,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Webhook;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -64,15 +66,16 @@ public class WebhookUtil {
         client.close();
     }
 
-    public void sendNormalMessage() {
+    public void sendNormalMessage(@Nullable InputStream inputStream) {
         if (getUrl() == null) throw new NullPointerException("getUrl() == null");
         WebhookClient client = WebhookClient.withUrl(getUrl());
         WebhookMessageBuilder builder = new WebhookMessageBuilder();
-        if (name != null) builder.setUsername(getType().slownie);
+
+        if (name != null) builder.setUsername(getName());
         if (avatar != null) builder.setAvatarUrl(getAvatar());
         if (!getMessage().isEmpty()) builder.setContent(getMessage());
         if (getEmbed() != null) builder.addEmbeds(getEmbed());
-
+        if (inputStream != null) builder.addFile("attachment.png", inputStream);
         client.send(builder.build());
         client.close();
     }

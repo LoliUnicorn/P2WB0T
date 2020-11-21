@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.rekrutacyjny;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.Webhook;
 import pl.kamil0024.core.Ustawienia;
@@ -28,6 +29,8 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.WebhookUtil;
+
+import java.util.List;
 
 public class OgloszenieCommand extends Command {
 
@@ -67,7 +70,16 @@ public class OgloszenieCommand extends Command {
         wu.setName(context.getMember().getNickname() == null ? context.getUser().getName() : context.getMember().getNickname());
         wu.setAvatar(context.getUser().getAvatarUrl());
 
-        wu.sendNormalMessage();
+        List<Message.Attachment> at = context.getMessage().getAttachments();
+        if (!at.isEmpty()) {
+            at.stream().findAny().get().retrieveInputStream()
+                    .thenAccept(wu::sendNormalMessage)
+                    .exceptionally(t -> {
+                        Log.newError(t, getClass());
+                        context.send("Nie udało się dołączyć zdjęcia do ogłoszenia! (" + t.getMessage() + ")").queue();
+                        return null;
+                    });
+        } else wu.sendNormalMessage(null);
 
         context.send("Pomyślnie wysłano ogłoszenie!").queue();
         return true;
