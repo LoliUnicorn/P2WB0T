@@ -104,12 +104,12 @@ public class LiczydloListener extends ListenerAdapter {
     }
 
     private void updateTopic(TextChannel txt) {
-        Message msg = getHistoryList(txt).get(0);
-        try {
-            int liczba = Integer.parseInt(msg.getContentDisplay());
-            String format = "Ostatnia zarejestrowana osoba: %s\nNastępna wiadomość powinna mieć treść: %s";
-            txt.getManager().setTopic(String.format(format, msg.getAuthor().getAsMention(), liczba+1)).complete();
-        } catch (Exception ignored) {}
+        //Message msg = getHistoryList(txt).get(0);
+        //try {
+        //    int liczba = Integer.parseInt(msg.getContentDisplay());
+         //   String format = "Ostatnia zarejestrowana osoba: %s\nNastępna wiadomość powinna mieć treść: %s";
+        //    txt.getManager().setTopic(String.format(format, msg.getAuthor().getAsMention(), liczba+1)).complete();
+       // } catch (Exception ignored) {}
     }
 
 }
