@@ -60,14 +60,13 @@ import static java.nio.charset.StandardCharsets.*;
 @SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
 
-    private static Logger logger = LoggerFactory.getLogger(ChatListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChatListener.class);
 
     private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
     private static final String DISCORD_INVITE = "(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]";
 
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
 
-    @Inject private ShardManager api;
     @Inject private final KaryJSON karyJSON;
     @Inject private final CaseDao caseDao;
     @Inject private final ModLog modLog;
@@ -76,7 +75,6 @@ public class ChatListener extends ListenerAdapter {
     @Getter private final List<String> przeklenstwa;
 
     public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
-        this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
@@ -101,10 +99,15 @@ public class ChatListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
+        if (e.getChannel().getParent() != null && e.getChannel().getParent().getId().equals("539819570358386698")) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
-
+        if (e.getChannel().getId().equals("426864003562864641") &&
+                !e.getMessage().getContentRaw().isEmpty() && e.getMessage().getContentRaw().length() >= 2 ||
+                e.getMessage().getContentRaw().toCharArray()[1] == 'p') {
+            return;
+        }
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
 
@@ -113,7 +116,7 @@ public class ChatListener extends ListenerAdapter {
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
-        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") ||  e.getChannel().getId().equals("573873102757429256")) return;
+        if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
 

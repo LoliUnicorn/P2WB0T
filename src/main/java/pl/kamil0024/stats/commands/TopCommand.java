@@ -38,7 +38,10 @@ import pl.kamil0024.stats.entities.Statystyka;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TopCommand extends Command {
 
@@ -67,7 +70,7 @@ public class TopCommand extends Command {
         Message msg = context.send("Ładuje...").complete();
         context.getChannel().sendTyping().queue();
 
-        new Thread(() -> {
+        Runnable task = () -> {
             List<StatsConfig> staty = statsDao.getAll();
             if (staty.isEmpty()) {
                 msg.editMessage(context.getTranslate("top.lol")).queue();
@@ -119,7 +122,9 @@ public class TopCommand extends Command {
                 futurePages.add(new FutureTask<>(() -> page));
             }
             new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 240).create(msg);
-        }).start();
+        };
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+        ses.schedule(task, 1, TimeUnit.NANOSECONDS);
         return true;
     }
 

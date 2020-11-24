@@ -77,26 +77,23 @@ public class KaryListener extends ListenerAdapter {
 
                 Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
                 if (event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
-                    msg.delete().complete();
+                    deleteMessage(msg);
                     getEmbedy().remove(entry);
                     continue;
                 }
 
                 if (event.getReactionEmote().getId().equals("623630774171729931")) {
-                    try {
-                        msg.delete().complete();
-                    } catch (Exception ignored) { }
+                    deleteMessage(msg);
                     entry.getMsg().delete().queue();
                     getEmbedy().remove(entry);
                     continue;
                 }
-
+                deleteMessage(msg);
                 Dowod d = new Dowod();
                 d.setId(1);
                 d.setUser(event.getMember().getId());
                 d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + MarkdownSanitizer.escape(entry.getMsg().getContentDisplay()));
                 d.setImage(null);
-                msg.delete().queue();
 
                 Member mem = null;
                 try {
@@ -122,15 +119,18 @@ public class KaryListener extends ListenerAdapter {
 
                 PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d);
                 getEmbedy().remove(entry);
-                try {
-                    msg.delete().complete();
-                } catch (Exception ignored) { }
             }
 
         } catch (ConcurrentModificationException ignored) {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
+    private void deleteMessage(Message m) {
+        try {
+            m.delete().queue(s -> {});
+        } catch (Exception ignored) { }
+    }
+
 }
