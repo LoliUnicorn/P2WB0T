@@ -313,7 +313,7 @@ public class PunishCommand extends Command {
                     Integer liczba = context.getParsed().getNumber(event.getMessage().getContentRaw());
                     if (liczba == null || liczba - 1 > karyJSON.getKary().size() || liczba <= 0) return;
                     KaryJSON.Kara kara = karyJSON.getKary().get(liczba - 1);
-                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
+                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule, null, eventWaiter);
                     try {
                         event.getMessage().delete().complete();
                         msg.delete().complete();
