@@ -85,6 +85,7 @@ public class DowodWaiter {
         cc.getKara().getDowody().add(d);
         e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
         cd.save(cc);
+        clear();
     }
 
 }

@@ -293,10 +293,7 @@ public class PunishCommand extends Command {
                 default:
                     Log.newError("Typ " + jegoTier.getType().name() + " nie jest wpisany!", PunishCommand.class);
             }
-            Log.debug("osoby: " + (osoby.size() == 1));
-            Log.debug("waiter: " + (eventWaiter != null));
             if (osoby.size() == 1 && eventWaiter != null) {
-                Log.debug("wykonuje...");
                 Kara.put(caseDao, karaBuilder, modLog, eventWaiter, member.getId(), txt, caseDao);
             } else Kara.put(caseDao, karaBuilder, modLog);
         }
