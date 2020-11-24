@@ -40,7 +40,6 @@ public class EmbedPageintaor {
     private static final String LAST_EMOJI = "\u23ED";
     private static final String STOP_EMOJI = "\u23F9";
 
-    private final JDA api;
     private final EventWaiter eventWaiter;
     private final List<EmbedBuilder> pages;
     private int thisPage = 1;
@@ -55,7 +54,6 @@ public class EmbedPageintaor {
         this.eventWaiter = eventWaiter;
         this.pages = pages;
         this.userId = user.getIdLong();
-        this.api = api;
         this.secound = secound;
     }
 
@@ -63,11 +61,11 @@ public class EmbedPageintaor {
         this.eventWaiter = eventWaiter;
         this.pages = pages;
         this.userId = user.getIdLong();
-        this.api = api;
         this.secound = 60;
     }
 
     public EmbedPageintaor create(MessageChannel channel) {
+        //noinspection DuplicatedCode
         channel.sendMessage(render(1)).override(true).queue(msg -> {
             botMsg = msg;
             botMsgId = msg.getIdLong();

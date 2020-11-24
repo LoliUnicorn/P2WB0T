@@ -162,7 +162,7 @@ public class ChatListener extends ListenerAdapter {
                         Collections.singletonList(member),
                         member.getGuild().getSelfMember(),
                         msg.getTextChannel(),
-                        caseDao, modLog, statsModule, d);
+                        caseDao, modLog, statsModule, d, null);
                 return;
             }
         }

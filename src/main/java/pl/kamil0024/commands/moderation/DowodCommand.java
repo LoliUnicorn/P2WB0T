@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageActivity;
 import net.dv8tion.jda.internal.entities.AbstractMessage;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -127,25 +128,7 @@ public class DowodCommand extends Command {
         }
         if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
 
-        Dowod d = new Dowod();
-        String content = "";
-        String tekstPowodu = context.getArgsToString(1);
-
-        if (tekstPowodu != null && !tekstPowodu.isEmpty()) {
-            content += tekstPowodu;
-        }
-        List<Message.Attachment> at = context.getMessage().getAttachments();
-        if (!at.isEmpty()) {
-            d.setImage(at.stream().findAny().get().getUrl());
-        }
-
-        if (content.isEmpty() && d.getImage() == null) {
-            context.send("Content dowodu nie może być pusty!").queue();
-            return false;
-        }
-
-        d.setContent(content);
-        d.setUser(context.getUser().getId());
+        Dowod d = getKaraConfig(context.getArgsToString(1), context.getMessage());
         d.setId(Dowod.getNextId(cc.getKara().getDowody()));
 
         cc.getKara().getDowody().add(d);
@@ -200,6 +183,22 @@ public class DowodCommand extends Command {
         if (!msg.getAttachments().isEmpty() && msg.getAttachments().get(0).isImage())
             return msg.getAttachments().get(0).getUrl();
         return null;
+    }
+
+    public static Dowod getKaraConfig(String rawTekst, Message msg) {
+        Dowod d = new Dowod();
+        String content = "";
+
+        if (rawTekst != null && !rawTekst.trim().isEmpty()) content += rawTekst;
+        List<Message.Attachment> at = msg.getAttachments();
+        if (!at.isEmpty()) d.setImage(at.stream().findAny().get().getUrl());
+
+        if (content.isEmpty() && d.getImage() == null) return null;
+
+        d.setContent(content);
+        d.setUser(msg.getAuthor().getId());
+        d.setId(1);
+        return d;
     }
 
 }

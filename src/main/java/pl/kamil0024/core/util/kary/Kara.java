@@ -21,12 +21,17 @@ package pl.kamil0024.core.util.kary;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import pl.kamil0024.commands.DowodWaiter;
 import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.moderation.DowodCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.util.ArrayList;
@@ -66,7 +71,7 @@ public class Kara {
         return null;
     }
 
-    public static synchronized void put(CaseDao caseDao, Kara kara, ModLog modLog) {
+    public static synchronized CaseConfig put(CaseDao caseDao, Kara kara, ModLog modLog) {
         CaseConfig cc = new CaseConfig();
         int lastId = getNextId(caseDao.getAll());
         cc.setId(Integer.toString(lastId));
@@ -74,6 +79,12 @@ public class Kara {
         cc.setKara(kara);
         caseDao.save(cc);
         modLog.sendModlog(kara);
+        return cc;
+    }
+
+    public static synchronized void put(CaseDao caseDao, Kara kara, ModLog modLog, EventWaiter eventWaiter, String userId, TextChannel channel, CaseDao cd) {
+        CaseConfig cc = put(caseDao, kara, modLog);
+        new DowodWaiter(userId, cc, cd, channel, eventWaiter).start();
     }
 
     public static synchronized int getNextId(List<CaseConfig> cc) {

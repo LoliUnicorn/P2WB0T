@@ -46,9 +46,9 @@ public class GiveawayCommand extends Command {
 
     @Getter private static HashMap<String, KonkursBuilder> konkurs = new HashMap<>();
 
-    private GiveawayDao giveawayDao;
-    private EventWaiter eventWaiter;
-    private GiveawayListener giveawayListener;
+    private final GiveawayDao giveawayDao;
+    private final EventWaiter eventWaiter;
+    private final GiveawayListener giveawayListener;
 
     private static final String CZAS = "\n\n*Czas na odpowiedź to 1 minuta*";
 

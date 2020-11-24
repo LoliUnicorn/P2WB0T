@@ -33,6 +33,7 @@ import pl.kamil0024.commands.moderation.PunishCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
+import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -117,7 +118,7 @@ public class KaryListener extends ListenerAdapter {
                     continue;
                 }
 
-                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d);
+                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d, null);
                 getEmbedy().remove(entry);
             }
 

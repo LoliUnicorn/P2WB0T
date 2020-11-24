@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.commands.DowodWaiter;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.Ustawienia;
@@ -89,7 +90,7 @@ public class PunishCommand extends Command {
                 for (EmbedBuilder embedBuilder : getKaraList(karyJSON, context.getMember())) {
                     pages.add(new FutureTask<>(() -> embedBuilder));
                 }
-                new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel());
+                new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 500).create(context.getChannel());
             } else {
                 Integer liczba = context.getParsed().getNumber(context.getArgs().get(1));
                 if (liczba == null || liczba > karyJSON.getKary().size() || liczba <= 0) {
@@ -191,10 +192,10 @@ public class PunishCommand extends Command {
                     return;
                 }
                 if (event.getReactionEmote().getId().equals(green.getId())) {
-                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule);
+                    putPun(kara, osoby, context.getMember(), context.getChannel(), caseDao, modLog, statsModule, null, eventWaiter);
                     try {
-                        event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().complete();
                         context.getMessage().delete().complete();
+                        event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().complete();
                     } catch (Exception ignored) {}
                 }
                 msg.clearReactions().complete();
@@ -215,10 +216,10 @@ public class PunishCommand extends Command {
     }
 
     public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
-        putPun(kara, osoby, member, txt, caseDao, modLog, statsModule, null);
+        putPun(kara, osoby, member, txt, caseDao, modLog, statsModule, null, null);
     }
 
-    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod) {
+    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod, @Nullable EventWaiter eventWaiter) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
             List<CaseConfig> cc = caseDao.getAllPunAktywne(osoba.getId());
@@ -291,7 +292,9 @@ public class PunishCommand extends Command {
                 default:
                     Log.newError("Typ " + jegoTier.getType().name() + " nie jest wpisany!", PunishCommand.class);
             }
-            Kara.put(caseDao, karaBuilder, modLog);
+            if (osoby.size() == 1 && eventWaiter != null && dowod == null) {
+                Kara.put(caseDao, karaBuilder, modLog, eventWaiter, member.getId(), txt, caseDao);
+            } else Kara.put(caseDao, karaBuilder, modLog);
         }
     }
 
