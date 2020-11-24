@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pl.kamil0024.commands.moderation.DowodCommand;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.kary.Dowod;
 
@@ -49,6 +50,7 @@ public class DowodWaiter {
     }
 
     public void start() {
+        Log.debug("startuje...");
         botMsg = channel.sendMessage("Zapisz dowód... (jeżeli takowego nie ma, napisz `anuluj`)").complete();
         waitForMessage();
     }

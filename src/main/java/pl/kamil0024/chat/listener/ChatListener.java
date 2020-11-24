@@ -98,7 +98,7 @@ public class ChatListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
-        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
+        if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId) || e.getAuthor().isBot()) return;
         if (e.getChannel().getParent() != null && e.getChannel().getParent().getId().equals("539819570358386698")) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;

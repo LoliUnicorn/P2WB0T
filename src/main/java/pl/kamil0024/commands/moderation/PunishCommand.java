@@ -51,6 +51,7 @@ import java.util.*;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class PunishCommand extends Command {
 
@@ -234,7 +235,7 @@ public class PunishCommand extends Command {
             }
             if (jegoTier == null) {
                 jegoTier = kara.getTiery().get(0);
-                for (CaseConfig aCase : cc) {
+                for (CaseConfig aCase : cc.stream().filter(ka -> ka.getKara().getPunAktywna()).collect(Collectors.toList())) {
                     aCase.getKara().setPunAktywna(false);
                     caseDao.save(aCase);
                 }
@@ -292,7 +293,10 @@ public class PunishCommand extends Command {
                 default:
                     Log.newError("Typ " + jegoTier.getType().name() + " nie jest wpisany!", PunishCommand.class);
             }
-            if (osoby.size() == 1 && eventWaiter != null && dowod == null) {
+            Log.debug("osoby: " + (osoby.size() == 1));
+            Log.debug("waiter: " + (eventWaiter != null));
+            if (osoby.size() == 1 && eventWaiter != null) {
+                Log.debug("wykonuje...");
                 Kara.put(caseDao, karaBuilder, modLog, eventWaiter, member.getId(), txt, caseDao);
             } else Kara.put(caseDao, karaBuilder, modLog);
         }
