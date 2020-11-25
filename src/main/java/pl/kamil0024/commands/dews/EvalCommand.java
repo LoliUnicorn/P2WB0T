@@ -50,7 +50,7 @@ import java.awt.*;
 
 public class EvalCommand extends Command {
 
-    private static Logger logger = LoggerFactory.getLogger(EvalCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(EvalCommand.class);
 
     @Inject private final EventWaiter eventWaiter;
     @Inject private final CommandManager commandManager;

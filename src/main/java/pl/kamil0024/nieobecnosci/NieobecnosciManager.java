@@ -121,34 +121,39 @@ public class NieobecnosciManager {
         }
 
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
-            long now = new Date().getTime();
-            Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
-            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.rekrutacyjny.guildId)).retrieveMemberById(nb.getUserId()).complete();
-            if (mem == null) {
-                Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
-                continue;
-            }
+            try {
+                long now = new Date().getTime();
+                Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
+                Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.rekrutacyjny.guildId)).retrieveMemberById(nb.getUserId()).complete();
+                if (mem == null) {
+                    Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
+                    continue;
+                }
 
-            if (msg == null) {
-                Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!", NieobecnosciManager.class);
-                continue;
-            }
+                if (msg == null) {
+                    Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!", NieobecnosciManager.class);
+                    continue;
+                }
 
-            if (nb.getEnd() - now <= 0) {
-                try {
-                    NieobecnosciConfig nbc = nieobecnosciDao.get(nb.getUserId());
-                    msg.delete().queue();
-                    nbc.getNieobecnosc().remove(nb);
-                    nb.setAktywna(false);
-                    nbc.getNieobecnosc().add(nb);
-                    nieobecnosciDao.save(nbc);
-                    Zmiana.endNieobecnosci(nb, mem);
-                    PrivateChannel pv = mem.getUser().openPrivateChannel().complete();
-                    pv.sendMessage("Twój urlop właśnie się zakończył!").complete();
-                } catch (Exception ignored) {}
-                continue;
+                if (nb.getEnd() - now <= 0) {
+                    try {
+                        NieobecnosciConfig nbc = nieobecnosciDao.get(nb.getUserId());
+                        msg.delete().queue();
+                        nbc.getNieobecnosc().remove(nb);
+                        nb.setAktywna(false);
+                        nbc.getNieobecnosc().add(nb);
+                        nieobecnosciDao.save(nbc);
+                        Zmiana.endNieobecnosci(nb, mem);
+                        PrivateChannel pv = mem.getUser().openPrivateChannel().complete();
+                        pv.sendMessage("Twój urlop właśnie się zakończył!").complete();
+                    } catch (Exception ignored) {}
+                    continue;
+                }
+                msg.editMessage(getEmbed(nb, mem).build()).queue();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.newError(e, getClass());
             }
-            msg.editMessage(getEmbed(nb, mem).build()).queue();
         }
     }
 }
