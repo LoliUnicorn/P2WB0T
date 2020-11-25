@@ -123,15 +123,13 @@ public class NieobecnosciManager {
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
             long now = new Date().getTime();
             Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
-            // fixme: inne id
-            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(nb.getUserId()).complete();
+            Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.rekrutacyjny.guildId)).retrieveMemberById(nb.getUserId()).complete();
             if (mem == null) {
                 Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
                 continue;
             }
 
             if (msg == null) {
-                // fixme: stworz wiadomosc
                 Log.newError("Nieobecnosc usera " + nb.getUserId() + " o ID " + nb.getId() + " nie ma wiadomosci!", NieobecnosciManager.class);
                 continue;
             }

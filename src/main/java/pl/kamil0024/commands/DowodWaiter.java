@@ -61,11 +61,12 @@ public class DowodWaiter {
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
+        if (!e.getAuthor().getId().equals(userId)) return false;
         if (e.getMessage().getContentRaw().equalsIgnoreCase("anuluj")) {
             clear();
             return false;
         }
-        return e.isFromGuild() && e.getAuthor().getId().equals(userId) && e.getTextChannel().getId().equals(channel.getId());
+        return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId());
     }
 
     private void clear() {

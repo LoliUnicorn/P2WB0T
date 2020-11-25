@@ -33,7 +33,7 @@ public class NieobecnosciModule implements Modul {
     private boolean start = false;
 
     private NieobecnosciListener nieobecnosciListener;
-    private NieobecnosciManager nieobecnosciManager;
+    private final NieobecnosciManager nieobecnosciManager;
 
     public NieobecnosciModule(ShardManager api, NieobecnosciDao nieobecnosciDao, NieobecnosciManager nieobecnosciManager) {
         this.api = api;
