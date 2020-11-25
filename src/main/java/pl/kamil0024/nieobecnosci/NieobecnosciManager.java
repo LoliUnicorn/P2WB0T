@@ -124,7 +124,10 @@ public class NieobecnosciManager {
             try {
                 long now = new Date().getTime();
                 Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
-                Member mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.rekrutacyjny.guildId)).retrieveMemberById(nb.getUserId()).complete();
+                Member mem = null;
+                try {
+                    mem = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.rekrutacyjny.guildId)).retrieveMemberById(nb.getUserId()).complete();
+                } catch (Exception ignored) { }
                 if (mem == null) {
                     Log.newError("Jezu " + nb.getUserId() + " wyszedł z serwera i nie mogę zaaktualizować nieobecności", NieobecnosciManager.class);
                     continue;

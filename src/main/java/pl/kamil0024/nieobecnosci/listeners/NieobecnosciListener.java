@@ -45,10 +45,10 @@ import java.util.concurrent.TimeUnit;
 
 public class NieobecnosciListener extends ListenerAdapter {
 
-    private static Logger logger = LoggerFactory.getLogger(NieobecnosciListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(NieobecnosciListener.class);
 
-    @Inject private NieobecnosciDao nieobecnosciDao;
-    @Inject private NieobecnosciManager nieobecnosciManager;
+    @Inject private final NieobecnosciDao nieobecnosciDao;
+    @Inject private final NieobecnosciManager nieobecnosciManager;
 
     public NieobecnosciListener(NieobecnosciDao nieobecnosciDao, NieobecnosciManager nieobecnosciManager) {
         this.nieobecnosciDao = nieobecnosciDao;
