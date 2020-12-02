@@ -35,7 +35,7 @@ import java.util.Objects;
 
 public class PlayCommand extends Command {
 
-    private MusicModule musicModule;
+    private final MusicModule musicModule;
 
     public PlayCommand(MusicModule musicModule) {
         name = "play";

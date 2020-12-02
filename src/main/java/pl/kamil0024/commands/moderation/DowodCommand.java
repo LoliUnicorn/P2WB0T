@@ -91,7 +91,7 @@ public class DowodCommand extends Command {
                 context.send("Nie ma żadnych dowodów w ten sprawie!").queue();
                 return false;
             }
-            new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 2137).create(context.getChannel());
+            new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 2137).create(context.getChannel(), context.getMessage());
             return true;
         }
 

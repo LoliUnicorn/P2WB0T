@@ -103,7 +103,7 @@ public class PrivateQueueCommand extends Command {
                 traki.add(new FutureTask<>(() -> new DecodeTrack(jsona.next().toString(), false).create()));
             }
 
-            new DynamicEmbedPageinator(traki, context.getUser(), eventWaiter, context.getJDA(), 60).create(context.getChannel());
+            new DynamicEmbedPageinator(traki, context.getUser(), eventWaiter, context.getJDA(), 60).create(context.getChannel(), context.getMessage());
             return true;
         } catch (Exception e) {
             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();

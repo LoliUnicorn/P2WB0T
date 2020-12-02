@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("DuplicatedCode")
 public class EmbedPageintaor {
     
     private static final String FIRST_EMOJI = "\u23EE";
@@ -77,8 +78,9 @@ public class EmbedPageintaor {
         return this;
     }
 
-    public EmbedPageintaor create(Message message) {
-        message.editMessage(render(1)).override(true).queue(msg -> {
+    public EmbedPageintaor create(MessageChannel channel, Message mes) {
+        //noinspection DuplicatedCode
+        channel.sendMessage(render(1)).reference(mes).override(true).queue(msg -> {
             botMsg = msg;
             botMsgId = msg.getIdLong();
             if (pages.size() != 1) {
@@ -95,8 +97,7 @@ public class EmbedPageintaor {
     }
 
     private void onMessageReactionAdd(MessageReactionAddEvent event) {
-        if (event.getUser().getIdLong() != userId) return;
-        if (event.getMessageIdLong() != botMsgId) return;
+        if (event.getUser().getIdLong() != userId || event.getMessageIdLong() != botMsgId) return;
 
         if (!event.getReactionEmote().isEmote()) {
             switch (event.getReactionEmote().getName()) {

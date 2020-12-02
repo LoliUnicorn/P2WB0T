@@ -32,7 +32,7 @@ import pl.kamil0024.music.commands.PlayCommand;
 @SuppressWarnings("DuplicatedCode")
 public class PrivateLeaveCommand extends Command {
 
-    private MusicAPI musicAPI;
+    private final MusicAPI musicAPI;
 
     public PrivateLeaveCommand(MusicAPI musicAPI) {
         name = "pleave";

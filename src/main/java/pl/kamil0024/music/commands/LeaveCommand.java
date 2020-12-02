@@ -29,7 +29,7 @@ import pl.kamil0024.musicmanager.entity.GuildMusicManager;
 @SuppressWarnings("DuplicatedCode")
 public class LeaveCommand extends Command {
 
-    private MusicModule musicModule;
+    private final MusicModule musicModule;
 
     public LeaveCommand(MusicModule musicModule) {
         name = "leave";

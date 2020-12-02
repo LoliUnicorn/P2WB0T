@@ -115,7 +115,7 @@ public class HistoryCommand extends Command {
         for (EmbedBuilder embedBuilder : historiaKar) {
             pages.add(new FutureTask<>(() -> embedBuilder));
         }
-        new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel());
+        new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120).create(context.getChannel(), context.getMessage());
         return true;
     }
 

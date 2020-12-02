@@ -33,7 +33,7 @@ import pl.kamil0024.music.commands.PlayCommand;
 @SuppressWarnings("DuplicatedCode")
 public class PrivateVolumeCommand extends Command {
 
-    private MusicAPI musicAPI;
+    private final MusicAPI musicAPI;
 
     public PrivateVolumeCommand(MusicAPI musicAPI) {
         name = "pvolume";

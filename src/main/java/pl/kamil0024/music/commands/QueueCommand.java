@@ -43,8 +43,8 @@ public class QueueCommand extends Command {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    private MusicModule musicModule;
-    private EventWaiter eventWaiter;
+    private final MusicModule musicModule;
+    private final EventWaiter eventWaiter;
 
     public QueueCommand(MusicModule musicModule, EventWaiter eventWaiter) {
         name = "queue";
@@ -78,7 +78,7 @@ public class QueueCommand extends Command {
             return false;
         }
 
-        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel(), context.getMessage());
         return true;
     }
 

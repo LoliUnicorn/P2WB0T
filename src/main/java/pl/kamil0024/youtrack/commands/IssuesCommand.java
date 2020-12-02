@@ -54,7 +54,7 @@ public class IssuesCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandContext context) {
-        Message msg = context.send("Ładuje...").complete();
+        Message msg = context.send("Ładuje...").reference(context.getMessage()).complete();
         Integer arg = context.getParsed().getNumber(context.getArgs().get(0));
         if (arg == null) arg = 0;
         DateTime dt = new DateTime().minusDays(arg);

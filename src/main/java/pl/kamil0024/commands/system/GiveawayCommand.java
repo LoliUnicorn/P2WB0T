@@ -76,7 +76,7 @@ public class GiveawayCommand extends Command {
                 context.sendTranslate("giveaway.emptygive").queue();
                 return false;
             }
-            new EmbedPageintaor(strony, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+            new EmbedPageintaor(strony, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel(), context.getMessage());
         }
         if (typ.equals("create") || typ.equals("stworz")) {
             Message msg = context.sendTranslate("giveaway.create", CZAS).complete();

@@ -115,7 +115,7 @@ public class OsuCommand extends Command {
             return true;
         }
         if (arg.equalsIgnoreCase("topplay")) {
-            Message mes = context.send(context.getTranslate("generic.loading")).complete();
+            Message mes = context.send(context.getTranslate("generic.loading")).reference(context.getMessage()).complete();
             try {
                 java.util.List<OsuScore> wyniki = osu.userBests
                         .query(new EndpointUserBests.ArgumentsBuilder(context.getArgs().get(1)).setLimit(100).build());

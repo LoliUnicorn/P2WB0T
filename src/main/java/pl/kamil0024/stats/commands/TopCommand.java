@@ -67,7 +67,7 @@ public class TopCommand extends Command {
         Integer dni = context.getParsed().getNumber(context.getArgs().get(0));
         if (dni == null) throw new UsageException();
 
-        Message msg = context.send("Ładuje...").complete();
+        Message msg = context.send("Ładuje...").reference(context.getMessage()).complete();
         context.getChannel().sendTyping().queue();
 
         Runnable task = () -> {

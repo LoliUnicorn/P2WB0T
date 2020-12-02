@@ -52,7 +52,7 @@ public class MultiCommand extends Command {
         User user = context.getParsed().getUser(context.getArgs().get(0));
         if (user == null) throw new UsageException();
 
-        Message msg = context.send("Ładuje...").complete();
+        Message msg = context.send("Ładuje...").reference(context.getMessage()).complete();
 
         MultiConfig mc = multiDao.get(user.getId());
         if (mc.getNicki().isEmpty()) {
@@ -89,8 +89,8 @@ public class MultiCommand extends Command {
             pages.add(eb);
         }
 
-        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(msg);
-
+        new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel(), context.getMessage());
+        msg.delete().queue();
         return true;
     }
 

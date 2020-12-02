@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("DuplicatedCode")
 public class PrivatePlayCommand extends Command {
 
-    private MusicAPI musicAPI;
+    private final MusicAPI musicAPI;
 
     public PrivatePlayCommand(MusicAPI musicAPI) {
         name = "pplay";

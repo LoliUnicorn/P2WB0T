@@ -30,7 +30,7 @@ import pl.kamil0024.music.MusicModule;
 @SuppressWarnings("DuplicatedCode")
 public class VolumeCommand extends Command {
 
-    private MusicModule musicModule;
+    private final MusicModule musicModule;
 
     public VolumeCommand(MusicModule musicModule) {
         name = "volume";

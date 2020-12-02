@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 public class YouTubeCommand extends Command {
 
-    private MusicModule musicModule;
-    private EventWaiter eventWaiter;
+    private final MusicModule musicModule;
+    private final EventWaiter eventWaiter;
 
     public YouTubeCommand(MusicModule musicModule, EventWaiter eventWaiter) {
         name = "youtube";

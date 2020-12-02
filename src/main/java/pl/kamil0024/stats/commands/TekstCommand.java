@@ -108,7 +108,8 @@ public class TekstCommand extends Command {
                 pages.addAll(teksty);
             } else pages.add(tekst);
 
-            new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).create(context.getChannel());
+            new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).
+                    create(context.getChannel(), context.getMessage());
 
             return true;
         } catch (Exception e) {

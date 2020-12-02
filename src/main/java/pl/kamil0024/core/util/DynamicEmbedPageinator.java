@@ -41,7 +41,6 @@ public class DynamicEmbedPageinator {
     private static final String LAST_EMOJI = "\u23ED";
     private static final String STOP_EMOJI = "\u23F9";
 
-    private final JDA api;
     private final EventWaiter eventWaiter;
     private final List<FutureTask<EmbedBuilder>> pages;
     private int thisPage = 1;
@@ -49,8 +48,8 @@ public class DynamicEmbedPageinator {
 
     private Message botMsg;
     private long botMsgId;
-    private long userId;
-    private int secound;
+    private final long userId;
+    private final int secound;
 
     private boolean loading = true;
     private boolean ended = false;
@@ -66,7 +65,6 @@ public class DynamicEmbedPageinator {
         this.eventWaiter = eventWaiter;
         this.pages = pages;
         this.userId = user.getIdLong();
-        this.api = api;
         this.secound = secound;
         if (this.preload) {
             mainExecutor.submit(() -> {
@@ -95,8 +93,8 @@ public class DynamicEmbedPageinator {
         if (botMsg != null) botMsg.editMessage(render(thisPage)).override(true).queue();
     }
 
-    public DynamicEmbedPageinator create(MessageChannel channel) {
-        channel.sendMessage(render(1)).override(true).queue(msg -> {
+    public DynamicEmbedPageinator create(MessageChannel channel, Message mess) {
+        channel.sendMessage(render(1)).reference(mess).override(true).queue(msg -> {
             botMsg = msg;
             botMsgId = msg.getIdLong();
             if (pages.size() != 1) {

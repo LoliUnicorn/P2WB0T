@@ -91,7 +91,7 @@ public class PunishCommand extends Command {
                 for (EmbedBuilder embedBuilder : getKaraList(karyJSON, context.getMember())) {
                     pages.add(new FutureTask<>(() -> embedBuilder));
                 }
-                new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 500).create(context.getChannel());
+                new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 500).create(context.getChannel(), context.getMessage());
             } else {
                 Integer liczba = context.getParsed().getNumber(context.getArgs().get(1));
                 if (liczba == null || liczba > karyJSON.getKary().size() || liczba <= 0) {
@@ -134,7 +134,7 @@ public class PunishCommand extends Command {
         Integer numer = context.getParsed().getNumber(context.getArgs().get(1));
 
         ArrayList<Member> osoby = new ArrayList<>();
-        Message msg = context.send("Ładuje...").complete();
+        Message msg = context.send("Ładuje...").reference(context.getMessage()).complete();
 
         if (arg.contains(",")) {
             for (String s : arg.split(",")) {
