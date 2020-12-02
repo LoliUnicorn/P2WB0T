@@ -119,10 +119,9 @@ public class NieobecnosciManager {
             Log.newError("Kanał do nieobecnosci jest nullem", NieobecnosciManager.class);
             return;
         }
-
+        long now = new Date().getTime();
         for (Nieobecnosc nb : nieobecnosciDao.getAllAktywne()) {
             try {
-                long now = new Date().getTime();
                 Message msg = CytujCommand.kurwaJDA(txt, nb.getMsgId());
                 Member mem = null;
                 try {

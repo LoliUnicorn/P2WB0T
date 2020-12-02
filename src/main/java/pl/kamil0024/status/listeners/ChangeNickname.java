@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.logger.Log;
 
 public class ChangeNickname extends ListenerAdapter {
 
@@ -33,14 +34,23 @@ public class ChangeNickname extends ListenerAdapter {
 
     @Override
     public void onUserUpdateName(@NotNull UserUpdateNameEvent e) {
+        Log.debug("Event się wykonuje...");
         Guild g = e.getJDA().getGuildById(Ustawienia.instance.bot.guildId);
-        if (g == null) throw new NullPointerException("gilda jest nullem");
+        if (g == null) {
+            Log.newError("gildia jest nullem", getClass());
+            throw new NullPointerException("gilda jest nullem");
+        }
 
         Member mem = g.retrieveMemberById(e.getUser().getId()).complete();
         if (mem == null) return;
 
         if (mem.getNickname() == null) {
-            g.modifyNickname(mem, e.getOldName()).queue();
+            try {
+                g.modifyNickname(mem, e.getOldName()).complete();
+            } catch (Exception ex) {
+                Log.error("Nie udało się zmienić nicku!", getClass());
+                Log.newError(ex, getClass());
+            }
         }
 
     }
