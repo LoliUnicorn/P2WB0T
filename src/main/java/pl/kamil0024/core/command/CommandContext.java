@@ -49,7 +49,7 @@ public class CommandContext {
 
     private final ArgumentManager argumentManager;
     private final Command cmd;
-    private Tlumaczenia tlumaczenia;
+    private final Tlumaczenia tlumaczenia;
 
     private static final Pattern URLPATTERN = Pattern.compile("(https?://(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\." +
             "[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?://(?:www\\.|(?!www))[a-zA-Z0-9]" +
@@ -116,7 +116,7 @@ public class CommandContext {
         if (checkUrl && URLPATTERN.matcher(msg).matches()) {
             message = message.replaceAll(String.valueOf(URLPATTERN), "[LINK]");
         }
-        return event.getChannel().sendMessage(message.replaceAll("@(everyone|here)", "@\u200b$1"));
+        return event.getChannel().sendMessage(message.replaceAll("@(everyone|here)", "@\u200b$1")).referenceById(getMessage().getIdLong());
     }
 
     public MessageAction send(MessageEmbed message) {

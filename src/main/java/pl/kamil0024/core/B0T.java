@@ -200,6 +200,7 @@ public class B0T {
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
             builder.enableCache(CacheFlag.EMOTE);
             builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+            MessageAction.setDefaultMentionRepliedUser(false);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
             this.api = builder.build();
             api.getGatewayIntents();

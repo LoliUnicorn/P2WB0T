@@ -29,7 +29,7 @@ def versionObj = new Version(major: 2)
 version = "$versionObj".toString()
 mainClassName = 'pl.kamil0024.core.Main'
 
-def jdaVersion = '4.2.0_168'
+def jdaVersion = '4.2.0_222'
 
 repositories {
     mavenCentral()

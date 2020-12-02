@@ -34,7 +34,6 @@ public class ChangeNickname extends ListenerAdapter {
 
     @Override
     public void onUserUpdateName(@NotNull UserUpdateNameEvent e) {
-        Log.debug("Event się wykonuje...");
         Guild g = e.getJDA().getGuildById(Ustawienia.instance.bot.guildId);
         if (g == null) {
             Log.newError("gildia jest nullem", getClass());
