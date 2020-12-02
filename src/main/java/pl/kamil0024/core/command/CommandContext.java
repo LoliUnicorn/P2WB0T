@@ -120,7 +120,7 @@ public class CommandContext {
     }
 
     public MessageAction send(MessageEmbed message) {
-        return event.getChannel().sendMessage(message);
+        return event.getChannel().sendMessage(message).referenceById(getMessage().getIdLong());
     }
 
     public MessageAction sendTranslate(String key, Object... obj) {
