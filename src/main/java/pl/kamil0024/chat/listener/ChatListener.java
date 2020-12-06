@@ -63,9 +63,10 @@ public class ChatListener extends ListenerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ChatListener.class);
 
     private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
-    private static final String DISCORD_INVITE = "(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]";
-
+    private static final Pattern DISCORD_INVITE = Pattern.compile("(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]");
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
+    private static final Pattern YOUTUBE_LINK = Pattern.compile("(http(s)?://)?(www\\.)?(m\\.)?(youtube\\.com|youtu\\.be)/\\S+");
+    private static final Pattern SKROTY = Pattern.compile("[jJ][ ]?[a-z-A-Z]{1,2}");
 
     @Inject private final KaryJSON karyJSON;
     @Inject private final CaseDao caseDao;
@@ -101,9 +102,9 @@ public class ChatListener extends ListenerAdapter {
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId) || e.getAuthor().isBot()) return;
         if (e.getChannel().getParent() != null && e.getChannel().getParent().getId().equals("539819570358386698")) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
-        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
+        if (e.getAuthor().isBot() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
-        if (e.getChannel().getId().equals("426864003562864641") &&
+        if (e.getChannel().getId().equals("426864003562864641") && !e.getAuthor().isBot() &&
                 !e.getMessage().getContentRaw().isEmpty() && e.getMessage().getContentRaw().length() >= 2 ||
                 e.getMessage().getContentRaw().toCharArray()[1] == 'p') {
             return;
@@ -115,7 +116,7 @@ public class ChatListener extends ListenerAdapter {
     public void onGuildMessageUpdate(@Nonnull GuildMessageUpdateEvent e) {
         if (!e.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
-        if (e.getAuthor().isBot() || e.getAuthor().isFake() || e.getMessage().getContentRaw().isEmpty()) return;
+        if (e.getAuthor().isBot() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);
     }
@@ -180,7 +181,7 @@ public class ChatListener extends ListenerAdapter {
             return;
         }
 
-        if (msgRaw.replaceAll("(http(s)?://)?(www\\.)?(m\\.)?(youtube\\.com|youtu\\.be)/\\S+", "kurwa").contains("kurwa")) {
+        if (YOUTUBE_LINK.matcher(msgRaw).find()) {
             if (!msg.getChannel().getId().equals("426864003562864641")) {
                 Role miniyt = member.getGuild().getRoleById("425670776272715776");
                 Role yt = member.getGuild().getRoleById("425670600049295360");
@@ -200,40 +201,19 @@ public class ChatListener extends ListenerAdapter {
         String takMsg = czystaWiadomosc.replaceAll("<@(&?)(!?)([0-9])*>", "")
                 .replaceAll("<#(\\d+)>", "");
 
-        int emote = emoteCount(takMsg, msg.getJDA());
-
         String bezEmotek = takMsg.replaceAll(EMOJI.toString(), "");
         String capsMsg = bezEmotek.replaceAll("[^\\w\\s]*", "");
-        int caps = containsCaps(capsMsg);
-
-        int flood = containsFlood(bezEmotek);
 
         if (!msg.getChannel().getId().equals("652927860943880224")) {
-            if (caps >= 50 || emote >= 10) {
-                logger.debug("---------------------------");
-                logger.debug("user: " + msg.getAuthor().getId());
-                logger.debug("msg: " + takMsg);
-                logger.debug("int flooda: " + flood);
-                logger.debug("procent capsa " + caps);
-                logger.debug("int emotek: " + emote);
-                logger.debug("---------------------------");
+            if (containsCaps(capsMsg) >= 50 || emoteCount(takMsg, msg.getJDA()) >= 10) {
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();
                 return;
             }
-            if (flood >= 10) {
+            if (containsFlood(bezEmotek) >= 10) {
                 action.setPewnosc(false);
                 action.setDeleted(false);
-                action.setKara(Action.ListaKar.FLOOD);
-                action.send();
-                return;
-            }
-        }
-        
-        if (msg.getChannel().getId().equals("739975462247202816")) {
-            if (containsTestFlood(bezEmotek) == 100) {
-                msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
                 action.send();
                 return;
@@ -290,8 +270,7 @@ public class ChatListener extends ListenerAdapter {
 
     public static boolean containsInvite(String[] list) {
         for (String s : list) {
-            String tak = s.replaceAll(DISCORD_INVITE, "CzemuTutajJestJakisJebanyInvite");
-            if (tak.contains("CzemuTutajJestJakisJebanyInvite")) return true;
+            return DISCORD_INVITE.matcher(s).find();
         }
         return false;
     }
@@ -345,7 +324,7 @@ public class ChatListener extends ListenerAdapter {
     public static int containsCaps(String msg) {
         msg = msg.replaceAll(" ", "")
                 .replaceAll("<@!?([0-9])*>", "")
-                .replaceAll("(x|X)", "").replaceAll("(d|D)", "");
+                .replaceAll("([xX])", "").replaceAll("([dD])", "");
         int caps = 0;
         char[] split = msg.toCharArray();
         if (split.length < 5) return 0;
@@ -406,7 +385,7 @@ public class ChatListener extends ListenerAdapter {
             if (whiteList.contains(s.toLowerCase()) || whiteList.contains(pat)) {
                 continue;
             }
-            if (pat.replaceAll("[jJ][ ]?[a-z-A-Z]{1,2}", "kurwa").equals("kurwa")) return true;
+            if (SKROTY.matcher(pat).find()) return true;
         }
 
         return false;

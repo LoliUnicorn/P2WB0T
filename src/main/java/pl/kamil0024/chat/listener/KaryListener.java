@@ -47,12 +47,12 @@ import java.util.concurrent.TimeUnit;
 
 public class KaryListener extends ListenerAdapter {
 
+    @Getter private static final ArrayList<Action> embedy = new ArrayList<>();
+
     private final KaryJSON karyJSON;
     private final CaseDao caseDao;
     private final ModLog modLog;
     private final StatsModule statsModule;
-
-    @Getter private static final ArrayList<Action> embedy = new ArrayList<>();
 
     public KaryListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.karyJSON = karyJSON;
@@ -83,13 +83,11 @@ public class KaryListener extends ListenerAdapter {
                     continue;
                 }
 
+                deleteMessage(entry.getMsg(), msg);
                 if (event.getReactionEmote().getId().equals("623630774171729931")) {
-                    deleteMessage(msg);
-                    entry.getMsg().delete().queue();
                     getEmbedy().remove(entry);
                     continue;
                 }
-                deleteMessage(msg);
                 Dowod d = new Dowod();
                 d.setId(1);
                 d.setUser(event.getMember().getId());
@@ -128,10 +126,12 @@ public class KaryListener extends ListenerAdapter {
         }
     }
 
-    private void deleteMessage(Message m) {
-        try {
-            m.delete().queue(s -> {});
-        } catch (Exception ignored) { }
+    private void deleteMessage(Message... m) {
+        for (Message message : m) {
+            try {
+                message.delete().queue(s -> {});
+            } catch (Exception ignored) { }
+        }
     }
 
 }

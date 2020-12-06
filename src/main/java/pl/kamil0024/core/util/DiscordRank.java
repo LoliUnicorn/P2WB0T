@@ -46,6 +46,7 @@ public enum DiscordRank {
     POMOCNIK(Ustawienia.instance.rangi.pomocnik),
     MODERATOR(Ustawienia.instance.rangi.moderator),
     OWNER(Ustawienia.instance.rangi.korona),
+    CHATMOD(Ustawienia.instance.roles.chatMod),
     ADMINISTRATOR(Ustawienia.instance.rangi.administrator);
 
     private final String roleId;

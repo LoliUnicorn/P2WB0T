@@ -31,14 +31,25 @@
         </encoder>
     </appender>
 
-    <logger name="n.d.jda.internal.requests.Requester" level="OFF"/>
-	<logger name="jda.internal.requests.Requester" level="OFF"/>
-	<logger name="net.dv8tion.jda.internal.requests.equester.java" level="OFF"/>
-	
-	<logger name="n.d.j.i.r.ratelimit.BotRateLimiter" level="OFF"/>
-	<logger name="net.dv8tion.jda.internal.requests.ratelimit.BotRateLimiter" level="OFF"/>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>~/core/logs/logs.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>[%d{HH:mm:ss.SSS}] [%colorize(%level)] [%class{36}.%M %L] %msg\n</Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>~/core/logs/zips/p2w.%i.zip</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>10</MaxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

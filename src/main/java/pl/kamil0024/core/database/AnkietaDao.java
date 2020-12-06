@@ -59,7 +59,7 @@ public class AnkietaDao extends ListenerAdapter implements Dao<AnkietaConfig> {
         this.api = api;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::update, 0, 1, TimeUnit.MINUTES);
+        executorSche.scheduleAtFixedRate(this::update, 0, 7, TimeUnit.MINUTES);
         api.addEventListener(this);
     }
 

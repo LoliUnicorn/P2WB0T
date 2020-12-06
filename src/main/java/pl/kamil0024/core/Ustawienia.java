@@ -206,6 +206,12 @@ public class Ustawienia {
         public String ogloszeniaId;
         public String nieobecnosciId;
         public String ankietyId;
+
+        public String admin = def;
+        public String mod = def;
+        public String pom = def;
+        public String staz = def;
+        public String chatmod = def;
     }
 
 }

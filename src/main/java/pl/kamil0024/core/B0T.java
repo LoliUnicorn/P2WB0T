@@ -63,6 +63,7 @@ import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
+import pl.kamil0024.rekrutacyjny.RekruModule;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.ticket.TicketModule;
 import pl.kamil0024.weryfikacja.WeryfikacjaModule;
@@ -269,6 +270,7 @@ public class B0T {
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
         modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao));
+        modulManager.getModules().add(new RekruModule(api, commandManager));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
