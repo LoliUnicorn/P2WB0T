@@ -32,13 +32,13 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>~/core/logs/logs.log</file>
+        <file>logs/logs.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>[%d{HH:mm:ss.SSS}] [%colorize(%level)] [%class{36}.%M %L] %msg\n</Pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <FileNamePattern>~/core/logs/zips/p2w.%i.zip</FileNamePattern>
+            <FileNamePattern>logs/zips/p2w.%i.zip</FileNamePattern>
             <MinIndex>1</MinIndex>
             <MaxIndex>10</MaxIndex>
         </rollingPolicy>
