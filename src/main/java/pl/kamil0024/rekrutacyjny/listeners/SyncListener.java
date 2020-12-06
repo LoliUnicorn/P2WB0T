@@ -70,6 +70,10 @@ public class SyncListener extends ListenerAdapter {
             String prefix = null;
             String role = null;
             switch (rank) {
+                case CHATMOD:
+                    role = Ustawienia.instance.rekrutacyjny.chatmod;
+                    prefix = "CHATMOD";
+                    break;
                 case POMOCNIK:
                     role = Ustawienia.instance.rekrutacyjny.pom;
                     prefix = "POM";
@@ -85,10 +89,6 @@ public class SyncListener extends ListenerAdapter {
                 case ADMINISTRATOR:
                     role = Ustawienia.instance.rekrutacyjny.admin;
                     prefix = "ADM";
-                    break;
-                case CHATMOD:
-                    role = Ustawienia.instance.rekrutacyjny.chatmod;
-                    prefix = "CHATMOD";
                     break;
             }
             if (role == null) return;
