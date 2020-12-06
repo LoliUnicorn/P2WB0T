@@ -66,7 +66,7 @@ public class SyncListener extends ListenerAdapter {
     public static void updateMember(@Nullable Member mem, @Nullable Member derp) {
         if (mem == null || derp == null || UserUtil.getPermLevel(derp).getNumer() == PermLevel.MEMBER.getNumer()) return;
 
-        for (DiscordRank rank : UserUtil.getRanks(mem)) {
+        for (DiscordRank rank : UserUtil.getRanks(derp)) {
             String prefix = null;
             String role = null;
             switch (rank) {
