@@ -20,6 +20,7 @@
 package pl.kamil0024.rekrutacyjny.listeners;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
@@ -55,7 +56,18 @@ public class SyncListener extends ListenerAdapter {
     @Override
     public void onGuildMemberRoleRemove(@Nonnull GuildMemberRoleRemoveEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
-        updateMember(getRekruMember(event.getMember()), event.getMember());
+        Member rekru = getRekruMember(event.getMember());
+        if (rekru == null) return;
+        for (Role role : event.getRoles()) {
+            String rekruRole =  null;
+            if (role.getId().equals(Ustawienia.instance.roles.adminRole)) rekruRole = Ustawienia.instance.rekrutacyjny.admin;
+            else if (role.getId().equals(Ustawienia.instance.roles.moderatorRole))  rekruRole = Ustawienia.instance.rekrutacyjny.mod;
+            else if (role.getId().equals(Ustawienia.instance.roles.helperRole)) rekruRole = Ustawienia.instance.rekrutacyjny.pom;
+            else if (role.getId().equals(Ustawienia.instance.rangi.stazysta)) rekruRole = Ustawienia.instance.rekrutacyjny.staz;
+            else if (role.getId().equals(Ustawienia.instance.roles.chatMod)) rekruRole = Ustawienia.instance.rekrutacyjny.chatmod;
+            if (rekruRole == null) continue;
+            rekru.getGuild().removeRoleFromMember(rekru, rekru.getGuild().getRoleById(rekruRole)).queue();
+        }
     }
 
     public void onGuildMemberUpdateNickname(@Nonnull GuildMemberUpdateNicknameEvent event) {
