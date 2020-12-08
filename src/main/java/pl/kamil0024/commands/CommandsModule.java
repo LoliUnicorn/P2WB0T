@@ -185,7 +185,7 @@ public class CommandsModule implements Modul {
             }
         }
 
-        if (botMsg != null) txt.sendMessage(StatusCommand.getMsg(null, null, null, botMsg)).complete();
+        if (botMsg != null) botMsg.editMessage(StatusCommand.getMsg(null, null, null, botMsg)).complete();
 
     }
 
