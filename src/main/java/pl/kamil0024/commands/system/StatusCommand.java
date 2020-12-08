@@ -19,7 +19,6 @@
 
 package pl.kamil0024.commands.system;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -37,7 +36,6 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -50,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class StatusCommand extends Command {
 
     private final static Logger logger = LoggerFactory.getLogger(StatusCommand.class);
-    private final static SimpleDateFormat DF = new SimpleDateFormat("dd.MM HH:mm");
+    private final static SimpleDateFormat DF = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private final EventWaiter eventWaiter;
 
     public StatusCommand(EventWaiter eventWaiter) {
@@ -211,7 +209,7 @@ public class StatusCommand extends Command {
         sb.appendLine("RoiZy.PL -> " + roizy.getUnicode() + "\n");
 
         sb.appendLine(xd + " **STATUS MOJANGU** " + xd);
-        sb.appendLine("Automatycznie co pięć minut jest aktualizowany status serwerów Mojanga. Jeżeli któryś status będzie wynosi " + MojangEmote.RED + " lub " + MojangEmote.YELLOW + " dołączenie na nasze serwery może być utrudnione.\n");
+        sb.appendLine("Automatycznie co pięć minut jest aktualizowany status serwerów Mojanga. Jeżeli któryś status będzie wynosi " + MojangEmote.RED.getUnicode() + " lub " + MojangEmote.YELLOW.getUnicode() + " dołączenie na nasze serwery może być utrudnione.\n");
 
         try {
             JSONArray json = NetworkUtil.getJsonArray("https://status.mojang.com/check");
@@ -219,8 +217,14 @@ public class StatusCommand extends Command {
             for (Object o : json) {
                 JSONObject obj = (JSONObject) o;
                 for (Object name : obj.names()) {
+                    Log.debug("sprawdzam " + name);
                     if (name.equals("session.minecraft.net") || name.equals("authserver.minecraft.net") || name.equals("api.minecraft.net") || name.equals("account.mojang.com")) {
-                        sb.appendLine(name + " -> " + (obj.has((String) name) ? MojangEmote.byOpis(obj.getString((String) name)) : MojangEmote.NULL));
+                        Log.debug(name + " pasuje");
+                        try {
+                            sb.appendLine(name + " -> " + MojangEmote.byOpis(obj.getString((String) name)).getUnicode());
+                        } catch (Exception e) {
+                            sb.appendLine(name + " -> " + MojangEmote.NULL.getUnicode());
+                        }
                     }
                 }
             }
@@ -241,6 +245,7 @@ public class StatusCommand extends Command {
         }
         sb.appendLine("\n");
         for (MojangEmote value : MojangEmote.values()) {
+            if (value == MojangEmote.NULL) continue;
             sb.appendLine(value.getUnicode() + " " + value.getOpis());
         }
 
