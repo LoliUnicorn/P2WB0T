@@ -76,7 +76,7 @@ public class OgloszenieCommand extends Command {
                     .thenAccept(wu::sendNormalMessage)
                     .exceptionally(t -> {
                         Log.newError(t, getClass());
-                        context.getTranslate("ogloszenia.imageerror").queue();
+                        context.sendTranslate("ogloszenia.imageerror").queue();
                         return null;
                     });
         } else wu.sendNormalMessage(null);
