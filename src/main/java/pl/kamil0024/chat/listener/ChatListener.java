@@ -104,9 +104,14 @@ public class ChatListener extends ListenerAdapter {
         if (UserUtil.getPermLevel(e.getAuthor()).getNumer() >= PermLevel.CHATMOD.getNumer()) return;
         if (e.getAuthor().isBot() || e.getMessage().getContentRaw().isEmpty()) return;
         if (e.getChannel().getId().equals("426809411378479105") || e.getChannel().getId().equals("503294063064121374") || e.getChannel().getId().equals("573873102757429256")) return;
+
+        char kurwa = 'a';
+        try {
+            kurwa = e.getMessage().getContentRaw().toCharArray()[1];
+        } catch (Exception ignored) { }
+
         if (e.getChannel().getId().equals("426864003562864641") && !e.getAuthor().isBot() &&
-                !e.getMessage().getContentRaw().isEmpty() && e.getMessage().getContentRaw().toCharArray().length >= 2 ||
-                e.getMessage().getContentRaw().toCharArray()[1] == 'p') {
+                !e.getMessage().getContentRaw().isEmpty() && kurwa == 'p') {
             return;
         }
         checkMessage(e.getMember(), e.getMessage(), karyJSON, caseDao, modLog);

@@ -60,7 +60,7 @@ public class StatusCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         if (context.getArgs().get(0) == null) throw new UsageException();
-        TextChannel txt = context.getGuild().getTextChannelById(Ustawienia.instance.channel.status);
+        TextChannel txt = context.getJDA().getTextChannelById(Ustawienia.instance.channel.status);
         if (txt == null) throw new NullPointerException("Kanal do statusu jest nullem");
 
         if (!txt.canTalk()) {
@@ -219,11 +219,8 @@ public class StatusCommand extends Command {
             for (Object o : json) {
                 JSONObject obj = (JSONObject) o;
                 for (Object name : obj.names()) {
-                    Log.debug("sprawdzam " + name);
                     if (name.equals("session.minecraft.net") || name.equals("authserver.mojang.com") || name.equals("api.mojang.com") || name.equals("account.mojang.com")) {
-                        Log.debug(name + " pasuje");
                         try {
-                            logger.debug("Sprawdzam MojangEmote dla " + obj.getString((String) name));
                             sb.appendLine(name + " -> " + MojangEmote.byOpis(obj.getString((String) name)).getUnicode());
                         } catch (Exception e) {
                             e.printStackTrace();
