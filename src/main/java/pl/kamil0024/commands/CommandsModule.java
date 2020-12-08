@@ -36,6 +36,7 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.musicapi.MusicAPI;
@@ -185,7 +186,14 @@ public class CommandsModule implements Modul {
             }
         }
 
-        if (botMsg != null) botMsg.editMessage(StatusCommand.getMsg(null, null, null, botMsg)).complete();
+        if (botMsg != null) {
+            try {
+                String c = StatusCommand.getMsg(null, null, null, botMsg.getContentRaw());
+                botMsg.editMessage(c).complete();
+            } catch (Exception e) {
+                Log.newError(e, getClass());
+            }
+        }
 
     }
 

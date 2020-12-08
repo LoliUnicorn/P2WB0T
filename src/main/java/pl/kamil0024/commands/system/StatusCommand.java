@@ -124,7 +124,7 @@ public class StatusCommand extends Command {
 
                     finalBotMsg.editMessage(getMsg(finalDerp == null ? null : e,
                             finalFeerko == null ? null : e,
-                            finalRoizy == null ? null : e, finalBotMsg)).queue();
+                            finalRoizy == null ? null : e, finalBotMsg.getContentRaw())).queue();
 
                     waitMsg.editMessage(context.getTranslate("status.succes")).queue();
                     waitMsg.clearReactions().queue();
@@ -134,7 +134,7 @@ public class StatusCommand extends Command {
     }
 
     @Getter
-    private enum Emote {
+    public enum Emote {
         ONLINE("\u2705", "Serwer chodzi sprawnie, bądź nie wiemy o problemie"),
         WARN("\u26A0", "Występują problemy na serwerze, sprawdzamy przyczynę"),
         OFF("\uD83D\uDED1", "Awaria serwera"),
@@ -160,7 +160,7 @@ public class StatusCommand extends Command {
     }
 
     @Getter
-    private enum MojangEmote {
+    public enum MojangEmote {
         NULL("❓", "null", "null"),
         GREEN("\uD83D\uDFE9", "green", "Serwis nie ma żadnych problemów"),
         YELLOW("\uD83D\uDFE8", "yellow", "Serwis ma problemy"),
@@ -184,7 +184,7 @@ public class StatusCommand extends Command {
         }
     }
 
-    public static String getMsg(@Nullable Emote derp, @Nullable Emote feerko, @Nullable Emote roizy, @Nullable Message botMsg) {
+    public static String getMsg(@Nullable Emote derp, @Nullable Emote feerko, @Nullable Emote roizy, @Nullable String botMsg) {
         String xd = "\uD83D\uDD36";
         BetterStringBuilder sb = new BetterStringBuilder();
 
@@ -193,7 +193,7 @@ public class StatusCommand extends Command {
             if (feerko == null) feerko = Emote.ONLINE;
             if (roizy == null) roizy = Emote.ONLINE;
         } else {
-            for (String s : botMsg.getContentRaw().split("\n")) {
+            for (String s : botMsg.split("\n")) {
                 if (!s.isEmpty() && s.contains("-> ")) {
                     String emote = s.split("-> ")[1];
                     if (derp == null) if (s.contains("DerpMC.PL")) derp = Emote.byUnicode(emote);
