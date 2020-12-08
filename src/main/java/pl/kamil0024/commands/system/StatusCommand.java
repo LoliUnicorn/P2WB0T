@@ -161,24 +161,25 @@ public class StatusCommand extends Command {
 
     @Getter
     private enum MojangEmote {
-        NULL("❓", "null"),
-        GREEN("\uD83D\uDFE9", "green"),
-        YELLOW("\uD83D\uDFE8", "yellow"),
-        RED("\uD83D\uDFE5", "red");
+        NULL("❓", "null", "null"),
+        GREEN("\uD83D\uDFE9", "green", "Serwis nie ma żadnych problemów"),
+        YELLOW("\uD83D\uDFE8", "yellow", "Serwis ma problemy"),
+        RED("\uD83D\uDFE5", "red", "Serwis jest wyłączony");
 
         public String unicode;
         public String opis;
+        public String tlumaczenie;
 
-        MojangEmote(String unicode, String opis) {
+        MojangEmote(String unicode, String opis, String tlumaczenie) {
             this.unicode = unicode;
             this.opis = opis;
+            this.tlumaczenie = tlumaczenie;
         }
 
         public static MojangEmote byOpis(String opis) {
             for (MojangEmote value : MojangEmote.values()) {
-                if (value.getUnicode().equalsIgnoreCase(opis)) return value;
+                if (value.getOpis().equalsIgnoreCase(opis)) return value;
             }
-            logger.error(opis + " się z nicznym nie zgadza");
             return MojangEmote.NULL;
         }
     }
@@ -249,7 +250,7 @@ public class StatusCommand extends Command {
         sb.appendLine("\n");
         for (MojangEmote value : MojangEmote.values()) {
             if (value == MojangEmote.NULL) continue;
-            sb.appendLine(value.getUnicode() + " " + value.getOpis());
+            sb.appendLine(value.getUnicode() + " " + value.getTlumaczenie());
         }
 
         return sb.toString();
