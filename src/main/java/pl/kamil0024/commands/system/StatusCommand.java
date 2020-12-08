@@ -178,6 +178,7 @@ public class StatusCommand extends Command {
             for (MojangEmote value : MojangEmote.values()) {
                 if (value.getUnicode().equalsIgnoreCase(opis)) return value;
             }
+            logger.error(opis + " się z nicznym nie zgadza");
             return MojangEmote.NULL;
         }
     }
@@ -218,11 +219,13 @@ public class StatusCommand extends Command {
                 JSONObject obj = (JSONObject) o;
                 for (Object name : obj.names()) {
                     Log.debug("sprawdzam " + name);
-                    if (name.equals("session.minecraft.net") || name.equals("authserver.minecraft.net") || name.equals("api.minecraft.net") || name.equals("account.mojang.com")) {
+                    if (name.equals("session.minecraft.net") || name.equals("authserver.mojang.com") || name.equals("api.mojang.com") || name.equals("account.mojang.com")) {
                         Log.debug(name + " pasuje");
                         try {
+                            logger.debug("Sprawdzam MojangEmote dla " + obj.getString((String) name));
                             sb.appendLine(name + " -> " + MojangEmote.byOpis(obj.getString((String) name)).getUnicode());
                         } catch (Exception e) {
+                            e.printStackTrace();
                             sb.appendLine(name + " -> " + MojangEmote.NULL.getUnicode());
                         }
                     }
