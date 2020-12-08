@@ -42,7 +42,7 @@ public class RebootCommand extends Command {
     @Override
     public boolean execute(CommandContext context) {
         reboot = true;
-        context.send("Wyłączam...").complete();
+        context.sendTranslate("reboot.success").complete();
         System.exit(0);
         return true;
     }

@@ -66,7 +66,7 @@ public class NieobecnoscCommand extends Command {
         if (arg.equalsIgnoreCase("aktywne")) {
             ArrayList<Nieobecnosc> nball = nieobecnosciDao.getAllAktywne();
             if (nball.isEmpty()) {
-                context.send("Nie ma aktywnych nieobecności!").queue();
+                context.sendTranslate("nieobecnosci.aktywne.empty").queue();
                 return false;
             }
             List<EmbedBuilder> pages = new ArrayList<>();
@@ -75,9 +75,9 @@ public class NieobecnoscCommand extends Command {
                 if (mem == null) continue;
                 EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
                 List<Zmiana> zmiany = nieobecnosc.getZmiany();
-                eb.addField("Ilość zmian:", zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
-                eb.addField("Ostatnia zmiana:",
-                        zmiany == null || zmiany.isEmpty() ? "Brak." : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
+                eb.addField(context.getTranslate("nieobecnosci.aktywne.changesize"), zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
+                eb.addField(context.getTranslate("nieobecnosci.aktywne.lastchange"),
+                        zmiany == null || zmiany.isEmpty() ? context.getTranslate("nieobecnosci.brak") : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
                         , false);
                 pages.add(eb);
             }
@@ -89,7 +89,7 @@ public class NieobecnoscCommand extends Command {
         if (mem != null) {
             NieobecnosciConfig nbConf = nieobecnosciDao.get(mem.getId());
             if (nbConf.getNieobecnosc().isEmpty()) {
-                context.send("Ten użytkownik nie miał jeszcze nieobecnośći!").queue();
+                context.sendTranslate("nieobecnosci.userdonthavenb").queue();
                 return false;
             }
             List<EmbedBuilder> pages = new ArrayList<>();
@@ -97,13 +97,13 @@ public class NieobecnoscCommand extends Command {
                 EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
                 if (!nieobecnosc.isAktywna()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                    eb.addField("Data rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
-                    eb.addField("Data zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);
+                    eb.addField(context.getTranslate("nieobecnosci.list.start"), sdf.format(new Date(nieobecnosc.getStart())), false);
+                    eb.addField(context.getTranslate("nieobecnosci.list.end"), sdf.format(new Date(nieobecnosc.getEnd())), false);
                 }
                 List<Zmiana> zmiany = nieobecnosc.getZmiany();
                 eb.addField("Ilość zmian:", zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
                 eb.addField("Ostatnia zmiana:",
-                        zmiany == null || zmiany.isEmpty() ? "Brak." : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
+                        zmiany == null || zmiany.isEmpty() ? context.getTranslate("nieobecnosci.brak") : zmiany.get(zmiany.size() - 1).toString(context.getGuild())
                         , false);
                 pages.add(eb);
             }
@@ -116,17 +116,17 @@ public class NieobecnoscCommand extends Command {
             String rawMember = context.getArgs().get(1);
             String powod = context.getArgsToString(2);
             if (rawMember == null || powod == null || powod.isEmpty()) {
-                context.send("Użycie: nieobecnosc powod <member> <nowy powód>").queue();
+                context.sendTranslate("nieobecnosci.powod.usage").queue();
                 return false;
             }
             Member maNieobecnosc = context.getParsed().getMember(rawMember);
             if (maNieobecnosc == null) {
-                context.send("Użycie: nieobecnosc powod <member> <nowy powód>").queue();
+                context.sendTranslate("nieobecnosci.powod.usage").queue();
                 return false;
             }
             NieobecnosciConfig nbConf = nieobecnosciDao.get(maNieobecnosc.getId());
             if (nbConf.getNieobecnosc().isEmpty()) {
-                context.send("Ten użytkownik nie ma żadnej nieobecności!").queue();
+                context.sendTranslate("nieobecnosci.userdonthavenb").queue();
                 return false;
             }
             Nieobecnosc last = nbConf.getNieobecnosc().get(nbConf.getNieobecnosc().size() - 1);
@@ -135,14 +135,14 @@ public class NieobecnoscCommand extends Command {
             zmiana.setKtoZmienia(context.getUser().getId());
             zmiana.setCoZmienia(Zmiana.Enum.REASON);
             zmiana.setKiedy(new Date().getTime());
-            zmiana.setKomentarz("Stary powód: " + last.getPowod() + "\nNowy powód: " + powod);
+            zmiana.setKomentarz(context.getTranslate("nieobecnosci.sp") + " " + last.getPowod() + context.getTranslate("nieobecnosci.np") + " " + powod);
             zmiana.sendLog(context.getGuild(), last.getUserId(), last.getId());
             if (last.getZmiany() == null) last.setZmiany(new ArrayList<>());
             last.getZmiany().add(zmiana);
             last.setPowod(powod);
             nbConf.getNieobecnosc().add(last);
             nieobecnosciDao.save(nbConf);
-            context.send("Pomyślnie zmieniono powód!").queue();
+            context.sendTranslate("nieobecnosci.powod.success").queue();
             nieobecnosciManager.update();
             return true;
         }

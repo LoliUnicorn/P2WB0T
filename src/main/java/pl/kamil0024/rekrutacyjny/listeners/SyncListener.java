@@ -65,6 +65,7 @@ public class SyncListener extends ListenerAdapter {
             else if (role.getId().equals(Ustawienia.instance.roles.helperRole)) rekruRole = Ustawienia.instance.rekrutacyjny.pom;
             else if (role.getId().equals(Ustawienia.instance.rangi.stazysta)) rekruRole = Ustawienia.instance.rekrutacyjny.staz;
             else if (role.getId().equals(Ustawienia.instance.roles.chatMod)) rekruRole = Ustawienia.instance.rekrutacyjny.chatmod;
+            else if (role.getId().equals(Ustawienia.instance.rangi.ekipa)) rekruRole = Ustawienia.instance.rekrutacyjny.ekipa;
             if (rekruRole == null) continue;
             rekru.getGuild().removeRoleFromMember(rekru, rekru.getGuild().getRoleById(rekruRole)).queue();
         }
@@ -105,7 +106,7 @@ public class SyncListener extends ListenerAdapter {
             }
             if (role == null) return;
             try {
-                mem.getGuild().modifyNickname(mem, "[" + prefix + "] " + UserUtil.getMcNick(derp)).complete();
+                mem.getGuild().modifyNickname(mem, prefix != null ? "[" + prefix + "] " : "" + UserUtil.getMcNick(derp)).complete();
                 mem.getGuild().addRoleToMember(mem, Objects.requireNonNull(mem.getGuild().getRoleById(role))).complete();
             } catch (Exception e) {
                 Log.newError(e, SyncListener.class);

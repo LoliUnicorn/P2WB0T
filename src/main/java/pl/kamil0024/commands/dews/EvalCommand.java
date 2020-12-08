@@ -154,7 +154,7 @@ public class EvalCommand extends Command {
 
         if (String.valueOf(value).length() >= 1000) {
             logger.debug(String.valueOf(value));
-            value = "Output przekracza liczbę znaków. Zobacz konsole";
+            value = context.getTranslate("eval.maxcharts");
         }
 
         eb.addField("\ud83d\udce5 INPUT", "```\n" + kod + "\n```", false);

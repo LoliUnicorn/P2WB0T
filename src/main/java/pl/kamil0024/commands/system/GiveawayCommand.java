@@ -169,7 +169,7 @@ public class GiveawayCommand extends Command {
                 () -> {
                     TextChannel txt = api.getTextChannelById(channelId);
                     if (getKonkurs().get(String.valueOf(userId)) != null) {
-                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId));
+                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
                     }
                 }
         );

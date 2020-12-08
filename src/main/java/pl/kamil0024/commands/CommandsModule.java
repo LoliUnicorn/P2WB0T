@@ -22,6 +22,9 @@ package pl.kamil0024.commands;
 import com.google.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
@@ -29,6 +32,7 @@ import pl.kamil0024.commands.listener.GuildListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
 import pl.kamil0024.commands.zabawa.OsuCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
@@ -111,7 +115,7 @@ public class CommandsModule implements Modul {
         this.ankietaDao = ankietaDao;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::tak, 0, 5, TimeUnit.MINUTES);
+        executorSche.scheduleAtFixedRate(() -> tak(api), 0, 5, TimeUnit.MINUTES);
     }
 
     @Override
@@ -166,9 +170,24 @@ public class CommandsModule implements Modul {
         return true;
     }
 
-    private void tak() {
-            RemindmeCommand.check(remindDao, api);
+    private void tak(ShardManager api) {
+        RemindmeCommand.check(remindDao, api);
+        TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.status);
+        if (txt == null) throw new NullPointerException("Kanal do statusu jest nullem");
+        Message botMsg = null;
+        MessageHistory history = txt.getHistoryFromBeginning(15).complete();
+        if (history.isEmpty()) return;
+
+        for (Message message : history.getRetrievedHistory()) {
+            if (message.getAuthor().getId().equals(Ustawienia.instance.bot.botId)) {
+                botMsg = message;
+                break;
+            }
         }
+
+        if (botMsg != null) txt.sendMessage(StatusCommand.getMsg(null, null, null, botMsg)).complete();
+
+    }
 
     @Override
     public boolean shutDown() {

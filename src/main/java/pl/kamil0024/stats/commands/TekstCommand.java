@@ -37,8 +37,8 @@ import java.util.Objects;
 
 public class TekstCommand extends Command {
 
-    private EventWaiter eventWaiter;
-    private MusicModule musicModule;
+    private final EventWaiter eventWaiter;
+    private final MusicModule musicModule;
 
     public TekstCommand(EventWaiter eventWaiter, MusicModule musicModule) {
         name = "tekst";
@@ -107,6 +107,7 @@ public class TekstCommand extends Command {
             if (!teksty.isEmpty()) {
                 pages.addAll(teksty);
             } else pages.add(tekst);
+            if (!sb.toString().isEmpty()) tekst.addField(" ", sb.toString(), false);
 
             new EmbedPageintaor(pages, context.getUser(), eventWaiter, context.getJDA()).
                     create(context.getChannel(), context.getMessage());

@@ -48,21 +48,21 @@ public class OgloszenieCommand extends Command {
     public boolean execute(CommandContext context) {
         TextChannel txt = context.getJDA().getTextChannelById(Ustawienia.instance.rekrutacyjny.ogloszeniaId);
         if (txt == null) {
-            context.send("Kanał do ogłoszeń jest nullem").queue();
-            Log.newError("Kanał do ogłoszeń jest nullem", getClass());
+            context.sendTranslate("ogloszenia.nullchannel").queue();
+            Log.newError(context.getTranslate("ogloszenia.nullchannel"), getClass());
             return false;
         }
         if (!txt.canTalk() || !context.getGuild().getSelfMember().hasPermission(txt, Permission.MESSAGE_EMBED_LINKS, Permission.MANAGE_WEBHOOKS)) {
-            context.send("Nie mam odpowiednich permisji do " + txt.getAsMention() + "! (wysyłanie linków, czytanie/pisanie wiadomości, zarządzanie webhookami)").queue();
+            context.sendTranslate("ogloszenia.noperms", txt.getAsMention()).queue();
             return false;
         }
         String arg = context.getArgsToString(0);
         if (arg == null || arg.trim().isEmpty()) {
-            context.send("Musisz podać argument!").queue();
+            context.sendTranslate("ogloszenia.requireargs").queue();
             return false;
         }
 
-        Webhook web = txt.retrieveWebhooks().complete().stream().findAny().orElse(txt.createWebhook("P2WBOT - Ogłoszenia").complete());
+        Webhook web = txt.retrieveWebhooks().complete().stream().findAny().orElse(txt.createWebhook(context.getTranslate("ogloszenia.webhookname")).complete());
         if (web == null) throw new NullPointerException("Webhook jest nullem!");
         WebhookUtil wu = new WebhookUtil();
         wu.setUrl(web.getUrl().replaceAll("discord\\.com", "discordapp.com"));
@@ -76,7 +76,7 @@ public class OgloszenieCommand extends Command {
                     .thenAccept(wu::sendNormalMessage)
                     .exceptionally(t -> {
                         Log.newError(t, getClass());
-                        context.send("Nie udało się dołączyć zdjęcia do ogłoszenia! (" + t.getMessage() + ")").queue();
+                        context.getTranslate("ogloszenia.imageerror").queue();
                         return null;
                     });
         } else wu.sendNormalMessage(null);

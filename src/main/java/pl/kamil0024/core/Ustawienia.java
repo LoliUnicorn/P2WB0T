@@ -120,6 +120,7 @@ public class Ustawienia {
         public String sponsor = def;
         public String miniyt = def;
         public String yt = def;
+        public String ekipa = def;
         public String pomocnik = def;
         public String buildteam = def;
         public String stazysta = def;
@@ -212,6 +213,7 @@ public class Ustawienia {
         public String pom = def;
         public String staz = def;
         public String chatmod = def;
+        public String ekipa = def;
     }
 
 }

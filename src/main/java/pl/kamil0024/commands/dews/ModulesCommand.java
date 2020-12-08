@@ -179,18 +179,22 @@ public class ModulesCommand extends Command {
                 sb.appendLine(green + " Szukam modulu");
                 sb.appendLine(red + " Unload (" + dopisek + ")");
                 sb.appendLine(green + " Reload");
+                break;
             case 4:
                 sb.appendLine(green + " Szukam modulu");
                 sb.appendLine(green + " Unload");
                 sb.appendLine(reload + " Reload...");
+                break;
             case 5:
                 sb.appendLine(green + " Szukam modulu...");
                 sb.appendLine(green + " Unload");
                 sb.appendLine(red + " Reload (" + dopisek + ")");
+                break;
             case 6:
                 sb.appendLine(green + " Szukam modulu");
                 sb.appendLine(green + " Unload");
                 sb.appendLine(green + " Reload");
+                break;
         }
         eb.setDescription(sb.build());
 

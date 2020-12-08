@@ -47,7 +47,7 @@ public class ShellCommand extends Command {
 
         String result = shell(arg);
         if (result == null) {
-            context.send("Result jest nullem??").queue();
+            context.sendTranslate("shell.nullresult").queue();
             return false;
         }
 

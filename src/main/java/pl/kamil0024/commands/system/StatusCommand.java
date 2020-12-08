@@ -19,25 +19,39 @@
 
 package pl.kamil0024.commands.system;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.util.BetterStringBuilder;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.core.util.UsageException;
+import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.util.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class StatusCommand extends Command {
 
-    private EventWaiter eventWaiter;
+    private final static Logger logger = LoggerFactory.getLogger(StatusCommand.class);
+    private final static SimpleDateFormat DF = new SimpleDateFormat("dd.MM HH:mm");
+    private final EventWaiter eventWaiter;
 
     public StatusCommand(EventWaiter eventWaiter) {
         name = "status";
@@ -84,6 +98,7 @@ public class StatusCommand extends Command {
                 }
             }
         }
+
         if (botMsg == null) throw new NullPointerException("Nie udało się znaleźć wiadomości bota");
 
         StringBuilder sb = new StringBuilder();
@@ -146,7 +161,30 @@ public class StatusCommand extends Command {
 
     }
 
-    private String getMsg(@Nullable Emote derp, @Nullable Emote feerko, @Nullable Emote roizy, @Nullable Message botMsg) {
+    @Getter
+    private enum MojangEmote {
+        NULL("❓", "null"),
+        GREEN("\uD83D\uDFE9", "green"),
+        YELLOW("\uD83D\uDFE8", "yellow"),
+        RED("\uD83D\uDFE5", "red");
+
+        public String unicode;
+        public String opis;
+
+        MojangEmote(String unicode, String opis) {
+            this.unicode = unicode;
+            this.opis = opis;
+        }
+
+        public static MojangEmote byOpis(String opis) {
+            for (MojangEmote value : MojangEmote.values()) {
+                if (value.getUnicode().equalsIgnoreCase(opis)) return value;
+            }
+            return MojangEmote.NULL;
+        }
+    }
+
+    public static String getMsg(@Nullable Emote derp, @Nullable Emote feerko, @Nullable Emote roizy, @Nullable Message botMsg) {
         String xd = "\uD83D\uDD36";
         BetterStringBuilder sb = new BetterStringBuilder();
 
@@ -165,16 +203,44 @@ public class StatusCommand extends Command {
             }
         }
 
-        sb.appendLine(xd + " STATUS SERWERÓW" + xd);
+        sb.appendLine(xd + " **STATUS SERWERÓW** " + xd);
         sb.appendLine("Na tym kanale możecie sprawdzić status serwerów. Status jest aktualizowany ręcznie przez nas, więc tutaj możecie się dowiedzieć, czy jesteśmy świadomi sytuacji i jakie kroki już podejmujemy.\n");
 
         sb.appendLine("DerpMC.PL -> " + derp.getUnicode());
         sb.appendLine("Feerko.PL -> " + feerko.getUnicode());
         sb.appendLine("RoiZy.PL -> " + roizy.getUnicode() + "\n");
 
+        sb.appendLine(xd + " **STATUS MOJANGU** " + xd);
+        sb.appendLine("Automatycznie co pięć minut jest aktualizowany status serwerów Mojanga. Jeżeli któryś status będzie wynosi " + MojangEmote.RED + " lub " + MojangEmote.YELLOW + " dołączenie na nasze serwery może być utrudnione.\n");
+
+        try {
+            JSONArray json = NetworkUtil.getJsonArray("https://status.mojang.com/check");
+            if (json == null || json.get(0) == null) throw new NullPointerException("json == null");
+            for (Object o : json) {
+                JSONObject obj = (JSONObject) o;
+                for (Object name : obj.names()) {
+                    if (name.equals("session.minecraft.net") || name.equals("authserver.minecraft.net") || name.equals("api.minecraft.net") || name.equals("account.mojang.com")) {
+                        sb.appendLine(name + " -> " + (obj.has((String) name) ? MojangEmote.byOpis(obj.getString((String) name)) : MojangEmote.NULL));
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            StringWriter er = new StringWriter();
+            e.printStackTrace(new PrintWriter(er));
+            logger.error(er.toString());
+            sb.appendLine("❗ Nie udało się uzyskać statusów od Mojangu ❗");
+        }
+
+        sb.appendLine("\n**Data ostatniej aktualizacji**: " + DF.format(new Date()) + "\n");
+
         sb.appendLine("Legenda:");
 
         for (Emote value : Emote.values()) {
+            sb.appendLine(value.getUnicode() + " " + value.getOpis());
+        }
+        sb.appendLine("\n");
+        for (MojangEmote value : MojangEmote.values()) {
             sb.appendLine(value.getUnicode() + " " + value.getOpis());
         }
 

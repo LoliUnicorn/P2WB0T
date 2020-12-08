@@ -79,16 +79,16 @@ public class DowodCommand extends Command {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setImage(dowod.getImage());
                     eb.setColor(c);
-                    eb.addField("Osoba zgłaszająca:", UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
+                    eb.addField(context.getTranslate("dowod.reporter"), UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
 
                     if (dowod.getContent() != null && !dowod.getContent().isEmpty()) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
                     if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
-                    eb.addField(" ", "ID Zgłoszenia: " + dowod.getId(), false);
+                    eb.addField(" ", context.getTranslate("dowod.reportid") + " " + dowod.getId(), false);
                     pages.add(eb);
                 }
                 pages.forEach(p -> futurePages.add(new FutureTask<>(() -> p)));
             } else {
-                context.send("Nie ma żadnych dowodów w ten sprawie!").queue();
+                context.sendTranslate("dowod.nullreports").queue();
                 return false;
             }
             new DynamicEmbedPageinator(futurePages, context.getUser(), eventWaiter, context.getJDA(), 2137).create(context.getChannel(), context.getMessage());
@@ -99,7 +99,7 @@ public class DowodCommand extends Command {
             try {
                 CaseConfig kara = caseDao.get(arg);
                 if (kara.getKara() == null) {
-                    context.send("Nie ma kary o takim ID!").queue();
+                    context.sendTranslate("Nie ma kary o takim ID!").queue();
                     return false;
                 }
                 if (kara.getKara().getDowody() == null) {
@@ -108,15 +108,15 @@ public class DowodCommand extends Command {
 
                 Dowod d = Dowod.getDowodById(Integer.parseInt(context.getArgs().get(2)), kara.getKara().getDowody());
                 if (d == null) {
-                    context.send("Nie ma dowodu o takim ID!").queue();
+                    context.sendTranslate("dowod.invaliddowod").queue();
                     return false;
                 }
                 kara.getKara().getDowody().remove(d);
                 caseDao.save(kara);
-                context.send("Pomyślnie usunięto dowód z tej kary!").queue();
+                context.sendTranslate("dowod.successdelete").queue();
                 return true;
             } catch (Exception e) {
-                context.send(String.format("Użycie: %sdowod remove <id kary> <id dowodu>", context.getPrefix())).queue();
+                context.sendTranslate("dowod.removeusage", context.getPrefix());
                 return false;
             }
         }
