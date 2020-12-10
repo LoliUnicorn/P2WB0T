@@ -185,10 +185,10 @@ public class ModLog extends ListenerAdapter {
 
                         switch (typ) {
                             case TEMPMUTE:
-                                g.unban(aCase.getKaranyId()).complete();
+                                if (m != null) g.removeRoleFromMember(m, muteRole).complete();
                                 break;
                             case TEMPBAN:
-                                if (m != null) g.removeRoleFromMember(m, muteRole).complete();
+                                g.unban(aCase.getKaranyId()).complete();
                                 break;
 
                         }

@@ -129,6 +129,7 @@ public class DowodCommand extends Command {
         if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
 
         Dowod d = getKaraConfig(context.getArgsToString(1), context.getMessage());
+        if (d == null) throw new UsageException();
         d.setId(Dowod.getNextId(cc.getKara().getDowody()));
 
         cc.getKara().getDowody().add(d);
