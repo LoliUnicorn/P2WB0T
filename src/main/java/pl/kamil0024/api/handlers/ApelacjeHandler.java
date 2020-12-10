@@ -144,9 +144,7 @@ public class ApelacjeHandler implements HttpHandler {
             } catch (Exception e) {
                 Response.sendErrorResponse(ex, "Błąd!", "Nie udało się wysłać requesta: " + e.getMessage());
             }
-
         }
-
     }
 
 }

@@ -84,7 +84,7 @@ public class CommandsModule implements Modul {
     @Inject AnkietaDao ankietaDao;
 
     private boolean start = false;
-    private ModLog modLog;
+    private final ModLog modLog;
 
     // Listeners
     KolkoIKrzyzykManager kolkoIKrzyzykManager;
@@ -208,29 +208,29 @@ public class CommandsModule implements Modul {
 
     @Override
     public String getName() {
-            return "commands";
-        }
+        return "commands";
+    }
 
     @Override
     public boolean isStart() {
-            return start;
-        }
+        return start;
+    }
 
     @Override
     public void setStart(boolean bol) {
-            this.start = bol;
-        }
+        this.start = bol;
+    }
 
     @Data
     @AllArgsConstructor
-    public class KaraJSON {
+    public static class KaraJSON {
         private final int id;
         private final String powod;
     }
 
     @Data
     @AllArgsConstructor
-    public class WarnJSON {
+    public static class WarnJSON {
         private final int warns;
         private final String kara;
         private final String czas;

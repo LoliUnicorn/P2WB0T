@@ -76,17 +76,19 @@ public class DowodWaiter {
     }
 
     private void event(MessageReceivedEvent e) {
-        Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
-        Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
-        if (d == null) {
-            e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
-            return;
-        }
-        if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
-        cc.getKara().getDowody().add(d);
-        e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
-        cd.save(cc);
-        clear();
+        try {
+            Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
+            Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
+            if (d == null) {
+                e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
+                return;
+            }
+            if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
+            cc.getKara().getDowody().add(d);
+            e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
+            cd.save(cc);
+            clear();
+        } catch (Exception ignored) { }
     }
 
 }

@@ -177,7 +177,7 @@ public class GiveawayCommand extends Command {
 
     @AllArgsConstructor
     @Data
-    private class KonkursBuilder {
+    private static class KonkursBuilder {
         public KonkursBuilder() { }
 
         private String napisz;

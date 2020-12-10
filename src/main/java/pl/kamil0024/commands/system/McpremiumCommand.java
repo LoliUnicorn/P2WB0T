@@ -72,9 +72,9 @@ public class McpremiumCommand extends Command {
             StringBuilder tekstDalej = new StringBuilder();
             for (int i = 0; i < xd.split(" ").length; i++) {
                 if (i == 0)
-                    tekstPierw.append(MarkdownSanitizer.escape(xd.split(" ")[i]));
+                    tekstPierw.append((xd.split(" ")[i]).replaceAll("_", "\\_"));
                 else {
-                    tekstDalej.append(MarkdownSanitizer.escape(xd.split(" ")[i]));
+                    tekstDalej.append((xd.split(" ")[i]).replaceAll("_", "\\_"));
                     if (i + 1 < xd.split(" ").length) tekstDalej.append(" ");
                 }
             }

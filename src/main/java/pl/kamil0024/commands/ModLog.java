@@ -27,7 +27,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
@@ -46,6 +45,7 @@ import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.Date;
@@ -60,9 +60,7 @@ public class ModLog extends ListenerAdapter {
 
     private final ShardManager api;
     private final TextChannel modlog;
-    private CaseDao caseDao;
-
-    private ScheduledExecutorService executorSche;
+    private final CaseDao caseDao;
 
     public ModLog(ShardManager api, CaseDao caseDao) {
         this.api = api;
@@ -72,19 +70,16 @@ public class ModLog extends ListenerAdapter {
             throw new UnsupportedOperationException("Kanał do modlogów jest nullem");
         }
         this.caseDao = caseDao;
-        executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::tak, 0, 2, TimeUnit.MINUTES);
+        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(this::check, 0, 2, TimeUnit.MINUTES);
     }
 
     @SneakyThrows
     @Override
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
-
         Thread.sleep(10000);
-
         List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
-
         checkKara(event.getMember(), false, cc);
         //checkKara(event, true, caseDao.getNickAktywne(nick));
     }
@@ -95,7 +90,8 @@ public class ModLog extends ListenerAdapter {
             String powod = null;
 
             String check = nick ? "Ten nick " : "Te konto ";
-
+            User adm = userExceptionBypass(config.getKara().getAdmId(), api);
+            if (adm == null) adm = event.getGuild().getSelfMember().getUser();
             switch (k.getTypKary()) {
                 case BAN:
                     powod = check + "jest permanentnie zbanowane!";
@@ -107,11 +103,11 @@ public class ModLog extends ListenerAdapter {
                     break;
                 case TEMPBAN:
                     powod = check + "jest tymczasowo zbanowane";
-                    TempbanCommand.tempban(event, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
+                    TempbanCommand.tempban(event, adm, k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
                 case TEMPMUTE:
                     powod = check + "jest tymczasowo wyciszone";
-                    TempmuteCommand.tempmute(event, api.retrieveUserById(config.getKara().getAdmId()).complete(), k.getPowod(), k.getDuration(), caseDao, this, true);
+                    TempmuteCommand.tempmute(event, adm, k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
             }
 
@@ -153,11 +149,7 @@ public class ModLog extends ListenerAdapter {
         }
     }
 
-    private void tak() {
-        check();
-    } // inaczej executorSche nie działa lol
-
-    private synchronized void check() {
+    private void check() {
         Date data = new Date();
         Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
         Role muteRole = api.getRoleById(Ustawienia.instance.muteRole);
@@ -178,36 +170,35 @@ public class ModLog extends ListenerAdapter {
                     continue;
                 }
                 if (end - data.getTime() <= 0) {
+                    KaryEnum reverseCase = typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE;
                     try {
-                        User u = api.retrieveUserById(aCase.getKaranyId()).complete();
+                        User u = userExceptionBypass(aCase.getKaranyId(), api);
+                        if (u == null) continue;
+
                         if (!bans.contains(u) && typ == KaryEnum.TEMPBAN) {
                             String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
                             Log.newError(String.format(msg, u.getId(), aCase.getKaraId()), ModLog.class);
                             continue;
                         }
 
-                        if (u == null) continue;
-                        Member m = null;
-                        try {
-                            m = g.retrieveMemberById(u.getId()).complete();
-                        } catch (ErrorResponseException ignored) {}
+                        Member m = memberExceptionBypass(u.getId(), g);
 
-                        if (typ == KaryEnum.TEMPBAN) {
-                            g.unban(aCase.getKaranyId()).complete();
-                        }
-                        if (typ == KaryEnum.TEMPMUTE) {
-                            if (m != null) {
-                                g.removeRoleFromMember(m, muteRole).complete();
-                            }
-                        }
+                        switch (typ) {
+                            case TEMPMUTE:
+                                g.unban(aCase.getKaranyId()).complete();
+                                break;
+                            case TEMPBAN:
+                                if (m != null) g.removeRoleFromMember(m, muteRole).complete();
+                                break;
 
+                        }
                         Kara kara = new Kara();
                         kara.setKaranyId(aCase.getKaranyId());
                         if (m != null) kara.setMcNick(UserUtil.getMcNick(m));
                         kara.setAdmId(Ustawienia.instance.bot.botId);
                         kara.setPowod("Czas minął. (ID: " + aCase.getKaraId() + ")");
                         kara.setTimestamp(data.getTime());
-                        kara.setTypKary(typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE);
+                        kara.setTypKary(reverseCase);
                         kara.setKaraId(Kara.getNextId(cc));
                         aCase.setAktywna(false);
                         sendModlog(kara);
@@ -219,17 +210,14 @@ public class ModLog extends ListenerAdapter {
                     } catch (Exception e) {
                         e.printStackTrace();
                         String msg = "Nie udało się dać kary %s dla %s (ID: %s) bo: %s";
-                        Log.newError(String.format(msg, typ == KaryEnum.TEMPBAN ? KaryEnum.UNBAN : KaryEnum.UNMUTE, aCase.getKaranyId(), aCase.getKaraId(), e.getMessage()), ModLog.class);
+                        Log.newError(String.format(msg, reverseCase, aCase.getKaranyId(), aCase.getKaraId(), e.getMessage()), getClass());
                     }
                     if (typ == KaryEnum.TEMPMUTE) {
-                        User u = api.retrieveUserById(aCase.getKaranyId()).complete();
-                        if (u != null) {
-                            try {
-                                Member m = g.retrieveMember(u).complete();
-                                if (MuteCommand.hasMute(m)) {
-                                    Log.newError("Uzytkownik " + UserUtil.getFullName(u) + " dostal unmuta, ale nadal ma range Wyciszony!", ModLog.class);
-                                }
-                            } catch (ErrorResponseException ignored) {}
+                        if (userExceptionBypass(aCase.getKaranyId(), api) != null) {
+                            Member m = memberExceptionBypass(aCase.getKaranyId(), g);
+                            if (m != null && MuteCommand.hasMute(m)) {
+                                Log.newError("Uzytkownik " + UserUtil.getFullName(m.getUser()) + " dostal unmuta, ale nadal ma range Wyciszony!", getClass());
+                            }
                         }
                     }
                 }
@@ -262,21 +250,13 @@ public class ModLog extends ListenerAdapter {
         return getEmbed(kara, api, bol, false);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static EmbedBuilder getEmbed(Kara kara, ShardManager api, Boolean bol, Boolean seeAktywna) {
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         EmbedBuilder eb = new EmbedBuilder();
         User u = api.retrieveUserById(kara.getKaranyId()).complete();
-        Member mem = null;
-        User admUser = null;
+        Member mem = memberExceptionBypass(kara.getAdmId(), api.getGuildById(Ustawienia.instance.bot.guildId));
+        User admUser = userExceptionBypass(kara.getAdmId(), api);
         String adm = "Nie można było pobrać administratora. Jego ID to: " + kara.getAdmId();
-        try {
-            mem = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(kara.getAdmId()).complete();
-        } catch (Exception ignored) {
-            try {
-                admUser = api.retrieveUserById(kara.getAdmId()).complete();
-            } catch (Exception ignored1) { }
-        }
 
         if (mem != null) eb.setColor(UserUtil.getColor(mem));
         eb.addField("Osoba karana", MarkdownSanitizer.escape(UserUtil.getFullName(u)), false);
@@ -319,7 +299,6 @@ public class ModLog extends ListenerAdapter {
                 }
             }
         } else {
-            eb.addField("Aktywna jako pun?", kara.getPunAktywna() ? "Tak" : "Nie", false);
             if (kara.getMessageUrl() != null) {
                 eb.addField("Kolega prosi o linka?", "[Klik](" + "https://discord.com/channels/" + kara.getMessageUrl() + ")", false);
             }
@@ -372,6 +351,24 @@ public class ModLog extends ListenerAdapter {
         web.setType(WebhookUtil.LogType.CASES);
         web.setMessage(String.format(format, odpowiedzialny, action, UserUtil.getLogName(banowany), powod));
         web.send();
+    }
+
+    @Nullable
+    private static Member memberExceptionBypass(String id, Guild guild) {
+        try {
+            return guild.retrieveMemberById(id).complete();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    private static User userExceptionBypass(String id, ShardManager api) {
+        try {
+            return api.retrieveUserById(id).complete();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
