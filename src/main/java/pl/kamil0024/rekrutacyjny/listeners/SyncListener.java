@@ -96,10 +96,10 @@ public class SyncListener extends ListenerAdapter {
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.pom));
                 case STAZYSTA:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.staz));
-                case EKIPA:
-                    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
-                case CHATMOD:
-                    rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));
+                //case EKIPA:
+                //    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
+                //case CHATMOD:
+                //  rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));
             }
         }
 
