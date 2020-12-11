@@ -106,7 +106,7 @@ public class SyncListener extends ListenerAdapter {
         if (rolesToAdd.isEmpty()) return;
 
         try {
-            mem.getGuild().modifyNickname(mem, nickname != null ? "[" + nickname.split(" ")[0] + "] " : "[?] " + UserUtil.getMcNick(derp)).complete();
+            if (nickname != null) mem.getGuild().modifyNickname(mem, nickname).complete();
             rolesToAdd.forEach(r -> mem.getGuild().addRoleToMember(mem, r).complete());
         } catch (Exception e) {
             Log.newError(e, SyncListener.class);
