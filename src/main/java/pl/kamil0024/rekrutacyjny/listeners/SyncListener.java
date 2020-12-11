@@ -82,7 +82,7 @@ public class SyncListener extends ListenerAdapter {
         if (mem == null || derp == null || UserUtil.getPermLevel(derp).getNumer() == PermLevel.MEMBER.getNumer()) return;
 
         Ustawienia.Rekrutacyjny ust = Ustawienia.instance.rekrutacyjny;
-        String nickname = mem.getNickname();
+        String nickname = derp.getNickname();
         List<Role> rolesToAdd = new ArrayList<>();
         List<DiscordRank> ranks = UserUtil.getRanks(derp.getGuild().retrieveMemberById(derp.getId()).complete()); // żeby zaktualizować role
 
