@@ -82,7 +82,7 @@ public class McpremiumCommand extends Command {
         } catch (JSONException | IOException ignored) { }
 
         if (name == null || uuid == null) {
-            context.send(context.getTranslate("mcpremium.alex")).queue();
+            context.send(context.getTranslate("mcpremium.alex", context.getMember().getAsMention())).queue();
             return false;
         }
 
@@ -91,7 +91,7 @@ public class McpremiumCommand extends Command {
         eb.addField(context.getTranslate("mcpremium.name"), MarkdownSanitizer.escape(name), false);
         eb.addField(context.getTranslate("mcpremium.uuid"), formatUuid(Objects.requireNonNull(uuid)), false);
         eb.addField(context.getTranslate("mcpremium.namemc"), "[namemc.com](https://namemc.com/profile/" + uuid + ")", false);
-        eb.setFooter(context.getTranslate("mcpremium.info") + " " + name);
+        eb.setFooter(context.getTranslate("mcpremium.info", UserUtil.getName(context.getMember().getUser()), UserUtil.getMcNick(context.getMember())));
         if (listaNazw.size() > 1)
             eb.addField(context.getTranslate("mcpremium.nick"), String.join("\n", listaNazw),
                     false);
