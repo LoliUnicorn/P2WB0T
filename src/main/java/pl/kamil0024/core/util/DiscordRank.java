@@ -43,6 +43,7 @@ public enum DiscordRank {
     YT(Ustawienia.instance.rangi.yt),
     BUILDTEAM(Ustawienia.instance.rangi.buildteam),
     STAZYSTA(Ustawienia.instance.rangi.stazysta),
+    EKIPA(Ustawienia.instance.rangi.ekipa),
     POMOCNIK(Ustawienia.instance.rangi.pomocnik),
     MODERATOR(Ustawienia.instance.rangi.moderator),
     OWNER(Ustawienia.instance.rangi.korona),

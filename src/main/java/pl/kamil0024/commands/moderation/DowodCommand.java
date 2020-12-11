@@ -23,14 +23,12 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageActivity;
 import net.dv8tion.jda.internal.entities.AbstractMessage;
-import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
@@ -65,8 +63,8 @@ public class DowodCommand extends Command {
 
     @Override
     public boolean execute(CommandContext context) {
-        String arg = context.getArgs().get(0); // id kary
-        String typ = context.getArgs().get(1); // typ lista|usun
+        String arg = context.getArgs().get(0);
+        String typ = context.getArgs().get(1);
 
         if (arg == null) throw new UsageException();
         if (equalsIgnoreCase(typ, "list", "lista")) {

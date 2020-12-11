@@ -88,7 +88,9 @@ public class DowodWaiter {
             e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
             cd.save(cc);
             clear();
-        } catch (Exception ignored) { }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

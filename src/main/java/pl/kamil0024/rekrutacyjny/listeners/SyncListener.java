@@ -34,7 +34,8 @@ import pl.kamil0024.core.util.UserUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
 public class SyncListener extends ListenerAdapter {
@@ -57,18 +58,19 @@ public class SyncListener extends ListenerAdapter {
     public void onGuildMemberRoleRemove(@Nonnull GuildMemberRoleRemoveEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         Member rekru = getRekruMember(event.getMember());
+        List<Role> roles = new ArrayList<>();
         if (rekru == null) return;
         for (Role role : event.getRoles()) {
-            String rekruRole =  null;
-            if (role.getId().equals(Ustawienia.instance.roles.adminRole)) rekruRole = Ustawienia.instance.rekrutacyjny.admin;
-            else if (role.getId().equals(Ustawienia.instance.roles.moderatorRole))  rekruRole = Ustawienia.instance.rekrutacyjny.mod;
-            else if (role.getId().equals(Ustawienia.instance.roles.helperRole)) rekruRole = Ustawienia.instance.rekrutacyjny.pom;
-            else if (role.getId().equals(Ustawienia.instance.rangi.stazysta)) rekruRole = Ustawienia.instance.rekrutacyjny.staz;
-            else if (role.getId().equals(Ustawienia.instance.roles.chatMod)) rekruRole = Ustawienia.instance.rekrutacyjny.chatmod;
-            else if (role.getId().equals(Ustawienia.instance.rangi.ekipa)) rekruRole = Ustawienia.instance.rekrutacyjny.ekipa;
-            if (rekruRole == null) continue;
-            rekru.getGuild().removeRoleFromMember(rekru, rekru.getGuild().getRoleById(rekruRole)).queue();
+            String r = role.getId();
+            if (r.equals(Ustawienia.instance.roles.adminRole)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.admin));
+            else if (r.equals(Ustawienia.instance.roles.moderatorRole)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.mod));
+            else if (r.equals(Ustawienia.instance.roles.helperRole)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.pom));
+            else if (r.equals(Ustawienia.instance.rangi.stazysta)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.staz));
+            else if (r.equals(Ustawienia.instance.roles.chatMod)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.chatmod));
+            else if (r.equals(Ustawienia.instance.rangi.ekipa)) roles.add(rekru.getGuild().getRoleById(Ustawienia.instance.rekrutacyjny.ekipa));
         }
+        roles.removeIf(r -> r.equals(null));
+        roles.forEach(r -> rekru.getGuild().removeRoleFromMember(rekru, r).queue());
     }
 
     public void onGuildMemberUpdateNickname(@Nonnull GuildMemberUpdateNicknameEvent event) {
@@ -79,38 +81,35 @@ public class SyncListener extends ListenerAdapter {
     public static void updateMember(@Nullable Member mem, @Nullable Member derp) {
         if (mem == null || derp == null || UserUtil.getPermLevel(derp).getNumer() == PermLevel.MEMBER.getNumer()) return;
 
-        for (DiscordRank rank : UserUtil.getRanks(derp)) {
-            String prefix = null;
-            String role = null;
+        Ustawienia.Rekrutacyjny ust = Ustawienia.instance.rekrutacyjny;
+        String nickname = mem.getNickname();
+        List<Role> rolesToAdd = new ArrayList<>();
+        List<DiscordRank> ranks = UserUtil.getRanks(derp.getGuild().retrieveMemberById(derp.getId()).complete()); // żeby zaktualizować role
+
+        for (DiscordRank rank : ranks) {
             switch (rank) {
-                case CHATMOD:
-                    role = Ustawienia.instance.rekrutacyjny.chatmod;
-                    prefix = "CHATMOD";
-                    break;
-                case POMOCNIK:
-                    role = Ustawienia.instance.rekrutacyjny.pom;
-                    prefix = "POM";
-                    break;
-                case STAZYSTA:
-                    role = Ustawienia.instance.rekrutacyjny.staz;
-                    prefix = "REKRUT";
-                    break;
-                case MODERATOR:
-                    role = Ustawienia.instance.rekrutacyjny.mod;
-                    prefix = "MOD";
-                    break;
                 case ADMINISTRATOR:
-                    role = Ustawienia.instance.rekrutacyjny.admin;
-                    prefix = "ADM";
-                    break;
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.admin));
+                case MODERATOR:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.mod));
+                case POMOCNIK:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.pom));
+                case STAZYSTA:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.staz));
+                case EKIPA:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
+                case CHATMOD:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));
             }
-            if (role == null) return;
-            try {
-                mem.getGuild().modifyNickname(mem, prefix != null ? "[" + prefix + "] " : "" + UserUtil.getMcNick(derp)).complete();
-                mem.getGuild().addRoleToMember(mem, Objects.requireNonNull(mem.getGuild().getRoleById(role))).complete();
-            } catch (Exception e) {
-                Log.newError(e, SyncListener.class);
-            }
+        }
+
+        if (rolesToAdd.isEmpty()) return;
+
+        try {
+            mem.getGuild().modifyNickname(mem, nickname != null ? "[" + nickname.split(" ")[0] + "] " : "[?] " + UserUtil.getMcNick(derp)).complete();
+            rolesToAdd.forEach(r -> mem.getGuild().addRoleToMember(mem, r).complete());
+        } catch (Exception e) {
+            Log.newError(e, SyncListener.class);
         }
         
     }
