@@ -60,11 +60,13 @@ public class DowodWaiter {
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
+        Log.debug("checkMessage: 1");
         if (!e.getAuthor().getId().equals(userId)) return false;
         if (e.getMessage().getContentRaw().equalsIgnoreCase("anuluj")) {
             clear();
             return false;
         }
+        Log.debug("checkMessage: 4");
         return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId());
     }
 
@@ -76,12 +78,15 @@ public class DowodWaiter {
 
     private void event(MessageReceivedEvent e) {
         try {
+            Log.debug("event: 1");
             Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
             Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
             if (d == null) {
+                Log.debug("event: 4");
                 e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
                 return;
             }
+            Log.debug("event: 5");
             if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
             cc.getKara().getDowody().add(d);
             e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
