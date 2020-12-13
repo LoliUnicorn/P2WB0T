@@ -90,16 +90,21 @@ public class SyncListener extends ListenerAdapter {
             switch (rank) {
                 case ADMINISTRATOR:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.admin));
+                    break;
                 case MODERATOR:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.mod));
+                    break;
                 case POMOCNIK:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.pom));
+                    break;
                 case STAZYSTA:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.staz));
-                //case EKIPA:
-                //    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
-                //case CHATMOD:
-                //  rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));
+                    break;
+                case EKIPA:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
+                    break;
+                case CHATMOD:
+                    rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));
             }
         }
 

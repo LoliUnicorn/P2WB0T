@@ -28,7 +28,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.kamil0024.commands.DowodWaiter;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.Ustawienia;

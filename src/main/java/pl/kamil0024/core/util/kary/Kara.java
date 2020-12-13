@@ -21,12 +21,10 @@ package pl.kamil0024.core.util.kary;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import pl.kamil0024.commands.DowodWaiter;
+import pl.kamil0024.core.util.DowodWaiter;
 import pl.kamil0024.commands.ModLog;
-import pl.kamil0024.commands.moderation.DowodCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.database.CaseDao;

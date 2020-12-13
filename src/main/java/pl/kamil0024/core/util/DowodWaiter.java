@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.commands;
+package pl.kamil0024.core.util;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import pl.kamil0024.commands.moderation.DowodCommand;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.kary.Dowod;
 
@@ -59,11 +60,15 @@ public class DowodWaiter {
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
+        Log.debug("checkMessage: 1");
         if (!e.getAuthor().getId().equals(userId)) return false;
+        Log.debug("checkMessage: 2");
         if (e.getMessage().getContentRaw().equalsIgnoreCase("anuluj")) {
+            Log.debug("checkMessage: 3");
             clear();
             return false;
         }
+        Log.debug("checkMessage: 4");
         return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId());
     }
 
@@ -75,16 +80,24 @@ public class DowodWaiter {
 
     private void event(MessageReceivedEvent e) {
         try {
+            Log.debug("event: 1");Syn
             Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
+            Log.debug("event: 2");
             Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
+            Log.debug("event: 3");
             if (d == null) {
+                Log.debug("event: 4");
                 e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
                 return;
             }
+            Log.debug("event: 5");
             if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
             cc.getKara().getDowody().add(d);
+            Log.debug("event: 6");
             e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
+            Log.debug("event: 7");
             cd.save(cc);
+            Log.debug("event: 8");
             clear();
         } catch (Exception ex) {
             ex.printStackTrace();
