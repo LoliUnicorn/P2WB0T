@@ -48,6 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -71,7 +72,7 @@ public class ModLog extends ListenerAdapter {
         }
         this.caseDao = caseDao;
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::check, 0, 2, TimeUnit.MINUTES);
+        executorSche.scheduleAtFixedRate(this::check, 2, 2, TimeUnit.MINUTES);
     }
 
     @SneakyThrows
@@ -156,7 +157,13 @@ public class ModLog extends ListenerAdapter {
         if (muteRole == null) throw new NullPointerException("muteRole jest nullem");
         if (g == null) throw new NullPointerException("Serwer docelowy jest nullem");
         List<CaseConfig> cc = caseDao.getAllAktywne();
-        List<User> bans = g.retrieveBanList().complete().stream().map(Guild.Ban::getUser).collect(Collectors.toList());
+        List<String> filtredBans = new ArrayList<>();
+
+        try {
+            for (Guild.Ban ban : g.retrieveBanList().complete()) {
+                filtredBans.add(ban.getUser().getId());
+            }
+        } catch (Exception ignored) { }
 
         for (CaseConfig a : cc) {
             Kara aCase = a.getKara();
@@ -175,7 +182,7 @@ public class ModLog extends ListenerAdapter {
                         User u = userExceptionBypass(aCase.getKaranyId(), api);
                         if (u == null) continue;
 
-                        if (!bans.contains(u) && typ == KaryEnum.TEMPBAN) {
+                        if (!filtredBans.contains(u.getId()) && typ == KaryEnum.TEMPBAN) {
                             String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
                             Log.newError(String.format(msg, u.getId(), aCase.getKaraId()), ModLog.class);
                             continue;
@@ -188,9 +195,14 @@ public class ModLog extends ListenerAdapter {
                                 if (m != null) g.removeRoleFromMember(m, muteRole).complete();
                                 break;
                             case TEMPBAN:
-                                g.unban(aCase.getKaranyId()).complete();
+                                try {
+                                    g.unban(aCase.getKaranyId()).complete();
+                                } catch (Exception e) {
+                                    if (filtredBans.contains(u.getId())) {
+                                        Log.newError(e, getClass());
+                                    }
+                                }
                                 break;
-
                         }
                         Kara kara = new Kara();
                         kara.setKaranyId(aCase.getKaranyId());
