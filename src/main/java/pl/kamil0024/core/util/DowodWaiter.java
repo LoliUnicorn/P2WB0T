@@ -80,7 +80,7 @@ public class DowodWaiter {
 
     private void event(MessageReceivedEvent e) {
         try {
-            Log.debug("event: 1");Syn
+            Log.debug("event: 1");
             Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
             Log.debug("event: 2");
             Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
