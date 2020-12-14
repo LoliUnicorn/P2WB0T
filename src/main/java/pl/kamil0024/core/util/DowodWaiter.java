@@ -19,6 +19,7 @@
 
 package pl.kamil0024.core.util;
 
+import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -32,22 +33,16 @@ import pl.kamil0024.core.util.kary.Dowod;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+@AllArgsConstructor
 public class DowodWaiter {
 
-    public EventWaiter eventWaiter;
-    public CaseConfig cc;
-    public CaseDao cd;
-    public String userId;
-    public TextChannel channel;
-    private Message botMsg;
+    private final String userId;
+    private final CaseConfig cc;
+    private final CaseDao cd;
+    private final TextChannel channel;
+    private final EventWaiter eventWaiter;
 
-    public DowodWaiter(String userId, CaseConfig cc, CaseDao cd, TextChannel channel, EventWaiter eventWaiter) {
-        this.eventWaiter = eventWaiter;
-        this.userId = userId;
-        this.cc = cc;
-        this.cd = cd;
-        this.channel = channel;
-    }
+    private Message botMsg;
 
     public void start() {
         botMsg = channel.sendMessage(String.format("<@%s>, zapisz dowód... (jeżeli takowego nie ma, napisz `anuluj`)", userId)).complete();
@@ -55,8 +50,12 @@ public class DowodWaiter {
     }
 
     private void waitForMessage() {
-        eventWaiter.waitForEvent(MessageReceivedEvent.class, this::checkMessage,
-                this::event, 40, TimeUnit.SECONDS, this::clear);
+        try {
+            eventWaiter.waitForEvent(MessageReceivedEvent.class, this::checkMessage,
+                    this::event, 40, TimeUnit.SECONDS, this::clear);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
