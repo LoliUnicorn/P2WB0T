@@ -23,11 +23,11 @@ import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.commands.moderation.DowodCommand;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.kary.Dowod;
 
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 public class DowodWaiter {
+
+    private final Logger logger = LoggerFactory.getLogger(DowodWaiter.class);
 
     private final String userId;
     private final CaseConfig cc;
@@ -45,6 +47,8 @@ public class DowodWaiter {
     private Message botMsg;
 
     public void start() {
+        logger.debug("Tworze waitera dla: " + userId);
+        logger.debug("Jego kanał to: " + channel.getId());
         botMsg = channel.sendMessage(String.format("<@%s>, zapisz dowód... (jeżeli takowego nie ma, napisz `anuluj`)", userId)).complete();
         waitForMessage();
     }
@@ -59,14 +63,16 @@ public class DowodWaiter {
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
-        Log.debug("checkMessage: 1");
+        logger.debug("checkMessage: 1");
         if (!e.getAuthor().getId().equals(userId)) return false;
+        logger.debug("checkMessage: 2");
         if (e.getMessage().getContentRaw().equalsIgnoreCase("anuluj")) {
+            logger.debug("checkMessage: 3");
             clear();
             return false;
         }
-        Log.debug("checkMessage: 4");
-        return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId());
+        logger.debug("checkMessage: 4");
+        return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId()) && e.getAuthor().getId().equals(userId);
     }
 
     private void clear() {
@@ -77,15 +83,17 @@ public class DowodWaiter {
 
     private void event(MessageReceivedEvent e) {
         try {
-            Log.debug("event: 1");
+            logger.debug("Wykonuje event dla: " + e.getAuthor().getId());
+            logger.debug("Jego kanal to: " + e.getChannel().getId());
+            logger.debug("event: 1");
             Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
             Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
             if (d == null) {
-                Log.debug("event: 4");
+                logger.debug("event: 2");
                 e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
                 return;
             }
-            Log.debug("event: 5");
+            logger.debug("event: 3");
             if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
             cc.getKara().getDowody().add(d);
             e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
