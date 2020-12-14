@@ -167,7 +167,7 @@ public class PunishCommand extends Command {
             new DynamicEmbedPageinator(pages, context.getUser(), eventWaiter, context.getJDA(), 120)
                     .setPun(true)
                     .create(msg);
-            initWaiter(context, msg, osoby, context.getMessage());
+            initWaiter(context, msg, osoby, context.getMessage(), eventWaiter, karyJSON, caseDao, modLog, statsModule);
             return true;
         }
 
@@ -215,15 +215,11 @@ public class PunishCommand extends Command {
         return Kara.check(context, osoba.getUser()) == null && !MuteCommand.hasMute(osoba);
     }
 
-    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
-        putPun(kara, osoby, member, txt, caseDao, modLog, statsModule, null, null);
-    }
-
     public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod, @Nullable EventWaiter eventWaiter) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
             List<CaseConfig> cc = caseDao.getAllPunAktywne(osoba.getId());
-            cc.removeIf(caseConfig -> !caseConfig.getKara().getPowod().toLowerCase().equals(kara.getPowod().toLowerCase()));
+            cc.removeIf(caseConfig -> !caseConfig.getKara().getPowod().equalsIgnoreCase(kara.getPowod()));
             jegoWarny += cc.size();
             KaryJSON.Tiery jegoTier = null;
             for (KaryJSON.Tiery tiery : kara.getTiery()) {
@@ -298,7 +294,7 @@ public class PunishCommand extends Command {
         }
     }
 
-    private void initWaiter(CommandContext context, Message msg, List<Member> osoby, Message userMsg) {
+    private static void initWaiter(CommandContext context, Message msg, List<Member> osoby, Message userMsg, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         AtomicBoolean kurwaBylaAkcja = new AtomicBoolean(false);
         eventWaiter.waitForEvent(
                 GuildMessageReceivedEvent.class,
@@ -314,7 +310,7 @@ public class PunishCommand extends Command {
                         event.getMessage().delete().complete();
                         msg.delete().complete();
                         userMsg.delete().complete();
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) { }
                 },
                 30, TimeUnit.SECONDS,
                 () -> {

@@ -82,7 +82,9 @@ public class Kara {
 
     public static synchronized void put(CaseDao caseDao, Kara kara, ModLog modLog, EventWaiter eventWaiter, String userId, TextChannel channel, CaseDao cd) {
         CaseConfig cc = put(caseDao, kara, modLog);
-        new DowodWaiter(userId, cc, cd, channel, eventWaiter).start();
+        if (eventWaiter != null) {
+            new DowodWaiter(userId, cc, cd, channel, eventWaiter).start();
+        }
     }
 
     public static synchronized int getNextId(List<CaseConfig> cc) {
