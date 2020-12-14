@@ -47,32 +47,22 @@ public class DowodWaiter {
     private Message botMsg;
 
     public void start() {
-        logger.debug("Tworze waitera dla: " + userId);
-        logger.debug("Jego kanał to: " + channel.getId());
         botMsg = channel.sendMessage(String.format("<@%s>, zapisz dowód... (jeżeli takowego nie ma, napisz `anuluj`)", userId)).complete();
         waitForMessage();
     }
 
     private void waitForMessage() {
-        try {
-            eventWaiter.waitForEvent(MessageReceivedEvent.class, this::checkMessage,
-                    this::event, 40, TimeUnit.SECONDS, this::clear);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        eventWaiter.waitForEvent(MessageReceivedEvent.class, this::checkMessage,
+                this::event, 40, TimeUnit.SECONDS, this::clear);
     }
 
     private boolean checkMessage(MessageReceivedEvent e) {
-        logger.debug("checkMessage: 1");
         if (!e.getAuthor().getId().equals(userId)) return false;
-        logger.debug("checkMessage: 2");
         if (e.getMessage().getContentRaw().equalsIgnoreCase("anuluj")) {
-            logger.debug("checkMessage: 3");
             clear();
             return false;
         }
-        logger.debug("checkMessage: 4");
-        return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId()) && e.getAuthor().getId().equals(userId);
+        return e.isFromGuild() && e.getTextChannel().getId().equals(channel.getId());
     }
 
     private void clear() {
@@ -82,26 +72,24 @@ public class DowodWaiter {
     }
 
     private void event(MessageReceivedEvent e) {
+        Message msg;
         try {
-            logger.debug("Wykonuje event dla: " + e.getAuthor().getId());
-            logger.debug("Jego kanal to: " + e.getChannel().getId());
-            logger.debug("event: 1");
-            Message msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
-            Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
-            if (d == null) {
-                logger.debug("event: 2");
-                e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
-                return;
-            }
-            logger.debug("event: 3");
-            if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
-            cc.getKara().getDowody().add(d);
-            e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
-            cd.save(cc);
-            clear();
+            msg = e.getTextChannel().retrieveMessageById(e.getMessageId()).complete();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.debug("Próbuje kolejny raz...");
+            waitForMessage();
+            return;
         }
+        Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
+        if (d == null) {
+            e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
+            return;
+        }
+        if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
+        cc.getKara().getDowody().add(d);
+        e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
+        cd.save(cc);
+        clear();
     }
 
 }
