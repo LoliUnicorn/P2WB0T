@@ -36,6 +36,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ConstantConditions")
 public class SyncListener extends ListenerAdapter {
@@ -101,7 +102,10 @@ public class SyncListener extends ListenerAdapter {
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.staz));
                     break;
                 case EKIPA:
-                    rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
+                    List<String> roles = derp.getRoles().stream().map(Role::getId).collect(Collectors.toList());
+                    if (!roles.contains(Ustawienia.instance.rangi.stazysta)) {
+                        rolesToAdd.add(mem.getGuild().getRoleById(ust.ekipa));
+                    }
                     break;
                 case CHATMOD:
                     rolesToAdd.add(mem.getGuild().getRoleById(ust.chatmod));

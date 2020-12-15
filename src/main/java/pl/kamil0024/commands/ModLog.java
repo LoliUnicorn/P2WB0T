@@ -72,7 +72,14 @@ public class ModLog extends ListenerAdapter {
         }
         this.caseDao = caseDao;
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::check, 2, 2, TimeUnit.MINUTES);
+        executorSche.scheduleAtFixedRate(() -> {
+            try {
+                check();
+            } catch (Exception e) {
+                Log.newError("Check ci znowu nawalił", getClass());
+                Log.newError(e, getClass());
+            }
+        }, 2, 2, TimeUnit.MINUTES);
     }
 
     @SneakyThrows
@@ -96,11 +103,11 @@ public class ModLog extends ListenerAdapter {
             switch (k.getTypKary()) {
                 case BAN:
                     powod = check + "jest permanentnie zbanowane!";
-                    event.getGuild().ban(event, 0, powod).queue();
+                    event.getGuild().ban(event, 0, powod).complete();
                     break;
                 case MUTE:
                     powod = check + "jest permanentnie wyciszone";
-                    event.getGuild().addRoleToMember(event, Objects.requireNonNull(api.getRoleById(Ustawienia.instance.muteRole))).queue();
+                    event.getGuild().addRoleToMember(event, Objects.requireNonNull(api.getRoleById(Ustawienia.instance.muteRole))).complete();
                     break;
                 case TEMPBAN:
                     powod = check + "jest tymczasowo zbanowane";
@@ -235,8 +242,6 @@ public class ModLog extends ListenerAdapter {
                 }
             }
         }
-        
-        
     }
 
     public synchronized void sendModlog(Kara kara) {

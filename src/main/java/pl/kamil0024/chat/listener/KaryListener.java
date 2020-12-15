@@ -76,8 +76,11 @@ public class KaryListener extends ListenerAdapter {
             for (Action entry : getEmbedy()) {
                 if (!entry.getBotMsg().equals(event.getMessageId())) continue;
 
-                Message msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-                if (event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
+                Message msg = null;
+                try {
+                    msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+                } catch (Exception e) { }
+                if (msg == null || event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
                     deleteMessage(msg);
                     getEmbedy().remove(entry);
                     continue;
