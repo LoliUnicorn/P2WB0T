@@ -364,7 +364,7 @@ public class PgMapper<T> {
 
     public List<T> getAllAktywne() {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"kara\": {\"aktywna\": true} }';", table.value());
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"kara\": {\"aktywna\": true}}' AND (data::jsonb @> '{\"kara\": {\"typKary\": \"TEMPBAN\"}}' OR data::jsonb @> '{\"kara\": {\"typKary\": \"TEMPMUTE\"}}');", table.value());
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {

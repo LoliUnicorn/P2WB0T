@@ -19,6 +19,8 @@
 
 package pl.kamil0024.commands;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
@@ -63,6 +65,8 @@ public class ModLog extends ListenerAdapter {
     private final TextChannel modlog;
     private final CaseDao caseDao;
 
+    @Setter @Getter private int proby = 0;
+
     public ModLog(ShardManager api, CaseDao caseDao) {
         this.api = api;
         this.modlog = api.getTextChannelById(Ustawienia.instance.channel.modlog);
@@ -74,6 +78,7 @@ public class ModLog extends ListenerAdapter {
         ScheduledExecutorService executorSche = Executors.newScheduledThreadPool(2);
         executorSche.scheduleAtFixedRate(() -> {
             try {
+                setProby(0);
                 check();
             } catch (Exception e) {
                 Log.newError("Check ci znowu nawalił", getClass());
@@ -158,10 +163,18 @@ public class ModLog extends ListenerAdapter {
     }
 
     private void check() {
+        setProby(getProby() + 1);
         Date data = new Date();
         Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
         Role muteRole = api.getRoleById(Ustawienia.instance.muteRole);
-        if (muteRole == null) throw new NullPointerException("muteRole jest nullem");
+        if (getProby() >= 5) {
+            setProby(0);
+            throw new NullPointerException("Po 5 probach nadal jest: muteRole == null");
+        }
+        if (getProby() < 5 || muteRole == null) {
+            check();
+            return;
+        }
         if (g == null) throw new NullPointerException("Serwer docelowy jest nullem");
         List<CaseConfig> cc = caseDao.getAllAktywne();
         List<String> filtredBans = new ArrayList<>();
@@ -189,7 +202,7 @@ public class ModLog extends ListenerAdapter {
                         User u = userExceptionBypass(aCase.getKaranyId(), api);
                         if (u == null) continue;
 
-                        if (!filtredBans.contains(u.getId()) && typ == KaryEnum.TEMPBAN) {
+                        if (!filtredBans.isEmpty() && !filtredBans.contains(u.getId()) && typ == KaryEnum.TEMPBAN) {
                             String msg = "Nie udało się dać kary UNBAN dla %s (ID: %s) bo: Typ nie ma bana";
                             Log.newError(String.format(msg, u.getId(), aCase.getKaraId()), ModLog.class);
                             continue;

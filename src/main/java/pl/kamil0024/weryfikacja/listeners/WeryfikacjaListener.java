@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.bdate.BDate;
@@ -58,7 +57,9 @@ public class WeryfikacjaListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals("740157959207780362") || event.getAuthor().isBot() || !event.isFromGuild()) return;
 
         String msg = event.getMessage().getContentRaw();
-        event.getMessage().delete().queue();
+        try {
+            event.getMessage().delete().complete();
+        } catch (Exception ignored) { }
 
         DiscordInviteConfig dc = apiModule.getDiscordConfig(msg);
         if (dc == null) {
