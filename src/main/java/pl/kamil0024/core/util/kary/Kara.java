@@ -70,6 +70,9 @@ public class Kara {
     }
 
     public static synchronized CaseConfig put(CaseDao caseDao, Kara kara, ModLog modLog) {
+        if (kara.getTypKary() == KaryEnum.UNBAN || kara.getTypKary() == KaryEnum.UNMUTE) {
+            kara.setAktywna(false); // kary un(ban|mute) nie muszą być aktywne
+        }
         CaseConfig cc = new CaseConfig();
         int lastId = getNextId(caseDao.getAll());
         cc.setId(Integer.toString(lastId));
