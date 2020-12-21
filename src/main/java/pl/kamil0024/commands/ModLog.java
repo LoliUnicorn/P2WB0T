@@ -171,7 +171,7 @@ public class ModLog extends ListenerAdapter {
             setProby(0);
             throw new NullPointerException("Po 5 probach nadal jest: muteRole == null");
         }
-        if (getProby() < 5 || muteRole == null) {
+        if (getProby() < 5 && muteRole == null) {
             check();
             return;
         }
