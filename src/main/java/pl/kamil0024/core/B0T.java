@@ -191,7 +191,7 @@ public class B0T {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token,
                     GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_VOICE_STATES,
                     GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS);
+                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES);
             builder.setShardsTotal(1);
             builder.setShards(0, 0);
             builder.setEnableShutdownHook(false);
