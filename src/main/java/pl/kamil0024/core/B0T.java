@@ -201,7 +201,7 @@ public class B0T {
             builder.addEventListeners(eventWaiter, new ExceptionListener());
             builder.setBulkDeleteSplittingEnabled(false);
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
-            builder.enableCache(CacheFlag.EMOTE);
+            builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY);
             builder.setMemberCachePolicy(MemberCachePolicy.ALL);
             MessageAction.setDefaultMentionRepliedUser(false);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
