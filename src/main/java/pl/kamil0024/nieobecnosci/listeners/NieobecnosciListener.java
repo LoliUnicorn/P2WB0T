@@ -86,7 +86,7 @@ public class NieobecnosciListener extends ListenerAdapter {
                 Date nowyCzas = sfd.parse(e.getMessage().getContentRaw().split("Przedłużam: ")[1]);
                 Date staryCzas = new Date(xd.getEnd());
                 if (nowyCzas.before(staryCzas)) {
-                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nie bądź jak Ewiatan, nie przedłużaj nieobecności w tył").
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nie bądź jak Ewitan, nie przedłużaj nieobecności w tył").
                             queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
                     return;
                 }

@@ -95,8 +95,8 @@ public class McpremiumCommand extends Command {
         if (listaNazw.size() > 1)
             eb.addField(context.getTranslate("mcpremium.nick"), String.join("\n", listaNazw),
                     false);
-        eb.setThumbnail("https://minotar.net/helm/" + name + "/2048.png");
-        eb.setImage("https://minotar.net/armor/body/" + name + "/124.png");
+        eb.setThumbnail("https://minotar.net/avatar/" + name + "/2048.png");
+        eb.setImage("https://minotar.net/body/" + name + "/124.png");
         context.send(eb.build()).queue();
         return true;
     }
