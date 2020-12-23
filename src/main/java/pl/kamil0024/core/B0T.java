@@ -191,7 +191,7 @@ public class B0T {
             DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token,
                     GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_VOICE_STATES,
                     GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS);
+                    GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES);
             builder.setShardsTotal(1);
             builder.setShards(0, 0);
             builder.setEnableShutdownHook(false);
@@ -201,7 +201,7 @@ public class B0T {
             builder.addEventListeners(eventWaiter, new ExceptionListener());
             builder.setBulkDeleteSplittingEnabled(false);
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
-            builder.enableCache(CacheFlag.EMOTE);
+            builder.enableCache(CacheFlag.EMOTE, CacheFlag.ACTIVITY);
             builder.setMemberCachePolicy(MemberCachePolicy.ALL);
             MessageAction.setDefaultMentionRepliedUser(false);
             MessageAction.setDefaultMentions(EnumSet.of(Message.MentionType.EMOTE, Message.MentionType.CHANNEL));
