@@ -66,7 +66,7 @@ public class UserinfoCommand extends Command {
         } catch (ErrorResponseException ignored) {}
 
         eb.setColor(UserUtil.getColor(context.getMember()));
-        eb.setFooter("Wykonane przez: " + UserUtil.getName(context.getMember().getUser()), UserUtil.getMcNick(context.getMember()));
+        eb.setFooter("Wykonane przez: " + UserUtil.getName(context.getMember().getUser()) + " [" UserUtil.getMcNick(context.getMember() + "]"));
         eb.setTimestamp(Instant.now());
         eb.setThumbnail(user.getAvatarUrl());
 
