@@ -102,13 +102,15 @@ public class Zmiana {
                 return "Anulowanie nieobecności";
             case START:
                 return "Start nieobecności";
+            case EXTENSION:
+                return "Przedłużenie nieobecności";
             default:
                 return en.toString();
         }
     }
 
     public enum Enum {
-        ENDTIME, REASON, CANCEL, START
+        ENDTIME, REASON, CANCEL, START, EXTENSION
     }
 
 }

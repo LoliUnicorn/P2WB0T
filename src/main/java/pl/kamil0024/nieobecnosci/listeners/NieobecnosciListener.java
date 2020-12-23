@@ -84,14 +84,20 @@ public class NieobecnosciListener extends ListenerAdapter {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                 Date nowyCzas = sfd.parse(e.getMessage().getContentRaw().split("Przedłużam: ")[1]);
+                Date staryCzas = new Date(xd.getEnd());
+                if (nowyCzas.before(staryCzas)) {
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nie bądź jak Ewiatan, nie przedłużaj nieobecności w tył").
+                            queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
+                    return;
+                }
 
                 Zmiana zmiana = new Zmiana();
-                zmiana.setCoZmienia(Zmiana.Enum.ENDTIME);
+                zmiana.setCoZmienia(Zmiana.Enum.EXTENSION);
                 zmiana.setKiedy(new Date().getTime());
                 zmiana.setKtoZmienia(e.getAuthor().getId());
 
                 String stary = String.format("Stary czas: `%s`\n", sdf.format(new Date(xd.getEnd())));
-                String nowy = String.format("Nowy czas: `%s`", sdf.format(new Date(nowyCzas.getTime())));
+                String nowy = String.format("Nowy czas: `%s`", sdf.format(staryCzas));
                 zmiana.setKomentarz(stary + nowy);
                 zmiana.sendLog(e.getGuild(), xd.getUserId(), xd.getId());
                 if (xd.getZmiany() == null) xd.setZmiany(new ArrayList<>());
@@ -116,6 +122,8 @@ public class NieobecnosciListener extends ListenerAdapter {
             powod = msg[1].split(": ")[1];
             end = sfd.parse(msg[2].split(": ")[1]).getTime();
         } catch (Exception xd) {
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", brak zastosowania do wzoru!").
+                    queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
             logger.debug(log + "parser jest zły");
             return;
         }
