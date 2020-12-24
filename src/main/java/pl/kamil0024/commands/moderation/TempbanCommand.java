@@ -56,7 +56,7 @@ public class TempbanCommand extends Command {
     @Override
     public boolean execute(@NotNull CommandContext context) {
         Member user = context.getParsed().getMember(context.getArgs().get(0));
-        if (user == null) {
+        if (context.getParsed().getUser(context.getArgs().get(0)) == null) {
             context.sendTranslate("kick.badmember").queue();
             return false;
         }
