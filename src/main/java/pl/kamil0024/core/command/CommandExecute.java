@@ -144,7 +144,7 @@ public class CommandExecute extends ListenerAdapter {
                     } catch (Exception ignored) { }
                 };
                 ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
-                ses.schedule(task, 3, TimeUnit.SECONDS);
+                ses.schedule(task, 1, TimeUnit.SECONDS);
                 return;
             }
         }
@@ -154,8 +154,10 @@ public class CommandExecute extends ListenerAdapter {
         if (c.getPermLevel().getNumer() > jegoPerm.getNumer()) {
             String wymaga = tlumaczenia.get(c.getPermLevel().getTranlsateKey());
             String ma = tlumaczenia.get(jegoPerm.getTranlsateKey());
+            String trans = "generic.noperm";
+            if (c.getCategory() == CommandCategory.MUSIC) trans = "generic.ytnoperm";
 
-            e.getChannel().sendMessage(tlumaczenia.get("generic.noperm", wymaga, c.getPermLevel().getNumer(),
+            e.getChannel().sendMessage(tlumaczenia.get(trans, wymaga, c.getPermLevel().getNumer(),
                     ma, jegoPerm.getNumer())).queue();
 
             zareaguj(e.getMessage(), e.getAuthor(), false);

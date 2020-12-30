@@ -131,5 +131,17 @@ public class UserUtil {
     public static List<DiscordRank> getRanks(Member member) {
         return DiscordRank.getRanks(member);
     }
-    
+
+    @SuppressWarnings("ConstantConditions")
+    @Nullable
+    public static String getPrefix(Member mem) {
+        try {
+            String nick = mem.getNickname().split("] ")[0];
+            return nick + "]";
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
 }

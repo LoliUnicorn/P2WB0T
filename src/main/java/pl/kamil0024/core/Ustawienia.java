@@ -19,10 +19,7 @@ package pl.kamil0024.core;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("ALL")
 public class Ustawienia {
@@ -52,6 +49,7 @@ public class Ustawienia {
     public Ticket ticket = new Ticket();
     public Apelacje apelacje = new Apelacje();
     public Rekrutacyjny rekrutacyjny = new Rekrutacyjny();
+    public Zespoly zespoly = new Zespoly();
 
     public static class Roles {
         public String helperRole = def;
@@ -214,6 +212,11 @@ public class Ustawienia {
         public String staz = def;
         public String chatmod = def;
         public String ekipa = def;
+    }
+
+    public static class Zespoly {
+        public List<String> zespoly = new ArrayList<>();
+        public Map<String, List<String>> liderzy = new HashMap<>();
     }
 
 }

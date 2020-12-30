@@ -588,6 +588,8 @@ public class APIModule implements Modul {
 
         routes.post("api/react/embed/post", new EmbedHandler(embedRedisManager));
 
+        routes.get("api/staff", new StaffHandler(api));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()
