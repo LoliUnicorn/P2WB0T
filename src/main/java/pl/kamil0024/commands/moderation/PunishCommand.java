@@ -271,7 +271,7 @@ public class PunishCommand extends Command {
                     statsModule.getStatsCache().addZmutowanych(member.getId(), 1);
                     break;
                 case TEMPBAN:
-                    TempbanCommand.tempban(osoba, member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true);
+                    TempbanCommand.tempban(osoba.getUser(), member.getUser(), kara.getPowod(), jegoTier.getDuration(), caseDao, modLog, true, osoba.getGuild(), UserUtil.getMcNick(osoba));
                     statsModule.getStatsCache().addZbanowanych(member.getId(), 1);
                     break;
                 case TEMPMUTE:

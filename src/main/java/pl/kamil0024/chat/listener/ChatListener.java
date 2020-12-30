@@ -275,7 +275,7 @@ public class ChatListener extends ListenerAdapter {
 
     public static boolean containsInvite(String[] list) {
         for (String s : list) {
-            return DISCORD_INVITE.matcher(s).find();
+            if (DISCORD_INVITE.matcher(s).find()) return true;
         }
         return false;
     }

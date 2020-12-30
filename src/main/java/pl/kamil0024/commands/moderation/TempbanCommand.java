@@ -55,8 +55,9 @@ public class TempbanCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandContext context) {
-        Member user = context.getParsed().getMember(context.getArgs().get(0));
-        if (context.getParsed().getUser(context.getArgs().get(0)) == null) {
+        Member member = context.getParsed().getMember(context.getArgs().get(0));
+        User user = context.getParsed().getUser(context.getArgs().get(0));
+        if (user == null) {
             context.sendTranslate("kick.badmember").queue();
             return false;
         }
@@ -68,12 +69,12 @@ public class TempbanCommand extends Command {
         }
         if (powod == null) powod = context.getTranslate("modlog.none");
 
-        String check = check(context, user.getUser());
+        String check = check(context, user);
         if (check != null) {
             context.send(check).queue();
             return false;
         }
-        String error = tempban(user, context.getUser(), powod, duration, caseDao, modLog, false);
+        String error = tempban(user, context.getUser(), powod, duration, caseDao, modLog, false, context.getGuild(), UserUtil.getMcNick(member));
         if (error != null) {
             context.send("Wysąpił błąd! " + error).queue();
             return false;
@@ -82,7 +83,7 @@ public class TempbanCommand extends Command {
         return true;
     }
 
-    public static String tempban(Member user, User adm, String powod, String duration, CaseDao caseDao, ModLog modLog, boolean isPun) {
+    public static String tempban(User user, User adm, String powod, String duration, CaseDao caseDao, ModLog modLog, boolean isPun, Guild guild, String nick) {
         if (UserUtil.getPermLevel(adm).getNumer() <= UserUtil.getPermLevel(user).getNumer()) {
             return "Poziom uprawnień osoby, którą chcesz ukarać jest wyższy od Twojego!";
         }
@@ -91,13 +92,11 @@ public class TempbanCommand extends Command {
             return "Duration " + duration + " jest zły!";
         }
 
-        for (Guild.Ban ban : user.getGuild().retrieveBanList().complete()) {
+        for (Guild.Ban ban : guild.retrieveBanList().complete()) {
             if (ban.getUser().getId().equals(user.getId())) {
                 return "Ta osoba jest już zbanowana!";
             }
         }
-
-        String nick = UserUtil.getMcNick(user);
 
         if (!isPun) {
             Kara kara = new Kara();
@@ -112,7 +111,7 @@ public class TempbanCommand extends Command {
             Kara.put(caseDao, kara, modLog);
         }
 
-        user.getGuild().ban(user, 0, powod).complete();
+        guild.ban(user, 0, powod).complete();
         return null;
     }
 

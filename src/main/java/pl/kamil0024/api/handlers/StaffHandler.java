@@ -69,6 +69,22 @@ public class StaffHandler implements HttpHandler {
                 case STAZYSTA:
                     staffList.getStazysci().add(getOsoba(member));
                     break;
+                case DEVELOPER:
+                    String s = UserUtil.getPrefix(member);
+                    if (s == null || member.getRoles().contains(api.getRoleById(Ustawienia.instance.rangi.korona))) break;
+                    Osoba o = getOsoba(member);
+                    switch (s) {
+                        case "[POM]":
+                            staffList.getStazysci().add(o);
+                            break;
+                        case "[MOD]":
+                            staffList.getModeratorzy().add(o);
+                            break;
+                        case "[ADM]":
+                            staffList.getAdministratorzy().add(o);
+                            break;
+                    }
+                    break;
             }
         }
 

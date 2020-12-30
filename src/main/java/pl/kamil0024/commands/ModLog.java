@@ -116,7 +116,7 @@ public class ModLog extends ListenerAdapter {
                     break;
                 case TEMPBAN:
                     powod = check + "jest tymczasowo zbanowane";
-                    TempbanCommand.tempban(event, adm, k.getPowod(), k.getDuration(), caseDao, this, true);
+                    TempbanCommand.tempban(event.getUser(), adm, k.getPowod(), k.getDuration(), caseDao, this, true, event.getGuild(), UserUtil.getMcNick(event));
                     break;
                 case TEMPMUTE:
                     powod = check + "jest tymczasowo wyciszone";
