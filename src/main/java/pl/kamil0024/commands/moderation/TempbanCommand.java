@@ -89,7 +89,7 @@ public class TempbanCommand extends Command {
         }
         Long dur = new Duration().parseLong(duration);
         if (dur == null) {
-            return "Duration " + duration + " jest zły!";
+            return "Duration `" + duration + "` jest zły!";
         }
 
         for (Guild.Ban ban : guild.retrieveBanList().complete()) {

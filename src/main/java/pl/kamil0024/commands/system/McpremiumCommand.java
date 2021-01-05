@@ -92,9 +92,10 @@ public class McpremiumCommand extends Command {
         eb.addField(context.getTranslate("mcpremium.uuid"), formatUuid(Objects.requireNonNull(uuid)), false);
         eb.addField(context.getTranslate("mcpremium.namemc"), "[namemc.com](https://namemc.com/profile/" + uuid + ")", false);
         eb.setFooter(context.getTranslate("mcpremium.info", UserUtil.getName(context.getMember().getUser()), UserUtil.getMcNick(context.getMember())));
-        if (listaNazw.size() > 1)
+        if (listaNazw.size() > 1 && String.join("\n", listaNazw).length() < 1024) {
             eb.addField(context.getTranslate("mcpremium.nick"), String.join("\n", listaNazw),
                     false);
+        }
         eb.setThumbnail("https://minotar.net/avatar/" + name + "/2048.png");
         eb.setImage("https://minotar.net/body/" + name + "/124.png");
         context.send(eb.build()).queue();

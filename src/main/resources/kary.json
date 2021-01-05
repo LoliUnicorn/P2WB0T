@@ -312,21 +312,36 @@
       }
     },
     "23": {
-      "name": "Reklamowanie serwerów w żaden sposób niepowiązanych z siecią serwerów P2W.pl w wiadomości prywatnej",
+      "name": "Propagowanie piractwa, nienawiści, treści pornograficznych, rasistowskich, pedofilii i innych szerko pojętych za nieetyczne lub niezgodne z obowiązującym polskim prawem",
       "tier_1": {
         "maxWarns": 1,
-        "type": "Tempban",
-        "time": "3d"
+        "type": "Tempmute",
+        "time": "3h"
       },
       "tier_2": {
         "maxWarns": 2,
-        "type": "Tempban",
-        "time": "5d"
+        "type": "Tempmute",
+        "time": "4h"
       },
       "tier_3": {
         "maxWarns": 3,
-        "type": "Tempban",
-        "time": "7d"
+        "type": "Tempmute",
+        "time": "5h"
+      },
+      "tier_4": {
+        "maxWarns": 4,
+        "type": "Tempmute",
+        "time": "6h"
+      },
+      "tier_5": {
+        "maxWarns": 5,
+        "type": "Tempmute",
+        "time": "8h"
+      },
+      "tier_6": {
+        "maxWarns": 6,
+        "type": "Tempmute",
+        "time": "10h"
       }
     },
     "24": {
