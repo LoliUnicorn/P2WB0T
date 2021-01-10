@@ -251,6 +251,7 @@ public class B0T {
         TicketDao        ticketDao           = new TicketDao(databaseManager);
         ApelacjeDao      apelacjeDao         = new ApelacjeDao(databaseManager);
         AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager, api);
+        WeryfikacjaDao   weryfikacjaDao      = new WeryfikacjaDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -272,13 +273,13 @@ public class B0T {
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao));
         modulManager.getModules().add(new RekruModule(api, commandManager));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new EmbedGeneratorModule(commandManager, embedRedisManager));
-        modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao));
+        modulManager.getModules().add(new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao, weryfikacjaDao));
         modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
         if (youTrack != null) modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
 

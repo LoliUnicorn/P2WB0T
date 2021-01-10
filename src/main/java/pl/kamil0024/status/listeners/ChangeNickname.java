@@ -43,7 +43,7 @@ public class ChangeNickname extends ListenerAdapter {
         Member mem = g.retrieveMemberById(e.getUser().getId()).complete();
         if (mem == null) return;
 
-        if (mem.getNickname() == null) {
+        if (mem.getNickname() == null && mem.getRoles().size() >= 1) {
             try {
                 g.modifyNickname(mem, e.getOldName()).complete();
             } catch (Exception ex) {

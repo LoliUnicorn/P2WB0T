@@ -21,6 +21,7 @@ package pl.kamil0024.embedgenerator;
 
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandManager;
+import pl.kamil0024.core.database.WeryfikacjaDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.embedgenerator.commands.EmbedCommand;
 import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;

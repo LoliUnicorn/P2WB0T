@@ -28,6 +28,9 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.awt.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 public class CheckMk {
 
@@ -38,8 +41,7 @@ public class CheckMk {
     }
 
     public void check() {
-        long created = getMember().getTimeCreated().toInstant().toEpochMilli() - 432000000;
-        if (created <= 0) {
+        if (new Date(System.currentTimeMillis() - 1209600000).toInstant().atOffset(ZoneOffset.UTC).isBefore(getMember().getTimeCreated())) {
             TextChannel txt = member.getJDA().getTextChannelById(Ustawienia.instance.channel.moddc);
             if (txt == null) {
                 Log.newError("Ustawienia.instance.channel.moddc == null", CheckMk.class);
@@ -49,8 +51,8 @@ public class CheckMk {
             eb.setColor(Color.red);
             eb.setFooter("Podejrzane konto!");
             eb.addField("Nick", UserUtil.getLogName(getMember()), false);
-            eb.addField("Powód", "Konto bez rangi oraz krótsze niż **5 dni**!", false);
-            eb.addField(null, "Sprawdź czy te konto nie omija blacklisty lub bana.", false);
+            eb.addField("Powód", "Konto bez rangi oraz krótsze niż **14 dni**!", false);
+            eb.addField(null, "Sprawdź czy te konto nie omija blacklisty lub bana", false);
             txt.sendMessage(eb.build()).queue();
         }
 

@@ -76,8 +76,9 @@ public class EvalCommand extends Command {
     @Inject private final ApelacjeDao apelacjeDao;
     @Inject private final AnkietaDao ankietaDao;
     @Inject private final EmbedRedisManager embedRedisManager;
+    @Inject private final WeryfikacjaDao weryfikacjaDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -105,6 +106,7 @@ public class EvalCommand extends Command {
         this.apelacjeDao = apelacjeDao;
         this.ankietaDao = ankietaDao;
         this.embedRedisManager = embedRedisManager;
+        this.weryfikacjaDao = weryfikacjaDao;
     }
 
     @Override
@@ -139,6 +141,7 @@ public class EvalCommand extends Command {
         shell.setVariable("apelacjeDao", apelacjeDao);
         shell.setVariable("ankietaDao", ankietaDao);
         shell.setVariable("embedRedisManager", embedRedisManager);
+        shell.setVariable("weryfikacjaDao", weryfikacjaDao);
         shell.setVariable("gson", new Gson());
 
         long ms = System.currentTimeMillis();
