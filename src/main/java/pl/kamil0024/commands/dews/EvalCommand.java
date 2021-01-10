@@ -46,6 +46,7 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.stats.StatsModule;
+import pl.kamil0024.weryfikacja.WeryfikacjaModule;
 import pl.kamil0024.youtrack.YouTrack;
 
 import java.awt.*;
@@ -77,8 +78,9 @@ public class EvalCommand extends Command {
     @Inject private final AnkietaDao ankietaDao;
     @Inject private final EmbedRedisManager embedRedisManager;
     @Inject private final WeryfikacjaDao weryfikacjaDao;
+    @Inject private final WeryfikacjaModule weryfikacjaModule;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -107,6 +109,7 @@ public class EvalCommand extends Command {
         this.ankietaDao = ankietaDao;
         this.embedRedisManager = embedRedisManager;
         this.weryfikacjaDao = weryfikacjaDao;
+        this.weryfikacjaModule = weryfikacjaModule;
     }
 
     @Override
@@ -142,6 +145,7 @@ public class EvalCommand extends Command {
         shell.setVariable("ankietaDao", ankietaDao);
         shell.setVariable("embedRedisManager", embedRedisManager);
         shell.setVariable("weryfikacjaDao", weryfikacjaDao);
+        shell.setVariable("weryfikacjaModule", weryfikacjaModule);
         shell.setVariable("gson", new Gson());
 
         long ms = System.currentTimeMillis();
