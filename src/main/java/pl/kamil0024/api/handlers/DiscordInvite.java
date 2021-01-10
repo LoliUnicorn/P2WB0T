@@ -51,13 +51,12 @@ public class DiscordInvite implements HttpHandler  {
         }
 
         for (Map.Entry<String, DiscordInviteConfig> dcconfig : apiModule.getDcCache().asMap().entrySet()) {
-            if (dcconfig.getValue().getNick().toLowerCase().equals(nick.toLowerCase())) {
+            if (dcconfig.getValue().getNick().equalsIgnoreCase(nick)) {
                 apiModule.getDcCache().invalidate(dcconfig.getKey());
             }
         }
-        apiModule.putDiscordConfig(nick, kod, ranga);
         Response.sendResponse(ex, "Zapytanie przebiegło pomyślnie");
-
+        apiModule.putDiscordConfig(nick, kod, ranga);
     }
 
 }
