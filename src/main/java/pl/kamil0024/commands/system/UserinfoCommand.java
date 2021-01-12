@@ -111,7 +111,7 @@ public class UserinfoCommand extends Command {
             case ONLINE:
                 return "Online";
             case IDLE:
-                return "Zaraz wrazam";
+                return "Zaraz wracam";
             case DO_NOT_DISTURB:
                 return "Nie przeszkadzać";
             case INVISIBLE:
@@ -121,7 +121,7 @@ public class UserinfoCommand extends Command {
             case UNKNOWN:
                 return "Unknow";
             default:
-                return "???";
+                return "? (" + onlineStatus.toString() + ")";
         }
     }
 
