@@ -219,10 +219,8 @@ public class CommandExecute extends ListenerAdapter {
 
     private static void zareaguj(Message msg, User user, boolean bol) {
         try {
-            try {
-                msg.addReaction(getReaction(user, bol)).complete();
-            } catch (ErrorResponseException ignored) { }
-        } catch (Exception ignored) {}
+            msg.addReaction(getReaction(user, bol)).complete();
+        } catch (ErrorResponseException ignored) { }
     }
 
     private void setCooldown(User user, Command command) {
