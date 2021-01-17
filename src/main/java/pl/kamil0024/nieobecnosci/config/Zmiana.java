@@ -72,13 +72,13 @@ public class Zmiana {
     }
 
     public static void endNieobecnosci(Nieobecnosc nb, Member member) {
-        EmbedBuilder eb = NieobecnosciManager.getEmbed(nb, member);
+        EmbedBuilder eb = NieobecnosciManager.getEmbed(nb, member, true);
         eb.setFooter("Nieobecność się zakończyła!");
         sendEmbed(eb, member.getJDA());
     }
 
     public static void startNieobecnosci(Nieobecnosc nb, Member member) {
-        EmbedBuilder eb = NieobecnosciManager.getEmbed(nb, member);
+        EmbedBuilder eb = NieobecnosciManager.getEmbed(nb, member, true);
         eb.setFooter("Nieobecność się rozpoczeła!");
         sendEmbed(eb, member.getJDA());
     }

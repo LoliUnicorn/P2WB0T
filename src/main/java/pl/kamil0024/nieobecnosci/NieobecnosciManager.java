@@ -89,6 +89,11 @@ public class NieobecnosciManager {
     }
 
     public static EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member) {
+        return getEmbed(nieobecnosc, member, false);
+    }
+
+
+    public static EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member, boolean priv) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -97,7 +102,8 @@ public class NieobecnosciManager {
         eb.setThumbnail(member.getUser().getAvatarUrl());
 
         eb.addField("Osoba zgłaszająca", member.getAsMention() + " " + MarkdownSanitizer.escape(UserUtil.getMcNick(member)), false);
-        eb.addField("Powód", nieobecnosc.getPowod(), false);
+        if (priv) eb.addField("Powód", nieobecnosc.getPowod(), false);
+        else eb.addField("Powód", "Dostępne pod /nieobecnosc " + member.getId(), false);
         if (nieobecnosc.isAktywna()) {
             eb.addField("Czas rozpoczęcia", sdf.format(new Date(nieobecnosc.getStart())), false);
             eb.addField("Czas zakończenia", sdf.format(new Date(nieobecnosc.getEnd())), false);

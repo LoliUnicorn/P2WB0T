@@ -73,7 +73,7 @@ public class NieobecnoscCommand extends Command {
             for (Nieobecnosc nieobecnosc : nball) {
                 Member mem = context.getParsed().getMember(nieobecnosc.getUserId());
                 if (mem == null) continue;
-                EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
+                EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem, true);
                 List<Zmiana> zmiany = nieobecnosc.getZmiany();
                 eb.addField(context.getTranslate("nieobecnosci.aktywne.changesize"), zmiany == null || zmiany.isEmpty() ? "0" : zmiany.size() + "", false);
                 eb.addField(context.getTranslate("nieobecnosci.aktywne.lastchange"),
@@ -94,7 +94,7 @@ public class NieobecnoscCommand extends Command {
             }
             List<EmbedBuilder> pages = new ArrayList<>();
             for (Nieobecnosc nieobecnosc : nbConf.getNieobecnosc()) {
-                EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem);
+                EmbedBuilder eb = NieobecnosciManager.getEmbed(nieobecnosc, mem, true);
                 if (!nieobecnosc.isAktywna()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                     eb.addField(context.getTranslate("nieobecnosci.list.start"), sdf.format(new Date(nieobecnosc.getStart())), false);
