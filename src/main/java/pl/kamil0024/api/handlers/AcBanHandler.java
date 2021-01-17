@@ -46,6 +46,12 @@ public class AcBanHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) {
         if (!Response.checkIp(ex)) { return; }
 
+        if (id == 3) {
+            int index = Integer.parseInt(ex.getQueryParameters().get("index").getFirst());
+            Response.sendObjectResponse(ex, acBanDao.getAll(index));
+            return;
+        }
+        
         JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
         AcBanConfig acBanConfig = GSON.fromJson(json.toString(), AcBanConfig.class);
 
@@ -59,13 +65,8 @@ public class AcBanHandler implements HttpHandler {
         if (id == 2) { // edit
             Response.sendResponse(ex, "Pomyślnie zmienono");
             acBanDao.save(acBanConfig);
-            return;
         }
 
-        if (id == 3) {
-            int index = Integer.parseInt(ex.getQueryParameters().get("index").getFirst());
-            Response.sendObjectResponse(ex, acBanDao.getAll(index));
-        }
 
     }
 
