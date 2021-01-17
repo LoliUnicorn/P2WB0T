@@ -74,6 +74,7 @@ public class APIModule implements Modul {
     @Inject private final ApelacjeDao apelacjeDao;
     @Inject private final AnkietaDao ankietaDao;
     @Inject private final EmbedRedisManager embedRedisManager;
+    @Inject private final AcBanDao acBanDao;
 
     private final Cache<UserinfoConfig> ucCache;
     private final Cache<DiscordInviteConfig> dcCache;
@@ -83,7 +84,7 @@ public class APIModule implements Modul {
 
     private final ScheduledExecutorService executorSche;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, AcBanDao acBanDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -98,6 +99,7 @@ public class APIModule implements Modul {
         this.apelacjeDao = apelacjeDao;
         this.ankietaDao = ankietaDao;
         this.embedRedisManager = embedRedisManager;
+        this.acBanDao = acBanDao;
 
         this.ucCache = redisManager.new CacheRetriever<UserinfoConfig>(){}.getCache(3600);
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(3600);
@@ -583,6 +585,10 @@ public class APIModule implements Modul {
         routes.get("api/react/apelacje/get/{id}", new ApelacjeHandler(apelacjeDao, 1));
         routes.get("api/react/apelacje/getstats", new ApelacjeHandler(apelacjeDao, 4));
         routes.post("api/react/apelacje/getmonthstats", new ApelacjeHandler(apelacjeDao, 5));
+
+        routes.post("api/react/apelacje/ac/put", new AcBanHandler(acBanDao, 1));
+        routes.post("api/react/apelacje/ac/edit", new AcBanHandler(acBanDao, 2));
+        routes.get("api/react/apelacje/ac/get/{index}", new AcBanHandler(acBanDao, 3));
 
         routes.post("api/react/ankiety/post", new AnkietaHandler(ankietaDao));
 

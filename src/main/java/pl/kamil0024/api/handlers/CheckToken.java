@@ -31,7 +31,6 @@ public class CheckToken implements HttpHandler {
         if (checkToken(ex)) {
             Response.sendResponse(ex, "Token jest dobry");
         }
-
     }
 
     public static boolean checkToken(HttpServerExchange ex) {

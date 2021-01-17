@@ -252,6 +252,7 @@ public class B0T {
         ApelacjeDao      apelacjeDao         = new ApelacjeDao(databaseManager);
         AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager, api);
         WeryfikacjaDao   weryfikacjaDao      = new WeryfikacjaDao(databaseManager);
+        AcBanDao         acBanDao            = new AcBanDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -266,7 +267,7 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, musicAPI);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, acBanDao);
         WeryfikacjaModule weryfikacjaModule = new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao, weryfikacjaDao);
         modulManager.getModules().add(new LogsModule(api, statsModule, redisManager));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));

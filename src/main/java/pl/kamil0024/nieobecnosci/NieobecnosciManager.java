@@ -92,7 +92,6 @@ public class NieobecnosciManager {
         return getEmbed(nieobecnosc, member, false);
     }
 
-
     public static EmbedBuilder getEmbed(Nieobecnosc nieobecnosc, Member member, boolean priv) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         EmbedBuilder eb = new EmbedBuilder();
