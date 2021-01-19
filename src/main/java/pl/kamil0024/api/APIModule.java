@@ -111,7 +111,7 @@ public class APIModule implements Modul {
 
     @Override
     public boolean startUp() {
-        RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao, api);
+//        RedisStatsManager redisStatsManager = new RedisStatsManager(redisManager, caseDao, api);
 
         RoutingHandler routes = new RoutingHandler();
 
@@ -577,7 +577,7 @@ public class APIModule implements Modul {
         routes.post("api/ticket/read", new TicketHandler(ticketDao, 8));
         routes.post("api/ticket/getreads", new TicketHandler(ticketDao, 9));
 
-        routes.get("api/react/stats/chatmod", new RedisChatModStats(redisStatsManager));
+//        routes.get("api/react/stats/chatmod", new RedisChatModStats(redisStatsManager));
 
         routes.post("api/react/apelacje/put", new ApelacjeHandler(apelacjeDao));
         routes.post("api/react/apelacje/edit", new ApelacjeHandler(apelacjeDao, 2));
