@@ -54,6 +54,7 @@ public class AcBanHandler implements HttpHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return;
         }
         
         JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
@@ -70,7 +71,7 @@ public class AcBanHandler implements HttpHandler {
             Response.sendResponse(ex, "Pomyślnie zmienono");
             acBanDao.save(acBanConfig);
         }
-        
+
     }
 
 }

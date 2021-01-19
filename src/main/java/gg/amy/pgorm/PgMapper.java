@@ -597,10 +597,7 @@ public class PgMapper<T> {
 
     public List<T> getAllAcBan(int offset, boolean seeReaded) {
         final List<T> data = new ArrayList<>();
-        String msg = String.format("SELECT * FROM %s ORDER BY data->>'createdTime' ASC LIMIT 10 OFFSET %d;", table.value(), offset);
-        if (!seeReaded) {
-            msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"readed\": false}' ORDER BY data->>'createdTime' ASC LIMIT 10 OFFSET %d;", table.value(), offset);
-        }
+        String msg = String.format("SELECT * FROM %s WHERE data::jsonb @> '{\"readed\": " + seeReaded + "}' ORDER BY data->>'createdTime' ASC LIMIT 10 OFFSET %d;", table.value(), offset);
         store.sql(msg, c -> {
             final ResultSet resultSet = c.executeQuery();
             if (resultSet.isBeforeFirst()) {
