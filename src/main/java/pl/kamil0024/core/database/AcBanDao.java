@@ -49,8 +49,8 @@ public class AcBanDao implements Dao<AcBanConfig> {
         return mapper.loadAll();
     }
 
-    public List<AcBanConfig> getAll(int offset) {
-        return mapper.getAllApelacje(offset);
+    public List<AcBanConfig> getAll(int offset, boolean seeReaded) {
+        return mapper.getAllAcBan(offset, seeReaded);
     }
 
 }

@@ -63,8 +63,13 @@ public class AcBanHandler implements HttpHandler {
         }
 
         if (id == 3) {
-            int index = Integer.parseInt(ex.getQueryParameters().get("index").getFirst());
-            Response.sendObjectResponse(ex, acBanDao.getAll(index));
+            try {
+                String readed = ex.getQueryParameters().get("readed").getFirst();
+                int index = Integer.parseInt(ex.getQueryParameters().get("index").getFirst());
+                Response.sendObjectResponse(ex, acBanDao.getAll(index, Boolean.parseBoolean(readed)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
