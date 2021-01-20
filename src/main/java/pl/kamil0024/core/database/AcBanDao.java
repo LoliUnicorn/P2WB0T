@@ -53,4 +53,8 @@ public class AcBanDao implements Dao<AcBanConfig> {
         return mapper.getAllAcBan(offset, seeReaded);
     }
 
+    public boolean existNick(String nick) {
+        return !mapper.loadRaw("SELECT * FROM acban WHERE data::jsonb @> '{\"nick\": \"" + nick + "\"}'").isEmpty();
+    }
+
 }

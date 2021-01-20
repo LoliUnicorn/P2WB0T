@@ -61,6 +61,10 @@ public class AcBanHandler implements HttpHandler {
         AcBanConfig acBanConfig = GSON.fromJson(json.toString(), AcBanConfig.class);
 
         if (id == 1) { // put
+            if (acBanDao.existNick(acBanConfig.getNick())) {
+                Response.sendErrorResponse(ex, "Błąd!", "Ten nick już istnieje!");
+                return;
+            }
             acBanConfig.setId(rand.nextInt(10000000) + "");
             Response.sendResponse(ex, "Pomyślnie dodano");
             acBanDao.save(acBanConfig);
