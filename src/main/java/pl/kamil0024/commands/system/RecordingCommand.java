@@ -91,7 +91,7 @@ public class RecordingCommand extends Command {
             setHandler(h);
             try {
                 manager.openAudioConnection(PlayCommand.getVc(context.getMember()));
-                context.sendTranslate("recording.startrec").queue();
+                context.sendTranslate("recording.startrec", context.getPrefix()).queue();
             } catch (Exception e) {
                 e.printStackTrace();
                 context.sendTranslate("recording.noconnect").queue();
