@@ -120,15 +120,7 @@ public class VoiceChatListener extends ListenerAdapter {
                 deleteMessage(event.getMember().getId(), event.getJDA());
             } catch (ErrorResponseException er) {
                 Log.newError("Nie udało się stworzyć kanału do ticketa!", getClass());
-                BetterStringBuilder error = new BetterStringBuilder();
-                error.appendLine("```");
-                error.append(new Gson().toJson(er));
-                error.append("```");
-                try {
-                    Log.newError(error.build(), getClass());
-                } catch (Exception e) {
-                    Log.newError(er, getClass());
-                }
+                er.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.newError("Nie udało się stworzyć kanału do ticketa!", getClass());
