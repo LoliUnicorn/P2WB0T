@@ -19,7 +19,9 @@
 
 package pl.kamil0024.ticket.listener;
 
+import com.google.gson.Gson;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -30,14 +32,17 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.joda.time.DateTime;
 import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
@@ -49,6 +54,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class VoiceChatListener extends ListenerAdapter {
 
@@ -112,9 +118,20 @@ public class VoiceChatListener extends ListenerAdapter {
                 ticketRedisManager.putChannelConfig(ctc);
 
                 deleteMessage(event.getMember().getId(), event.getJDA());
+            } catch (ErrorResponseException er) {
+                Log.newError("Nie udało się stworzyć kanału do ticketa!", getClass());
+                BetterStringBuilder error = new BetterStringBuilder();
+                error.appendLine("```");
+                error.append(new Gson().toJson(er));
+                error.append("```");
+                try {
+                    Log.newError(error.build(), getClass());
+                } catch (Exception e) {
+                    Log.newError(er, getClass());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.newError("Nie udało się stworzyć kanału do ticketa!", VoiceChatListener.class);
+                Log.newError("Nie udało się stworzyć kanału do ticketa!", getClass());
                 Log.newError(e, VoiceChatListener.class);
             }
             return;
@@ -155,18 +172,18 @@ public class VoiceChatListener extends ListenerAdapter {
                         return;
                     }
                     cooldownCache.put(memId, new DateTime().plusMinutes(10).getMillis());
-                    String msg = String.format("użytkownik <@%s> czeka na ", memId);
+                    String msg = String.format("Użytkownik <@%s> czeka na ", memId);
                     String name = channelJoined.getName().toLowerCase();
                     if (name.contains("discord")) {
-                        msg += "kanale pomocy serwera Discord!";
+                        msg += "kanale pomocy serwera Discord\n\n" + getMentions(VcType.DISCORD, channelJoined.getGuild());
                     } else if (name.contains("p2w")) {
-                        msg += "kanale pomocy forum P2W";
+                        msg += "kanale pomocy forum P2W\n\n" + getMentions(VcType.P2W, channelJoined.getGuild());
                     } else if (name.contains("minecraft")) {
-                        msg += "kanale pomocy serwera Minecraft";
+                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
                     } else {
-                        msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")";
+                        msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
                     }
-                    Message mmsg = txt.sendMessage(msg).complete();
+                    Message mmsg = txt.sendMessage(msg).allowedMentions(Collections.singleton(Message.MentionType.USER)).complete();
                     deleteMessage(memId, channelJoined.getJDA());
                     messagesCache.put(memId, mmsg.getId());
                 }
@@ -210,7 +227,7 @@ public class VoiceChatListener extends ListenerAdapter {
                                 conf);
                         msg.delete().queue();
                     },
-                    30, TimeUnit.SECONDS,
+                    120, TimeUnit.SECONDS,
                     () -> msg.delete().queue());
         }
 
@@ -243,6 +260,29 @@ public class VoiceChatListener extends ListenerAdapter {
             if (msg == null || xd == null) return;
             xd.retrieveMessageById(msg).complete().delete().complete();
         } catch (Exception ignored) { }
+    }
+
+    private List<Member> getMentions(VcType type, Guild g) {
+        List<Member> l = g.getMembersWithRoles(g.getRoleById(Ustawienia.instance.rangi.ekipa))
+                .stream().filter(m -> UserUtil.getPermLevel(m).getNumer() >= PermLevel.HELPER.getNumer() && filtr(m))
+                .collect(Collectors.toList());
+
+        if (type == VcType.P2W || type == VcType.DISCORD) {
+            String rola = type == VcType.P2W ? Ustawienia.instance.rangi.moderatorforum : Ustawienia.instance.roles.chatMod;
+            l = g.getMembersWithRoles(g.getRoleById(rola))
+                    .stream().filter(this::filtr)
+                    .collect(Collectors.toList());
+        }
+
+        return l;
+    }
+
+    private boolean filtr(Member mem) {
+        return mem.getOnlineStatus() != OnlineStatus.IDLE && mem.getOnlineStatus() != OnlineStatus.OFFLINE;
+    }
+
+    private enum VcType {
+        MINECRAFT, DISCORD, P2W
     }
 
 }
