@@ -255,7 +255,7 @@ public class VoiceChatListener extends ListenerAdapter {
         } catch (Exception ignored) { }
     }
 
-    private List<Member> getMentions(VcType type, Guild g) {
+    private String getMentions(VcType type, Guild g) {
         List<Member> l = g.getMembersWithRoles(g.getRoleById(Ustawienia.instance.rangi.ekipa))
                 .stream().filter(m -> UserUtil.getPermLevel(m).getNumer() >= PermLevel.HELPER.getNumer() && filtr(m))
                 .collect(Collectors.toList());
@@ -269,7 +269,13 @@ public class VoiceChatListener extends ListenerAdapter {
 
         l.removeIf(m -> USERS.contains(m.getId()));
 
-        return l;
+		StringBuilder s = new StringBuilder();
+		
+		for (Member entry : l) {
+			s.append(entry.getAsMention()).append(", ");
+		}
+
+        return s;
     }
 
     private boolean filtr(Member mem) {
