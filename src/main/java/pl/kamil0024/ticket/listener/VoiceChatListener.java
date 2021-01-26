@@ -19,7 +19,7 @@
 
 package pl.kamil0024.ticket.listener;
 
-import com.google.gson.Gson;
+import com.google.common.collect.ImmutableList;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
@@ -42,7 +42,6 @@ import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
-import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
@@ -60,6 +59,8 @@ public class VoiceChatListener extends ListenerAdapter {
 
     private final static long EKIPA_ID = 561102835715145728L;
     private final static long RAW_PERMS = Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL);
+    private final static List<String> USERS = ImmutableList.of("322644408799461377", "140580556881526784", "400561036845121536", "343467373417857025");
+
     private final TicketDao ticketDao;
     private final TicketRedisManager ticketRedisManager;
     private final EventWaiter eventWaiter;
@@ -266,11 +267,13 @@ public class VoiceChatListener extends ListenerAdapter {
                     .collect(Collectors.toList());
         }
 
+        l.removeIf(m -> USERS.contains(m.getId()));
+
         return l;
     }
 
     private boolean filtr(Member mem) {
-        return mem.getOnlineStatus() != OnlineStatus.IDLE && mem.getOnlineStatus() != OnlineStatus.OFFLINE;
+        return !mem.getUser().isBot() && mem.getOnlineStatus() != OnlineStatus.IDLE && mem.getOnlineStatus() != OnlineStatus.OFFLINE;
     }
 
     private enum VcType {
