@@ -269,13 +269,12 @@ public class VoiceChatListener extends ListenerAdapter {
 
         l.removeIf(m -> USERS.contains(m.getId()));
 
-		StringBuilder s = new StringBuilder();
-		
-		for (Member entry : l) {
-			s.append(entry.getAsMention()).append(", ");
-		}
+        StringBuilder s = new StringBuilder();
+        for (Member entry : l) {
+            s.append(entry.getAsMention()).append(", ");
+	}
 
-        return s;
+        return s.toString();
     }
 
     private boolean filtr(Member mem) {
