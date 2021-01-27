@@ -89,13 +89,16 @@ public class VoiceChatListener extends ListenerAdapter {
                         .setParent(cate)
                         .addMemberPermissionOverride(event.getMember().getIdLong(), RAW_PERMS, 0)
                         .addRolePermissionOverride(EKIPA_ID, RAW_PERMS, 0)
-                        .addMemberPermissionOverride(event.getJDA().getSelfUser().getIdLong(), Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL), 0);
+                        .addMemberPermissionOverride(event.getJDA().getSelfUser().getIdLong(), Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL), 0)
+                        .addRolePermissionOverride(event.getGuild().getPublicRole().getIdLong(), 0, RAW_PERMS);
 		    
-                //for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
-                //    if (permissionOverride.getPermissionHolder() != null) {
-                //        action = action.addPermissionOverride(permissionOverride.getPermissionHolder(), permissionOverride.getAllowed(), permissionOverride.getDenied());
-                //    }
-                //}
+                /*
+                for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
+                    if (permissionOverride.getPermissionHolder() != null) {
+                        action = action.addPermissionOverride(permissionOverride.getPermissionHolder(), permissionOverride.getAllowed(), permissionOverride.getDenied());
+                    }
+                }
+                */
                 VoiceChannel vc = action.complete();
                 guild.moveVoiceMember(event.getMember(), vc).queue();
 
