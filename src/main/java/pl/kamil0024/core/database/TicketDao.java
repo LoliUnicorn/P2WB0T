@@ -120,7 +120,7 @@ public class TicketDao implements Dao<TicketConfig> {
             tc.setTimestamp(date - conf.getCreatedTime());
             String nick = UserUtil.getMcNick(member);
             tc.setUserNick(nick.equals("-") ? null : nick);
-
+            tc.setKategoria(conf.getKategoria());
             BetterStringBuilder msg = new BetterStringBuilder();
             msg.appendLine("Cześć,\n");
             msg.appendLine("twoja prośba o pomoc została zamknięta przez administratora! " +

@@ -30,6 +30,7 @@ public class ChannelTicketConfig {
     private String channelId = null;
     private String userId = null;
     private String admId = null;
+    private String kategoria = null;
     private long createdTime = 0;
 
 }

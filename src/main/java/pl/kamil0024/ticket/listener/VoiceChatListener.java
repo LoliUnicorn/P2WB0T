@@ -82,10 +82,11 @@ public class VoiceChatListener extends ListenerAdapter {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
         Guild guild = event.getGuild();
         if (event.getChannelJoined().getId().equals(Ustawienia.instance.ticket.vcToCreate)) {
+            String[] name = event.getChannelLeft().getName().split(" ");
+            String channelName = name[name.length - 1].toLowerCase();
             try {
-                String[] name = event.getChannelLeft().getName().split(" ");
                 Category cate = Objects.requireNonNull(guild.getCategoryById(Ustawienia.instance.ticket.createChannelCategory));
-                ChannelAction<VoiceChannel> action = guild.createVoiceChannel(name[name.length - 1].toLowerCase() + "-" + event.getMember().getId())
+                ChannelAction<VoiceChannel> action = guild.createVoiceChannel(channelName + "-" + event.getMember().getId())
                         .setParent(cate)
                         .addMemberPermissionOverride(event.getMember().getIdLong(), RAW_PERMS, 0)
                         .addRolePermissionOverride(EKIPA_ID, RAW_PERMS, 0)
@@ -118,6 +119,7 @@ public class VoiceChatListener extends ListenerAdapter {
                 ctc.setChannelId(vc.getId());
                 ctc.setCreatedTime(new Date().getTime());
                 ctc.setUserId(event.getMember().getId());
+                ctc.setKategoria(channelName);
                 ticketRedisManager.putChannelConfig(ctc);
 
                 deleteMessage(event.getMember().getId(), event.getJDA());

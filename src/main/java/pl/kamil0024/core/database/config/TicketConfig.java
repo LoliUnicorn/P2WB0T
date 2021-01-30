@@ -55,6 +55,7 @@ public class TicketConfig {
     private long completeTime; // kiedy wypełniono ankiete
     private long timestamp; // w ile rozwiązano ticketa
     private List<String> readBy = new ArrayList<>();
+    private String kategoria; // kategoria zlogszenia mc/discord/forum
 
     private boolean spam = false;
     private String spamAdm = null;
