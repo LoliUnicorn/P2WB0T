@@ -19,6 +19,7 @@
 
 package pl.kamil0024.api.handlers;
 
+import com.google.gson.Gson;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.Data;
@@ -29,8 +30,6 @@ import pl.kamil0024.core.database.config.TicketConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static pl.kamil0024.api.handlers.AnkietaHandler.gson;
 
 public class TicketStatsHandler implements HttpHandler {
 
@@ -44,7 +43,7 @@ public class TicketStatsHandler implements HttpHandler {
     public void handleRequest(HttpServerExchange ex) {
         if (!Response.checkIp(ex)) { return; }
 
-        int start, end;
+        long start, end;
 
         try {
             start = Integer.parseInt(ex.getQueryParameters().get("start").getFirst());
@@ -56,7 +55,7 @@ public class TicketStatsHandler implements HttpHandler {
 
         TicketStats ticketStats = new TicketStats();
         List<TicketConfig> tc = ticketDao.getAll();
-        tc.removeIf(t -> t.getCreatedTime() <= end || t.getCreatedTime() >= start);
+        tc.removeIf(t -> !(t.getCreatedTime() <= end && t.getCreatedTime() >= start));
         ticketStats.setLiczbaZgloszen(tc.size());
 
         Map<String, UserTicketStats> stats = new HashMap<>();
@@ -79,7 +78,7 @@ public class TicketStatsHandler implements HttpHandler {
             }
         }
         ticketStats.setStats(stats);
-        Response.sendObjectResponse(ex, gson.toJson(ticketStats));
+        Response.sendObjectResponse(ex, new Gson().toJson(ticketStats));
     }
 
     @Data
