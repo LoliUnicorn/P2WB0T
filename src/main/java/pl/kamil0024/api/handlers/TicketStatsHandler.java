@@ -72,9 +72,11 @@ public class TicketStatsHandler implements HttpHandler {
                 if (entry.getOcena() > 3) st.setPozytywneZgloszenia(st.getPozytywneZgloszenia() + 1);
                 else st.setNegatywneZgloszenia(st.getNegatywneZgloszenia() + 1);
             }
-            
-            int i = (st.getKategorie().getOrDefault(entry.getKategoria(), 0)) + 1;
-            st.getKategorie().put(entry.getKategoria(), i);
+
+            if (entry.getKategoria() != null) {
+                int i = (st.getKategorie().getOrDefault(entry.getKategoria(), 0)) + 1;
+                st.getKategorie().put(entry.getKategoria(), i);
+            }
         }
         ticketStats.setStats(stats);
         Response.sendObjectResponse(ex, gson.toJson(ticketStats));
