@@ -76,9 +76,11 @@ public class TicketStatsHandler implements HttpHandler {
                 int i = (st.getKategorie().getOrDefault(entry.getKategoria(), 0)) + 1;
                 st.getKategorie().put(entry.getKategoria(), i);
             }
+
+            stats.put(entry.getAdmNick(), st);
         }
         ticketStats.setStats(stats);
-        Response.sendObjectResponse(ex, new Gson().toJson(ticketStats));
+        Response.sendObjectResponse(ex, ticketStats);
     }
 
     @Data
