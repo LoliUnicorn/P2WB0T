@@ -46,8 +46,8 @@ public class TicketStatsHandler implements HttpHandler {
         long start, end;
 
         try {
-            start = Integer.parseInt(ex.getQueryParameters().get("start").getFirst());
-            end = Integer.parseInt(ex.getQueryParameters().get("end").getFirst());
+            start = Long.parseLong(ex.getQueryParameters().get("start").getFirst());
+            end = Long.parseLong(ex.getQueryParameters().get("end").getFirst());
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Brak parametrów!", "Brakuje parametrów end i start");
             return;
