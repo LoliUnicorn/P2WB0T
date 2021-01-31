@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import pl.kamil0024.core.command.enums.PermLevel;
 
 @Data
 @AllArgsConstructor
@@ -37,6 +38,7 @@ public class UserinfoConfig {
 
     private String mcNick = null;
     private String fullname = "/";
+    private PermLevel permLevel = PermLevel.MEMBER;
 
     public String getWhateverName() {
         return getMcNick() == null ? getFullname() : getMcNick();
