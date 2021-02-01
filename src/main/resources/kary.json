@@ -409,7 +409,7 @@
         "maxWarns": 2,
         "type": "Tempmute",
         "time": "2h"
-      }
+      },
 	  "tier_3": {
         "maxWarns": 3,
         "type": "Tempmute",
