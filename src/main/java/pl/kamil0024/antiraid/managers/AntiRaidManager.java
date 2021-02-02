@@ -84,12 +84,18 @@ public class AntiRaidManager {
         int pingiNaWiadomosc = 0;
         for (int i = 0; i < lastC.size(); i++) {
             try {
-                if (lastC.get(i) == null || lastC.get(i + 1) == null)
+                if (lastC.get(i) == null || lastC.get(i + 1) == null) {
+                    Log.debug("cos jest nullem " + i);
+                    Log.debug(new Gson().toJson(lastC.get(i)));
+                    Log.debug(new Gson().toJson(lastC.get(i + 1)));
                     throw new IllegalBlockSizeException();
+                }
             } catch (Exception err) {
                 continue;
             }
-            procentRoznicy.add(l.similarity(lastC.get(i).getContent(), lastC.get(i + 1).getContent()));
+            double db = l.similarity(lastC.get(i).getContent(), lastC.get(i + 1).getContent());
+            Log.debug("różnica: " + db);
+            procentRoznicy.add(db);
             Matcher supermarketMatch = PING_REGEX.matcher(lastC.get(i).getContent());
             if (supermarketMatch.matches()) pingiNaWiadomosc++;
         }
