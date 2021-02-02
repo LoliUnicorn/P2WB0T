@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import pl.kamil0024.antiraid.AntiRaidModule;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
@@ -254,6 +255,7 @@ public class B0T {
         WeryfikacjaDao   weryfikacjaDao      = new WeryfikacjaDao(databaseManager);
         AcBanDao         acBanDao            = new AcBanDao(databaseManager);
         RecordingDao     recordingDao        = new RecordingDao(databaseManager);
+        AntiRaidDao      antiRaidDao         = new AntiRaidDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -283,6 +285,7 @@ public class B0T {
         modulManager.getModules().add(new EmbedGeneratorModule(commandManager, embedRedisManager));
         modulManager.getModules().add(weryfikacjaModule);
         modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
+        modulManager.getModules().add(new AntiRaidModule(api, antiRaidDao, redisManager));
         if (youTrack != null) modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
 
         for (Modul modul : modulManager.getModules()) {

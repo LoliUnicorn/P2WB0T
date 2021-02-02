@@ -62,6 +62,7 @@ dependencies {
     compile 'com.kcthota:emoji4j:5.0'
     compile 'org.projectlombok:lombok:1.18.10'
     compile 'com.github.francesco149:koohii:1.2.2'
+    compile 'info.debatty:java-string-similarity:1.2.1'
 
     compile 'io.undertow:undertow-core:2.0.28.Final'
     compile 'io.undertow:undertow-servlet:2.0.28.Final'
