@@ -100,13 +100,12 @@ public class AntiRaidManager {
             if (supermarketMatch.matches()) pingiNaWiadomosc++;
         }
 
-        double czulosc = 100 - (60 / 100d);
+        double czulosc = (60 / 100d);
         List<Double> proc = procentRoznicy.stream().filter(v -> v >= czulosc).collect(Collectors.toList());
         Log.debug("proc.size(): " + proc.size());
         if (proc.size() >= 3) {
-            sendRaid(message.getAuthor(), lastC, "3 wiadomości o dużym podobieństwie", message.getGuild());
-//            sendRaid(message.getAuthor(), lastC, "3 wiadomości o podobieństwie " + proc.stream().map(w -> w * 100 + "%")
-//                    .collect(Collectors.joining(", ")), message.getGuild());
+            sendRaid(message.getAuthor(), lastC, "3 wiadomości o podobieństwie " + proc.stream().map(w -> w * 100 + "%")
+                    .collect(Collectors.joining(", ")), message.getGuild());
             return;
         }
 
