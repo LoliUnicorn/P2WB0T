@@ -135,9 +135,9 @@ public class AntiRaidManager {
         eb.addField("", "Ostatnie wiadomości:", false);
         int i = 1;
         for (FakeAntiRaidMessage message : messages) {
-            if (message.getContent().length() >= MessageEmbed.VALUE_MAX_LENGTH) {
-                eb.addField("Wiadomość nr:  " + i, message.getContent().substring(0, MessageEmbed.VALUE_MAX_LENGTH - 1), false);
-            } else eb.addField("Wiadomość nr:  " + i, message.getContent(), false);
+            try {
+                eb.addField("Wiadomość nr:  " + i, message.getContent(), false);
+            } catch(Exception ignored) {}
             i++;
         }
         eb.addField("Powód", reason, false);
