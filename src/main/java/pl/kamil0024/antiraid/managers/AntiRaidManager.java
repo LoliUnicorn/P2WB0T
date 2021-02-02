@@ -78,16 +78,11 @@ public class AntiRaidManager {
             save(message.getAuthor().getId(), lastC);
         }
 
-        Log.debug("Lista: " + new Gson().toJson(lastC));
-
         List<Double> procentRoznicy = new ArrayList<>();
         int pingiNaWiadomosc = 0;
         for (int i = 0; i < lastC.size(); i++) {
             try {
                 if (lastC.get(i) == null || lastC.get(i + 1) == null) {
-                    Log.debug("cos jest nullem " + i);
-                    Log.debug(new Gson().toJson(lastC.get(i)));
-                    Log.debug(new Gson().toJson(lastC.get(i + 1)));
                     throw new IllegalBlockSizeException();
                 }
             } catch (Exception err) {
@@ -100,7 +95,7 @@ public class AntiRaidManager {
             if (supermarketMatch.matches()) pingiNaWiadomosc++;
         }
 
-        double czulosc = (60 / 100d);
+        double czulosc = (80 / 100d);
         List<Double> proc = procentRoznicy.stream().filter(v -> v >= czulosc).collect(Collectors.toList());
         Log.debug("proc.size(): " + proc.size());
         if (proc.size() >= 3) {
@@ -124,6 +119,7 @@ public class AntiRaidManager {
     }
 
     public void sendRaid(User user, List<FakeAntiRaidMessage> messages, String reason, Guild guild) {
+        save(user.getId(), new ArrayList<>());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
         eb.setAuthor("Wykryto raida!");
@@ -133,8 +129,8 @@ public class AntiRaidManager {
         int i = 1;
         for (FakeAntiRaidMessage message : messages) {
             if (message.getContent().length() >= MessageEmbed.VALUE_MAX_LENGTH) {
-                eb.addField("Wiadomość nr: " + i, message.getContent().substring(0, MessageEmbed.VALUE_MAX_LENGTH - 1), false);
-            } else eb.addField("Wiadomość nr: " + i, message.getContent(), false);
+                eb.addField("Wiadomość nr:  " + i, message.getContent().substring(0, MessageEmbed.VALUE_MAX_LENGTH - 1), false);
+            } else eb.addField("Wiadomość nr:  " + i, message.getContent(), false);
             i++;
         }
         eb.addField("Powód", reason, false);
