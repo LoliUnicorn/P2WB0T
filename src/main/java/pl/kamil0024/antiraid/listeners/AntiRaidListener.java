@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.antiraid.managers.AntiRaidManager;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 
 import javax.annotation.Nonnull;
