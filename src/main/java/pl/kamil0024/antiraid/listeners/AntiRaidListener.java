@@ -37,9 +37,10 @@ public class AntiRaidListener extends ListenerAdapter {
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
 //        if (event.getAuthor().isBot() || UserUtil.getPermLevel(event.getMember()).getNumer() > PermLevel.MEMBER.getNumer())
 //            return;
-
+        Log.debug("wykonuje event");
         if (!event.getAuthor().getId().equals("343467373417857025")) return;
 
+        Log.debug("zapisuje wiadomosc");
         antiRaidManager.saveMessage(event.getAuthor().getId(), event.getMessage());
     }
 

@@ -19,6 +19,7 @@
 
 package pl.kamil0024.antiraid.managers;
 
+import com.google.gson.Gson;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -76,6 +77,8 @@ public class AntiRaidManager {
             lastC.add(FakeAntiRaidMessage.convert(message));
             save(message.getAuthor().getId(), lastC);
         }
+
+        Log.debug("Lista: " + new Gson().toJson(lastC));
 
         List<Double> procentRoznicy = new ArrayList<>();
         int pingiNaWiadomosc = 0;
