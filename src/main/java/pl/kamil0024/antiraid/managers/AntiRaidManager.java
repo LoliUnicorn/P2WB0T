@@ -149,6 +149,7 @@ public class AntiRaidManager {
             arc.setDate(new Date().getTime());
             arc.setUserId(user.getId());
             arc.setId(msg.getId());
+            arc.setReason(powod);
             dao.save(arc);
             msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
