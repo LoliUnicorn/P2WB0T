@@ -84,6 +84,10 @@ public class TempbanCommand extends Command {
     }
 
     public static String tempban(User user, User adm, String powod, String duration, CaseDao caseDao, ModLog modLog, boolean isPun, Guild guild, String nick) {
+        return tempban(user, adm, powod,duration, caseDao, modLog, isPun, guild,nick,0);
+    }
+
+    public static String tempban(User user, User adm, String powod, String duration, CaseDao caseDao, ModLog modLog, boolean isPun, Guild guild, String nick, int delDays) {
         if (UserUtil.getPermLevel(adm).getNumer() <= UserUtil.getPermLevel(user).getNumer()) {
             return "Poziom uprawnień osoby, którą chcesz ukarać jest wyższy od Twojego!";
         }

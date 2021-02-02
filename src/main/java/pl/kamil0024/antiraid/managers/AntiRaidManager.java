@@ -19,14 +19,15 @@
 
 package pl.kamil0024.antiraid.managers;
 
-import com.google.gson.Gson;
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;
+import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.AntiRaidDao;
+import pl.kamil0024.core.database.config.AntiRaidConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
@@ -35,14 +36,13 @@ import pl.kamil0024.core.util.UserUtil;
 import javax.crypto.IllegalBlockSizeException;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class AntiRaidManager {
-
-    private static final Pattern PING_REGEX = Pattern.compile("<@[!&]?([0-9]{17,18})>");
 
     private final NormalizedLevenshtein l = new NormalizedLevenshtein();
     private final AntiRaidDao dao;
@@ -63,7 +63,7 @@ public class AntiRaidManager {
 
     public void saveMessage(String userId, Message message) {
         List<FakeAntiRaidMessage> lastC = getMessages(userId);
-        if (lastC == null) {
+        if (lastC == null || lastC.isEmpty()) {
             List<FakeAntiRaidMessage> arr = new ArrayList<>();
             arr.add(null);
             arr.add(null);
@@ -79,7 +79,7 @@ public class AntiRaidManager {
         }
 
         List<Double> procentRoznicy = new ArrayList<>();
-        int pingiNaWiadomosc = 0;
+
         for (int i = 0; i < lastC.size(); i++) {
             try {
                 if (lastC.get(i) == null || lastC.get(i + 1) == null) {
@@ -88,24 +88,14 @@ public class AntiRaidManager {
             } catch (Exception err) {
                 continue;
             }
-            double db = l.similarity(lastC.get(i).getContent(), lastC.get(i + 1).getContent());
-            Log.debug("różnica: " + db);
-            procentRoznicy.add(db);
-            Matcher supermarketMatch = PING_REGEX.matcher(lastC.get(i).getContent());
-            if (supermarketMatch.matches()) pingiNaWiadomosc++;
+            procentRoznicy.add(l.similarity(lastC.get(i).getContent(), lastC.get(i + 1).getContent()));
         }
 
-        double czulosc = (80 / 100d);
+        double czulosc = 80 / 100d;
         List<Double> proc = procentRoznicy.stream().filter(v -> v >= czulosc).collect(Collectors.toList());
-        Log.debug("proc.size(): " + proc.size());
         if (proc.size() >= 3) {
             sendRaid(message.getAuthor(), lastC, "3 wiadomości o podobieństwie " + proc.stream().map(w -> w * 100 + "%")
                     .collect(Collectors.joining(", ")), message.getGuild());
-            return;
-        }
-
-        if (pingiNaWiadomosc >= 3) {
-            sendRaid(message.getAuthor(), lastC, "3 wiadomości zawierają ping", message.getGuild());
             return;
         }
 
@@ -114,11 +104,28 @@ public class AntiRaidManager {
                         .getRoles().stream().filter(Role::isMentionable).count() && message.getGuild().getRoles().stream()
                         .anyMatch(Role::isMentionable))) {
             sendRaid(message.getAuthor(), lastC, "5 pingów w wiadomości lub oznaczone wszystkie role oznaczalne", message.getGuild());
+            return;
+        }
+
+        if (message.getMentionedMembers().stream().filter(m -> UserUtil.getPermLevel(m).getNumer() > PermLevel.MEMBER.getNumer()).count() > 3) {
+            sendRaid(message.getAuthor(), lastC, "Oznaczenie +3 członków administracji", message.getGuild());
+            return;
+        }
+
+        if (message.getMentionedMembers().stream().map(Member::getId).collect(Collectors.toList()).contains("630825972178092038")) {
+            sendRaid(message.getAuthor(), lastC, "Oznaczenie administracji", message.getGuild());
         }
 
     }
 
     public void sendRaid(User user, List<FakeAntiRaidMessage> messages, String reason, Guild guild) {
+        try {
+            guild.addRoleToMember(user.getId(), guild.getRoleById(Ustawienia.instance.muteRole)).complete();
+        } catch (Exception e) {
+            Log.newError("Nie udało się ukarać gracza za raida!", getClass());
+            Log.newError(e, getClass());
+            return;
+        }
         save(user.getId(), new ArrayList<>());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
@@ -137,6 +144,12 @@ public class AntiRaidManager {
 
         try {
             Message msg = guild.getTextChannelById(Ustawienia.instance.channel.moddc).sendMessage(eb.build()).complete();
+
+            AntiRaidConfig arc = new AntiRaidConfig();
+            arc.setDate(new Date().getTime());
+            arc.setUserId(user.getId());
+            arc.setId(msg.getId());
+            dao.save(arc);
             msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
         } catch (Exception e) {

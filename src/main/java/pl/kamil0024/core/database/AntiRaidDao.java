@@ -47,4 +47,8 @@ public class AntiRaidDao implements Dao<AntiRaidConfig> {
         return mapper.loadAll();
     }
 
+    public void delete(String id) {
+        mapper.delete(id);
+    }
+
 }

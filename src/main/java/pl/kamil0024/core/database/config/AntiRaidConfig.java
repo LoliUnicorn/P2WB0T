@@ -40,7 +40,7 @@ public class AntiRaidConfig {
     @PrimaryKey
     private String id;
 
-    public String messageId;
+    public String userId;
     public long date;
     public String reason;
 

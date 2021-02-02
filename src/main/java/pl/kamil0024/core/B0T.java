@@ -285,7 +285,7 @@ public class B0T {
         modulManager.getModules().add(new EmbedGeneratorModule(commandManager, embedRedisManager));
         modulManager.getModules().add(weryfikacjaModule);
         modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
-        modulManager.getModules().add(new AntiRaidModule(api, antiRaidDao, redisManager));
+        modulManager.getModules().add(new AntiRaidModule(api, antiRaidDao, redisManager, caseDao, modLog));
         if (youTrack != null) modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
 
         for (Modul modul : modulManager.getModules()) {

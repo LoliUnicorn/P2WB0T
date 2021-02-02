@@ -22,7 +22,9 @@ package pl.kamil0024.antiraid;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.antiraid.listeners.AntiRaidListener;
 import pl.kamil0024.antiraid.managers.AntiRaidManager;
+import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.database.AntiRaidDao;
+import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.RedisManager;
 
@@ -31,21 +33,25 @@ public class AntiRaidModule implements Modul {
     private final ShardManager api;
     private final AntiRaidDao dao;
     private final RedisManager redisManager;
+    private final CaseDao caseDao;
+    private final ModLog modLog;
 
     private boolean start = false;
 
     private AntiRaidListener antiRaidListener;
 
-    public AntiRaidModule(ShardManager api, AntiRaidDao dao, RedisManager redisManager) {
+    public AntiRaidModule(ShardManager api, AntiRaidDao dao, RedisManager redisManager, CaseDao caseDao, ModLog modLog) {
         this.api = api;
         this.dao = dao;
         this.redisManager = redisManager;
+        this.caseDao = caseDao;
+        this.modLog= modLog;
     }
 
     @Override
     public boolean startUp() {
         AntiRaidManager manager = new AntiRaidManager(dao, redisManager);
-        antiRaidListener = new AntiRaidListener(manager);
+        antiRaidListener = new AntiRaidListener(manager, dao, caseDao, modLog);
         api.addEventListener(antiRaidListener);
         return true;
     }

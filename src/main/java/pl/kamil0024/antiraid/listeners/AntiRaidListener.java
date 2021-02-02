@@ -20,31 +20,96 @@
 package pl.kamil0024.antiraid.listeners;
 
 import lombok.AllArgsConstructor;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.antiraid.managers.AntiRaidManager;
+import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.commands.moderation.TempbanCommand;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.database.AntiRaidDao;
+import pl.kamil0024.core.database.CaseDao;
+import pl.kamil0024.core.database.config.AntiRaidConfig;
 import pl.kamil0024.core.logger.Log;
+import pl.kamil0024.core.util.Duration;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.kary.Kara;
+import pl.kamil0024.core.util.kary.KaryEnum;
 
 import javax.annotation.Nonnull;
+import java.util.Date;
 
 @AllArgsConstructor
 public class AntiRaidListener extends ListenerAdapter {
 
     private final AntiRaidManager antiRaidManager;
-    
+    private final AntiRaidDao dao;
+    private final CaseDao caseDao;
+    private final ModLog modLog;
+
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-//        if (event.getAuthor().isBot() || UserUtil.getPermLevel(event.getMember()).getNumer() > PermLevel.MEMBER.getNumer())
-//            return;
-        if (!event.getAuthor().getId().equals("343467373417857025")) return;
-
+        if (!event.isFromGuild() || event.getAuthor().isBot() || UserUtil.getPermLevel(event.getMember()).getNumer() > PermLevel.MEMBER.getNumer() || event.getMessage().getContentRaw().isEmpty())
+            return;
         try {
             antiRaidManager.saveMessage(event.getAuthor().getId(), event.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    @Override
+    public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)
+                || !event.getChannel().getId().equals(Ustawienia.instance.channel.moddc)) return;
+        if (UserUtil.getPermLevel(event.getMember()).getNumer() == PermLevel.MEMBER.getNumer()) return;
+        if (event.getMember().getUser().isBot()) return;
+
+        AntiRaidConfig arc = dao.get(event.getMessageId());
+        if (arc == null) return;
+
+        Member member = null;
+        Message msg;
+
+        try {
+            msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+        } catch (Exception ignored) {
+            event.getChannel().sendMessage("Nie udało się jakimś cudem pobrać wiadomości. Spróbuj ponownie!").complete();
+            return;
+        }
+
+        try {
+            member = event.getGuild().retrieveMemberById(arc.getUserId()).complete();
+        } catch (Exception ignored) { }
+
+        if (member == null) {
+            event.getChannel().sendMessage("Użytkownik wyszedł z serwera?").complete();
+            dao.delete(arc.getId());
+            msg.delete().complete();
+            return;
+        }
+
+        if (msg == null || event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
+            try {
+                event.getGuild().removeRoleFromMember(arc.getUserId(), event.getGuild().getRoleById(Ustawienia.instance.muteRole)).complete();
+            } catch (Exception e) {
+                event.getChannel().sendMessage("Nie udało się usunąć roli!").complete();
+            }
+            return;
+        }
+
+        String tak = TempbanCommand.tempban(member.getUser(), event.getUser(),
+                String.format("Raid (%s)", arc.getReason()), "1d", caseDao, modLog, false,
+                event.getGuild(), member.getNickname() == null ? "-" : member.getNickname(), 1);
+
+        if (tak != null) event.getChannel().sendMessage(tak).complete();
+        msg.delete().complete();
+
     }
 
 }
