@@ -40,6 +40,7 @@ public class AddMember implements HttpHandler {
             api.getGuildById(Ustawienia.instance.bot.guildId)
                     .addMember(json.getString("token"), ex.getQueryParameters().get("id").getFirst())
                     .complete();
+            Response.sendResponse(ex, "Pomyślnie dodano");
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd!", e.getMessage());
         }

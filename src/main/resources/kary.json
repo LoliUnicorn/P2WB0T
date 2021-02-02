@@ -398,29 +398,29 @@
         "time": "24h"
       }
     },
-	"27": {
-      "name": "Niestosowne zachowanie",
+    "27": {
+      "name": "xd",
       "tier_1": {
-        "maxWarns": 1,
+        "maxWarns": 2,
         "type": "Tempmute",
         "time": "1h"
       },
-	  "tier_2": {
+      "tier_2": {
         "maxWarns": 2,
         "type": "Tempmute",
         "time": "2h"
       },
-	  "tier_3": {
+      "tier_3": {
         "maxWarns": 3,
         "type": "Tempmute",
         "time": "3h"
       },
-	  "tier_4": {
+      "tier_4": {
         "maxWarns": 4,
         "type": "Tempmute",
-        "time": "5h"
+        "time": "4h"
       },
-	  "tier_5": {
+      "tier_5": {
         "maxWarns": 5,
         "type": "Tempban",
         "time": "1d"

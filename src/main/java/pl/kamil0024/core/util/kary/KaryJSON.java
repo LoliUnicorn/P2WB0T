@@ -26,7 +26,10 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Main;
+import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.logger.Log;
 
 import java.io.InputStream;
@@ -36,6 +39,8 @@ import java.util.List;
 
 @Data
 public class KaryJSON {
+
+    private static Logger logger = LoggerFactory.getLogger(KaryJSON.class);
 
     private ArrayList<Kara> kary;
 
@@ -66,22 +71,38 @@ public class KaryJSON {
         Iterator<String> keys = object.keys();
         ArrayList<String> ids = new ArrayList<>();
         while (keys.hasNext()) { ids.add(keys.next()); }
+        logger.debug("Ładuje kary {}", ids.size());
 
         for (int i = 1; i < ids.size(); i++) {
-            JSONObject obj = object.getJSONObject(String.valueOf(i));
-            String powod = repla(obj.getString("name"));
-            ArrayList<Tiery> tieryList = new ArrayList<>();
+            try {
+                JSONObject obj = object.getJSONObject(String.valueOf(i));
+                String powod = repla(obj.getString("name"));
+                ArrayList<Tiery> tieryList = new ArrayList<>();
 
-            Iterator<String> tierKeys = obj.keys();
-            ArrayList<String> tierIds = new ArrayList<>();
-            while (tierKeys.hasNext()) { tierIds.add(tierKeys.next()); }
-            for (int ii = 1; ii < tierIds.size(); ii++) {
-                try {
-                    JSONObject tier = obj.getJSONObject("tier_" + ii);
-                    tieryList.add(new Tiery(tier.getInt("maxWarns"), tier.getString("time"), KaryEnum.getKara(tier.getString("type"))));
-                } catch (Exception ignored) {}
+                Iterator<String> tierKeys = obj.keys();
+                ArrayList<String> tierIds = new ArrayList<>();
+                while (tierKeys.hasNext()) { tierIds.add(tierKeys.next()); }
+                for (int ii = 1; ii < tierIds.size(); ii++) {
+                    try {
+                        JSONObject tier = obj.getJSONObject("tier_" + ii);
+                        tieryList.add(new Tiery(tier.getInt("maxWarns"), tier.getString("time"), KaryEnum.getKara(tier.getString("type"))));
+                    } catch (Exception ignored) {}
+                }
+                Kara kara = new Kara(i, powod, tieryList);
+                logger.debug("------------------------");
+                logger.debug("ID: " + kara.getId());
+                logger.debug("Powod: " + kara.getPowod());
+                for (Tiery entry : kara.getTiery()) {
+                    logger.debug("  Duration:" + entry.getDuration());
+                    logger.debug("  Type:" + entry.getType());
+                    logger.debug("  MaxWarns:" + entry.getMaxWarns());
+                }
+                logger.debug("------------------------");
+                getKary().add(kara);
+            } catch (Exception e) {
+                Log.newError("Nie udało się załadować kary nr:" + i, getClass());
+                Log.newError(e, getClass());
             }
-            getKary().add(new Kara(i, powod, tieryList));
         }
 
     }

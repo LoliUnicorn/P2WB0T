@@ -44,6 +44,7 @@ import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.logs.logger.FakeMessage;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 
@@ -92,14 +93,7 @@ public class VoiceChatListener extends ListenerAdapter {
                         .addRolePermissionOverride(EKIPA_ID, RAW_PERMS, 0)
                         .addMemberPermissionOverride(event.getJDA().getSelfUser().getIdLong(), Permission.getRaw(Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL, Permission.MANAGE_CHANNEL), 0)
                         .addRolePermissionOverride(event.getGuild().getPublicRole().getIdLong(), 0, RAW_PERMS);
-		    
-                /*
-                for (PermissionOverride permissionOverride : Objects.requireNonNull(cate).getPermissionOverrides()) {
-                    if (permissionOverride.getPermissionHolder() != null) {
-                        action = action.addPermissionOverride(permissionOverride.getPermissionHolder(), permissionOverride.getAllowed(), permissionOverride.getDenied());
-                    }
-                }
-                */
+
                 VoiceChannel vc = action.complete();
                 guild.moveVoiceMember(event.getMember(), vc).queue();
 
@@ -129,7 +123,7 @@ public class VoiceChatListener extends ListenerAdapter {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.newError("Nie udało się stworzyć kanału do ticketa!", getClass());
-                Log.newError(e, VoiceChatListener.class);
+                Log.newError(e, getClass());
             }
             return;
         }
