@@ -17,9 +17,13 @@
 
 package pl.kamil0024.core;
 
+import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.SubscriberExceptionContext;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
@@ -54,6 +58,7 @@ import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.socket.SocketServer;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Statyczne;
 import pl.kamil0024.core.util.Tlumaczenia;
@@ -81,6 +86,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -133,6 +139,12 @@ public class B0T {
         HostnameVerifier allHostsValid = (hostname, session) -> true;
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         //#endregion fix self-assigne certs
+
+        AsyncEventBus eventBus = new AsyncEventBus(Executors.newFixedThreadPool(16), EventBusErrorHandler.instance);
+
+        SocketServer socketServer = new SocketServer(eventBus);
+        socketServer.start();
+        
         moduls = new HashMap<>();
         tlumaczenia = new Tlumaczenia();
         argumentManager = new ArgumentManager();
@@ -380,5 +392,27 @@ public class B0T {
         }
     }
 
+    public static class EventBusErrorHandler implements SubscriberExceptionHandler {
+        public static final EventBusErrorHandler instance = new EventBusErrorHandler();
+
+        @Override
+        public void handleException(@NotNull Throwable exception, @NotNull SubscriberExceptionContext context) {
+            Log.newError(message(context), getClass());
+            Log.newError(exception, getClass());
+        }
+
+        private static String message(SubscriberExceptionContext context) {
+            Method method = context.getSubscriberMethod();
+            return "Exception thrown by subscriber method "
+                    + method.getName()
+                    + '('
+                    + method.getParameterTypes()[0].getName()
+                    + ')'
+                    + " on subscriber "
+                    + context.getSubscriber()
+                    + " when dispatching event: "
+                    + context.getEvent();
+        }
+    }
 
 }

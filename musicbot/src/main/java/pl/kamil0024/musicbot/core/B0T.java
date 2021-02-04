@@ -37,6 +37,7 @@ import pl.kamil0024.musicbot.core.util.Statyczne;
 import pl.kamil0024.musicbot.core.util.Tlumaczenia;
 import pl.kamil0024.musicbot.music.MusicModule;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
+import pl.kamil0024.musicbot.socket.SocketClient;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -125,6 +126,9 @@ public class B0T {
         try {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
+
+        SocketClient client = new SocketClient();
+        client.start();
 
         this.modulManager = new ModulManager();
 

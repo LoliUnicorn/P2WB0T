@@ -128,9 +128,13 @@ public class CommandExecute extends ListenerAdapter {
         }
 
         if (c.getCategory() == CommandCategory.PRIVATE_CHANNEL) {
-            if (!e.getChannel().getId().equals("426864003562864641") && jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
-                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", komend muzycznych musisz używać na <#426864003562864641>!")
-                        .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
+//            if (!e.getChannel().getId().equals("426864003562864641") && jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
+//                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", komend muzycznych musisz używać na <#426864003562864641>!")
+//                        .queue(m -> m.delete().queueAfter(5, TimeUnit.SECONDS));
+//                return;
+//            }
+            if (jegoPerm.getNumer() == PermLevel.MEMBER.getNumer()) {
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", boty muzyczne przechodzą aktualizacje. Wkrótce będą dostępne!").complete();
                 return;
             }
         }
