@@ -58,6 +58,7 @@ import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.socket.SocketServer;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Statyczne;
@@ -142,7 +143,8 @@ public class B0T {
 
         AsyncEventBus eventBus = new AsyncEventBus(Executors.newFixedThreadPool(16), EventBusErrorHandler.instance);
 
-        SocketServer socketServer = new SocketServer(eventBus);
+        SocketManager socketManager = new SocketManager(eventBus);
+        SocketServer socketServer = new SocketServer(eventBus, socketManager);
         socketServer.start();
         
         moduls = new HashMap<>();
@@ -289,7 +291,7 @@ public class B0T {
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao, socketManager));
         modulManager.getModules().add(new RekruModule(api, commandManager));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);

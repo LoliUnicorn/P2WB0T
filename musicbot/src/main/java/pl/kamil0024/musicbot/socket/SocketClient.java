@@ -19,14 +19,17 @@
 
 package pl.kamil0024.musicbot.socket;
 
+import com.google.gson.Gson;
+import lombok.Data;
 import pl.kamil0024.musicbot.core.logger.Log;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
+import java.util.Map;
 
 public class SocketClient extends Thread {
+
+    private final static Gson GSON = new Gson();
 
     Socket socket;
     OutputStream output;
@@ -50,16 +53,50 @@ public class SocketClient extends Thread {
                }
            }
 
-           Log.debug("Połączono z serwerem!");
+           new Thread(() -> {
+               try {
+                   InputStream input = socket.getInputStream();
+                   BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-           writer.println("test");
+                   String text;
+                   while ((text = reader.readLine()) != null) {
+                       retrieveMessage(text);
+                   }
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }).start();
 
-           socket.close();
-           writer.close();
-           output.close();
        } catch (Exception e) {
            e.printStackTrace();
        }
+
+    }
+
+    public void retrieveMessage(String msg) {
+        Log.debug("Nowa wiadomość od serwera: " + msg);
+        Log.debug("Po fromJson otrzymujemy:");
+        SocketAction socketAction = GSON.fromJson(msg, SocketAction.class);
+        Log.debug("memberId: " + socketAction.getMemberId());
+        Log.debug("channelId: " + socketAction.getChannelId());
+        Log.debug("topic: " + socketAction.getTopic());
+        Log.debug("socketId:" + socketAction.getSocketId());
+        Log.debug("args: " + GSON.toJson(socketAction.getArgs()));
+    }
+
+    public void sendMessage(String msg) {
+
+    }
+
+    @Data
+    public static class SocketAction {
+        public SocketAction() { }
+
+        private String memberId;
+        private String channelId;
+        private String topic;
+        private int socketId;
+        private Map<String, Object> args;
 
     }
 

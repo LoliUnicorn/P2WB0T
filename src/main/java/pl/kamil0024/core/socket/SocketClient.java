@@ -25,7 +25,6 @@ import pl.kamil0024.core.logger.Log;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Random;
 
 public class SocketClient {
 
@@ -35,9 +34,9 @@ public class SocketClient {
     @Getter private PrintWriter writer;
     @Getter private final int socketId;
 
-    public SocketClient(Socket socket, AsyncEventBus eventBus) {
+    public SocketClient(Socket socket, AsyncEventBus eventBus, int socketId) {
         this.socket = socket;
-        this.socketId = new Random().nextInt(Integer.MAX_VALUE);
+        this.socketId = socketId;
         this.eventBus = eventBus;
 
         try {
