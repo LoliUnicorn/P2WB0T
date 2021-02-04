@@ -43,7 +43,7 @@ public class SocketClient extends Thread {
                Thread.sleep(10000);
 
                try {
-                   Socket socket = new Socket("localhost", 7070);
+                   socket = new Socket("localhost", 7070);
                    output = socket.getOutputStream();
                    writer = new PrintWriter(output, true);
                    break;
