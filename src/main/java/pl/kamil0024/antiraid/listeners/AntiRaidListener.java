@@ -100,6 +100,7 @@ public class AntiRaidListener extends ListenerAdapter {
             } catch (Exception e) {
                 event.getChannel().sendMessage("Nie udało się usunąć roli!").complete();
             }
+            if (msg != null) msg.delete().complete();
             return;
         }
 

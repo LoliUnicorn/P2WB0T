@@ -20,6 +20,7 @@
 package pl.kamil0024.antiraid.managers;
 
 import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -131,6 +132,7 @@ public class AntiRaidManager {
         eb.setColor(Color.red);
         eb.setAuthor("Wykryto raida!");
         eb.addField("Użytkownik", UserUtil.getLogName(user), false);
+        eb.addField("Kanał ostatniej wiadomości", String.format("<#%s>", messages.get(messages.size() - 1).getChannel()), false);
 
         eb.addField("", "Ostatnie wiadomości:", false);
         int i = 1;
@@ -160,13 +162,15 @@ public class AntiRaidManager {
     }
 
     @Data
+    @AllArgsConstructor
     public static class FakeAntiRaidMessage {
         private final String messageId;
         private final String content;
         private final long data;
+        private final String channel;
 
         public static FakeAntiRaidMessage convert(Message message) {
-            return new FakeAntiRaidMessage(message.getId(), message.getContentRaw(), message.getTimeCreated().toInstant().getEpochSecond());
+            return new FakeAntiRaidMessage(message.getId(), message.getContentRaw(), message.getTimeCreated().toInstant().getEpochSecond(), message.getChannel().getId());
         }
 
     }
