@@ -82,10 +82,12 @@ public class SocketClient extends Thread {
         Log.debug("topic: " + socketAction.getTopic());
         Log.debug("socketId:" + socketAction.getSocketId());
         Log.debug("args: " + GSON.toJson(socketAction.getArgs()));
+
+        sendMessage("siema, odpowiadam");
     }
 
     public void sendMessage(String msg) {
-
+        writer.println(msg);
     }
 
     @Data

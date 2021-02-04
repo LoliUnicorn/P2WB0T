@@ -48,10 +48,10 @@ public class SocketManager {
     public void sendMessage(SocketAction socketAction) {
         SocketClient client = clients.get(socketAction.getSocketId());
         if (client == null) {
-            Log.error("Próbowano wysłać wiadomość do socketa %s, ale ten nie istnieje!", socketAction.getSocketId());
+            Log.newError("Próbowano wysłać wiadomość do socketa %s, ale ten nie istnieje!", getClass(), socketAction.getSocketId());
             return;
         }
-        client.getWriter().write(socketAction.toJson());
+        client.getWriter().println(socketAction.toJson());
     }
 
     @Subscribe
