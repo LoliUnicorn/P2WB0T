@@ -30,7 +30,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class SocketServer extends Thread {
+public class SocketServer {
 
     private final static Gson GSON = new Gson();
 
@@ -43,11 +43,9 @@ public class SocketServer extends Thread {
         eventBus.register(this);
     }
 
-    @Override
     public void start() {
 
         ServerSocket serverSocket;
-        Socket socket;
 
         try {
             serverSocket = new ServerSocket(7070);
@@ -57,18 +55,19 @@ public class SocketServer extends Thread {
             return;
         }
 
-        while (true) {
-            try {
-                socket = serverSocket.accept();
-                SocketClient client = new SocketClient(socket, eventBus);
-                client.start();
-                clients.put(client.getSocketId(), client);
-                Log.debug("Podłączono nowy socket!");
-            } catch (Exception e) {
-                Log.newError(e, getClass());
+        new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    SocketClient client = new SocketClient(socket, eventBus);
+                    client.start();
+                    clients.put(client.getSocketId(), client);
+                    Log.debug("Podłączono nowy socket!");
+                } catch (Exception e) {
+                    Log.newError(e, getClass());
+                }
             }
-
-        }
+        }).start();
 
     }
 

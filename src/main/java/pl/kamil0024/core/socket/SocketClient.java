@@ -27,7 +27,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Random;
 
-public class SocketClient extends Thread {
+public class SocketClient {
 
     private final Socket socket;
     private final AsyncEventBus eventBus;
@@ -49,20 +49,21 @@ public class SocketClient extends Thread {
 
     }
 
-    @Override
     public void start() {
-        try {
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        new Thread(() -> {
+            try {
+                InputStream input = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-            String text;
-            while ((text = reader.readLine()) != null) {
-                eventBus.post(new SocketServer.SocketJson(getSocketId(), text));
+                String text;
+                while ((text = reader.readLine()) != null) {
+                    eventBus.post(new SocketServer.SocketJson(getSocketId(), text));
+                }
+                eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
+            } catch (Exception e) {
+                Log.newError(e, getClass());
             }
-            eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
-        } catch (Exception e) {
-            Log.newError(e, getClass());
-        }
+        }).start();
     }
 
 }
