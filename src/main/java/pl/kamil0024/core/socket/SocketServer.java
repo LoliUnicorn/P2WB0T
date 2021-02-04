@@ -62,7 +62,7 @@ public class SocketServer extends Thread {
                 socket = serverSocket.accept();
                 SocketClient client = new SocketClient(socket, eventBus);
                 client.start();
-                clients.put(client.getId(), client);
+                clients.put(client.getSocketId(), client);
                 Log.debug("Podłączono nowy socket!");
             } catch (Exception e) {
                 Log.newError(e, getClass());

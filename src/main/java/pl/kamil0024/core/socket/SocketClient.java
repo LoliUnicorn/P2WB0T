@@ -33,11 +33,11 @@ public class SocketClient extends Thread {
     private final AsyncEventBus eventBus;
 
     @Getter private PrintWriter writer;
-    @Getter private final int id;
+    @Getter private final int socketId;
 
     public SocketClient(Socket socket, AsyncEventBus eventBus) {
         this.socket = socket;
-        this.id = new Random().nextInt(Integer.MAX_VALUE);
+        this.socketId = new Random().nextInt(Integer.MAX_VALUE);
         this.eventBus = eventBus;
 
         try {
@@ -57,9 +57,9 @@ public class SocketClient extends Thread {
 
             String text;
             while ((text = reader.readLine()) != null) {
-                eventBus.post(new SocketServer.SocketJson(getId(), text));
+                eventBus.post(new SocketServer.SocketJson(getSocketId(), text));
             }
-            eventBus.post(new SocketServer.SocketDisconnect(getId()));
+            eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
         } catch (Exception e) {
             Log.newError(e, getClass());
         }
