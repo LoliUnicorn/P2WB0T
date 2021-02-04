@@ -68,6 +68,7 @@ public class VoiceChatListener extends ListenerAdapter {
 
     private final Cache<Long> cooldownCache;
     private final Cache<String> messagesCache;
+    private final Cache<Boolean> pingCache;
 
     public VoiceChatListener(TicketDao ticketDao, TicketRedisManager ticketRedisManager, EventWaiter eventWaiter, RedisManager redisManager) {
         this.ticketDao = ticketDao;
@@ -75,6 +76,7 @@ public class VoiceChatListener extends ListenerAdapter {
         this.eventWaiter = eventWaiter;
         this.cooldownCache = redisManager.new CacheRetriever<Long>() {}.getCache(7200);
         this.messagesCache = redisManager.new CacheRetriever<String>() {}.getCache(7200);
+        this.pingCache = redisManager.new CacheRetriever<Boolean>() {}.getCache(7200);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -162,12 +164,15 @@ public class VoiceChatListener extends ListenerAdapter {
                         Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
                         return;
                     }
+                    VcType vcType = VcType.MINECRAFT;
                     cooldownCache.put(memId, new DateTime().plusMinutes(10).getMillis());
                     String msg = String.format("Użytkownik <@%s> czeka na ", memId);
                     String name = channelJoined.getName().toLowerCase();
                     if (name.contains("discord")) {
+                        vcType = VcType.DISCORD;
                         msg += "kanale pomocy serwera Discord\n\n" + getMentions(VcType.DISCORD, channelJoined.getGuild());
                     } else if (name.contains("p2w")) {
+                        vcType = VcType.P2W;
                         msg += "kanale pomocy forum P2W\n\n" + getMentions(VcType.P2W, channelJoined.getGuild());
                     } else if (name.contains("minecraft")) {
                         msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
@@ -176,7 +181,8 @@ public class VoiceChatListener extends ListenerAdapter {
                     }
                     Message mmsg = txt.sendMessage(msg).allowedMentions(Collections.singleton(Message.MentionType.USER)).complete();
                     deleteMessage(memId, channelJoined.getJDA());
-                    messagesCache.put(memId, mmsg.getId());
+                    messagesCache.put(memId, mmsg.getId() + "-" + vcType.name());
+                    pingCache.put(vcType.name(), true);
                 }
             }
         };
@@ -249,11 +255,14 @@ public class VoiceChatListener extends ListenerAdapter {
             TextChannel xd = jda.getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
             String msg = messagesCache.getIfPresent(id);
             if (msg == null || xd == null) return;
-            xd.retrieveMessageById(msg).complete().delete().complete();
+            String[] s = msg.split("-");
+            xd.retrieveMessageById(s[0]).complete().delete().complete();
+            pingCache.invalidate(s[1]);
         } catch (Exception ignored) { }
     }
 
     private String getMentions(VcType type, Guild g) {
+        if (pingCache.getIfPresent(type.name())) return "";
         List<Member> l = g.getMembersWithRoles(g.getRoleById(Ustawienia.instance.rangi.ekipa))
                 .stream().filter(m -> UserUtil.getPermLevel(m).getNumer() >= PermLevel.HELPER.getNumer() && filtr(m))
                 .collect(Collectors.toList());
