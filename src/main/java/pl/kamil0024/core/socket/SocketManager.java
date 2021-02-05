@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.actions.*;
+import pl.kamil0024.core.util.GsonUtil;
 import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 
 import java.util.HashMap;
@@ -78,11 +79,13 @@ public class SocketManager {
                 Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             } else if (response.getMessageType().equals("embedtrack")) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> map = (Map<String, Object>) response.getData();
-                EmbedBuilder track = new PrivateQueueCommand.DecodeTrack((PrivateQueueCommand.Track) map.get("track"), false).create();
+                Log.debug("track: " + GsonUtil.toJSON(response.getData()));
+                PrivateQueueCommand.Track t = (PrivateQueueCommand.Track) response.getData();
+
+                EmbedBuilder track = new PrivateQueueCommand.DecodeTrack(t, false).create();
+
                 MessageBuilder mb = new MessageBuilder();
-                mb.setContent(ping + ", " + map.get("msg"));
+                mb.setContent(ping + ", dodano do kolejki!");
                 mb.setEmbed(track.build());
                 Message msg = txt.sendMessage(mb.build()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();

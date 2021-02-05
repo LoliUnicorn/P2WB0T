@@ -120,11 +120,7 @@ public class SocketClient extends Thread {
                 @Override
                 public void trackLoaded(AudioTrack track) {
                     musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
-
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("track", new QueueHandler.Track(track));
-                    map.put("msg", "dodaje do kolejki!");
-                    Response r = new Response(socketAction, true, "embedtrack", null, map);
+                    Response r = new Response(socketAction, true, "embedtrack", null, new QueueHandler.Track(track));
                     sendMessage(r);
                 }
 

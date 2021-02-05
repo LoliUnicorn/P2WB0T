@@ -48,8 +48,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @AllArgsConstructor
 public class SocketRestAction {
 
-    private static final Gson GSON = new Gson();
-
     private final ShardManager api;
     private final MusicManager musicManager;
 
@@ -109,7 +107,7 @@ public class SocketRestAction {
         }
         response.setMessageType("track");
         response.setSuccess(true);
-        response.setData(GSON.toJson(new QueueHandler.Track(track)));
+        response.setData(new QueueHandler.Track(track));
         return response;
     }
 
@@ -127,7 +125,7 @@ public class SocketRestAction {
         List<QueueHandler.Track> traki = new ArrayList<>();
         klele.forEach(t -> traki.add(new QueueHandler.Track(t)));
         response.setMessageType("track");
-        response.setData(GSON.toJson(traki));
+        response.setData(traki);
         return response;
     }
 
