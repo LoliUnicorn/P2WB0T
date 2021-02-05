@@ -147,7 +147,7 @@ public class SocketManager {
             manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId), sendMessage);
         }
         public void volume(int procent) {
-            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, procent), sendMessage);
+            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, String.valueOf(procent)), sendMessage);
         }
 
         public Action setSendMessage(boolean bol) {

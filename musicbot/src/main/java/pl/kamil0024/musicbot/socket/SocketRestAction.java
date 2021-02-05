@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
 import pl.kamil0024.musicbot.api.handlers.QueueHandler;
+import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
@@ -162,8 +163,9 @@ public class SocketRestAction {
         response.setMessageType("message");
         response.setSuccess(true);
         Guild guild = Connect.getGuild(api);
-        int l = 0;
+        int l;
         try {
+            Log.debug("Liczba: " + liczba);
             l = Integer.parseInt(liczba);
             if (l <= 0 || l > 100) throw new Exception();
         } catch (Exception e) {

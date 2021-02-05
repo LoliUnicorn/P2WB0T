@@ -169,7 +169,7 @@ public class SocketClient extends Thread {
                     response = action.skip();
                     break;
                 case "volume":
-                    response = action.volume(String.valueOf(socketAction.getArgs().get("liczba")));
+                    response = action.volume((String) socketAction.getArgs().get("liczba"));
             }
         } catch (Exception e) {
             e.printStackTrace();

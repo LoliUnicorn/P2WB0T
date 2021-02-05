@@ -33,7 +33,7 @@ public class VolumeAction implements SocketAction {
     private final String memberId;
     private final String channelId;
     private final int socketId;
-    private final int procent;
+    private final String procent;
 
     private final String topic = "volume";
 
