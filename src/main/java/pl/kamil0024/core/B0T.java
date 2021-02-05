@@ -281,7 +281,7 @@ public class B0T {
         NieobecnosciManager nieobecnosciManager = new NieobecnosciManager(api, nieobecnosciDao);
         api.addEventListener(modLog);
 
-        this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, musicAPI);
+        this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, socketManager);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
         APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, acBanDao, recordingDao);

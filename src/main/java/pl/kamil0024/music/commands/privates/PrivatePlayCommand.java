@@ -27,26 +27,25 @@ import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.socket.SocketClient;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.music.commands.PlayCommand;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("DuplicatedCode")
 public class PrivatePlayCommand extends Command {
 
-    private final MusicAPI musicAPI;
+    private final SocketManager socketManager;
 
-    public PrivatePlayCommand(MusicAPI musicAPI) {
+    public PrivatePlayCommand(SocketManager socketManager) {
         name = "pplay";
         aliases.add("privateplay");
         category = CommandCategory.PRIVATE_CHANNEL;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
     }
 
     @Override
@@ -59,71 +58,34 @@ public class PrivatePlayCommand extends Command {
             return false;
         }
 
-        int wolnyBot = 0;
-        MusicRestAction restAction = null;
+        SocketClient client = socketManager.getClientFromChanne(context);
 
-        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
-            if (member.getUser().isBot()) {
-                Integer agent = musicAPI.getPortByClient(member.getId());
-                if (agent != null) {
-                    wolnyBot = agent;
-                    restAction = musicAPI.getAction(agent);
-                }
-
-            }
-        }
-
-        if (wolnyBot == 0 && restAction == null) {
-            for (Integer port : musicAPI.getPorts()) {
-                restAction = musicAPI.getAction(port);
-                if (restAction.getVoiceChannel() == null) {
-                    wolnyBot = port;
+        if (client != null) {
+            socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId())
+                    .play(link);
+        } else {
+            boolean find = false;
+            for (Map.Entry<Integer, SocketClient> entry : socketManager.getClients().entrySet()) {
+                Member mem = context.getGuild().getMemberById(entry.getValue().getBotId());
+                if (mem == null) continue;
+                if (mem.getVoiceState() == null || mem.getVoiceState().getChannel() == null) {
+                    find = true;
+                    socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), entry.getKey())
+                            .setSendMessage(false)
+                            .connect(PlayCommand.getVc(context.getMember()).getId())
+                            .setSendMessage(true)
+                            .play(link);
                     break;
                 }
             }
-        }
-
-        if (wolnyBot == 0) {
-            context.sendTranslate("pplay.to.small.bot").queue();
-            return false;
-        }
-
-        try {
-            MusicResponse play = restAction.play(link.split("v=")[1]);
-            try {
-                restAction.connect(PlayCommand.getVc(context.getMember()));
-            } catch (Exception e) {
-                context.sendTranslate("pplay.dont.connect").queue();
+            if (!find) {
+                context.sendTranslate("pplay.to.small.bot").queue();
                 return false;
             }
-            if (play.isError() && !play.getError().getDescription().contains("Bot nie jest na żadnym kanale!")) {
-                context.send("Nie udało się odtworzyć piosenki! " + play.getError().getDescription()).queue();
-                if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
-                    restAction.disconnect();
-                }
-                return false;
-            } else {
-                context.sendTranslate("pplay.success").queue();
-                return true;
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            context.sendTranslate("pplay.bad.link").queue();
-            try {
-                if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
-                    restAction.disconnect();
-                }
-            } catch (Exception ignored) {}
-            return false;
-        } catch (Exception e) {
-            context.send("Wystąpił błąd z API! " + e.getLocalizedMessage()).queue();
-            Log.newError(e, PrivatePlayCommand.class);
-            try {
-                if (restAction.getQueue().isError() && restAction.getPlayingTrack().isError()) {
-                    restAction.disconnect();
-                }
-            } catch (Exception ignored) {}
-            return false;
+
         }
+
+        return true;
     }
 
     public static boolean check(CommandContext context) {

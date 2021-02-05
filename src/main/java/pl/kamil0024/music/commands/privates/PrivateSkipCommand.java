@@ -27,55 +27,33 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.socket.SocketClient;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.music.commands.PlayCommand;
 
 @SuppressWarnings("DuplicatedCode")
 public class PrivateSkipCommand extends Command {
 
-    private final MusicAPI musicAPI;
+    private final SocketManager socketManager;
 
-    public PrivateSkipCommand(MusicAPI musicAPI) {
+    public PrivateSkipCommand(SocketManager socketManager) {
         name = "pskip";
         aliases.add("privateskip");
         category = CommandCategory.PRIVATE_CHANNEL;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
     }
 
     @Override
     public boolean execute(CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
-        int wolnyBot = 0;
-        MusicRestAction restAction = null;
-
-        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
-            if (member.getUser().isBot()) {
-                Integer agent = musicAPI.getPortByClient(member.getId());
-                if (agent != null) {
-                    wolnyBot = agent;
-                    restAction = musicAPI.getAction(agent);
-                }
-
-            }
-        }
-
-        if (wolnyBot == 0) {
+        SocketClient client = socketManager.getClientFromChanne(context);
+        if (client == null) {
             context.sendTranslate("pleave.no.bot").queue();
             return false;
         }
-
-        try {
-            MusicResponse skip = restAction.skip();
-            if (skip.isError()) {
-                context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
-                return false;
-            }
-            context.sendTranslate("pskip.success").queue();
-            return true;
-        } catch (Exception e) {
-            context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
-            return false;
-        }
+        socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId()).skip();
+        return true;
     }
 
 }

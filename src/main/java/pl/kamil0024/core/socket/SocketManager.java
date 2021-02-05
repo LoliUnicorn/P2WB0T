@@ -26,16 +26,20 @@ import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
+import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.actions.*;
 import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.GsonUtil;
+import pl.kamil0024.music.commands.PlayCommand;
 import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 
 import java.util.*;
@@ -44,12 +48,14 @@ import java.util.*;
 public class SocketManager {
 
     @Getter private final HashMap<Integer, SocketClient> clients;
+    @Getter private final HashMap<Integer, String> botIds;
 
     private final ShardManager api;
     private final EventWaiter eventWaiter;
 
     public SocketManager(AsyncEventBus eventBus, ShardManager api, EventWaiter eventWaiter) {
         clients = new HashMap<>();
+        botIds = new HashMap<>();
         eventBus.register(this);
         this.api = api;
         this.eventWaiter = eventWaiter;
@@ -62,6 +68,7 @@ public class SocketManager {
         if (socketJson.getJson().startsWith("setBotId:")) {
             String id = socketJson.getJson().split("setBotId:")[1];
             clients.get(socketJson.getId()).setBotId(id);
+            botIds.put(socketJson.getId(), id);
             return;
         }
 
@@ -132,10 +139,27 @@ public class SocketManager {
     public void disconnectEvent(SocketServer.SocketDisconnect socketDisconnect) {
         Log.debug("Odłączono socketa %s", socketDisconnect.getId());
         clients.remove(socketDisconnect.getId());
+        botIds.remove(socketDisconnect.getId());
     }
 
     public Action getAction(String memberId, String channelId, int socketId) {
         return new Action(this, memberId, channelId, socketId, true);
+    }
+
+    @Nullable
+    public SocketClient getClientFromId(String userId) {
+       return clients.values().stream().filter(s -> s.getBotId().equals(userId)).findAny().orElse(null);
+    }
+
+    @Nullable
+    public SocketClient getClientFromChanne(CommandContext context) {
+        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
+            if (member.getUser().isBot()) {
+                SocketClient agent = getClientFromId(member.getId());
+                if (agent != null) return agent;
+            }
+        }
+        return null;
     }
 
     @AllArgsConstructor
@@ -147,23 +171,29 @@ public class SocketManager {
 
         private Boolean sendMessage;
 
-        public void connect(String voiceChannelId) {
+        public Action connect(String voiceChannelId) {
             manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId));
+            return this;
         }
-        public void disconnect() {
+        public Action disconnect() {
             manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId));
+            return this;
         }
-        public void play(String track) {
+        public Action play(String track) {
             manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track));
+            return this;
         }
-        public void queue() {
+        public Action queue() {
             manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId));
+            return this;
         }
-        public void shutdown() {
+        public Action shutdown() {
             manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId));
+            return this;
         }
-        public void skip() {
+        public Action skip() {
             manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId));
+            return this;
         }
 
         public Action setSendMessage(boolean bol) {

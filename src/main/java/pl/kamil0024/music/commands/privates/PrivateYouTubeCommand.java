@@ -19,7 +19,6 @@
 
 package pl.kamil0024.music.commands.privates;
 
-import com.google.gson.Gson;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
@@ -28,11 +27,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.socket.SocketClient;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
@@ -40,25 +37,25 @@ import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.music.commands.PlayCommand;
 import pl.kamil0024.music.commands.QueueCommand;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("DuplicatedCode")
 public class PrivateYouTubeCommand extends Command {
 
-    private final MusicAPI musicAPI;
+    private final SocketManager socketManager;
     private final EventWaiter eventWaiter;
     private final MusicModule musicModule;
 
-    public PrivateYouTubeCommand(MusicAPI musicAPI, EventWaiter eventWaiter, MusicModule musicModule) {
+    public PrivateYouTubeCommand(SocketManager socketManager, EventWaiter eventWaiter, MusicModule musicModule) {
         name = "pyt";
         aliases.add("privateeyt");
         aliases.add("privateeyoutube");
         category = CommandCategory.PRIVATE_CHANNEL;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
         this.eventWaiter = eventWaiter;
         this.musicModule = musicModule;
     }
@@ -81,44 +78,6 @@ public class PrivateYouTubeCommand extends Command {
         }
         HashMap<Integer, AudioTrack> mapa = new HashMap<>();
 
-        int wolnyBot = 0;
-        MusicRestAction restAction = null;
-
-        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
-            if (member.getUser().isBot()) {
-                Integer agent = musicAPI.getPortByClient(member.getId());
-                if (agent != null) {
-                    wolnyBot = agent;
-                    restAction = musicAPI.getAction(agent);
-                }
-
-            }
-        }
-
-        if (wolnyBot == 0 && restAction == null) {
-            for (Integer port : musicAPI.getPorts()) {
-                restAction = musicAPI.getAction(port);
-                if (restAction.getVoiceChannel() == null) {
-                    wolnyBot = port;
-                    try {
-                        MusicResponse tak = restAction.connect(PlayCommand.getVc(context.getMember()));
-                        if (tak.isError()) {
-                            throw new Exception();
-                        }
-                    } catch (Exception e) {
-                        context.sendTranslate("pplay.dont.connect").queue();
-                        return false;
-                    }
-                    break;
-                }
-            }
-        }
-
-        if (wolnyBot == 0) {
-            context.sendTranslate("pplay.to.small.bot").queue();
-            return false;
-        }
-
         BetterStringBuilder bsb = new BetterStringBuilder();
         bsb.appendLine("```");
         bsb.appendLine(context.getTranslate("youtube.firstline"));
@@ -134,8 +93,6 @@ public class PrivateYouTubeCommand extends Command {
 
         try {
             Message msg = context.send(bsb.toString()).complete();
-
-            MusicRestAction finalRestAction = restAction;
             eventWaiter.waitForEvent(GuildMessageReceivedEvent.class,
                     (event) -> event.getAuthor().getId().equals(context.getUser().getId()) && event.getChannel().getId().equals(context.getChannel().getId()),
                     (event) -> {
@@ -150,32 +107,40 @@ public class PrivateYouTubeCommand extends Command {
                         }
                         try {
                             msg.delete().complete();
-                            if (lista.isEmpty()) {
-                                if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
-                                    finalRestAction.disconnect();
+                            if (lista.isEmpty()) return;
+
+                            List<String> urls = new ArrayList<>();
+                            lista.forEach(i -> urls.add(QueueCommand.getImageUrl(mapa.get(i))));
+
+                            SocketClient client = socketManager.getClientFromChanne(context);
+
+                            if (client != null) {
+                                SocketManager.Action action = socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId());
+                                action.play(urls.get(0));
+                            } else {
+                                boolean find = false;
+                                for (Map.Entry<Integer, SocketClient> entry : socketManager.getClients().entrySet()) {
+                                    Member mem = context.getGuild().getMemberById(entry.getValue().getBotId());
+                                    if (mem == null) continue;
+                                    if (mem.getVoiceState() == null || mem.getVoiceState().getChannel() == null) {
+                                        find = true;
+                                        socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), entry.getKey())
+                                                .setSendMessage(false)
+                                                .connect(PlayCommand.getVc(context.getMember()).getId())
+                                                .setSendMessage(true)
+                                                .play(urls.get(0));
+                                        break;
+                                    }
                                 }
-                                return;
+                                if (!find) context.sendTranslate("pplay.to.small.bot").queue();
                             }
-                            lista.forEach(i -> {
-                                try {
-                                    track.add(mapa.get(i));
-                                    finalRestAction.play(QueueCommand.getYtLink(mapa.get(i)).split("v=")[1]);
-                                } catch (IOException ignored) { }
-                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
                         }
                         context.sendTranslate("youtube.succes", getTekst(track)).queue();
                         event.getMessage().delete().queue();
-                    }, 15, TimeUnit.SECONDS, () -> {
-                        try {
-                            if (finalRestAction.getQueue().isError() && finalRestAction.getPlayingTrack().isError()) {
-                                finalRestAction.disconnect();
-                            }
-                        } catch (Exception ignored) {}
-                        msg.delete().queue();
-                    });
+                    }, 15, TimeUnit.SECONDS, () -> msg.delete().queue());
         } catch (Exception e) {
             context.send("Wystąpił błąd z API! " + e.getLocalizedMessage());
             Log.newError(e, PrivateYouTubeCommand.class);

@@ -38,7 +38,8 @@ import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SocketClient extends Thread {
@@ -112,7 +113,9 @@ public class SocketClient extends Thread {
             Guild guild = Connect.getGuild(api);
             AudioManager state = guild.getAudioManager();
             if (state.getConnectedChannel() == null) {
-                response.setErrorMessage("Bot nie jest na żadnym kanale!");
+                response.setErrorMessage("bot nie jest na żadnym kanale!");
+                sendMessage(response);
+                return;
             }
             GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(guild);
             serwerManager.getManager().loadItemOrdered(serwerManager, (String) socketAction.getArgs().get("track"), new AudioLoadResultHandler() {
@@ -145,6 +148,7 @@ public class SocketClient extends Thread {
                     sendMessage(r);
                 }
             });
+
             return;
         }
 
@@ -189,6 +193,8 @@ public class SocketClient extends Thread {
     public void sendMessage(Response response) {
         writer.println(GSON.toJson(response));
     }
+
+
 
     @Data
     @AllArgsConstructor
