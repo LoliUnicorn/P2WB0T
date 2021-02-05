@@ -22,27 +22,64 @@ package pl.kamil0024.core.socket;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.Subscribe;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.actions.ConnectAction;
 import pl.kamil0024.core.socket.actions.DisconnectAction;
 import pl.kamil0024.core.socket.actions.SocketAction;
 
 import java.util.HashMap;
+import java.util.Map;
 
+@SuppressWarnings("unused")
 public class SocketManager {
 
     @Getter private final HashMap<Integer, SocketClient> clients;
 
-    public SocketManager(AsyncEventBus eventBus) {
+    private final ShardManager api;
+
+    public SocketManager(AsyncEventBus eventBus, ShardManager api) {
         clients = new HashMap<>();
         eventBus.register(this);
+        this.api = api;
     }
 
     @Subscribe
     public void retrieveMessage(SocketServer.SocketJson socketJson) {
         Log.debug("Nowa wiadomość socketa %s:", socketJson.getId());
-        Log.debug(socketJson.getJson());
+        if (socketJson.getJson().startsWith("setBotId:")) {
+            String id = socketJson.getJson().split("setBotId:")[1];
+            clients.get(socketJson.getId()).setBotId(id);
+            return;
+        }
+
+        try {
+            Response response = SocketServer.GSON.fromJson(socketJson.getJson(), Response.class);
+            TextChannel txt = api.getTextChannelById(response.getAction().getChannelId());
+            if (txt == null) throw new NullPointerException("Kanal jakims cudem jest nullem");
+            String ping = String.format("<@%s>", response.getAction().getSocketId());
+            if (!response.isSuccess()) {
+                Message msg = txt.sendMessage(ping + ", " + response.getErrorMessage()).complete();
+                msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
+                return;
+            }
+
+            if (response.getMessageType().equals("message")) {
+                Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
+                msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
+            }
+
+        } catch (Exception e) {
+            Log.newError("Socket client wyslal zla wiadomosc! W logach masz wiadomosc", getClass());
+            Log.error(socketJson.getJson());
+            Log.newError(e, getClass());
+        }
+
     }
 
     public void sendMessage(SocketAction socketAction) {
@@ -81,5 +118,27 @@ public class SocketManager {
 
     }
 
+    @Data
+    @AllArgsConstructor
+    public static class Response {
+        private final SocketAction action;
+        private final boolean success;
+        private final String errorMessage;
+        private final String messageType;
+        private final Object data;
+
+        @Data
+        public static class SocketAction {
+            public SocketAction() { }
+
+            private String memberId;
+            private String channelId;
+            private String topic;
+            private int socketId;
+            private Map<String, Object> args;
+
+        }
+
+    }
 
 }

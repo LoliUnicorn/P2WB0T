@@ -21,6 +21,7 @@ package pl.kamil0024.core.socket;
 
 import com.google.common.eventbus.AsyncEventBus;
 import lombok.Getter;
+import lombok.Setter;
 import pl.kamil0024.core.logger.Log;
 
 import java.io.*;
@@ -33,6 +34,7 @@ public class SocketClient {
 
     @Getter private PrintWriter writer;
     @Getter private final int socketId;
+    @Getter @Setter private String botId;
 
     public SocketClient(Socket socket, AsyncEventBus eventBus, int socketId) {
         this.socket = socket;

@@ -123,13 +123,13 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
-        SocketClient client = new SocketClient();
-        client.start();
-
         this.modulManager = new ModulManager();
 
         MusicManager musicManager = new MusicManager(api);
         APIModule apiModule = new APIModule(api, musicManager, eventWaiter);
+
+        SocketClient client = new SocketClient(musicManager, api);
+        client.start();
 
         modulManager.getModules().add(apiModule);
         modulManager.getModules().add(new MusicModule(api, musicManager));

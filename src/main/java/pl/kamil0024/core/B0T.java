@@ -142,10 +142,6 @@ public class B0T {
         //#endregion fix self-assigne certs
 
         AsyncEventBus eventBus = new AsyncEventBus(Executors.newFixedThreadPool(16), EventBusErrorHandler.instance);
-
-        SocketManager socketManager = new SocketManager(eventBus);
-        SocketServer socketServer = new SocketServer(eventBus, socketManager);
-        socketServer.start();
         
         moduls = new HashMap<>();
         tlumaczenia = new Tlumaczenia();
@@ -250,6 +246,10 @@ public class B0T {
         try {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
+
+        SocketManager socketManager = new SocketManager(eventBus, api);
+        SocketServer socketServer = new SocketServer(eventBus, socketManager);
+        socketServer.start();
 
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
         EmbedRedisManager embedRedisManager  = new EmbedRedisManager(redisManager);
