@@ -19,10 +19,6 @@
 
 package pl.kamil0024.musicbot.socket;
 
-import com.google.gson.Gson;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
@@ -32,17 +28,14 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
 import pl.kamil0024.musicbot.api.handlers.QueueHandler;
-import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 @SuppressWarnings("DuplicatedCode")
 @AllArgsConstructor
@@ -164,13 +157,15 @@ public class SocketRestAction {
         return response;
     }
 
-    public SocketClient.Response volume(Integer liczba) {
+    public SocketClient.Response volume(String liczba) {
         SocketClient.Response response = new SocketClient.Response();
         response.setMessageType("message");
         response.setSuccess(true);
         Guild guild = Connect.getGuild(api);
+        int l = 0;
         try {
-            if (liczba <= 0 || liczba > 100) throw new Exception();
+            l = Integer.parseInt(liczba);
+            if (l <= 0 || l > 100) throw new Exception();
         } catch (Exception e) {
             response.setSuccess(false);
             response.setErrorMessage("zła liczba! (musi być z przedziału 1-100)");
@@ -183,7 +178,7 @@ public class SocketRestAction {
         }
         GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
 
-        manager.getPlayer().setVolume(liczba);
+        manager.getPlayer().setVolume(l);
         response.setData("zmieniam głośność na " + liczba + "%");
         return response;
     }
