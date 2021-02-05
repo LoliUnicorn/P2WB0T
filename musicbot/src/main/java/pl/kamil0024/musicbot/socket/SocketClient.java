@@ -97,6 +97,7 @@ public class SocketClient extends Thread {
 
     public void retrieveMessage(String msg) {
         SocketAction socketAction = GSON.fromJson(msg, SocketAction.class);
+        Log.debug("Nowa wiadomość od serwera: " + socketAction);
 
         SocketRestAction action = new SocketRestAction(api, musicManager);
         Response response = null;
@@ -193,7 +194,7 @@ public class SocketClient extends Thread {
     public static class SocketAction {
         public SocketAction() { }
 
-        private boolean sendMessage;
+        private Boolean sendMessage;
         private String memberId;
         private String channelId;
         private String topic;
