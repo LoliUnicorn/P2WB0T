@@ -26,7 +26,7 @@ import java.util.Map;
 
 public interface SocketAction {
 
-    boolean getSendMessage();
+    Boolean getSendMessage();
     String getMemberId();
     String getChannelId();
     String getTopic();
