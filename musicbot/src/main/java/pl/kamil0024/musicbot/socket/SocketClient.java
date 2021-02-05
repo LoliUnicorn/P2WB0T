@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
+import pl.kamil0024.musicbot.api.handlers.QueueHandler;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
@@ -37,6 +38,7 @@ import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SocketClient extends Thread {
@@ -98,7 +100,6 @@ public class SocketClient extends Thread {
     public void retrieveMessage(String msg) {
         Log.debug("Nowa wiadomość od serwera: " + msg);
         SocketAction socketAction = GSON.fromJson(msg, SocketAction.class);
-        Log.debug("Nowa wiadomość od serwera po fromJson: " + socketAction);
 
         SocketRestAction action = new SocketRestAction(api, musicManager);
         Response response = null;
@@ -119,7 +120,11 @@ public class SocketClient extends Thread {
                 @Override
                 public void trackLoaded(AudioTrack track) {
                     musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
-                    Response r = new Response(socketAction, true, "message", null, "dodano " + track.getInfo().title + " do kolejki");
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("track", new QueueHandler.Track(track));
+                    map.put("msg", "dodaje do kolejki!");
+                    Response r = new Response(socketAction, true, "embedtrack", null, map);
                     sendMessage(r);
                 }
 

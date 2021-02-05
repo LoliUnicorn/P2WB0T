@@ -111,15 +111,18 @@ public class PrivateQueueCommand extends Command {
         }
     }
 
-    public class DecodeTrack {
+    public static class DecodeTrack {
 
-        private final String json;
         private final Track trak;
         private final boolean aktualnieGrana;
 
         public DecodeTrack(String string, boolean aktualnieGrana) {
-            this.json = string;
-            this.trak = new Gson().fromJson(json, Track.class);
+            this.trak = new Gson().fromJson(string, Track.class);
+            this.aktualnieGrana = aktualnieGrana;
+        }
+
+        public DecodeTrack(Track trak, boolean aktualnieGrana) {
+            this.trak = trak;
             this.aktualnieGrana = aktualnieGrana;
         }
 

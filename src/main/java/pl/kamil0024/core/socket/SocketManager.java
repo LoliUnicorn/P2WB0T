@@ -24,12 +24,15 @@ import com.google.common.eventbus.Subscribe;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.actions.*;
+import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +77,15 @@ public class SocketManager {
                 if (response.getData() == null) return;
                 Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
+            } else if (response.getMessageType().equals("embedtrack")) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = (Map<String, Object>) response.getData();
+                EmbedBuilder track = new PrivateQueueCommand.DecodeTrack((PrivateQueueCommand.Track) map.get("track"), false).create();
+                MessageBuilder mb = new MessageBuilder();
+                mb.setContent(ping + ", " + map.get("msg"));
+                mb.setEmbed(track.build());
+                Message msg = txt.sendMessage(mb.build()).complete();
+                msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             }
 
         } catch (Exception e) {
@@ -84,7 +96,7 @@ public class SocketManager {
 
     }
 
-    public void sendMessage(SocketAction socketAction, Boolean sendMessage) {
+    public synchronized void sendMessage(SocketAction socketAction, Boolean sendMessage) {
         socketAction.setSendMessage(sendMessage);
         SocketClient client = clients.get(socketAction.getSocketId());
         if (client == null) {
