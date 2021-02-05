@@ -78,31 +78,37 @@ public class SocketManager {
 
             if (!response.getAction().isSendMessage()) return;
 
-            if (response.getMessageType().equals("message")) {
-                if (response.getData() == null) return;
-                Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
-                msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
-            } else if (response.getMessageType().equals("embedtrack")) {
-                PrivateQueueCommand.Track t = GsonUtil.fromJSON(GsonUtil.toJSON(response.getData()), PrivateQueueCommand.Track.class);
-                EmbedBuilder track = new PrivateQueueCommand.DecodeTrack(t, false).create();
-                MessageBuilder mb = new MessageBuilder();
-                mb.setContent(ping + ", dodano do kolejki!");
-                mb.setEmbed(track.build());
-                Message msg = txt.sendMessage(mb.build()).complete();
-                msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
-            } else if (response.getMessageType().equals("queuelist")) {
-                String data = GsonUtil.toJSON(response.getData());
-                Log.debug("data:" + data);
-                Iterator<Object> a = new JSONArray(data).iterator();
-                List<EmbedBuilder> tracks = new ArrayList<>();
-                boolean first = true;
-                while (a.hasNext()) {
-                    tracks.add(new PrivateQueueCommand.DecodeTrack(a.next().toString(), first).create());
-                    first = false;
+            switch (response.getMessageType()) {
+                case "message": {
+                    if (response.getData() == null) return;
+                    Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
+                    msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
+                    break;
                 }
-                new EmbedPageintaor(tracks, api.getUserById(response.getAction().getMemberId()), eventWaiter, api.getShards().stream().findAny().get())
-                    .create(txt);
+                case "embedtrack": {
+                    PrivateQueueCommand.Track t = GsonUtil.fromJSON(GsonUtil.toJSON(response.getData()), PrivateQueueCommand.Track.class);
+                    EmbedBuilder track = new PrivateQueueCommand.DecodeTrack(t, false).create();
+                    MessageBuilder mb = new MessageBuilder();
+                    mb.setContent(ping + ", dodano do kolejki!");
+                    mb.setEmbed(track.build());
+                    Message msg = txt.sendMessage(mb.build()).complete();
+                    msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
+                    break;
+                }
+                case "queuelist":
+                    String data = GsonUtil.toJSON(response.getData());
+                    Log.debug("data:" + data);
+                    Iterator<Object> a = new JSONArray(data).iterator();
+                    List<EmbedBuilder> tracks = new ArrayList<>();
+                    boolean first = true;
+                    while (a.hasNext()) {
+                        tracks.add(new PrivateQueueCommand.DecodeTrack(a.next().toString(), first).create());
+                        first = false;
+                    }
+                    new EmbedPageintaor(tracks, api.getUserById(response.getAction().getMemberId()), eventWaiter, api.getShards().stream().findAny().get())
+                            .create(txt);
 
+                    break;
             }
 
         } catch (Exception e) {
@@ -113,8 +119,7 @@ public class SocketManager {
 
     }
 
-    public synchronized void sendMessage(SocketAction socketAction, Boolean sendMessage) {
-        socketAction.setSendMessage(sendMessage);
+    public synchronized void sendMessage(SocketAction socketAction) {
         SocketClient client = clients.get(socketAction.getSocketId());
         if (client == null) {
             Log.newError("Próbowano wysłać wiadomość do socketa %s, ale ten nie istnieje!", getClass(), socketAction.getSocketId());
@@ -143,22 +148,22 @@ public class SocketManager {
         private Boolean sendMessage;
 
         public void connect(String voiceChannelId) {
-            manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId), sendMessage);
+            manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId));
         }
         public void disconnect() {
-            manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId), sendMessage);
+            manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId));
         }
         public void play(String track) {
-            manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track), sendMessage);
+            manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track));
         }
         public void queue() {
-            manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId), sendMessage);
+            manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId));
         }
         public void shutdown() {
-            manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId), sendMessage);
+            manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId));
         }
         public void skip() {
-            manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId), sendMessage);
+            manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId));
         }
 
         public Action setSendMessage(boolean bol) {

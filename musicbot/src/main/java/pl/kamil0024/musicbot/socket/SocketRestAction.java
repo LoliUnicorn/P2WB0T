@@ -119,6 +119,7 @@ public class SocketRestAction {
         List<QueueHandler.Track> traki = new ArrayList<>();
         traki.add(0, new QueueHandler.Track(manager.getPlayer().getPlayingTrack()));
         klele.forEach(t -> traki.add(new QueueHandler.Track(t)));
+        response.setSuccess(true);
         response.setMessageType("queuelist");
         response.setData(traki);
         return response;
