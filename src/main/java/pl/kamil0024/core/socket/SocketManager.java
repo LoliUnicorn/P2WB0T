@@ -80,7 +80,7 @@ public class SocketManager {
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             } else if (response.getMessageType().equals("embedtrack")) {
                 Log.debug("track: " + GsonUtil.toJSON(response.getData()));
-                PrivateQueueCommand.Track t = (PrivateQueueCommand.Track) response.getData();
+                PrivateQueueCommand.Track t = GsonUtil.fromJSON(GsonUtil.toJSON(response.getData()), PrivateQueueCommand.Track.class);
 
                 EmbedBuilder track = new PrivateQueueCommand.DecodeTrack(t, false).create();
 
