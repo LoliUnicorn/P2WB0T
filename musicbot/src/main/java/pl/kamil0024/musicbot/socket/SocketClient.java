@@ -96,8 +96,9 @@ public class SocketClient extends Thread {
     }
 
     public void retrieveMessage(String msg) {
+        Log.debug("Nowa wiadomość od serwera: " + msg);
         SocketAction socketAction = GSON.fromJson(msg, SocketAction.class);
-        Log.debug("Nowa wiadomość od serwera: " + socketAction);
+        Log.debug("Nowa wiadomość od serwera po fromJson: " + socketAction);
 
         SocketRestAction action = new SocketRestAction(api, musicManager);
         Response response = null;
@@ -191,9 +192,8 @@ public class SocketClient extends Thread {
     }
 
     @Data
+    @AllArgsConstructor
     public static class SocketAction {
-        public SocketAction() { }
-
         private Boolean sendMessage;
         private String memberId;
         private String channelId;

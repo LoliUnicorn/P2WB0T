@@ -110,7 +110,7 @@ public class SocketManager {
         private final String channelId;
         private final int socketId;
 
-        private boolean sendMessage;
+        private Boolean sendMessage;
 
         public void connect(String voiceChannelId) {
             manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId));
