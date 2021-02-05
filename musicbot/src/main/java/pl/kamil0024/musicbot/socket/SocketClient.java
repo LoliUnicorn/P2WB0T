@@ -94,9 +94,12 @@ public class SocketClient extends Thread {
         Response response = null;
 
         if (socketAction.getTopic().equals("disconnect")) response = action.disconnect();
-        if (socketAction.getTopic().equals("connect")) response = action.connect((String) socketAction.getArgs().get("channelId"));
+        if (socketAction.getTopic().equals("connect")) response = action.connect((String) socketAction.getArgs().get("voiceChannel"));
+
+        Log.debug("response: " + GSON.toJson(response));
 
         if (response != null) {
+            Log.debug("Wysyłam!");
             response.setAction(socketAction);
             sendMessage(response);
         }
