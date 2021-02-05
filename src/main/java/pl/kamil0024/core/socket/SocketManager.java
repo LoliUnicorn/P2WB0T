@@ -84,7 +84,8 @@ public class SocketManager {
 
     }
 
-    public void sendMessage(SocketAction socketAction) {
+    public void sendMessage(SocketAction socketAction, Boolean sendMessage) {
+        socketAction.setSendMessage(sendMessage);
         SocketClient client = clients.get(socketAction.getSocketId());
         if (client == null) {
             Log.newError("Próbowano wysłać wiadomość do socketa %s, ale ten nie istnieje!", getClass(), socketAction.getSocketId());
@@ -113,25 +114,25 @@ public class SocketManager {
         private Boolean sendMessage;
 
         public void connect(String voiceChannelId) {
-            manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId));
+            manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId), sendMessage);
         }
         public void disconnect() {
-            manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId));
+            manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId), sendMessage);
         }
         public void play(String track) {
-            manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track));
+            manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track), sendMessage);
         }
         public void queue() {
-            manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId));
+            manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId), sendMessage);
         }
         public void shutdown() {
-            manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId));
+            manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId), sendMessage);
         }
         public void skip() {
-            manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId));
+            manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId), sendMessage);
         }
         public void volume(int procent) {
-            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, procent));
+            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, procent), sendMessage);
         }
 
         public Action setSendMessage(boolean bol) {

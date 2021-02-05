@@ -29,7 +29,7 @@ import java.util.Map;
 @Data
 public class ConnectAction implements SocketAction {
 
-    private final Boolean sendMessage;
+    private Boolean sendMessage;
     private final String memberId;
     private final String channelId;
     private final int socketId;

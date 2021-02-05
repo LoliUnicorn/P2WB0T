@@ -32,6 +32,8 @@ public interface SocketAction {
     String getTopic();
     int getSocketId();
 
+    void setSendMessage(Boolean bol);
+
     default Map<String, Object> getArgs() {
         return new HashMap<>();
     }

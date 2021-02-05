@@ -26,7 +26,7 @@ import lombok.Data;
 @Data
 public class PlayingTrackAction implements SocketAction {
 
-    private final Boolean sendMessage;
+    private Boolean sendMessage;
     private final String memberId;
     private final String channelId;
     private final int socketId;
