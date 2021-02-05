@@ -93,13 +93,43 @@ public class SocketClient extends Thread {
         SocketRestAction action = new SocketRestAction(api, musicManager);
         Response response = null;
 
-        if (socketAction.getTopic().equals("disconnect")) response = action.disconnect();
-        if (socketAction.getTopic().equals("connect")) response = action.connect((String) socketAction.getArgs().get("voiceChannel"));
+        try {
+            switch (socketAction.getTopic()) {
+                case "disconnect":
+                    response = action.disconnect();
+                    break;
+                case "connect":
+                    response = action.connect((String) socketAction.getArgs().get("voiceChannel"));
+                    break;
+                case "play":
+                    response = action.play((String) socketAction.getArgs().get("track"));
+                    break;
+                case "playingtrack":
+                    response = action.playingTrack();
+                    break;
+                case "queue":
+                    response = action.queue();
+                    break;
+                case "shutdown":
+                    response = action.shutdown();
+                    break;
+                case "skip":
+                    response = action.skip();
+                    break;
+                case "volume":
+                    response = action.volume((Integer) socketAction.getArgs().get("liczba"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = new Response();
+            response.setMessageType("message");
+            response.setSuccess(false);
+            response.setErrorMessage("Wystąpił błąd podczas wysyłania requesta do socketa. Error: " + e.getLocalizedMessage());
+        }
 
         Log.debug("response: " + GSON.toJson(response));
 
         if (response != null) {
-            Log.debug("Wysyłam!");
             response.setAction(socketAction);
             sendMessage(response);
         }
@@ -129,6 +159,7 @@ public class SocketClient extends Thread {
 
         private SocketAction action;
         private boolean success;
+        private boolean sendMessage;
         private String messageType;
         private String errorMessage;
         private Object data;

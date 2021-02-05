@@ -26,6 +26,7 @@ import pl.kamil0024.core.logger.Log;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class SocketClient {
 
@@ -60,6 +61,8 @@ public class SocketClient {
                 while ((text = reader.readLine()) != null) {
                     eventBus.post(new SocketServer.SocketJson(getSocketId(), text));
                 }
+                eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
+            } catch (SocketException ex) {
                 eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
             } catch (Exception e) {
                 Log.newError(e, getClass());

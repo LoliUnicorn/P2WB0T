@@ -45,6 +45,7 @@ public class PlayingTrackHandler implements HttpHandler {
                 return;
             }
             Response.sendObjectResponse(ex, new QueueHandler.Track(track));
+            return;
         } catch (Exception e) {
             Response.sendErrorResponse(ex, "Błąd", "Wystąpił błąd: " + e.getLocalizedMessage());
         }

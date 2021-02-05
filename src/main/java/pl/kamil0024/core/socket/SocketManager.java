@@ -29,9 +29,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.core.socket.actions.ConnectAction;
-import pl.kamil0024.core.socket.actions.DisconnectAction;
-import pl.kamil0024.core.socket.actions.SocketAction;
+import pl.kamil0024.core.socket.actions.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,14 +60,17 @@ public class SocketManager {
             Response response = SocketServer.GSON.fromJson(socketJson.getJson(), Response.class);
             TextChannel txt = api.getTextChannelById(response.getAction().getChannelId());
             if (txt == null) throw new NullPointerException("Kanal jakims cudem jest nullem");
-            String ping = String.format("<@%s>", response.getAction().getSocketId());
+            String ping = String.format("<@%s>", response.getAction().getMemberId());
             if (!response.isSuccess()) {
                 Message msg = txt.sendMessage(ping + ", " + response.getErrorMessage()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
                 return;
             }
 
+            if (!response.isSendMessage()) return;
+            
             if (response.getMessageType().equals("message")) {
+                if (response.getData() == null) return;
                 Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             }
@@ -98,7 +99,7 @@ public class SocketManager {
     }
 
     public Action getAction(String memberId, String channelId, int socketId) {
-        return new Action(this, memberId, channelId, socketId);
+        return new Action(this, memberId, channelId, socketId, true);
     }
 
     @AllArgsConstructor
@@ -108,12 +109,37 @@ public class SocketManager {
         private final String channelId;
         private final int socketId;
 
+        private boolean sendMessage;
+
         public void connect(String voiceChannelId) {
             manager.sendMessage(new ConnectAction(memberId, channelId, socketId, voiceChannelId));
         }
-
         public void disconnect() {
             manager.sendMessage(new DisconnectAction(memberId, channelId, socketId));
+        }
+        public void play(String track) {
+            manager.sendMessage(new PlayAction(memberId, channelId, socketId, track));
+        }
+        public void queue() {
+            manager.sendMessage(new QueueAction(memberId, channelId, socketId));
+        }
+        public void shutdown() {
+            manager.sendMessage(new ShutdownAction(memberId, channelId, socketId));
+        }
+        public void skip() {
+            manager.sendMessage(new SkipAction(memberId, channelId, socketId));
+        }
+        public void volume(int procent) {
+            manager.sendMessage(new VolumeAction(memberId, channelId, socketId, procent));
+        }
+
+        public Action setSendMessage(boolean bol) {
+            sendMessage = bol;
+            return this;
+        }
+
+        public boolean getSendMessage() {
+            return this.sendMessage;
         }
 
     }
@@ -123,6 +149,7 @@ public class SocketManager {
     public static class Response {
         private final SocketAction action;
         private final boolean success;
+        private final boolean sendMessage;
         private final String errorMessage;
         private final String messageType;
         private final Object data;

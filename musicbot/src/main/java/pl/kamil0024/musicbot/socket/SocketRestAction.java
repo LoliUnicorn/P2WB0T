@@ -19,6 +19,11 @@
 
 package pl.kamil0024.musicbot.socket;
 
+import com.google.gson.Gson;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -27,11 +32,21 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.Response;
 import pl.kamil0024.musicbot.api.handlers.Connect;
+import pl.kamil0024.musicbot.api.handlers.QueueHandler;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+@SuppressWarnings("DuplicatedCode")
 @AllArgsConstructor
 public class SocketRestAction {
+
+    private static final Gson GSON = new Gson();
 
     private final ShardManager api;
     private final MusicManager musicManager;
@@ -78,6 +93,144 @@ public class SocketRestAction {
         } catch (Exception e) {
             response.setErrorMessage("Wystąpił błąd:" + e.getLocalizedMessage());
         }
+        return response;
+    }
+
+    public SocketClient.Response play(String track) {
+        SocketClient.Response response = new SocketClient.Response();
+        response.setMessageType("message");
+        response.setSuccess(true);
+
+        Guild guild = Connect.getGuild(api);
+        AudioManager state = guild.getAudioManager();
+        if (state.getConnectedChannel() == null) {
+            response.setSuccess(false);
+            response.setErrorMessage("Bot nie jest na żadnym kanale!");
+            return response;
+        }
+
+        GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+
+        serwerManager.getManager().loadItemOrdered(serwerManager, track, new AudioLoadResultHandler() {
+
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                musicManager.play(Connect.getGuild(api), serwerManager, track, state.getConnectedChannel());
+                response.setData("dodano " + track.getInfo().title + " do kolejki");
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+                for (AudioTrack track : playlist.getTracks()) {
+                    musicManager.play(Connect.getGuild(api), serwerManager, track, state.getConnectedChannel());
+                }
+                response.setData("dodano " + playlist.getTracks().size() + " piosenek do kolejki (max. limit w kolejce to **10**).");
+            }
+
+            @Override
+            public void noMatches() {
+                response.setSuccess(false);
+                response.setErrorMessage("nie znaleziono dopasowań");
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+                response.setSuccess(false);
+                response.setErrorMessage("nie udało się dodać piosenki do kolejki! Error: " + exception.getLocalizedMessage());
+            }
+        });
+
+        return response;
+    }
+
+    public SocketClient.Response playingTrack() {
+        SocketClient.Response response = new SocketClient.Response();
+        AudioTrack track = musicManager.getGuildAudioPlayer(Connect.getGuild(api)).getPlayer().getPlayingTrack();
+        if (track == null) {
+            response.setMessageType("message");
+            response.setSuccess(false);
+            response.setErrorMessage("bot nie nie gra!");
+            return response;
+        }
+        response.setMessageType("track");
+        response.setSuccess(true);
+        response.setData(GSON.toJson(new QueueHandler.Track(track)));
+        return response;
+    }
+
+    public SocketClient.Response queue() {
+        SocketClient.Response response = new SocketClient.Response();
+        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+        List<AudioTrack> klele = new ArrayList<>(manager.getQueue());
+
+        if (klele.isEmpty() && manager.getPlayer().getPlayingTrack() == null) {
+            response.setSuccess(false);
+            response.setMessageType("message");
+            response.setErrorMessage("kolejka jest pusta!");
+            return response;
+        }
+        List<QueueHandler.Track> traki = new ArrayList<>();
+        klele.forEach(t -> traki.add(new QueueHandler.Track(t)));
+        response.setMessageType("track");
+        response.setData(GSON.toJson(traki));
+        return response;
+    }
+
+    public SocketClient.Response shutdown() {
+        SocketClient.Response response = new SocketClient.Response();
+        response.setMessageType("message");
+        response.setData("zamykam");
+
+        Guild guild = Connect.getGuild(api);
+        AudioManager state = guild.getAudioManager();
+        if (state.getConnectedChannel() != null) state.closeAudioConnection();
+        Runnable task = () -> System.exit(0);
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+        ses.schedule(task, 10, TimeUnit.SECONDS);
+        return response;
+    }
+
+    public SocketClient.Response skip() {
+        SocketClient.Response response = new SocketClient.Response();
+        response.setMessageType("message");
+        response.setSuccess(false);
+        Guild guild = Connect.getGuild(api);
+        AudioManager state = guild.getAudioManager();
+        if (state.getConnectedChannel() == null) {
+            response.setErrorMessage("bot nie jest na żadnym kanale!");
+            return response;
+        }
+        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+        if (manager.getPlayer().getPlayingTrack() == null) {
+            response.setErrorMessage("bot aktualnie nic nie gra, a nie można pominąć niczego!");
+            return response;
+        }
+        manager.nextTrack();
+        response.setSuccess(true);
+        response.setData("puszczam następną piosenkę");
+        return response;
+    }
+
+    public SocketClient.Response volume(int liczba) {
+        SocketClient.Response response = new SocketClient.Response();
+        response.setMessageType("message");
+        response.setSuccess(false);
+        Guild guild = Connect.getGuild(api);
+        try {
+            if (liczba <= 0 || liczba > 100) throw new Exception();
+        } catch (Exception e) {
+            response.setErrorMessage("zła liczba! (musi być z przedziału 1-100)");
+            return response;
+        }
+        AudioManager state = guild.getAudioManager();
+        if (state.getConnectedChannel() == null) {
+            response.setErrorMessage("bot nie jest na żadnym kanale!");
+            return response;
+        }
+        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+
+        manager.getPlayer().setVolume(liczba);
+        response.setData("zmieniam głośność na " + liczba + "%");
         return response;
     }
 
