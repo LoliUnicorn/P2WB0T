@@ -20,11 +20,19 @@
 package pl.kamil0024.musicbot.socket;
 
 import com.google.gson.Gson;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.musicbot.api.handlers.Connect;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.logger.Log;
+import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.io.*;
@@ -93,6 +101,50 @@ public class SocketClient extends Thread {
         SocketRestAction action = new SocketRestAction(api, musicManager);
         Response response = null;
 
+        if (socketAction.getTopic().equals("play")) {
+            response = new Response();
+            response.setMessageType("message");
+            response.setSuccess(false);
+
+            Guild guild = Connect.getGuild(api);
+            AudioManager state = guild.getAudioManager();
+            if (state.getConnectedChannel() == null) {
+                response.setErrorMessage("Bot nie jest na żadnym kanale!");
+            }
+            GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(guild);
+            serwerManager.getManager().loadItemOrdered(serwerManager, (String) socketAction.getArgs().get("track"), new AudioLoadResultHandler() {
+
+                @Override
+                public void trackLoaded(AudioTrack track) {
+                    musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
+                    Response r = new Response(socketAction, true, "message", null, "dodano " + track.getInfo().title + " do kolejki");
+                    sendMessage(r);
+                }
+
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {
+                    for (AudioTrack track : playlist.getTracks()) {
+                        musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
+                    }
+                    Response r = new Response(socketAction, true, "message", null, "dodano " + playlist.getTracks().size() + " piosenek do kolejki (max. limit w kolejce to **10**).");
+                    sendMessage(r);
+                }
+
+                @Override
+                public void noMatches() {
+                    Response r = new Response(socketAction, false, "message", "nie znaleziono dopasowań", null);
+                    sendMessage(r);
+                }
+
+                @Override
+                public void loadFailed(FriendlyException exception) {
+                    Response r = new Response(socketAction, false, "message", "nie udało się dodać piosenki do kolejki! Error: " + exception.getLocalizedMessage(), null);
+                    sendMessage(r);
+                }
+            });
+            return;
+        }
+
         try {
             switch (socketAction.getTopic()) {
                 case "disconnect":
@@ -100,9 +152,6 @@ public class SocketClient extends Thread {
                     break;
                 case "connect":
                     response = action.connect((String) socketAction.getArgs().get("voiceChannel"));
-                    break;
-                case "play":
-                    response = action.play((String) socketAction.getArgs().get("track"));
                     break;
                 case "playingtrack":
                     response = action.playingTrack();
@@ -144,6 +193,7 @@ public class SocketClient extends Thread {
     public static class SocketAction {
         public SocketAction() { }
 
+        private boolean sendMessage;
         private String memberId;
         private String channelId;
         private String topic;
@@ -159,7 +209,6 @@ public class SocketClient extends Thread {
 
         private SocketAction action;
         private boolean success;
-        private boolean sendMessage;
         private String messageType;
         private String errorMessage;
         private Object data;

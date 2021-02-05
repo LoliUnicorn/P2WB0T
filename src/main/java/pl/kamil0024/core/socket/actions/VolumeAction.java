@@ -29,6 +29,7 @@ import java.util.Map;
 @Data
 public class VolumeAction implements SocketAction {
 
+    private final Boolean sendMessage;
     private final String memberId;
     private final String channelId;
     private final int socketId;

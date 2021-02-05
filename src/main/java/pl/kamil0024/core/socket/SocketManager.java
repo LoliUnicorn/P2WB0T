@@ -68,7 +68,7 @@ public class SocketManager {
                 return;
             }
 
-            if (!response.isSendMessage()) return;
+            if (!response.getAction().isSendMessage()) return;
 
             if (response.getMessageType().equals("message")) {
                 if (response.getData() == null) return;
@@ -113,25 +113,25 @@ public class SocketManager {
         private boolean sendMessage;
 
         public void connect(String voiceChannelId) {
-            manager.sendMessage(new ConnectAction(memberId, channelId, socketId, voiceChannelId));
+            manager.sendMessage(new ConnectAction(sendMessage, memberId, channelId, socketId, voiceChannelId));
         }
         public void disconnect() {
-            manager.sendMessage(new DisconnectAction(memberId, channelId, socketId));
+            manager.sendMessage(new DisconnectAction(sendMessage, memberId, channelId, socketId));
         }
         public void play(String track) {
-            manager.sendMessage(new PlayAction(memberId, channelId, socketId, track));
+            manager.sendMessage(new PlayAction(sendMessage, memberId, channelId, socketId, track));
         }
         public void queue() {
-            manager.sendMessage(new QueueAction(memberId, channelId, socketId));
+            manager.sendMessage(new QueueAction(sendMessage, memberId, channelId, socketId));
         }
         public void shutdown() {
-            manager.sendMessage(new ShutdownAction(memberId, channelId, socketId));
+            manager.sendMessage(new ShutdownAction(sendMessage, memberId, channelId, socketId));
         }
         public void skip() {
-            manager.sendMessage(new SkipAction(memberId, channelId, socketId));
+            manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId));
         }
         public void volume(int procent) {
-            manager.sendMessage(new VolumeAction(memberId, channelId, socketId, procent));
+            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, procent));
         }
 
         public Action setSendMessage(boolean bol) {
@@ -150,7 +150,6 @@ public class SocketManager {
     public static class Response {
         private final SocketAction action;
         private final boolean success;
-        private final boolean sendMessage;
         private final String errorMessage;
         private final String messageType;
         private final Object data;
@@ -159,6 +158,7 @@ public class SocketManager {
         public static class SocketAction {
             public SocketAction() { }
 
+            private boolean sendMessage;
             private String memberId;
             private String channelId;
             private String topic;
