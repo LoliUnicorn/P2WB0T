@@ -98,51 +98,6 @@ public class SocketRestAction {
         return response;
     }
 
-//    public SocketClient.Response play(String track) {
-//        SocketClient.Response response = new SocketClient.Response();
-//
-//        response.setMessageType("message");
-//        response.setSuccess(true);
-//
-//        Guild guild = Connect.getGuild(api);
-//        AudioManager state = guild.getAudioManager();
-//        if (state.getConnectedChannel() == null) {
-//            response.setSuccess(false);
-//            response.setErrorMessage("Bot nie jest na żadnym kanale!");
-//            return response;
-//        }
-//        GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(guild);
-//        serwerManager.getManager().loadItemOrdered(serwerManager, track, new AudioLoadResultHandler() {
-//
-//            @Override
-//            public void trackLoaded(AudioTrack track) {
-//                musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
-//                response.setData("dodano " + track.getInfo().title + " do kolejki");
-//            }
-//
-//            @Override
-//            public void playlistLoaded(AudioPlaylist playlist) {
-//                for (AudioTrack track : playlist.getTracks()) {
-//                    musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
-//                }
-//                response.setData("dodano " + playlist.getTracks().size() + " piosenek do kolejki (max. limit w kolejce to **10**).");
-//            }
-//
-//            @Override
-//            public void noMatches() {
-//                response.setSuccess(false);
-//                response.setErrorMessage("nie znaleziono dopasowań");
-//            }
-//
-//            @Override
-//            public void loadFailed(FriendlyException exception) {
-//                response.setSuccess(false);
-//                response.setErrorMessage("nie udało się dodać piosenki do kolejki! Error: " + exception.getLocalizedMessage());
-//            }
-//        });
-//        return response;
-//    }
-
     public SocketClient.Response playingTrack() {
         SocketClient.Response response = new SocketClient.Response();
         AudioTrack track = musicManager.getGuildAudioPlayer(Connect.getGuild(api)).getPlayer().getPlayingTrack();
