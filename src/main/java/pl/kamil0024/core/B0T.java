@@ -247,7 +247,7 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
-        SocketManager socketManager = new SocketManager(eventBus, api);
+        SocketManager socketManager = new SocketManager(eventBus, api, eventWaiter);
         SocketServer socketServer = new SocketServer(eventBus, socketManager);
         socketServer.start();
 

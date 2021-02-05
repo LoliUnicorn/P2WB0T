@@ -29,14 +29,16 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.json.JSONArray;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.actions.*;
+import pl.kamil0024.core.util.EmbedPageintaor;
+import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.GsonUtil;
 import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class SocketManager {
@@ -44,11 +46,13 @@ public class SocketManager {
     @Getter private final HashMap<Integer, SocketClient> clients;
 
     private final ShardManager api;
+    private final EventWaiter eventWaiter;
 
-    public SocketManager(AsyncEventBus eventBus, ShardManager api) {
+    public SocketManager(AsyncEventBus eventBus, ShardManager api, EventWaiter eventWaiter) {
         clients = new HashMap<>();
         eventBus.register(this);
         this.api = api;
+        this.eventWaiter = eventWaiter;
     }
 
     @Subscribe
@@ -79,20 +83,30 @@ public class SocketManager {
                 Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
             } else if (response.getMessageType().equals("embedtrack")) {
-                Log.debug("track: " + GsonUtil.toJSON(response.getData()));
                 PrivateQueueCommand.Track t = GsonUtil.fromJSON(GsonUtil.toJSON(response.getData()), PrivateQueueCommand.Track.class);
-
                 EmbedBuilder track = new PrivateQueueCommand.DecodeTrack(t, false).create();
-
                 MessageBuilder mb = new MessageBuilder();
                 mb.setContent(ping + ", dodano do kolejki!");
                 mb.setEmbed(track.build());
                 Message msg = txt.sendMessage(mb.build()).complete();
                 msg.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
+            } else if (response.getMessageType().equals("queuelist")) {
+                String data = GsonUtil.toJSON(response.getData());
+                Log.debug("data:" + data);
+                Iterator<Object> a = new JSONArray(data).iterator();
+                List<EmbedBuilder> tracks = new ArrayList<>();
+                boolean first = true;
+                while (a.hasNext()) {
+                    tracks.add(new PrivateQueueCommand.DecodeTrack(a.next().toString(), first).create());
+                    first = false;
+                }
+                new EmbedPageintaor(tracks, api.getUserById(response.getAction().getMemberId()), eventWaiter, api.getShards().stream().findAny().get())
+                    .create(txt);
+
             }
 
         } catch (Exception e) {
-            Log.newError("Socket client wyslal zla wiadomosc! W logach masz wiadomosc", getClass());
+            Log.newError("Wystapil blad podczas przetwarzania wiadomosci od socketa! W logach masz wiecej informacji", getClass());
             Log.error(socketJson.getJson());
             Log.newError(e, getClass());
         }
@@ -145,9 +159,6 @@ public class SocketManager {
         }
         public void skip() {
             manager.sendMessage(new SkipAction(sendMessage, memberId, channelId, socketId), sendMessage);
-        }
-        public void volume(int procent) {
-            manager.sendMessage(new VolumeAction(sendMessage, memberId, channelId, socketId, String.valueOf(procent)), sendMessage);
         }
 
         public Action setSendMessage(boolean bol) {
