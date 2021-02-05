@@ -30,7 +30,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.musicbot.api.Response;
 import pl.kamil0024.musicbot.api.handlers.Connect;
 import pl.kamil0024.musicbot.api.handlers.QueueHandler;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
@@ -214,11 +213,12 @@ public class SocketRestAction {
     public SocketClient.Response volume(int liczba) {
         SocketClient.Response response = new SocketClient.Response();
         response.setMessageType("message");
-        response.setSuccess(false);
+        response.setSuccess(true);
         Guild guild = Connect.getGuild(api);
         try {
             if (liczba <= 0 || liczba > 100) throw new Exception();
         } catch (Exception e) {
+            response.setSuccess(false);
             response.setErrorMessage("zła liczba! (musi być z przedziału 1-100)");
             return response;
         }

@@ -50,6 +50,7 @@ public class SocketManager {
     @Subscribe
     public void retrieveMessage(SocketServer.SocketJson socketJson) {
         Log.debug("Nowa wiadomość socketa %s:", socketJson.getId());
+        Log.debug(socketJson.getJson());
         if (socketJson.getJson().startsWith("setBotId:")) {
             String id = socketJson.getJson().split("setBotId:")[1];
             clients.get(socketJson.getId()).setBotId(id);
@@ -68,7 +69,7 @@ public class SocketManager {
             }
 
             if (!response.isSendMessage()) return;
-            
+
             if (response.getMessageType().equals("message")) {
                 if (response.getData() == null) return;
                 Message msg = txt.sendMessage(ping + ", " + response.getData()).complete();

@@ -57,7 +57,7 @@ public class SocketServer {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Socket socket = serverSocket.accept();
-                    SocketClient client = new SocketClient(socket, eventBus, socketManager.getClients().size() + 1);
+                    SocketClient client = new SocketClient(socket, eventBus, socketManager.getClients().keySet().stream().findFirst().orElse(0) + 1);
                     client.start();
                     socketManager.getClients().put(client.getSocketId(), client);
                     Log.debug("Podłączono nowy socket!");

@@ -127,10 +127,10 @@ public class SocketClient extends Thread {
             response.setErrorMessage("Wystąpił błąd podczas wysyłania requesta do socketa. Error: " + e.getLocalizedMessage());
         }
 
-        Log.debug("response: " + GSON.toJson(response));
 
         if (response != null) {
             response.setAction(socketAction);
+            Log.debug("response: " + GSON.toJson(response));
             sendMessage(response);
         }
 
