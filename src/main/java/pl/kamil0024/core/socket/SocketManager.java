@@ -66,7 +66,7 @@ public class SocketManager {
         Log.debug("Nowa wiadomość socketa %s:", socketJson.getId());
         Log.debug(socketJson.getJson());
         if (socketJson.getJson().startsWith("setBotId:")) {
-            String id = socketJson.getJson().split("setBotId:")[1];
+            String id = socketJson.getJson().split("setBotId: ")[1];
             clients.get(socketJson.getId()).setBotId(id);
             botIds.put(socketJson.getId(), id);
             return;
