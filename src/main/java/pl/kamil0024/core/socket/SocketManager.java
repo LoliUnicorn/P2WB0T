@@ -74,6 +74,8 @@ public class SocketManager {
 
         try {
             Response response = SocketServer.GSON.fromJson(socketJson.getJson(), Response.class);
+            if (response.getAction().getTopic().equals("shutdown")) return;
+
             TextChannel txt = api.getTextChannelById(response.getAction().getChannelId());
             if (txt == null) throw new NullPointerException("Kanal jakims cudem jest nullem");
             String ping = String.format("<@%s>", response.getAction().getMemberId());

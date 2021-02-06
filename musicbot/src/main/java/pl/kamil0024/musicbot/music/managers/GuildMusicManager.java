@@ -27,6 +27,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.musicbot.music.managers.entity.AudioPlayerSendHandler;
 
 import java.util.concurrent.BlockingQueue;
@@ -64,16 +65,18 @@ public class GuildMusicManager extends AudioEventAdapter {
 
     }
 
-    public void nextTrack() {
+    @Nullable
+    public AudioTrack nextTrack() {
         AudioTrack next = queue.poll();
 
         if (getDestroy() || next == null) {
             destroy();
-            return;
+            return null;
         }
 
         player.startTrack(next, false);
         setAktualnaPiosenka(next);
+        return next;
     }
 
     public void destroy() {

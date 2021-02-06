@@ -34,6 +34,7 @@ import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -154,9 +155,7 @@ public class SocketRestAction {
             response.setErrorMessage("bot aktualnie nic nie gra, a nie można pominąć niczego!");
             return response;
         }
-        manager.nextTrack();
-        response.setSuccess(true);
-        if (manager.getQueue().size() != 0) response.setData("kolejka się skończyła! Opuszczam kanał");
+        if (manager.nextTrack() == null) response.setData("kolejka się skończyła! Opuszczam kanał");
         else response.setData("puszczam następną piosenkę");
         return response;
     }
