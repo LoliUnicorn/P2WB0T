@@ -58,6 +58,7 @@ import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.socket.SocketServer;
 import pl.kamil0024.core.util.EventWaiter;
@@ -89,10 +90,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
@@ -118,7 +116,7 @@ public class B0T {
     private ShardManager api;
     private ModulManager modulManager;
     private MusicModule musicModule;
-    private MusicAPI musicAPI;
+    private SocketManager socketManager;
     private VoiceStateDao voiceStateDao;
 
     @SneakyThrows
@@ -247,13 +245,12 @@ public class B0T {
             Thread.sleep(8000);
         } catch (InterruptedException ignored) {}
 
-        SocketManager socketManager = new SocketManager(eventBus, api, eventWaiter);
+        this.socketManager = new SocketManager(eventBus, api, eventWaiter);
         SocketServer socketServer = new SocketServer(eventBus, socketManager);
         socketServer.start();
 
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
         EmbedRedisManager embedRedisManager  = new EmbedRedisManager(redisManager);
-                         this.musicAPI       = new MusicAPIImpl(api);
 
         CaseDao          caseDao             = new CaseDao(databaseManager);
         UserDao          userDao             = new UserDao(databaseManager);
@@ -284,14 +281,14 @@ public class B0T {
         this.musicModule = new MusicModule(commandManager, api, eventWaiter, voiceStateDao, socketManager);
         this.statsModule = new StatsModule(commandManager, api, eventWaiter, statsDao, musicModule, nieobecnosciDao);
 
-        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, musicAPI, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, acBanDao, recordingDao);
+        APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, acBanDao, recordingDao);
         WeryfikacjaModule weryfikacjaModule = new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao, weryfikacjaDao);
         modulManager.getModules().add(new LogsModule(api, statsModule, redisManager));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule));
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, musicAPI, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao, socketManager));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao, socketManager));
         modulManager.getModules().add(new RekruModule(api, commandManager));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);
@@ -344,12 +341,10 @@ public class B0T {
             api.setStatus(OnlineStatus.DO_NOT_DISTURB);
             api.setActivity(Activity.playing("Wyłącznie bota w toku..."));
 
-            loadMusic();
-            musicAPI.getPorts().forEach(port -> {
-                try {
-                    musicAPI.getAction(port).shutdown();
-                } catch (IOException ignored) { }
-            });
+            for (Map.Entry<Integer, SocketClient> entry : socketManager.getClients().entrySet()) {
+                socketManager.getAction("0", Ustawienia.instance.channel.moddc, entry.getKey())
+                        .setSendMessage(false).shutdown();
+            }
 
             musicModule.load();
             modulManager.disableAll();
@@ -359,40 +354,40 @@ public class B0T {
         Runtime.getRuntime().addShutdownHook(shutdownThread);
     }
 
-    public void loadMusic() {
-        try {
-            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
-            if (g == null) return;
-
-            for (Integer port : musicAPI.getPorts()) {
-                MusicRestAction action = musicAPI.getAction(port);
-                VoiceStateConfig vsc = new VoiceStateConfig(musicAPI.getClientByPort(port));
-
-                VoiceChannel vc = action.getVoiceChannel();
-                if (vc == null) continue;
-                vsc.setVoiceChannel(vc.getId());
-
-                MusicResponse queue = action.getQueue();
-                if (queue.isError()) continue;
-
-                ArrayList<String> kurwa = new ArrayList<>();
-                for (Object o : queue.json.getJSONArray("data")) {
-                    PrivateQueueCommand.Track trak = new Gson()
-                            .fromJson(o.toString(), PrivateQueueCommand.Track.class);
-                    kurwa.add(trak.getIdentifier());
-                }
-                vsc.setQueue(kurwa);
-                MusicResponse mr = action.getPlayingTrack();
-                PrivateQueueCommand.Track trak = new Gson()
-                        .fromJson(mr.json.getJSONObject("data").toString(), PrivateQueueCommand.Track.class);
-                vsc.setAktualnaPiosenka(trak.getIdentifier());
-                voiceStateDao.save(vsc);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void loadMusic() {
+//        try {
+//            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+//            if (g == null) return;
+//
+//            for (Integer port : musicAPI.getPorts()) {
+//                MusicRestAction action = musicAPI.getAction(port);
+//                VoiceStateConfig vsc = new VoiceStateConfig(musicAPI.getClientByPort(port));
+//
+//                VoiceChannel vc = action.getVoiceChannel();
+//                if (vc == null) continue;
+//                vsc.setVoiceChannel(vc.getId());
+//
+//                MusicResponse queue = action.getQueue();
+//                if (queue.isError()) continue;
+//
+//                ArrayList<String> kurwa = new ArrayList<>();
+//                for (Object o : queue.json.getJSONArray("data")) {
+//                    PrivateQueueCommand.Track trak = new Gson()
+//                            .fromJson(o.toString(), PrivateQueueCommand.Track.class);
+//                    kurwa.add(trak.getIdentifier());
+//                }
+//                vsc.setQueue(kurwa);
+//                MusicResponse mr = action.getPlayingTrack();
+//                PrivateQueueCommand.Track trak = new Gson()
+//                        .fromJson(mr.json.getJSONObject("data").toString(), PrivateQueueCommand.Track.class);
+//                vsc.setAktualnaPiosenka(trak.getIdentifier());
+//                voiceStateDao.save(vsc);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static class EventBusErrorHandler implements SubscriberExceptionHandler {
         public static final EventBusErrorHandler instance = new EventBusErrorHandler();

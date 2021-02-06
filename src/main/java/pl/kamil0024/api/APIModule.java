@@ -35,14 +35,12 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.api.handlers.*;
 import pl.kamil0024.api.internale.MiddlewareBuilder;
-import pl.kamil0024.api.redisstats.RedisStatsManager;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
-import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.UserUtil;
@@ -61,7 +59,6 @@ import static io.undertow.Handlers.path;
 public class APIModule implements Modul {
 
     private final VoiceStateDao voiceStateDao;
-    private final MusicAPI musicAPI;
     private final ShardManager api;
     private boolean start = false;
     Undertow server;
@@ -85,11 +82,10 @@ public class APIModule implements Modul {
 
     private final ScheduledExecutorService executorSche;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, MusicAPI musicAPI, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, AcBanDao acBanDao, RecordingDao recordingDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, AcBanDao acBanDao, RecordingDao recordingDao) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
-        this.musicAPI = musicAPI;
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
 
         this.caseDao = caseDao;
@@ -555,11 +551,6 @@ public class APIModule implements Modul {
          * @apiError {Boolean} error.description Długa odpowiedź błędu
          */
         routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
-
-        //#region Music Bot api
-        routes.get("api/musicbot/shutdown/{port}", new MusicBotHandler(musicAPI, false, voiceStateDao, api));
-        routes.get("api/musicbot/connect/{port}/{clientid}", new MusicBotHandler(musicAPI, true, voiceStateDao, api));
-        //#endregion Music Bot api
 
         routes.get("api/youtrack/reports", new YouTrackReport(api));
 

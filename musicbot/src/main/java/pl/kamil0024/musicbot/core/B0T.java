@@ -26,12 +26,10 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.APIModule;
-import pl.kamil0024.musicbot.core.listener.ShutdownListener;
 import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.core.module.Modul;
 import pl.kamil0024.musicbot.core.module.ModulManager;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
-import pl.kamil0024.musicbot.core.util.NetworkUtil;
 import pl.kamil0024.musicbot.core.util.Statyczne;
 import pl.kamil0024.musicbot.core.util.Tlumaczenia;
 import pl.kamil0024.musicbot.music.MusicModule;
@@ -94,7 +92,7 @@ public class B0T {
             builder.setEnableShutdownHook(false);
             builder.setAutoReconnect(true);
             builder.setStatus(OnlineStatus.OFFLINE);
-            builder.addEventListeners(eventWaiter, new ShutdownListener());
+            builder.addEventListeners(eventWaiter);
             builder.setBulkDeleteSplittingEnabled(false);
             builder.setCallbackPool(Executors.newFixedThreadPool(4));
             this.api = builder.build();
@@ -165,22 +163,11 @@ public class B0T {
             System.exit(1);
         }
 
-        try {
-            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/connect/%s/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port, shard.get().getSelfUser().getId()));
-        } catch (Exception e) {
-            Log.newError("Nie udało się podłączyć do głównego api");
-            Log.newError(e);
-        }
-
     }
 
     public void shutdownThread() {
         this.shutdownThread = new Thread(() -> {
             Log.info("Zamykam...");
-            try {
-                NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/shutdown/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
-            } catch (Exception ignored) {}
-
             modulManager.disableAll();
             api.shutdown();
         });
