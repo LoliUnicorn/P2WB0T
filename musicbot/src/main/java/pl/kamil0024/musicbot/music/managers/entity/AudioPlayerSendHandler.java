@@ -49,7 +49,11 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     @Override
     public boolean canProvide() {
         // returns true if audio was provided
-        return audioPlayer.provide(frame);
+        try {
+            return audioPlayer.provide(frame);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

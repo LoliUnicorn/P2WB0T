@@ -112,7 +112,7 @@ public class QueueCommand extends Command {
     }
 
     public static String getYtLink(AudioTrack audioTrack) {
-        return String.format("https://www.youtube.com/watch?v=%s", audioTrack.getIdentifier());
+        return String.format("https://youtu.be/%s", audioTrack.getIdentifier());
     }
 
     public static String getYtLink(String audioTrack) {

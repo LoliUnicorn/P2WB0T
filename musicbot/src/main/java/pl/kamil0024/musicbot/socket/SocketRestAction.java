@@ -156,35 +156,8 @@ public class SocketRestAction {
         }
         manager.nextTrack();
         response.setSuccess(true);
-        if (manager.getQueue().size() == 0) response.setData("kolejka się skończyła! Opuszczam kanał");
+        if (manager.getQueue().size() != 0) response.setData("kolejka się skończyła! Opuszczam kanał");
         else response.setData("puszczam następną piosenkę");
-        return response;
-    }
-
-    public SocketClient.Response volume(String liczba) {
-        SocketClient.Response response = new SocketClient.Response();
-        response.setMessageType("message");
-        response.setSuccess(true);
-        Guild guild = Connect.getGuild(api);
-        int l;
-        try {
-            Log.debug("Liczba: " + liczba);
-            l = Integer.parseInt(liczba);
-            if (l <= 0 || l > 100) throw new Exception();
-        } catch (Exception e) {
-            response.setSuccess(false);
-            response.setErrorMessage("zła liczba! (musi być z przedziału 1-100)");
-            return response;
-        }
-        AudioManager state = guild.getAudioManager();
-        if (state.getConnectedChannel() == null) {
-            response.setErrorMessage("bot nie jest na żadnym kanale!");
-            return response;
-        }
-        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
-
-        manager.getPlayer().setVolume(l);
-        response.setData("zmieniam głośność na " + liczba + "%");
         return response;
     }
 

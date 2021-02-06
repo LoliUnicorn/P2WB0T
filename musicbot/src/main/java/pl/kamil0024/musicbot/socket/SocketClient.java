@@ -27,6 +27,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
@@ -111,18 +112,37 @@ public class SocketClient extends Thread {
             response.setSuccess(false);
 
             Guild guild = Connect.getGuild(api);
-            AudioManager state = guild.getAudioManager();
-            if (state.getConnectedChannel() == null) {
+            AudioManager state = null;
+            boolean inChannel = false;
+
+            for (int i = 0; i < 5; i++) {
+                state = guild.getAudioManager();
+                if (state.getConnectedChannel() == null) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (Exception e) {
+                        break;
+                    }
+                } else {
+                    inChannel = true;
+                    break;
+                }
+            }
+
+            if (!inChannel) {
                 response.setErrorMessage("bot nie jest na żadnym kanale!");
                 sendMessage(response);
                 return;
             }
+
+            final VoiceChannel vc = state.getConnectedChannel();
+
             GuildMusicManager serwerManager = musicManager.getGuildAudioPlayer(guild);
             serwerManager.getManager().loadItemOrdered(serwerManager, (String) socketAction.getArgs().get("track"), new AudioLoadResultHandler() {
 
                 @Override
                 public void trackLoaded(AudioTrack track) {
-                    musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
+                    musicManager.play(guild, serwerManager, track, vc);
                     Response r = new Response(socketAction, true, "embedtrack", null, new QueueHandler.Track(track));
                     sendMessage(r);
                 }
@@ -130,7 +150,7 @@ public class SocketClient extends Thread {
                 @Override
                 public void playlistLoaded(AudioPlaylist playlist) {
                     for (AudioTrack track : playlist.getTracks()) {
-                        musicManager.play(guild, serwerManager, track, state.getConnectedChannel());
+                        musicManager.play(guild, serwerManager, track, vc);
                     }
                     Response r = new Response(socketAction, true, "message", null, "dodano " + playlist.getTracks().size() + " piosenek do kolejki (max. limit w kolejce to **10**).");
                     sendMessage(r);
@@ -180,7 +200,7 @@ public class SocketClient extends Thread {
             response.setSuccess(false);
             response.setErrorMessage("Wystąpił błąd podczas wysyłania requesta do socketa. Error: " + e.getLocalizedMessage());
         }
-        
+
         if (response != null) {
             response.setAction(socketAction);
             Log.debug("response: " + GSON.toJson(response));

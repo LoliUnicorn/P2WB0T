@@ -97,7 +97,6 @@ public class PrivateYouTubeCommand extends Command {
                     (event) -> event.getAuthor().getId().equals(context.getUser().getId()) && event.getChannel().getId().equals(context.getChannel().getId()),
                     (event) -> {
                         List<Integer> lista = new ArrayList<>();
-                        List<AudioTrack> track = new ArrayList<>();
                         String eMsg = event.getMessage().getContentRaw().replaceAll(" ", "");
                         for (String s : eMsg.split(",")) {
                             Integer i = context.getParsed().getNumber(s);
