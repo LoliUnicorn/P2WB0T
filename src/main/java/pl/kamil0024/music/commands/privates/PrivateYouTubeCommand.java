@@ -110,7 +110,7 @@ public class PrivateYouTubeCommand extends Command {
                             if (lista.isEmpty()) return;
 
                             List<String> urls = new ArrayList<>();
-                            lista.forEach(i -> urls.add(QueueCommand.getImageUrl(mapa.get(i))));
+                            lista.forEach(i -> urls.add(QueueCommand.getYtLink(mapa.get(i))));
 
                             SocketClient client = socketManager.getClientFromChanne(context);
 
@@ -138,7 +138,6 @@ public class PrivateYouTubeCommand extends Command {
                             e.printStackTrace();
                             context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
                         }
-                        context.sendTranslate("youtube.succes", getTekst(track)).queue();
                         event.getMessage().delete().queue();
                     }, 15, TimeUnit.SECONDS, () -> msg.delete().queue());
         } catch (Exception e) {

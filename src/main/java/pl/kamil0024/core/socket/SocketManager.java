@@ -104,7 +104,6 @@ public class SocketManager {
                 }
                 case "queuelist":
                     String data = GsonUtil.toJSON(response.getData());
-                    Log.debug("data:" + data);
                     Iterator<Object> a = new JSONArray(data).iterator();
                     List<EmbedBuilder> tracks = new ArrayList<>();
                     boolean first = true;

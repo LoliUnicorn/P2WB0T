@@ -156,7 +156,8 @@ public class SocketRestAction {
         }
         manager.nextTrack();
         response.setSuccess(true);
-        response.setData("puszczam następną piosenkę");
+        if (manager.getQueue().size() == 0) response.setData("kolejka się skończyła! Opuszczam kanał");
+        else response.setData("puszczam następną piosenkę");
         return response;
     }
 
