@@ -155,6 +155,7 @@ public class SocketRestAction {
             response.setErrorMessage("bot aktualnie nic nie gra, a nie można pominąć niczego!");
             return response;
         }
+        response.setSuccess(true);
         if (manager.nextTrack() == null) response.setData("kolejka się skończyła! Opuszczam kanał");
         else response.setData("puszczam następną piosenkę");
         return response;

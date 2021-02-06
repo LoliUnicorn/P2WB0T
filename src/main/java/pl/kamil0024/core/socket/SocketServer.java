@@ -27,6 +27,9 @@ import pl.kamil0024.core.logger.Log;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 public class SocketServer {
 
@@ -57,7 +60,11 @@ public class SocketServer {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Socket socket = serverSocket.accept();
-                    SocketClient client = new SocketClient(socket, eventBus, socketManager.getClients().keySet().stream().findFirst().orElse(0) + 1);
+                    int lastId = 0;
+                    for (Map.Entry<Integer, SocketClient> entry : socketManager.getClients().entrySet()) {
+                        lastId = entry.getKey();
+                    }
+                    SocketClient client = new SocketClient(socket, eventBus, lastId + 1);
                     client.start();
                     socketManager.getClients().put(client.getSocketId(), client);
                     Log.debug("Podłączono nowy socket!");
