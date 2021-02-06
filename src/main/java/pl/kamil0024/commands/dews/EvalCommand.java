@@ -35,9 +35,8 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.*;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.ModulManager;
-import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.UsageException;
@@ -72,7 +71,6 @@ public class EvalCommand extends Command {
     @Inject private final StatsModule statsModule;
     @Inject private final MultiDao multiDao;
     @Inject private final MusicModule musicModule;
-    @Inject private final MusicAPI musicAPI;
     @Inject private final YouTrack youTrack;
     @Inject private final TicketDao ticketDao;
     @Inject private final ApelacjeDao apelacjeDao;
@@ -80,8 +78,9 @@ public class EvalCommand extends Command {
     @Inject private final EmbedRedisManager embedRedisManager;
     @Inject private final WeryfikacjaDao weryfikacjaDao;
     @Inject private final WeryfikacjaModule weryfikacjaModule;
+    @Inject private final SocketManager socketManager;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, MusicAPI musicAPI, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, SocketManager socketManager) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -103,7 +102,6 @@ public class EvalCommand extends Command {
         this.statsModule = statsModule;
         this.multiDao = multiDao;
         this.musicModule = musicModule;
-        this.musicAPI = musicAPI;
         this.youTrack = youTrack;
         this.ticketDao = ticketDao;
         this.apelacjeDao = apelacjeDao;
@@ -111,6 +109,7 @@ public class EvalCommand extends Command {
         this.embedRedisManager = embedRedisManager;
         this.weryfikacjaDao = weryfikacjaDao;
         this.weryfikacjaModule = weryfikacjaModule;
+        this.socketManager = socketManager;
     }
 
     @Override
@@ -139,7 +138,6 @@ public class EvalCommand extends Command {
         shell.setVariable("statsModule", statsModule);
         shell.setVariable("multiDao", multiDao);
         shell.setVariable("musicModule", musicModule);
-        shell.setVariable("musicAPI", musicAPI);
         shell.setVariable("youTrack", youTrack);
         shell.setVariable("ticketDao", ticketDao);
         shell.setVariable("apelacjeDao", apelacjeDao);
@@ -148,6 +146,7 @@ public class EvalCommand extends Command {
         shell.setVariable("weryfikacjaDao", weryfikacjaDao);
         shell.setVariable("weryfikacjaModule", weryfikacjaModule);
         shell.setVariable("gson", new Gson());
+        shell.setVariable("socketManager", socketManager);
 
         long ms = System.currentTimeMillis();
         Object value;

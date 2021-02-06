@@ -26,7 +26,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.*;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
@@ -47,9 +47,8 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.module.Modul;
-import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.music.audiomanager.spotify.SpotifyAudioSourceManager;
 import pl.kamil0024.music.commands.*;
 import pl.kamil0024.music.commands.privates.*;
 import pl.kamil0024.musicmanager.entity.GuildMusicManager;
@@ -75,16 +74,16 @@ public class MusicModule implements Modul {
     public final AudioPlayerManager playerManager;
     @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
-    private static YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
+    private static final YoutubeSearchProvider youtubeSearchProvider = new YoutubeSearchProvider();
     public YoutubeAudioSourceManager youtubeSourceManager;
-    public MusicAPI musicAPI;
+    public SocketManager socketManager;
 
-    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao, MusicAPI musicAPI) {
+    public MusicModule(CommandManager commandManager, ShardManager api, EventWaiter eventWaiter, VoiceStateDao voiceStateDao, SocketManager socketManager) {
         this.commandManager = commandManager;
         this.api = api;
         this.eventWaiter = eventWaiter;
         this.voiceStateDao = voiceStateDao;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
 
         this.playerManager = defaultAudioPlayerManager;
         this.musicManagers = new HashMap<>();
@@ -125,12 +124,11 @@ public class MusicModule implements Modul {
         cmd.add(new LoopCommand(this));
 
         //#region Prywatne
-        cmd.add(new PrivatePlayCommand(musicAPI));
-        cmd.add(new PrivateLeaveCommand(musicAPI));
-        cmd.add(new PrivateQueueCommand(musicAPI, eventWaiter));
-        cmd.add(new PrivateSkipCommand(musicAPI));
-        cmd.add(new PrivateVolumeCommand(musicAPI));
-        cmd.add(new PrivateYouTubeCommand(musicAPI, eventWaiter, this));
+        cmd.add(new PrivatePlayCommand(socketManager));
+        cmd.add(new PrivateLeaveCommand(socketManager));
+        cmd.add(new PrivateQueueCommand(socketManager));
+        cmd.add(new PrivateSkipCommand(socketManager));
+        cmd.add(new PrivateYouTubeCommand(socketManager, eventWaiter, this));
         //#endregion Prywatne
 
         cmd.forEach(commandManager::registerCommand);

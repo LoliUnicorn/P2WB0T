@@ -17,18 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.api.handlers;
+package pl.kamil0024.core.socket.actions;
 
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import pl.kamil0024.musicbot.core.Ustawienia;
-import pl.kamil0024.musicbot.api.Response;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public class CheckToken implements HttpHandler {
+import java.util.HashMap;
+import java.util.Map;
+
+@AllArgsConstructor
+@Data
+public class ConnectAction implements SocketAction {
+
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+    private final String voiceChannelId;
+
+    private final String topic = "connect";
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
-        Response.sendResponse(ex, "Połączenie jest dobre!");
+    public Map<String, Object> getArgs() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("voiceChannel", getVoiceChannelId());
+        return map;
     }
 
 }

@@ -39,7 +39,7 @@ import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
-import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -78,7 +78,6 @@ public class CommandsModule implements Modul {
     @Inject StatsModule statsModule;
     @Inject MusicModule musicModule;
     @Inject MultiDao multiDao;
-    @Inject MusicAPI musicAPI;
     @Inject NieobecnosciManager nieobecnosciManager;
     @Inject YouTrack youTrack;
     @Inject TicketDao ticketDao;
@@ -88,6 +87,7 @@ public class CommandsModule implements Modul {
     @Inject WeryfikacjaDao weryfikacjaDao;
     @Inject WeryfikacjaModule weryfikacjaModule;
     @Inject RecordingDao recordingDao;
+    @Inject SocketManager socketManager;
 
     private boolean start = false;
     private final ModLog modLog;
@@ -97,7 +97,7 @@ public class CommandsModule implements Modul {
     GuildListener guildListener;
     GiveawayListener giveawayListener;
 
-    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, MusicAPI musicAPI, NieobecnosciManager nieobecnosciManager, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, RecordingDao recordingDao) {
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, NieobecnosciManager nieobecnosciManager, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, RecordingDao recordingDao, SocketManager socketManager) {
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -114,7 +114,6 @@ public class CommandsModule implements Modul {
         this.statsModule = statsModule;
         this.musicModule = musicModule;
         this.multiDao = multiDao;
-        this.musicAPI = musicAPI;
         this.nieobecnosciManager = nieobecnosciManager;
         this.youTrack = youTrack;
         this.ticketDao = ticketDao;
@@ -124,6 +123,7 @@ public class CommandsModule implements Modul {
         this.weryfikacjaDao = weryfikacjaDao;
         this.weryfikacjaModule = weryfikacjaModule;
         this.recordingDao = recordingDao;
+        this.socketManager = socketManager;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
         executorSche.scheduleAtFixedRate(() -> tak(api), 0, 5, TimeUnit.MINUTES);
@@ -140,10 +140,10 @@ public class CommandsModule implements Modul {
         cmd = new ArrayList<>();
 
         cmd.add(new PingCommand());
-        cmd.add(new BotinfoCommand(commandManager, modulManager, musicAPI));
+        cmd.add(new BotinfoCommand(commandManager, modulManager, socketManager));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
-        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, musicAPI, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule));
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, socketManager));
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());

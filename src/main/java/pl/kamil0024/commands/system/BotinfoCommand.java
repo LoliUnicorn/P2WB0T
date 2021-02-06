@@ -24,14 +24,13 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.module.ModulManager;
-import pl.kamil0024.core.musicapi.MusicAPI;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.Statyczne;
 import pl.kamil0024.core.util.UserUtil;
 
@@ -46,9 +45,9 @@ public class BotinfoCommand extends Command {
 
     @Inject private final CommandManager commandManager;
     @Inject private final ModulManager modulManager;
-    @Inject private final MusicAPI musicAPI;
+    @Inject private final SocketManager socketManager;
 
-    public BotinfoCommand(CommandManager commandManager, ModulManager modulManager, MusicAPI musicAPI) {
+    public BotinfoCommand(CommandManager commandManager, ModulManager modulManager, SocketManager socketManager) {
         name = "botinfo";
         aliases = Arrays.asList("botstat", "botstats");
         cooldown = 5;
@@ -56,7 +55,7 @@ public class BotinfoCommand extends Command {
 
         this.commandManager = commandManager;
         this.modulManager = modulManager;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
     }
 
     @SneakyThrows
@@ -88,14 +87,7 @@ public class BotinfoCommand extends Command {
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.cmd"), String.valueOf(commandManager.getCommands().size()), false));
         fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.modules"), String.valueOf(modulManager.getModules().size()), false));
 
-        int polaczonych = 0;
-        for (Integer port : musicAPI.getPorts()) {
-            VoiceChannel vc = musicAPI.getAction(port).getVoiceChannel();
-            if (vc != null) {
-                polaczonych++;
-            }
-        }
-        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.musicbots"), String.format("[ %s / %s ]", polaczonych, musicAPI.getPorts().size()), false));
+        fields.add(new MessageEmbed.Field(context.getTranslate("botinfo.musicbots"), String.format("[ %s ]", socketManager.getClients().size()), false));
 
         eb.setColor(UserUtil.getColor(context.getMember()));
 

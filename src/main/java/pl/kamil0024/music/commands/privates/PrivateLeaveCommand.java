@@ -19,63 +19,37 @@
 
 package pl.kamil0024.music.commands.privates;
 
-import net.dv8tion.jda.api.entities.Member;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
-import pl.kamil0024.music.commands.PlayCommand;
+import pl.kamil0024.core.socket.SocketClient;
+import pl.kamil0024.core.socket.SocketManager;
 
 @SuppressWarnings("DuplicatedCode")
 public class PrivateLeaveCommand extends Command {
 
-    private final MusicAPI musicAPI;
+    private final SocketManager socketManager;
 
-    public PrivateLeaveCommand(MusicAPI musicAPI) {
+    public PrivateLeaveCommand(SocketManager socketManager) {
         name = "pleave";
         aliases.add("privateleave");
         category = CommandCategory.PRIVATE_CHANNEL;
-        this.musicAPI = musicAPI;
+        this.socketManager = socketManager;
     }
 
     @Override
     public boolean execute(CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
-        int wolnyBot = 0;
-        MusicRestAction restAction = null;
-
-        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
-            if (member.getUser().isBot()) {
-                Integer agent = musicAPI.getPortByClient(member.getId());
-                if (agent != null) {
-                    wolnyBot = agent;
-                    restAction = musicAPI.getAction(agent);
-                }
-
-            }
-        }
-
-        if (wolnyBot == 0) {
+        SocketClient client = socketManager.getClientFromChanne(context);
+        if (client == null) {
             context.sendTranslate("pleave.no.bot").queue();
             return false;
         }
+        socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId())
+                .disconnect();
+        return true;
 
-        try {
-            MusicResponse skip = restAction.disconnect();
-            if (skip.isError()) {
-                context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
-                return false;
-            }
-            context.sendTranslate("pleave.succes").queue();
-            return true;
-        } catch (Exception e) {
-            context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
-            return false;
-        }
     }
 
 }

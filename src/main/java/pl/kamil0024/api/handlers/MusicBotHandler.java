@@ -21,19 +21,14 @@ package pl.kamil0024.api.handlers;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.VoiceStateDao;
 import pl.kamil0024.core.database.config.VoiceStateConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
-
-import java.io.IOException;
 
 public class MusicBotHandler implements HttpHandler {
 

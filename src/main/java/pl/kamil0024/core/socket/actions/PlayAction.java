@@ -17,22 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.core.listener;
+package pl.kamil0024.core.socket.actions;
 
-import net.dv8tion.jda.api.events.ShutdownEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import pl.kamil0024.musicbot.core.Ustawienia;
-import pl.kamil0024.musicbot.core.util.NetworkUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ShutdownListener extends ListenerAdapter {
+@AllArgsConstructor
+@Data
+public class PlayAction implements SocketAction {
+
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+    private final String trackUrl;
+
+    private final String topic = "play";
 
     @Override
-    public void onShutdown(@Nonnull ShutdownEvent event) {
-        try {
-            NetworkUtil.getJson(String.format("http://0.0.0.0:%s/api/musicbot/shutdown/%s", Ustawienia.instance.api.mainPort, Ustawienia.instance.api.port));
-        } catch (Exception ignored) {}
+    public Map<String, Object> getArgs() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("track", getTrackUrl());
+        return map;
     }
 
 }

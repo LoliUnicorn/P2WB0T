@@ -21,23 +21,25 @@ package pl.kamil0024.core.socket;
 
 import com.google.common.eventbus.AsyncEventBus;
 import lombok.Getter;
+import lombok.Setter;
 import pl.kamil0024.core.logger.Log;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Random;
+import java.net.SocketException;
 
-public class SocketClient extends Thread {
+public class SocketClient {
 
     private final Socket socket;
     private final AsyncEventBus eventBus;
 
     @Getter private PrintWriter writer;
-    @Getter private final int id;
+    @Getter private final int socketId;
+    @Getter @Setter private String botId;
 
-    public SocketClient(Socket socket, AsyncEventBus eventBus) {
+    public SocketClient(Socket socket, AsyncEventBus eventBus, int socketId) {
         this.socket = socket;
-        this.id = new Random().nextInt(Integer.MAX_VALUE);
+        this.socketId = socketId;
         this.eventBus = eventBus;
 
         try {
@@ -49,20 +51,23 @@ public class SocketClient extends Thread {
 
     }
 
-    @Override
     public void start() {
-        try {
-            InputStream input = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        new Thread(() -> {
+            try {
+                InputStream input = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
-            String text;
-            while ((text = reader.readLine()) != null) {
-                eventBus.post(new SocketServer.SocketJson(getId(), text));
+                String text;
+                while ((text = reader.readLine()) != null) {
+                    eventBus.post(new SocketServer.SocketJson(getSocketId(), text));
+                }
+                eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
+            } catch (SocketException ex) {
+                eventBus.post(new SocketServer.SocketDisconnect(getSocketId()));
+            } catch (Exception e) {
+                Log.newError(e, getClass());
             }
-            eventBus.post(new SocketServer.SocketDisconnect(getId()));
-        } catch (Exception e) {
-            Log.newError(e, getClass());
-        }
+        }).start();
     }
 
 }

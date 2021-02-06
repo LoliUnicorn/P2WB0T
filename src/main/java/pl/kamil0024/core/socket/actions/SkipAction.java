@@ -17,15 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.core.util;
+package pl.kamil0024.core.socket.actions;
 
-import lombok.Getter;
-import org.json.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public class JSONResponse extends JSONObject {
-    @Getter private final int code;
-    public JSONResponse(String string, int code) {
-        super(string);
-        this.code = code;
-    }
+@AllArgsConstructor
+@Data
+public class SkipAction implements SocketAction {
+
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+
+    private final String topic = "skip";
+
 }

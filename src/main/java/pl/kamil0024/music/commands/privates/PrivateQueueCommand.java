@@ -30,6 +30,8 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.musicapi.MusicAPI;
 import pl.kamil0024.core.musicapi.MusicResponse;
 import pl.kamil0024.core.musicapi.MusicRestAction;
+import pl.kamil0024.core.socket.SocketClient;
+import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
 import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
@@ -47,79 +49,43 @@ import static pl.kamil0024.music.commands.QueueCommand.longToTimespan;
 @SuppressWarnings("DuplicatedCode")
 public class PrivateQueueCommand extends Command {
 
-    private final MusicAPI musicAPI;
-    private final EventWaiter eventWaiter;
+    private final SocketManager socketManager;
 
-    public PrivateQueueCommand(MusicAPI musicAPI, EventWaiter eventWaiter) {
+    public PrivateQueueCommand(SocketManager socketManager) {
         name = "pqueue";
         aliases.add("privatequeue");
         category = CommandCategory.PRIVATE_CHANNEL;
-        this.musicAPI = musicAPI;
-        this.eventWaiter = eventWaiter;
+        this.socketManager = socketManager;
     }
 
     @Override
     public boolean execute(CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
-        int wolnyBot = 0;
-        MusicRestAction restAction = null;
+        SocketClient client = socketManager.getClientFromChanne(context);
 
-        for (Member member : PlayCommand.getVc(context.getMember()).getMembers()) {
-            if (member.getUser().isBot()) {
-                Integer agent = musicAPI.getPortByClient(member.getId());
-                if (agent != null) {
-                    wolnyBot = agent;
-                    restAction = musicAPI.getAction(agent);
-                }
-
-            }
-        }
-
-        if (wolnyBot == 0) {
-            context.send("Na Twoim kanale nie ma żadnego bota").queue();
+        if (client == null) {
+            context.sendTranslate("pleave.no.bot").queue();
             return false;
         }
 
-        try {
-            List<FutureTask<EmbedBuilder>> traki = new ArrayList<>();
-
-            MusicResponse skip = restAction.getQueue();
-            MusicResponse playing = restAction.getPlayingTrack();
-            if ((skip.isError() && !skip.getError().getDescription().contains("Kolejka jest pusta!") ) || playing.isError()) {
-                context.send("Wystąpił błąd: " + skip.getError().getDescription()).queue();
-                return false;
-            }
-
-            Iterator<Object> jsona = skip.json.getJSONArray("data").iterator();
-
-            String json = playing.json.getJSONObject("data").toString();
-            Track played = new Gson().fromJson(json, Track.class);
-            if (played != null) {
-                traki.add(new FutureTask<>(() -> new DecodeTrack(json, true).create()));
-            }
-
-            while (jsona.hasNext()) {
-                traki.add(new FutureTask<>(() -> new DecodeTrack(jsona.next().toString(), false).create()));
-            }
-
-            new DynamicEmbedPageinator(traki, context.getUser(), eventWaiter, context.getJDA(), 60).create(context.getChannel(), context.getMessage());
-            return true;
-        } catch (Exception e) {
-            context.send("Wystąpił błąd: " + e.getLocalizedMessage()).queue();
-            return false;
-        }
+        socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId())
+                .queue();
+        return true;
     }
 
-    public class DecodeTrack {
+    public static class DecodeTrack {
 
-        private final String json;
         private final Track trak;
         private final boolean aktualnieGrana;
 
         public DecodeTrack(String string, boolean aktualnieGrana) {
-            this.json = string;
-            this.trak = new Gson().fromJson(json, Track.class);
+            this.trak = new Gson().fromJson(string, Track.class);
+            this.aktualnieGrana = aktualnieGrana;
+        }
+
+        public DecodeTrack(Track trak, boolean aktualnieGrana) {
+            this.trak = trak;
             this.aktualnieGrana = aktualnieGrana;
         }
 

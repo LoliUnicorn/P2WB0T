@@ -17,37 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.core.util;
+package pl.kamil0024.core.socket.actions;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public class BetterStringBuilder {
+@AllArgsConstructor
+@Data
+public class DisconnectAction implements SocketAction {
 
-    @Getter Number lines;
-    @Getter StringBuilder stringBuilder;
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
 
-    public BetterStringBuilder() {
-        this.lines = 0;
-        this.stringBuilder = new StringBuilder();
-    }
-
-    public BetterStringBuilder append(Object obj) {
-        stringBuilder.append(obj);
-        return this;
-    }
-
-    public BetterStringBuilder appendLine(Object obj) {
-        stringBuilder.append(obj).append("\n");
-        return this;
-    }
-
-    public String build() {
-        return stringBuilder.toString();
-    }
-
-    @Override
-    public String toString() {
-        return build();
-    }
+    private final String topic = "disconnect";
 
 }

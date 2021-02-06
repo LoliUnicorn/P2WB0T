@@ -17,27 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.core.util;
+package pl.kamil0024.core.socket.actions;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Getter
-@Deprecated
-public class Response {
-    private long delta;
-    private final boolean valid;
+@AllArgsConstructor
+@Data
+public class PlayingTrackAction implements SocketAction {
 
-    Response(long delta, boolean valid) {
-        this.delta = delta;
-        this.valid = valid;
-    }
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+    private final String voiceChannelId;
 
-    Response(boolean valid) {
-        this.valid = valid;
-    }
+    private final String topic = "playingtrack";
 
-    @Override
-    public String toString() {
-        return String.format("%s {delta=%d,valid=%s}", super.toString(), delta, valid);
-    }
 }

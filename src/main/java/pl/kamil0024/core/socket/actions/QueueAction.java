@@ -17,12 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.musicbot.core.util;
+package pl.kamil0024.core.socket.actions;
 
-public class UsageException extends RuntimeException {
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-    public UsageException() {
-        super();
-    }
+@AllArgsConstructor
+@Data
+public class QueueAction implements SocketAction {
+
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+
+    private final String topic = "queue";
 
 }

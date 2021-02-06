@@ -20,7 +20,6 @@
 package pl.kamil0024.core.socket;
 
 import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,26 +27,26 @@ import pl.kamil0024.core.logger.Log;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
-public class SocketServer extends Thread {
+public class SocketServer {
 
-    private final static Gson GSON = new Gson();
+    public final static Gson GSON = new Gson();
 
-    private final HashMap<Integer, SocketClient> clients;
-    AsyncEventBus eventBus;
+    private final AsyncEventBus eventBus;
+    private final SocketManager socketManager;
 
-    public SocketServer(AsyncEventBus eventBus) {
-        clients = new HashMap<>();
+    public SocketServer(AsyncEventBus eventBus, SocketManager socketManager) {
+        this.socketManager = socketManager;
         this.eventBus = eventBus;
         eventBus.register(this);
     }
 
-    @Override
     public void start() {
 
         ServerSocket serverSocket;
-        Socket socket;
 
         try {
             serverSocket = new ServerSocket(7070);
@@ -57,41 +56,24 @@ public class SocketServer extends Thread {
             return;
         }
 
-        while (true) {
-            try {
-                socket = serverSocket.accept();
-                SocketClient client = new SocketClient(socket, eventBus);
-                client.start();
-                clients.put(client.getId(), client);
-                Log.debug("Podłączono nowy socket!");
-            } catch (Exception e) {
-                Log.newError(e, getClass());
+        new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    int lastId = 0;
+                    for (Map.Entry<Integer, SocketClient> entry : socketManager.getClients().entrySet()) {
+                        lastId = entry.getKey();
+                    }
+                    SocketClient client = new SocketClient(socket, eventBus, lastId + 1);
+                    client.start();
+                    socketManager.getClients().put(client.getSocketId(), client);
+                    Log.debug("Podłączono nowy socket!");
+                } catch (Exception e) {
+                    Log.newError(e, getClass());
+                }
             }
+        }).start();
 
-        }
-
-    }
-
-
-    @Subscribe
-    public void retrieveMessage(SocketJson socketJson) {
-        Log.debug("Nowa wiadomość socketa %s:", socketJson.getId());
-        Log.debug(socketJson.getJson());
-    }
-
-    public void sendMessage(SocketJson socketJson) {
-        SocketClient client = clients.get(socketJson.getId());
-        if (client == null) {
-            Log.error("Próbowano wysłać wiadomość do socketa %s, ale ten nie istnieje!", socketJson.getId());
-            return;
-        }
-        client.getWriter().write(GSON.toJson(socketJson));
-    }
-
-    @Subscribe
-    public void disconnectEvent(SocketDisconnect socketDisconnect) {
-        Log.debug("Odłączono socketa %s", socketDisconnect.getId());
-        clients.remove(socketDisconnect.getId());
     }
 
     @Data
