@@ -30,7 +30,6 @@ import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.listener.GuildListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
-import pl.kamil0024.commands.zabawa.OsuCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
@@ -159,7 +158,6 @@ public class CommandsModule implements Modul {
         cmd.add(new MultiCommand(multiDao, eventWaiter));
         cmd.add(new PogodaCommand());
         cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
-        cmd.add(new OsuCommand(api, eventWaiter));
         cmd.add(new RecordingCommand(recordingDao, eventWaiter));
 
         // Moderacyjne:
