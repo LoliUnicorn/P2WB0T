@@ -96,8 +96,8 @@ public class NieobecnosciListener extends ListenerAdapter {
                 zmiana.setKiedy(new Date().getTime());
                 zmiana.setKtoZmienia(e.getAuthor().getId());
 
-                String stary = String.format("Stary czas: `%s`\n", sdf.format(new Date(xd.getEnd())));
-                String nowy = String.format("Nowy czas: `%s`", sdf.format(staryCzas));
+                String stary = String.format("Stary czas: `%s`\n", sdf.format(staryCzas));
+                String nowy = String.format("Nowy czas: `%s`", sdf.format(nowyCzas));
                 zmiana.setKomentarz(stary + nowy);
                 zmiana.sendLog(e.getGuild(), xd.getUserId(), xd.getId());
                 if (xd.getZmiany() == null) xd.setZmiany(new ArrayList<>());
