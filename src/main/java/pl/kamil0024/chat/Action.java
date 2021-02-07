@@ -22,13 +22,16 @@ package pl.kamil0024.chat;
 import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.chat.listener.KaryListener;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.logs.logger.FakeMessage;
 
 import java.awt.*;
 import java.util.Objects;
@@ -37,42 +40,38 @@ import java.util.Objects;
 public class Action {
 
     private ListaKar kara;
-    private Message msg;
-    private KaryJSON karyJSON;
+    private FakeMessage msg;
 
     private boolean pewnosc = true;
     private boolean isDeleted = true;
     private String botMsg = null;
 
-    public Action(KaryJSON karyJSON) {
-        this.karyJSON = karyJSON;
-    }
+    public Action() { }
 
-    @SuppressWarnings("ConstantConditions")
-    public void send() {
+    public void send(KaryListener karyListener, Guild api) {
         if (kara == null || msg == null) throw new NullPointerException("kara lub msg jest nullem");
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
 
-        eb.addField("Użytkownik", UserUtil.getFullNameMc(Objects.requireNonNull(msg.getMember())), false);
-        eb.addField("Treść wiadomości", msg.getContentRaw(), false);
-        eb.addField("Kanał", msg.getTextChannel().getAsMention(), false);
+        eb.addField("Użytkownik", UserUtil.getFullNameMc(api.getMemberById(getMsg().getAuthor())), false);
+        eb.addField("Treść wiadomości", getMsg().getContent(), false);
+        eb.addField("Kanał", String.format("<#%s>", getMsg().getChannel()), false);
         eb.addField("Za co ukarać?", kara.getPowod(), false);
 
         if (!pewnosc) {
             eb.addField("!UWAGA!", "Zgłoszenie może ukazać się fałszywe. Radze zajrzeć do kontekstu prowadzonej rozmowy", false);
         }
-        if (!isDeleted) eb.addField("Link do wiadomości", String.format("[%s](%s)", "KLIK", msg.getJumpUrl()), false);
-        eb.setFooter("jakiś randomowy footer bo embedy się bugują na telefonie");
-        TextChannel txt = msg.getJDA().getTextChannelById(Ustawienia.instance.channel.moddc);
+        if (!isDeleted) eb.addField("Link do wiadomości", String.format("[%s](%s)", "KLIK",
+                String.format("https://discord.com/channels/%s/%s/%s", api.getId(), getMsg().getChannel(), getMsg().getId())), false);
+        TextChannel txt = api.getTextChannelById(Ustawienia.instance.channel.moddc);
         if (txt == null) throw new NullPointerException("Kanał do modów dc jest nullem");
         txt.sendMessage(eb.build()).queue(m -> {
-                m.addReaction(CommandExecute.getReaction(msg.getAuthor(), true)).queue();
-                m.addReaction(CommandExecute.getReaction(msg.getAuthor(), false)).queue();
-                m.addReaction(msg.getAuthor().getJDA().getEmoteById("623630774171729931")).queue();
+                m.addReaction(CommandExecute.getReaction(api.getSelfMember().getUser(), true)).queue();
+                m.addReaction(CommandExecute.getReaction(api.getSelfMember().getUser(), false)).queue();
+                m.addReaction(api.getEmoteById("623630774171729931")).queue();
                 setBotMsg(m.getId());
-                KaryListener.getEmbedy().add(this);
+                karyListener.getEmbedy().put(m.getId(), this);
         });
     }
 

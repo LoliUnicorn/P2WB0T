@@ -45,6 +45,7 @@ import pl.kamil0024.core.util.Emoji;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
+import pl.kamil0024.logs.logger.FakeMessage;
 import pl.kamil0024.stats.StatsModule;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -70,14 +71,16 @@ public class ChatListener extends ListenerAdapter {
     @Inject private final CaseDao caseDao;
     @Inject private final ModLog modLog;
     @Inject private final StatsModule statsModule;
+    @Inject private final KaryListener karyListener;
 
     @Getter private final List<String> przeklenstwa;
 
-    public ChatListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
+    public ChatListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule, KaryListener karyListener) {
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
         this.statsModule = statsModule;
+        this.karyListener = karyListener;
 
         InputStream res = Main.class.getClassLoader().getResourceAsStream("przeklenstwa.api");
         if (res == null) {
@@ -141,8 +144,8 @@ public class ChatListener extends ListenerAdapter {
                 .replaceAll("0", "o")
                 .replaceAll("v", "u")
                 .replaceAll("<#(\\d+)>", "");
-        Action action = new Action(karyJSON);
-        action.setMsg(msg);
+        Action action = new Action();
+        action.setMsg(FakeMessage.convert(msg));
 
         String przeklenstwa = msgRaw;
 
@@ -173,14 +176,14 @@ public class ChatListener extends ListenerAdapter {
 
         if (containsLink(msgRaw.split(" ")) && !msg.getChannel().getId().equals("426864003562864641")) {
             action.setKara(Action.ListaKar.LINK);
-            action.send();
+            action.send(karyListener, msg.getGuild());
             return;
         }
 
         if (containsInvite(msgRaw.split(" "))) {
             msg.delete().queue();
             action.setKara(Action.ListaKar.LINK);
-            action.send();
+            action.send(karyListener, msg.getGuild());
             return;
         }
 
@@ -195,7 +198,7 @@ public class ChatListener extends ListenerAdapter {
                 if (!member.getRoles().contains(miniyt) || !member.getRoles().contains(yt)) {
                     msg.delete().queue();
                     action.setKara(Action.ListaKar.LINK);
-                    action.send();
+                    action.send(karyListener, msg.getGuild());
                 }
             }
 
@@ -211,14 +214,14 @@ public class ChatListener extends ListenerAdapter {
             if (containsCaps(capsMsg) >= 50 || emoteCount(takMsg, msg.getJDA()) >= 10) {
                 msg.delete().queue();
                 action.setKara(Action.ListaKar.FLOOD);
-                action.send();
+                action.send(karyListener, msg.getGuild());
                 return;
             }
             if (containsFlood(bezEmotek) >= 10) {
                 action.setPewnosc(false);
                 action.setDeleted(false);
                 action.setKara(Action.ListaKar.FLOOD);
-                action.send();
+                action.send(karyListener, msg.getGuild());
                 return;
             }
         }
@@ -230,7 +233,7 @@ public class ChatListener extends ListenerAdapter {
         for (String s : getPrzeklenstwa()) {
             if (przeklenstwa.toLowerCase().contains(s) || przeklenstwa.replaceAll(" ", "").toLowerCase().contains(s)) {
                 action.setKara(Action.ListaKar.ZACHOWANIE);
-                action.send();
+                action.send(karyListener, msg.getGuild());
                 return;
             }
         }

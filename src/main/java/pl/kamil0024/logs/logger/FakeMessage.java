@@ -29,11 +29,11 @@ import java.time.OffsetDateTime;
 @Data
 public class FakeMessage {
 
-    public final String id;
-    public final String author;
-    public final String content;
-    public final String channel;
-    public final OffsetDateTime createdAt;
+    private final String id;
+    private final String author;
+    private final String content;
+    private final String channel;
+    private final OffsetDateTime createdAt;
 
     public static FakeMessage convert(Message msg) {
         return new FakeMessage(msg.getId(),

@@ -32,6 +32,8 @@ import pl.kamil0024.commands.moderation.PunishCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
+import pl.kamil0024.core.redis.Cache;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -45,18 +47,19 @@ import java.util.concurrent.TimeUnit;
 
 public class KaryListener extends ListenerAdapter {
 
-    @Getter private static final ArrayList<Action> embedy = new ArrayList<>();
+    @Getter private final Cache<Action> embedy;
 
     private final KaryJSON karyJSON;
     private final CaseDao caseDao;
     private final ModLog modLog;
     private final StatsModule statsModule;
 
-    public KaryListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
+    public KaryListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule, RedisManager redisManager) {
         this.karyJSON = karyJSON;
         this.caseDao = caseDao;
         this.modLog = modLog;
         this.statsModule = statsModule;
+        this.embedy = redisManager.new CacheRetriever<Action>(){}.getCache(-1);
     }
 
     @Override
@@ -69,62 +72,59 @@ public class KaryListener extends ListenerAdapter {
         check(event);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private synchronized void check(GuildMessageReactionAddEvent event) {
+        Action action = embedy.getIfPresent(event.getMessageId());
+        if (action == null) return;
+
+        Message msg = null;
         try {
-            for (Action entry : getEmbedy()) {
-                if (!entry.getBotMsg().equals(event.getMessageId())) continue;
-
-                Message msg = null;
-                try {
-                    msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-                } catch (Exception ignored) { }
-                if (msg == null || event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
-                    deleteMessage(msg);
-                    getEmbedy().remove(entry);
-                    continue;
-                }
-
-                deleteMessage(entry.getMsg(), msg);
-                if (event.getReactionEmote().getId().equals("623630774171729931")) {
-                    getEmbedy().remove(entry);
-                    continue;
-                }
-                Dowod d = new Dowod();
-                d.setId(1);
-                d.setUser(event.getMember().getId());
-                d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + MarkdownSanitizer.escape(entry.getMsg().getContentDisplay()));
-                d.setImage(null);
-
-                Member mem = null;
-                try {
-                    mem = event.getGuild().retrieveMemberById(entry.getMsg().getAuthor().getId()).complete();
-                } catch (Exception ignored) { }
-
-                if (mem == null) {
-                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik wyszedł z serwera??")
-                            .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
-                    continue;
-                }
-                if (MuteCommand.hasMute(mem)) {
-                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik jest wyciszony!")
-                            .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
-                    continue;
-                }
-
-                KaryJSON.Kara kara = karyJSON.getByName(entry.getKara().getPowod());
-                if (kara == null) {
-                    event.getChannel().sendMessage(event.getMember().getAsMention() + ", kara `" + entry.getKara().getPowod() + "` jest źle wpisana!").queue();
-                    continue;
-                }
-
-                PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d, null);
-                getEmbedy().remove(entry);
-            }
-
-        } catch (ConcurrentModificationException ignored) {
-        } catch (Exception e) {
-            e.printStackTrace();
+            msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
+        } catch (Exception ignored) { }
+        if (msg == null || event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
+            deleteMessage(msg);
+            embedy.invalidate(event.getMessageId());
+            return;
         }
+        try {
+            deleteMessage(event.getGuild().getTextChannelById(action.getMsg().getChannel()).retrieveMessageById(action.getMsg().getId()).complete());
+        } catch (Exception ignored) { }
+        deleteMessage(msg);
+
+        if (event.getReactionEmote().getId().equals("623630774171729931")) {
+            embedy.invalidate(event.getMessageId());
+            return;
+        }
+        Dowod d = new Dowod();
+        d.setId(1);
+        d.setUser(event.getMember().getId());
+        d.setContent("Wystawione automatycznie. Treść wiadomości poniżej.\n\n" + MarkdownSanitizer.escape(action.getMsg().getContent()));
+        d.setImage(null);
+
+        Member mem = null;
+        try {
+            mem = event.getGuild().retrieveMemberById(action.getMsg().getAuthor()).complete();
+        } catch (Exception ignored) { }
+
+        if (mem == null) {
+            event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik wyszedł z serwera??")
+                    .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
+            return;
+        }
+        if (MuteCommand.hasMute(mem)) {
+            event.getChannel().sendMessage(event.getMember().getAsMention() + ", użytkownik jest wyciszony!")
+                    .queue(m -> m.delete().queueAfter(10, TimeUnit.SECONDS));
+            return;
+        }
+
+        KaryJSON.Kara kara = karyJSON.getByName(action.getKara().getPowod());
+        if (kara == null) {
+            event.getChannel().sendMessage(event.getMember().getAsMention() + ", kara `" + action.getKara().getPowod() + "` jest źle wpisana!").queue();
+            return;
+        }
+
+        PunishCommand.putPun(kara, Collections.singletonList(mem), event.getMember(), event.getChannel(), caseDao, modLog, statsModule, d, null);
+        embedy.invalidate(event.getMessageId());
     }
 
     private void deleteMessage(Message... m) {

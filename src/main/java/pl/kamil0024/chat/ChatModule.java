@@ -26,6 +26,7 @@ import pl.kamil0024.chat.listener.KaryListener;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.module.Modul;
+import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
 
@@ -36,23 +37,25 @@ public class ChatModule implements Modul {
     @Inject private final CaseDao caseDao;
     @Inject private final ModLog modLog;
     @Inject private final StatsModule statsModule;
+    @Inject private final RedisManager redisManager;
 
     private boolean start = false;
     private ChatListener chatListener;
     private KaryListener karyListener;
 
-    public ChatModule(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
+    public ChatModule(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule, RedisManager redisManager) {
         this.api = api;
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
         this.statsModule = statsModule;
+        this.redisManager = redisManager;
     }
 
     @Override
     public boolean startUp() {
-        this.chatListener = new ChatListener(karyJSON, caseDao, modLog, statsModule);
-        this.karyListener = new KaryListener(karyJSON, caseDao, modLog, statsModule);
+        this.karyListener = new KaryListener(karyJSON, caseDao, modLog, statsModule, redisManager);
+        this.chatListener = new ChatListener(karyJSON, caseDao, modLog, statsModule, this.karyListener);
         api.addEventListener(chatListener, karyListener);
         setStart(true);
         return true;
@@ -60,7 +63,6 @@ public class ChatModule implements Modul {
 
     @Override
     public boolean shutDown() {
-        KaryListener.getEmbedy().clear();
         api.removeEventListener(chatListener, karyListener);
         setStart(false);
         return true;
