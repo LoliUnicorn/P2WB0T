@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -42,7 +43,7 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgs().get(0);
 
         if (arg == null || arg.isEmpty()) {
@@ -53,7 +54,7 @@ public class HelpCommand extends Command {
             eb.setDescription(context.getTranslate("help.desc", context.getPrefix()));
 
             for (CommandCategory cate : CommandCategory.values()) {
-                StringBuffer komendy = new StringBuffer();
+                StringBuilder komendy = new StringBuilder();
                 for (Map.Entry<String, Command> cmd : commandManager.getCommands().entrySet()) {
                     if ((!context.executedInRekru() && cmd.getValue().isOnlyInRekru()) || (context.executedInRekru() && !cmd.getValue().isEnabledInRekru())) continue;
                     if (cmd.getValue().getPermLevel().getNumer() <= UserUtil.getPermLevel(context.getMember()).getNumer()) {
@@ -71,7 +72,7 @@ public class HelpCommand extends Command {
 
         if (cmd == null) {
             for (Map.Entry<String, Command> alias : commandManager.getAliases().entrySet()) {
-                if (alias.getKey().toLowerCase().equals(arg.toLowerCase())) { cmd = alias.getValue(); }
+                if (alias.getKey().equalsIgnoreCase(arg)) cmd = alias.getValue();
             }
         }
         if (cmd == null) {
@@ -96,7 +97,7 @@ public class HelpCommand extends Command {
         else cmd = command;
 
         EmbedBuilder eb = new EmbedBuilder();
-        StringBuffer desc = new StringBuffer();
+        StringBuilder desc = new StringBuilder();
 
         desc.append("```");
 

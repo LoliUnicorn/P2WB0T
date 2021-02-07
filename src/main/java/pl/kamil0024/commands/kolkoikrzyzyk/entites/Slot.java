@@ -19,12 +19,9 @@
 
 package pl.kamil0024.commands.kolkoikrzyzyk.entites;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import pl.kamil0024.commands.kolkoikrzyzyk.Gra;
-import pl.kamil0024.core.logger.Log;
 
 import java.util.*;
 

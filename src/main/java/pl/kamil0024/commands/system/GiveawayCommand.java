@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.listener.GiveawayListener;
@@ -44,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GiveawayCommand extends Command {
 
-    @Getter private static HashMap<String, KonkursBuilder> konkurs = new HashMap<>();
+    @Getter private static final HashMap<String, KonkursBuilder> konkurs = new HashMap<>();
 
     private final GiveawayDao giveawayDao;
     private final EventWaiter eventWaiter;
@@ -63,7 +64,7 @@ public class GiveawayCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String typ = context.getArgs().get(0);
         if (typ == null) typ = "create";
         getKonkurs().remove(context.getUser().getId());
@@ -169,7 +170,7 @@ public class GiveawayCommand extends Command {
                 () -> {
                     TextChannel txt = api.getTextChannelById(channelId);
                     if (getKonkurs().get(String.valueOf(userId)) != null) {
-                        txt.sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
+                        Objects.requireNonNull(txt).sendMessage(String.format("<@%s>, twój czas na odpowiedź minał!", userId)).queue();
                     }
                 }
         );

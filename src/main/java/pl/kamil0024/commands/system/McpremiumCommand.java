@@ -21,6 +21,7 @@ package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class McpremiumCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String name = null, uuid = null;
         String arg = context.getArgs().get(0);
         List<String> listaNazw = new ArrayList<>();

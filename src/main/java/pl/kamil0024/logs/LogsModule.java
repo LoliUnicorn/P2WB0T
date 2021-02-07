@@ -36,8 +36,8 @@ public class LogsModule implements Modul {
 
     private MessageManager messageManager;
     private Logger logger;
-    private StatsModule statsModule;
-    private RedisManager redisManager;
+    private final StatsModule statsModule;
+    private final RedisManager redisManager;
 
     public LogsModule(ShardManager api, StatsModule statsModule, RedisManager redisManager) {
         this.api = api;

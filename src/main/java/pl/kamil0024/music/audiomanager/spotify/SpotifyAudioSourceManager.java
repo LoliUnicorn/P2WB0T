@@ -118,9 +118,9 @@ public class SpotifyAudioSourceManager implements AudioSourceManager, HttpConfig
 
             for (TrackSimplified t : album.getTracks().getItems()) {
                 // todo caching!
-                /*AudioItem item = youtubeManager.loadItem(null, new AudioReference("ytsearch:" + album.getArtists()[0].getName() + " " + t.getName(), null));
-                if (item instanceof AudioPlaylist)
-                    playlist.add(((AudioPlaylist) item).getTracks().get(0));*/
+                //AudioItem item = youtubeManager.loadItem(null, new AudioReference("ytsearch:" + album.getArtists()[0].getName() + " " + t.getName(), null));
+                // if (item instanceof AudioPlaylist)
+                //     playlist.add(((AudioPlaylist) item).getTracks().get(0));
                 AudioTrackInfo info = new AudioTrackInfo(t.getName(), album.getArtists()[0].getName(), t.getDurationMs(),
                         "ytsearch:" + album.getArtists()[0].getName() + " " + t.getName(), false, null);
                 playlist.add(new SpotifyAudioTrack(info, youtubeManager));
@@ -149,18 +149,11 @@ public class SpotifyAudioSourceManager implements AudioSourceManager, HttpConfig
 
             final Future<Playlist> playlistFuture;
 
-            if (userId != null) {
-                playlistFuture = api.getPlaylist(userId, playListId).build().executeAsync();
-            } else {
-                playlistFuture = api.getPlaylist(playListId).build().executeAsync();
-            }
+            playlistFuture = api.getPlaylist(playListId).build().executeAsync();
 
             final Playlist spotifyPlaylist = playlistFuture.get();
 
             for (PlaylistTrack playlistTrack : spotifyPlaylist.getTracks().getItems()) {
-                /*AudioItem item = youtubeManager.loadItem(null, new AudioReference("ytsearch:" + playlistTrack.getTrack().getArtists()[0].getName() + " " + playlistTrack.getTrack().getName(), null));
-                if (item instanceof AudioPlaylist)
-                    finalPlaylist.add(((AudioPlaylist) item).getTracks().get(0));*/
                 AudioTrackInfo info = new AudioTrackInfo(playlistTrack.getTrack().getName(), playlistTrack.getTrack().getArtists()[0].getName(), playlistTrack.getTrack().getDurationMs(),
                         "ytsearch:" + playlistTrack.getTrack().getArtists()[0].getName() + " " + playlistTrack.getTrack().getName(), false, null);
                 finalPlaylist.add(new SpotifyAudioTrack(info, youtubeManager));
@@ -200,9 +193,6 @@ public class SpotifyAudioSourceManager implements AudioSourceManager, HttpConfig
             Future<Track> trackFuture = api.getTrack(res.group(res.groupCount())).build().executeAsync();
             Track track = trackFuture.get();
 
-            /*AudioItem item = youtubeManager.loadItem(null, new AudioReference("ytsearch:" + track.getArtists()[0].getName() + " " + track.getName(), null));
-            if (item instanceof AudioPlaylist)
-                return ((AudioPlaylist) item).getTracks().get(0);*/
             AudioTrackInfo info = new AudioTrackInfo(track.getName(), track.getArtists()[0].getName(), track.getDurationMs(),
                     "ytsearch:" + track.getArtists()[0].getName() + " " + track.getName(), false, null);
 

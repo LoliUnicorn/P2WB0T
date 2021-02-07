@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -56,7 +57,7 @@ public class KickCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         Member mem = context.getParsed().getMember(context.getArgs().get(0));
         if (mem == null) {
             context.sendTranslate("kick.badmember").queue();

@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
@@ -54,11 +55,11 @@ public class RemindmeCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgs().get(0);
         if (arg == null) throw new UsageException();
 
-        if (arg.toLowerCase().equals("list")) {
+        if (arg.equalsIgnoreCase("list")) {
             List<RemindConfig> rc = remindDao.getAll();
             rc.removeIf(m -> !m.getUserId().equals(context.getUser().getId()));
             if (rc.isEmpty()) {
@@ -74,7 +75,7 @@ public class RemindmeCommand extends Command {
             return true;
         }
 
-        if (arg.toLowerCase().equals("delete") || arg.toLowerCase().equals("remove")) {
+        if (arg.equalsIgnoreCase("delete") || arg.equalsIgnoreCase("remove")) {
             Integer id = context.getParsed().getNumber(context.getArgs().get(1));
             if (id == null) throw new UsageException();
 

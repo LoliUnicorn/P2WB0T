@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.managers.ChannelManager;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -41,7 +42,7 @@ public class ArchiwizujCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         TextChannel txt = context.getParsed().getTextChannel(context.getArgs().get(0));
         Category cate = context.getGuild().getCategoryById(Ustawienia.instance.inne.kategoriaArchiwum);
         if (cate == null) throw new NullPointerException("Kategoria do archiwum jest nullem");

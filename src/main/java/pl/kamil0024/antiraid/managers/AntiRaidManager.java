@@ -39,8 +39,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class AntiRaidManager {
@@ -121,7 +120,7 @@ public class AntiRaidManager {
 
     public void sendRaid(User user, List<FakeAntiRaidMessage> messages, String reason, Guild guild) {
         try {
-            guild.addRoleToMember(user.getId(), guild.getRoleById(Ustawienia.instance.muteRole)).complete();
+            guild.addRoleToMember(user.getId(), Objects.requireNonNull(guild.getRoleById(Ustawienia.instance.muteRole))).complete();
         } catch (Exception e) {
             Log.newError("Nie udało się ukarać gracza za raida!", getClass());
             Log.newError(e, getClass());
@@ -145,7 +144,7 @@ public class AntiRaidManager {
         eb.addField("Powód", reason, false);
 
         try {
-            Message msg = guild.getTextChannelById(Ustawienia.instance.channel.moddc).sendMessage(eb.build()).complete();
+            Message msg = Objects.requireNonNull(guild.getTextChannelById(Ustawienia.instance.channel.moddc)).sendMessage(eb.build()).complete();
 
             AntiRaidConfig arc = new AntiRaidConfig();
             arc.setDate(new Date().getTime());

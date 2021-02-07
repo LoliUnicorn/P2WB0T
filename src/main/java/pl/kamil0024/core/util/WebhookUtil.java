@@ -25,11 +25,8 @@ import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Webhook;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 

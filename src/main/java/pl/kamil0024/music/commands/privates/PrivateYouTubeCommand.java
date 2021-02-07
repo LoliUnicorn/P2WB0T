@@ -24,6 +24,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -61,7 +62,7 @@ public class PrivateYouTubeCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
         String tytul = context.getArgsToString(0);
@@ -147,16 +148,5 @@ public class PrivateYouTubeCommand extends Command {
         return true;
     }
 
-    private String getTekst(List<AudioTrack> tracks) {
-        StringBuilder sb = new StringBuilder();
-        int size = 1;
-        for (AudioTrack track : tracks) {
-            String tytul = track.getInfo().title.replace("`", "");
-            sb.append("`").append(tytul).append("`");
-            if (size != tracks.size()) sb.append(", ");
-            size++;
-        }
-        return sb.toString();
-    }
 
 }

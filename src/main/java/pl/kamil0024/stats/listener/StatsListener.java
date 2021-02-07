@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.stats.StatsModule;
 
 import javax.annotation.Nonnull;
@@ -31,7 +30,7 @@ import java.util.Objects;
 
 public class StatsListener extends ListenerAdapter {
 
-    private StatsModule statsModule;
+    private final StatsModule statsModule;
 
     public StatsListener(StatsModule statsModule) {
         this.statsModule = statsModule;
@@ -40,7 +39,7 @@ public class StatsListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
         Category category = event.getChannel().getParent();
-        if (category == null || event.getAuthor().isBot() || event.getAuthor().isFake()) return;
+        if (category == null || event.getAuthor().isBot()) return;
 
         if (!Objects.requireNonNull(event.getMember()).getRoles().contains(event.getGuild().getRoleById(Ustawienia.instance.roles.chatMod))) return;
 

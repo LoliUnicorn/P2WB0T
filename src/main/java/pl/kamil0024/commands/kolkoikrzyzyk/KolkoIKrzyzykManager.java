@@ -21,7 +21,6 @@ package pl.kamil0024.commands.kolkoikrzyzyk;
 
 import lombok.Data;
 import lombok.Getter;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -38,7 +37,7 @@ import java.util.Map;
 public class KolkoIKrzyzykManager {
     
     public HashMap<String, Zaproszenie> zaproszenia;
-    public static final ArrayList<String> graja = new ArrayList<>();;
+    public static final ArrayList<String> graja = new ArrayList<>();
 
     private ShardManager api;
     private EventWaiter eventWaiter;

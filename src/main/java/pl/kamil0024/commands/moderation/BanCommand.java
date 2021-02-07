@@ -22,6 +22,7 @@ package pl.kamil0024.commands.moderation;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -55,7 +56,7 @@ public class BanCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         User mem = context.getParsed().getUser(context.getArgs().get(0));
         if (mem == null) {
             context.sendTranslate("kick.badmember").queue();

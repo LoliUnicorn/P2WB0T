@@ -21,7 +21,6 @@ package pl.kamil0024.logs.logger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.time.OffsetDateTime;

@@ -31,11 +31,11 @@ import pl.kamil0024.stats.StatsModule;
 
 public class ChatModule implements Modul {
 
-    @Inject private ShardManager api;
-    @Inject private KaryJSON karyJSON;
-    @Inject private CaseDao caseDao;
-    @Inject private ModLog modLog;
-    @Inject private StatsModule statsModule;
+    @Inject private final ShardManager api;
+    @Inject private final KaryJSON karyJSON;
+    @Inject private final CaseDao caseDao;
+    @Inject private final ModLog modLog;
+    @Inject private final StatsModule statsModule;
 
     private boolean start = false;
     private ChatListener chatListener;
@@ -51,7 +51,7 @@ public class ChatModule implements Modul {
 
     @Override
     public boolean startUp() {
-        this.chatListener = new ChatListener(api, karyJSON, caseDao, modLog, statsModule);
+        this.chatListener = new ChatListener(karyJSON, caseDao, modLog, statsModule);
         this.karyListener = new KaryListener(karyJSON, caseDao, modLog, statsModule);
         api.addEventListener(chatListener, karyListener);
         setStart(true);

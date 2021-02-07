@@ -83,7 +83,7 @@ public class PunishCommand extends Command {
             context.send(HelpCommand.getUsage(context).build()).queue();
             return false;
         }
-        if (arg.toLowerCase().equals("info")) {
+        if (arg.equalsIgnoreCase("info")) {
             String arg1 = context.getArgs().get(1);
             if (arg1 == null) {
                 List<FutureTask<EmbedBuilder>> pages = new ArrayList<>();

@@ -24,15 +24,10 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Main;
-import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Properties;
 

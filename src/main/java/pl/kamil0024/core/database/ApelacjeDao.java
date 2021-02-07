@@ -75,10 +75,6 @@ public class ApelacjeDao implements Dao<ApelacjeConfig> {
             map.put(a.getApelacjeNick(), fmap);
         }
         return map;
-//        return apelacje.stream().filter(a -> {
-//            DateTime dt = new DateTime(a.getCreatedApelacja());
-//            return dt.getMonthOfYear() == month && dt.getYear() == year;
-//        }).collect(Collectors.toList());
     }
 
     public static HashMap<String, List<ApelacjeConfig>> getFrom(List<ApelacjeConfig> all, DateTime dt, int days) {

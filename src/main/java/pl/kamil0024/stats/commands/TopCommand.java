@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.CommandExecute;
@@ -59,7 +60,7 @@ public class TopCommand extends Command {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("550961672714452993")) {
             context.send("Nie możesz tego użyć!").queue();
             return false;

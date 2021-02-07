@@ -52,8 +52,7 @@ public class DynamicEmbedPageinator {
     private final int secound;
 
     private boolean loading = true;
-    private boolean ended = false;
-    private boolean preload = true;
+    private final boolean ended = false;
 
     private static final ExecutorService mainExecutor = Executors.newFixedThreadPool(4);
 
@@ -66,7 +65,8 @@ public class DynamicEmbedPageinator {
         this.pages = pages;
         this.userId = user.getIdLong();
         this.secound = secound;
-        if (this.preload) {
+        boolean preload = true;
+        if (preload) {
             mainExecutor.submit(() -> {
                 ExecutorService executor = Executors.newFixedThreadPool(2, new NamedThreadFactory("PageLoader-" +
                         userId + "-" + botMsgId + "-" + pages.size() + "-pages"));

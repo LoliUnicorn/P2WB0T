@@ -274,7 +274,7 @@ public class EventWaiter implements EventListener
         threadpool.shutdown();
     }
 
-    private class WaitingEvent<T extends GenericEvent>
+    private static class WaitingEvent<T extends GenericEvent>
     {
         final Predicate<T> condition;
         final Consumer<T> action;

@@ -27,8 +27,8 @@ import pl.kamil0024.nieobecnosci.listeners.NieobecnosciListener;
 
 public class NieobecnosciModule implements Modul {
 
-    @Inject private ShardManager api;
-    @Inject private NieobecnosciDao nieobecnosciDao;
+    @Inject private final ShardManager api;
+    @Inject private final NieobecnosciDao nieobecnosciDao;
 
     private boolean start = false;
 

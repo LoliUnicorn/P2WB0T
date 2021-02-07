@@ -23,26 +23,15 @@ import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
-import pl.kamil0024.core.util.DynamicEmbedPageinator;
-import pl.kamil0024.core.util.EmbedPageintaor;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.music.commands.PlayCommand;
 import pl.kamil0024.music.commands.QueueCommand;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.FutureTask;
 
 import static pl.kamil0024.music.commands.QueueCommand.longToTimespan;
 
@@ -59,7 +48,7 @@ public class PrivateQueueCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
         SocketClient client = socketManager.getClientFromChanne(context);

@@ -27,7 +27,7 @@ public abstract class Args {
 
     @Getter protected String name;
 
-    public Object parsed(String o, JDA jda, CommandContext context) throws Exception {
+    public Object parsed(String o, JDA jda, CommandContext context) {
         throw new UnsupportedOperationException("Argu nie ma zaimplementowanej funkcji execute()");
     }
 

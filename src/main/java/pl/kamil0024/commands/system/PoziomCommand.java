@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -35,7 +36,7 @@ public class PoziomCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
 
         Member mem = context.getParsed().getMember(context.getArgs().get(0));
         if (mem == null) mem = context.getMember();

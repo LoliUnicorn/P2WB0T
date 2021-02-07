@@ -25,20 +25,19 @@ import io.undertow.server.HttpServerExchange;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.config.DiscordInviteConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.util.Map;
 
 public class DiscordInvite implements HttpHandler  {
 
-    @Inject private APIModule apiModule;
+    @Inject private final APIModule apiModule;
 
     public DiscordInvite(APIModule apiModule) {
         this.apiModule = apiModule;
     }
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (!CheckToken.checkToken(ex)) return;
 
         String nick = ex.getQueryParameters().get("nick").getFirst();

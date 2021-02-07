@@ -57,7 +57,6 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class ModLog extends ListenerAdapter {
 
@@ -212,7 +211,7 @@ public class ModLog extends ListenerAdapter {
 
                         switch (typ) {
                             case TEMPMUTE:
-                                if (m != null) g.removeRoleFromMember(m, muteRole).complete();
+                                if (m != null) g.removeRoleFromMember(m, Objects.requireNonNull(muteRole)).complete();
                                 break;
                             case TEMPBAN:
                                 try {

@@ -22,7 +22,7 @@ package pl.kamil0024.music.commands;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.joda.time.Duration;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -57,7 +57,7 @@ public class QueueCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         TrackScheduler trackScheduler = musicModule.getGuildAudioPlayer(context.getGuild()).getScheduler();
         if (trackScheduler == null) {
             context.send("trackScheduler jest nullem").queue();

@@ -21,8 +21,6 @@ package pl.kamil0024.ticket;
 
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import pl.kamil0024.core.command.Command;
-import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
 import pl.kamil0024.core.module.Modul;
@@ -31,7 +29,6 @@ import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 import pl.kamil0024.ticket.listener.VoiceChatListener;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,9 +36,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TicketModule implements Modul {
 
-    private ArrayList<Command> cmd;
-
-    @Inject CommandManager commandManager;
     @Inject TicketDao ticketDao;
     @Inject ShardManager api;
     @Inject RedisManager redisManager;
@@ -74,7 +68,6 @@ public class TicketModule implements Modul {
 
     @Override
     public boolean startUp() {
-        cmd = new ArrayList<>();
         vcl = new VoiceChatListener(ticketDao, ticketRedisManager, eventWaiter, redisManager);
         api.addEventListener(vcl);
         return true;

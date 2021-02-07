@@ -58,7 +58,7 @@ public class UserInfo implements HttpHandler {
             } catch(Exception ignored) { }
             FakeUser fake = new FakeUser();
             try {
-                Guild.Ban ban = api.getGuildById(Ustawienia.instance.bot.guildId).retrieveBan(user).complete();
+                Guild.Ban ban = Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveBan(user).complete();
                 if (ban != null) {
                     fake.setBanned(true);
                 }
@@ -106,7 +106,7 @@ public class UserInfo implements HttpHandler {
     @AllArgsConstructor
     private static class FakeRole {
         private String name;
-        private int color = 0;
+        private Integer color = 0;
     }
 
 }

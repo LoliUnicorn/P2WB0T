@@ -19,14 +19,11 @@
 
 package pl.kamil0024.commands.dews;
 
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.module.ModulManager;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.stats.StatsModule;
 
 public class RebootCommand extends Command {
 
@@ -40,7 +37,7 @@ public class RebootCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         reboot = true;
         context.sendTranslate("reboot.success").complete();
         System.exit(0);

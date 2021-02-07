@@ -41,7 +41,7 @@ import java.util.ArrayList;
 
 public class ModulesCommand extends Command {
 
-    private ModulManager modulManager;
+    private final ModulManager modulManager;
 
     public ModulesCommand(ModulManager modulManager) {
         name = "modules";
@@ -83,7 +83,7 @@ public class ModulesCommand extends Command {
 
         Modul modul = null;
         for (Modul m : modulManager.getModules()) {
-            if (m.getName().toLowerCase().equals(name.toLowerCase())) {
+            if (m.getName().equalsIgnoreCase(name)) {
                 modul = m;
                 break;
             }
@@ -94,7 +94,7 @@ public class ModulesCommand extends Command {
             return false;
         }
 
-        if (arg.toLowerCase().equals("reload")) {
+        if (arg.equalsIgnoreCase("reload")) {
             Message msg = context.send(getReloadEmbed(0, green, red, load)).complete();
             msg.editMessage(getReloadEmbed(2, green, red, load)).complete();
             try {
@@ -114,7 +114,7 @@ public class ModulesCommand extends Command {
             }
         }
 
-        if (arg.toLowerCase().equals("start")) {
+        if (arg.equalsIgnoreCase("start")) {
             if (modul.isStart()) {
                 context.send("Ten moduł jest załadowany!").queue();
                 return false;

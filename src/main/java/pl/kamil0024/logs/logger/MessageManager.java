@@ -56,7 +56,7 @@ public class MessageManager extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.getAuthor().isFake() || event.getMessage().isWebhookMessage() ||
+        if (event.getAuthor().isBot() || event.getMessage().isWebhookMessage() ||
                 event.getMessage().getContentRaw().isEmpty()) return;
         add(event.getMessage());
     }

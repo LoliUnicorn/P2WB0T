@@ -19,7 +19,6 @@
 
 package pl.kamil0024.status;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.status.listeners.ChangeNickname;

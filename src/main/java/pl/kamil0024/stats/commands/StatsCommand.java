@@ -21,6 +21,7 @@ package pl.kamil0024.stats.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -45,7 +46,7 @@ public class StatsCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (UserUtil.getPermLevel(context.getMember()) != PermLevel.DEVELOPER && !context.getUser().getId().equals("550961672714452993")) {
             context.send("Nie możesz tego użyć!").queue();
             return false;

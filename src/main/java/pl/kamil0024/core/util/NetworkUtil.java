@@ -85,5 +85,4 @@ public class NetworkUtil {
         Response res = downloadResponse(url);
         return res.body() == null ? new byte[0] : res.body().bytes();
     }
-
 }

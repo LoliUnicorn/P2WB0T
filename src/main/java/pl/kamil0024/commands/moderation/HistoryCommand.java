@@ -30,7 +30,6 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.util.DynamicEmbedPageinator;
-import pl.kamil0024.core.util.EmbedPageintaor;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Kara;

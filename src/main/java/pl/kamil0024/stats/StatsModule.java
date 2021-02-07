@@ -31,13 +31,11 @@ import pl.kamil0024.core.database.config.StatsConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.commands.TekstCommand;
 import pl.kamil0024.stats.commands.TopCommand;
 import pl.kamil0024.stats.entities.StatsCache;
 import pl.kamil0024.stats.entities.Statystyka;
-import pl.kamil0024.stats.entities.UserStats;
 import pl.kamil0024.stats.listener.StatsListener;
 
 import java.util.ArrayList;

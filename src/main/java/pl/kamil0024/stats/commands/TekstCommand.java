@@ -21,12 +21,12 @@ package pl.kamil0024.stats.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 import pl.kamil0024.music.MusicModule;
 
@@ -50,7 +50,7 @@ public class TekstCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg;
         AudioTrack track = musicModule.getGuildAudioPlayer(context.getGuild()).getPlayer().getPlayingTrack();
 

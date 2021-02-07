@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -40,7 +41,7 @@ import java.util.List;
 
 public class EmbedCommand extends Command {
 
-    private static Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
 
     private final EmbedRedisManager embedRedisManager;
 
@@ -52,7 +53,7 @@ public class EmbedCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String firsta = context.getArgs().get(0);
         if (firsta == null || (!firsta.equalsIgnoreCase("send")) && !firsta.equalsIgnoreCase("edit")) throw new UsageException();
 
@@ -111,7 +112,7 @@ public class EmbedCommand extends Command {
         return eb;
     }
     
-    private EmbedBuilder getEmed(String json) throws Exception {
+    private EmbedBuilder getEmed(String json) {
         EmbedBuilder eb = new EmbedBuilder();
         Embed embed = GSON.fromJson(json, Embed.class);
 

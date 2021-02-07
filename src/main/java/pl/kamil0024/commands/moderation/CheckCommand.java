@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class CheckCommand extends Command {
 
-    private CaseDao caseDao;
+    private final CaseDao caseDao;
 
     public CheckCommand(CaseDao caseDao) {
         name = "check";
@@ -47,7 +48,7 @@ public class CheckCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         User user = context.getParsed().getUser(context.getArgs().get(0));
         if (user == null) {
             context.send("Nie ma takiego użytkownika!").queue();

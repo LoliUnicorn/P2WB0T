@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kamil0024.commands.ModLog;
@@ -40,7 +41,6 @@ import pl.kamil0024.core.socket.SocketManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.UsageException;
-import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
 import pl.kamil0024.music.MusicModule;
@@ -49,7 +49,6 @@ import pl.kamil0024.weryfikacja.WeryfikacjaModule;
 import pl.kamil0024.youtrack.YouTrack;
 
 import java.awt.*;
-import java.io.File;
 
 public class EvalCommand extends Command {
 
@@ -113,7 +112,7 @@ public class EvalCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String kod = context.getArgsToString(0);
         if (context.getArgs().get(0) == null || kod.isEmpty()) throw new UsageException();
 

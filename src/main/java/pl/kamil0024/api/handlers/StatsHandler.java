@@ -22,14 +22,10 @@ package pl.kamil0024.api.handlers;
 import com.google.inject.Inject;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.entities.Statystyka;
 
@@ -38,8 +34,8 @@ import java.util.List;
 
 public class StatsHandler implements HttpHandler {
 
-    @Inject private APIModule api;
-    @Inject private StatsDao statsDao;
+    @Inject private final APIModule api;
+    @Inject private final StatsDao statsDao;
     @Inject private boolean id = false;
 
     public StatsHandler(StatsDao statsDao, APIModule apiModule) {
@@ -83,7 +79,7 @@ public class StatsHandler implements HttpHandler {
             for (StatsConfig statsc : all) {
                 String mc = api.getUserConfig(statsc.getId()).getMcNick();
                 if (mc == null) continue;
-                if (mc.split(" ")[1].toLowerCase().equals(nick.toLowerCase())) {
+                if (mc.split(" ")[1].equalsIgnoreCase(nick)) {
                     mem = statsc.getStats();
                     break;
                 }

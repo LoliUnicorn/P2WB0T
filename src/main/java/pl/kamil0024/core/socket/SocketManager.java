@@ -113,7 +113,7 @@ public class SocketManager {
                         tracks.add(new PrivateQueueCommand.DecodeTrack(a.next().toString(), first).create());
                         first = false;
                     }
-                    new EmbedPageintaor(tracks, api.getUserById(response.getAction().getMemberId()), eventWaiter, api.getShards().stream().findAny().get())
+                    new EmbedPageintaor(tracks, Objects.requireNonNull(api.getUserById(response.getAction().getMemberId())), eventWaiter, api.getShards().get(0))
                             .create(txt);
 
                     break;

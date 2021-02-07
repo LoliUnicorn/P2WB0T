@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.zabawa;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -39,7 +40,7 @@ public class PogodaCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String lokacja = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
 

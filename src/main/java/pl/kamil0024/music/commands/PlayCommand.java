@@ -33,6 +33,7 @@ import pl.kamil0024.music.MusicModule;
 
 import java.util.Objects;
 
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class PlayCommand extends Command {
 
     private final MusicModule musicModule;
@@ -47,7 +48,7 @@ public class PlayCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String url = context.getArgs().get(0);
         if (url == null) throw new UsageException();
         
@@ -87,10 +88,8 @@ public class PlayCommand extends Command {
     }
 
     public static boolean isSameChannel(Member bot, Member mem) {
-        if (!PlayCommand.isVoice(bot)) {
-            return false;
-        }
-        return PlayCommand.isVoice(mem) && getVc(mem).getId().equals(getVc(bot).getId());
+        if (!PlayCommand.isVoice(bot) || !PlayCommand.isVoice(mem)) return false;
+        return getVc(mem).getId().equals(getVc(bot).getId());
     }
 
 }

@@ -31,7 +31,6 @@ import pl.kamil0024.api.redisstats.modules.CaseRedisManager;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 
 public class RedisChatModStats implements HttpHandler {
 
@@ -127,7 +126,7 @@ public class RedisChatModStats implements HttpHandler {
         List<String> labels = new ArrayList<>();
         List<Integer> data = new ArrayList<>();
         List<Datasets> datasets = new ArrayList<>();
-        String kolor = "#1150d6";
+        String kolor;
         int rok = new DateTime().getYear();
         switch (typ) {
             case "rok":
