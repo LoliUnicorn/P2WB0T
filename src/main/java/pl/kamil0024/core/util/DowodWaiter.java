@@ -81,7 +81,7 @@ public class DowodWaiter {
             waitForMessage();
             return;
         }
-        List<Dowod> d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
+        List<Dowod> d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg, false);
         if (d == null || d.isEmpty()) {
             e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
             return;

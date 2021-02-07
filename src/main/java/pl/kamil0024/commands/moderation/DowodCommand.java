@@ -131,7 +131,7 @@ public class DowodCommand extends Command {
         }
         if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
 
-        List<Dowod> d = getKaraConfig(context.getArgsToString(1), context.getMessage());
+        List<Dowod> d = getKaraConfig(context.getArgsToString(1), context.getMessage(), true);
         if (d == null || d.isEmpty()) throw new UsageException();
 
         int id = Dowod.getNextId(cc.getKara().getDowody());
@@ -192,7 +192,7 @@ public class DowodCommand extends Command {
         return null;
     }
 
-    public static List<Dowod> getKaraConfig(String rawTekst, Message msg) {
+    public static List<Dowod> getKaraConfig(String rawTekst, Message msg, boolean inCmd) {
         List<Dowod> dowody = new ArrayList<>();
         List<Message.Attachment> at = msg.getAttachments();
         String content = "";
@@ -210,7 +210,7 @@ public class DowodCommand extends Command {
                 if (txt != null) {
                     try {
                         InputStream f = entry.retrieveInputStream().get();
-                        m = txt.sendFile(f, "dowod").complete();
+                        m = txt.sendFile(f, entry.getFileName()).complete();
                         if (m.getAttachments().isEmpty()) { // Czyli nigdy
                             m = null;
                         }
@@ -225,9 +225,9 @@ public class DowodCommand extends Command {
                 dowody.add(d);
                 id++;
             }
-
         }
-        if (deleteMsg) msg.delete().queue();
+
+        if (deleteMsg && !inCmd) msg.delete().queue();
         return dowody;
     }
 
