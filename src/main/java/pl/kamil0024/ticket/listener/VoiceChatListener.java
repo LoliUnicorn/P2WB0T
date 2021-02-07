@@ -265,7 +265,7 @@ public class VoiceChatListener extends ListenerAdapter {
     }
 
     private String getMentions(VcType type, Guild g) {
-        if (pingCache.getIfPresent(type.name())) return "";
+        if (pingCache.getIfPresent(type.name()) == null) return "";
         List<Member> l = g.getMembersWithRoles(g.getRoleById(Ustawienia.instance.rangi.ekipa))
                 .stream().filter(m -> UserUtil.getPermLevel(m).getNumer() >= PermLevel.HELPER.getNumer() && filtr(m))
                 .collect(Collectors.toList());
