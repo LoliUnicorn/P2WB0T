@@ -20,7 +20,6 @@
 package pl.kamil0024.liczydlo;
 
 import com.google.inject.Inject;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 

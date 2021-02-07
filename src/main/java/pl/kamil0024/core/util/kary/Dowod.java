@@ -55,24 +55,4 @@ public class Dowod {
         return null;
     }
 
-    @CheckReturnValue
-    public User retrieveUser(ShardManager api) {
-        try {
-            return api.retrieveUserById(user).complete();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @CheckReturnValue
-    public Member retrieveMember(ShardManager api) {
-        Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
-        if (g == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem");
-        try {
-            return g.retrieveMemberById(user).complete();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
 }

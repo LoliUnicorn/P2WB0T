@@ -19,6 +19,7 @@
 
 package pl.kamil0024.commands.dews;
 
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -41,7 +42,7 @@ public class ShellCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
 

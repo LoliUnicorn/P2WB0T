@@ -19,6 +19,7 @@
 
 package pl.kamil0024.commands.moderation;
 
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -42,7 +43,7 @@ public class KarainfoCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         Integer id = context.getParsed().getNumber(context.getArgs().get(0));
         if (id == null) throw new UsageException();
 

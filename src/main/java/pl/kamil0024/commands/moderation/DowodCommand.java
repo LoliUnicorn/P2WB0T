@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageActivity;
 import net.dv8tion.jda.internal.entities.AbstractMessage;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -45,7 +46,6 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("RegExpDuplicateCharacterInClass")
 public class DowodCommand extends Command {
 
     private final CaseDao caseDao;
@@ -62,7 +62,7 @@ public class DowodCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgs().get(0);
         String typ = context.getArgs().get(1);
 
@@ -126,11 +126,15 @@ public class DowodCommand extends Command {
         }
         if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
 
-        Dowod d = getKaraConfig(context.getArgsToString(1), context.getMessage());
-        if (d == null) throw new UsageException();
-        d.setId(Dowod.getNextId(cc.getKara().getDowody()));
+        List<Dowod> d = getKaraConfig(context.getArgsToString(1), context.getMessage());
+        if (d == null || d.isEmpty()) throw new UsageException();
 
-        cc.getKara().getDowody().add(d);
+        int id = Dowod.getNextId(cc.getKara().getDowody());
+        for (Dowod dowod : d) {
+            dowod.setId(id);
+            cc.getKara().getDowody().add(dowod);
+            id++;
+        }
         caseDao.save(cc);
         context.send("Pomyślnie zapisano dowód!").queue();
         return true;
@@ -173,7 +177,6 @@ public class DowodCommand extends Command {
     }
 
 
-    @SuppressWarnings("RegExpRedundantEscape")
     public static String getImageUrl(Message msg) {
         Matcher matcher = Pattern.compile("(http(s)?):\\/\\/(www\\.)?[?a-zA-Z0-9@:-]{2,256}\\.[a-z]{2,24}" +
                         "\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*\\.(a?png|jpe?g|gif|webp|tiff|svg))",
@@ -184,20 +187,26 @@ public class DowodCommand extends Command {
         return null;
     }
 
-    public static Dowod getKaraConfig(String rawTekst, Message msg) {
-        Dowod d = new Dowod();
-        String content = "";
-
-        if (rawTekst != null && !rawTekst.trim().isEmpty()) content += rawTekst;
+    public static List<Dowod> getKaraConfig(String rawTekst, Message msg) {
+        List<Dowod> dowody = new ArrayList<>();
         List<Message.Attachment> at = msg.getAttachments();
-        if (!at.isEmpty()) d.setImage(at.stream().findAny().get().getUrl());
+        String content = "";
+        if (rawTekst != null && !rawTekst.trim().isEmpty()) content += rawTekst;
+        if (content.isEmpty() && at.isEmpty()) return null;
 
-        if (content.isEmpty() && d.getImage() == null) return null;
-
-        d.setContent(content);
-        d.setUser(msg.getAuthor().getId());
-        d.setId(1);
-        return d;
+        int id = 1;
+        if (!at.isEmpty()) {
+            for (Message.Attachment entry : at) {
+                Dowod d = new Dowod();
+                d.setImage(entry.getUrl());
+                if (id == 1) d.setContent(content);
+                d.setUser(msg.getAuthor().getId());
+                d.setId(id);
+                dowody.add(d);
+                id++;
+            }
+        }
+        return dowody;
     }
 
 }

@@ -24,10 +24,8 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.config.NieobecnosciConfig;
-import pl.kamil0024.core.database.config.UserConfig;
 import pl.kamil0024.core.database.config.UserinfoConfig;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 
@@ -37,8 +35,8 @@ import java.util.List;
 
 public class Nieobecnosci implements HttpHandler {
 
-    @Inject private NieobecnosciDao nieobecnosciDao;
-    @Inject private APIModule api;
+    @Inject private final NieobecnosciDao nieobecnosciDao;
+    @Inject private final APIModule api;
 
     public Nieobecnosci(NieobecnosciDao nieobecnosciDao, APIModule apiModule) {
         this.nieobecnosciDao = nieobecnosciDao;
@@ -47,7 +45,7 @@ public class Nieobecnosci implements HttpHandler {
 
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (!CheckToken.checkToken(ex)) return;
 
         try {
@@ -100,7 +98,7 @@ public class Nieobecnosci implements HttpHandler {
             for (NieobecnosciConfig config : nb) {
                 UserinfoConfig uc = api.getUserConfig(config.getId());
                 try {
-                    if (uc.getMcNick().split(" ")[1].toLowerCase().equals(parm.toLowerCase())) {
+                    if (uc.getMcNick().split(" ")[1].equalsIgnoreCase(parm)) {
                         for (Nieobecnosc nieobecnosc : config.getNieobecnosc()) {
                             jegoUrlopy.add(format(nieobecnosc, api));
                         }

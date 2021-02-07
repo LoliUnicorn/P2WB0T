@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.chat.Action;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.commands.moderation.MuteCommand;
@@ -33,7 +32,6 @@ import pl.kamil0024.commands.moderation.PunishCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
-import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.KaryJSON;
@@ -79,7 +77,7 @@ public class KaryListener extends ListenerAdapter {
                 Message msg = null;
                 try {
                     msg = event.getChannel().retrieveMessageById(event.getMessageId()).complete();
-                } catch (Exception e) { }
+                } catch (Exception ignored) { }
                 if (msg == null || event.getReactionEmote().getId().equals(Ustawienia.instance.emote.red)) {
                     deleteMessage(msg);
                     getEmbedy().remove(entry);

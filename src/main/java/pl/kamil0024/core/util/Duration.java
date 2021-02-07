@@ -35,10 +35,6 @@ public class Duration {
         now = new BDate().getTimestamp();
     }
 
-    public Duration(Long now) {
-        this.now = now;
-    }
-
     @Nullable
     public Long parseLong(String s) {
         if (s == null) return null;
@@ -70,10 +66,6 @@ public class Duration {
         } catch (NumberFormatException e) { return null; }
 
         return new BDate(now, getLang()).add(longg, time).getTimestamp();
-    }
-
-    public String parseString() {
-        return new BDate(now, getLang()).difference(date);
     }
 
     private static BLanguage getLang() {

@@ -22,6 +22,24 @@ package pl.kamil0024.core.socket.actions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:src/main/java/pl/kamil0024/core/socket/actions/PlayingTrackAction.java
+@AllArgsConstructor
+@Data
+public class PlayingTrackAction implements SocketAction {
+
+    private Boolean sendMessage;
+    private final String memberId;
+    private final String channelId;
+    private final int socketId;
+    private final String voiceChannelId;
+
+    private final String topic = "playingtrack";
+
+}
+=======
+>>>>>>> socket
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,4 +62,9 @@ public class ConnectAction implements SocketAction {
         return map;
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> socket:src/main/java/pl/kamil0024/core/socket/actions/ConnectAction.java
+>>>>>>> socket

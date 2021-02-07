@@ -21,8 +21,6 @@ package pl.kamil0024.core.database.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import pl.kamil0024.core.command.enums.PermLevel;
 
 @Data

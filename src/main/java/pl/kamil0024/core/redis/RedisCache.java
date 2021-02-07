@@ -27,7 +27,7 @@ import java.util.function.Function;
 public class RedisCache<V> implements Cache<V> {
     private final RedisManager rcm;
     private final int expiry;
-    private TypeToken<V> holds;
+    private final TypeToken<V> holds;
 
     public RedisCache(RedisManager rcm, TypeToken<V> holds, int expiry) {
         this.rcm = rcm;

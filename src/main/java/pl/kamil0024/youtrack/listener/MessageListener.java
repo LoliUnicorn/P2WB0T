@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.utils.MarkdownUtil;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.logger.Log;
@@ -36,7 +35,6 @@ import pl.kamil0024.youtrack.models.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

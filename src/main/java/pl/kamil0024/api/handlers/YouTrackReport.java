@@ -23,16 +23,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.HeaderValues;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.logger.Log;
-import pl.kamil0024.stats.commands.StatsCommand;
 import pl.kamil0024.stats.commands.TopCommand;
 
 import java.awt.*;
@@ -50,7 +46,7 @@ public class YouTrackReport implements HttpHandler {
     }
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         Response.sendResponse(ex, "Pomyślnie wysłano reporta!");
 
         String header = ex.getRequestHeaders().get("data").getFirst();

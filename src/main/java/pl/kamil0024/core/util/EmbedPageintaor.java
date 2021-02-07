@@ -27,7 +27,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,8 +47,8 @@ public class EmbedPageintaor {
 
     private Message botMsg;
     private long botMsgId;
-    private long userId;
-    private int secound;
+    private final long userId;
+    private final int secound;
 
     public EmbedPageintaor(List<EmbedBuilder> pages, User user, EventWaiter eventWaiter, JDA api, int secound) {
         this.eventWaiter = eventWaiter;

@@ -28,7 +28,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.logger.Log;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class LiczydloListener extends ListenerAdapter {
 
-    @Inject private ShardManager api;
+    @Inject private final ShardManager api;
 
     public LiczydloListener(ShardManager api) {
         this.api = api;
@@ -72,23 +71,18 @@ public class LiczydloListener extends ListenerAdapter {
 
         if (messages.size() < 2 || liczba != kiedysMessage+1 || messages.get(1).getAuthor().getId().equals(event.getAuthor().getId())) {
             event.getMessage().delete().queue();
-            return;
         }
-
-        updateTopic(event.getChannel());
     }
 
     @Override
     public void onGuildMessageUpdate(@Nonnull GuildMessageUpdateEvent event) {
         if (!event.getChannel().getId().equals(Ustawienia.instance.channel.liczek)) return;
         event.getMessage().delete().complete();
-        updateTopic(event.getChannel());
     }
 
     @Override
     public void onGuildMessageDelete(@Nonnull GuildMessageDeleteEvent event) {
         if (!event.getChannel().getId().equals(Ustawienia.instance.channel.liczek)) return;
-        updateTopic(event.getChannel());
     }
 
 
@@ -101,15 +95,6 @@ public class LiczydloListener extends ListenerAdapter {
             } else msg.delete().queue();
         }
         return msgs;
-    }
-
-    private void updateTopic(TextChannel txt) {
-        //Message msg = getHistoryList(txt).get(0);
-        //try {
-        //    int liczba = Integer.parseInt(msg.getContentDisplay());
-         //   String format = "Ostatnia zarejestrowana osoba: %s\nNastępna wiadomość powinna mieć treść: %s";
-        //    txt.getManager().setTopic(String.format(format, msg.getAuthor().getAsMention(), liczba+1)).complete();
-       // } catch (Exception ignored) {}
     }
 
 }

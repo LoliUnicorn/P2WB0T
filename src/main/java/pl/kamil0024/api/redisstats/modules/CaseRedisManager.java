@@ -50,8 +50,8 @@ public class CaseRedisManager {
     private final Map<Long, List<ChatModStatsConfig>> mapChatmodWMiesiacu;
     private final Map<Long, List<ChatModStatsConfig>> mapChatmodWRoku;
 
-    private ScheduledExecutorService executorSche;
-    private ShardManager api;
+    private final ScheduledExecutorService executorSche;
+    private final ShardManager api;
 
     public CaseRedisManager(CaseDao caseDao, ShardManager api) {
         this.caseDao = caseDao;
@@ -104,7 +104,7 @@ public class CaseRedisManager {
             String chatmodId = kara.getAdmId();
             List<ChatModStatsConfig> lista = chatModWRoku.getOrDefault(h, new ArrayList<>());
 
-            if (lista.isEmpty() || !ChatModStatsConfig.containsId(chatmodId, lista)) {
+            if (lista.isEmpty() || ChatModStatsConfig.consId(chatmodId, lista)) {
                 ChatModStatsConfig cst = new ChatModStatsConfig();
                 cst.setLiczbaKar(1);
                 cst.setId(chatmodId);
@@ -112,7 +112,7 @@ public class CaseRedisManager {
                 if (nick == null) {
                     User u = api.retrieveUserById(chatmodId).complete();
                     try {
-                        String n = UserUtil.getMcNick(api.getGuildById(Ustawienia.instance.bot.guildId).retrieveMemberById(chatmodId).complete(), true);
+                        String n = UserUtil.getMcNick(Objects.requireNonNull(api.getGuildById(Ustawienia.instance.bot.guildId)).retrieveMemberById(chatmodId).complete(), true);
                         nicknames.put(chatmodId, n);
                         cst.setNick(n);
                     } catch (Exception e) {
@@ -152,7 +152,7 @@ public class CaseRedisManager {
                 karyWMiesiacu.put(ms, (karyWMiesiacu.getOrDefault(ms, 0)) + 1);
 
                 List<ChatModStatsConfig> listaMsc = chatmodWMiesiacu.getOrDefault(ms, new ArrayList<>());
-                if (listaMsc.isEmpty() || !ChatModStatsConfig.containsId(chatmodId, listaMsc)) {
+                if (listaMsc.isEmpty() || ChatModStatsConfig.consId(chatmodId, listaMsc)) {
                     ChatModStatsConfig cst = new ChatModStatsConfig();
                     cst.setId(chatmodId);
                     cst.setLiczbaKar(1);

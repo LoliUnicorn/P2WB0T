@@ -67,8 +67,4 @@ public enum DiscordRank {
         return rank;
     }
 
-    public static ArrayList<DiscordRank> getRanks(String id, Guild guild) {
-        return getRanks(guild.retrieveMemberById(id).complete());
-    }
-
 }

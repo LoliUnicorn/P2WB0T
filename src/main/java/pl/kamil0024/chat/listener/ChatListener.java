@@ -60,8 +60,6 @@ import static java.nio.charset.StandardCharsets.*;
 @SuppressWarnings("DuplicatedCode")
 public class ChatListener extends ListenerAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChatListener.class);
-
     private static final Pattern HTTP = Pattern.compile("([0-9a-z_-]+\\.)+(com|infonet|net|org|pro|de|ggmc|md|me|tt|tv|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt)");
     private static final Pattern DISCORD_INVITE = Pattern.compile("(https?://)?(www\\.)?(discord\\.(gg|io|me|li)|discordapp\\.com/invite)/.+[a-z]");
     private static final Pattern EMOJI = Pattern.compile("<(a?):(\\w{2,32}):(\\d{17,19})>");
@@ -75,7 +73,7 @@ public class ChatListener extends ListenerAdapter {
 
     @Getter private final List<String> przeklenstwa;
 
-    public ChatListener(ShardManager api, KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
+    public ChatListener(KaryJSON karyJSON, CaseDao caseDao, ModLog modLog, StatsModule statsModule) {
         this.karyJSON = karyJSON;
         this.modLog = modLog;
         this.caseDao = caseDao;
@@ -229,16 +227,6 @@ public class ChatListener extends ListenerAdapter {
         action.setPewnosc(false);
         action.setDeleted(false);
 
-//        if (skrotyCount(takMsg.toLowerCase().split(" "))) {
-//            action.setKara(Action.ListaKar.SKROTY);
-//            action.send();
-//            return;
-//        }
-//        if (skrotyCount(new String[] {takMsg.toLowerCase()})) {
-//            action.setKara(Action.ListaKar.SKROTY);
-//            action.send();
-//        }
-
         for (String s : getPrzeklenstwa()) {
             if (przeklenstwa.toLowerCase().contains(s) || przeklenstwa.replaceAll(" ", "").toLowerCase().contains(s)) {
                 action.setKara(Action.ListaKar.ZACHOWANIE);
@@ -280,26 +268,6 @@ public class ChatListener extends ListenerAdapter {
         return false;
     }
 
-
-    public static double containsTestFlood(String msg) {
-        if (msg.length() <= 4 || msg.toLowerCase().contains("zaraz")) return 0;
-        HashMap<Character, Integer> mapa = new HashMap<>();
-
-        for (char c : msg.replaceAll(" ", "").toCharArray()) {
-            Integer ind = mapa.getOrDefault(c, 0);
-            ind++;
-            mapa.put(c, ind);
-        }
-
-        int suma = 0;
-        for (Map.Entry<Character, Integer> entry : mapa.entrySet()) {
-            if (entry.getValue() > 1) {
-                suma += entry.getValue();
-            }
-        }
-        return ((double) suma / (double) msg.length()) * 100;
-    }
-
     public static int containsFlood(String msg) {
         if (msg.length() < 3 || containsLink(new String[] {msg})) return 0;
 
@@ -311,10 +279,10 @@ public class ChatListener extends ListenerAdapter {
             try {
                 if (split.equals(" ")) continue;
                 String nastepnaLitera = ssplit[tak + 1];
-                if (floodowanyZnak == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.toLowerCase().equals(nastepnaLitera.toLowerCase())) {
+                if (floodowanyZnak == null && !split.equals("") && !nastepnaLitera.isEmpty() && split.equalsIgnoreCase(nastepnaLitera)) {
                     floodowanyZnak = nastepnaLitera;
                     flood++;
-                } else if (floodowanyZnak != null && floodowanyZnak.toLowerCase().equals(split.toLowerCase())) {
+                } else if (floodowanyZnak != null && floodowanyZnak.equalsIgnoreCase(split)) {
                     flood++;
                 } else {
                     floodowanyZnak = nastepnaLitera;
@@ -367,33 +335,6 @@ public class ChatListener extends ListenerAdapter {
             if (Emoji.resolve(s, api) != null) count++;
         }
         return count;
-    }
-
-    public static boolean skrotyCount(String[] msg) {
-        ArrayList<String> whiteList = new ArrayList<>();
-        whiteList.add("jj");
-        whiteList.add("jak");
-        whiteList.add("juz");
-        whiteList.add("już");
-        whiteList.add("ja");
-        whiteList.add("jem");
-        whiteList.add("jez");
-        whiteList.add("jej");
-        whiteList.add("joł");
-        whiteList.add("je");
-        whiteList.add("jo");
-        whiteList.add("jol");
-        whiteList.add("jes");
-
-        for (String s : msg) {
-            String pat = s.replaceAll("[^\\u0020\\u0030-\\u0039\\u0041-\\u005A\\u0061-\\u007A\\u00C0-\\u1D99]", "").replaceAll(EMOJI.toString(), "");
-            if (whiteList.contains(s.toLowerCase()) || whiteList.contains(pat)) {
-                continue;
-            }
-            if (SKROTY.matcher(pat).find()) return true;
-        }
-
-        return false;
     }
 
 }

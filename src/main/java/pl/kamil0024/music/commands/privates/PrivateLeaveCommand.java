@@ -19,6 +19,10 @@
 
 package pl.kamil0024.music.commands.privates;
 
+<<<<<<< HEAD
+=======
+import org.jetbrains.annotations.NotNull;
+>>>>>>> socket
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -38,7 +42,7 @@ public class PrivateLeaveCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!PrivatePlayCommand.check(context)) return false;
 
         SocketClient client = socketManager.getClientFromChanne(context);

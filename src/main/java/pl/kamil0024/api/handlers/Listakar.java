@@ -26,14 +26,13 @@ import pl.kamil0024.api.APIModule;
 import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.util.*;
 
 public class Listakar implements HttpHandler {
 
-    @Inject private CaseDao caseDao;
-    @Inject private APIModule api;
+    @Inject private final CaseDao caseDao;
+    @Inject private final APIModule api;
 
     public Listakar(CaseDao caseDao, APIModule apiModule) {
         this.caseDao = caseDao;
@@ -42,7 +41,7 @@ public class Listakar implements HttpHandler {
 
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (!CheckToken.checkToken(ex)) return;
 
         String nick = ex.getQueryParameters().get("nick").getFirst();

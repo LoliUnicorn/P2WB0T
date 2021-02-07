@@ -19,6 +19,7 @@
 
 package pl.kamil0024.music.commands;
 
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -41,7 +42,7 @@ public class SkipCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!PlayCommand.isVoice(context.getGuild().getSelfMember())) {
             context.sendTranslate("leave.nochannel").queue();
             return false;

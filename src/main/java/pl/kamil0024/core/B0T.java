@@ -23,21 +23,21 @@ import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil0024.antiraid.AntiRaidModule;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
@@ -48,15 +48,10 @@ import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.database.*;
-import pl.kamil0024.core.database.config.VoiceStateConfig;
 import pl.kamil0024.core.listener.ExceptionListener;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
-import pl.kamil0024.core.musicapi.impl.MusicAPIImpl;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
@@ -70,7 +65,6 @@ import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
 import pl.kamil0024.liczydlo.LiczydloModule;
 import pl.kamil0024.logs.LogsModule;
 import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.music.commands.privates.PrivateQueueCommand;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.nieobecnosci.NieobecnosciModule;
 import pl.kamil0024.rekrutacyjny.RekruModule;
@@ -81,13 +75,10 @@ import pl.kamil0024.youtrack.YTModule;
 import pl.kamil0024.youtrack.YouTrack;
 import pl.kamil0024.youtrack.YouTrackBuilder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -98,7 +89,7 @@ import static pl.kamil0024.core.util.Statyczne.WERSJA;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "OptionalGetWithoutIsPresent"})
 public class B0T {
 
-    private static Logger logger = LoggerFactory.getLogger(B0T.class);
+    private static final Logger logger = LoggerFactory.getLogger(B0T.class);
 
     @Getter private HashMap<String, Modul> moduls;
 
@@ -354,6 +345,7 @@ public class B0T {
         Runtime.getRuntime().addShutdownHook(shutdownThread);
     }
 
+<<<<<<< HEAD
 //    public void loadMusic() {
 //        try {
 //            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
@@ -389,6 +381,8 @@ public class B0T {
 //        }
 //    }
 
+=======
+>>>>>>> socket
     public static class EventBusErrorHandler implements SubscriberExceptionHandler {
         public static final EventBusErrorHandler instance = new EventBusErrorHandler();
 

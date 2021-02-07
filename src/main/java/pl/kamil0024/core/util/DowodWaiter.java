@@ -31,6 +31,7 @@ import pl.kamil0024.core.database.config.CaseConfig;
 import pl.kamil0024.core.util.kary.Dowod;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
@@ -80,13 +81,15 @@ public class DowodWaiter {
             waitForMessage();
             return;
         }
-        Dowod d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
-        if (d == null) {
+        List<Dowod> d = DowodCommand.getKaraConfig(msg.getContentRaw(), msg);
+        if (d == null || d.isEmpty()) {
             e.getTextChannel().sendMessage("Dowód jest pusty?").queue();
             return;
         }
         if (cc.getKara().getDowody() == null) cc.getKara().setDowody(new ArrayList<>());
-        cc.getKara().getDowody().add(d);
+        for (Dowod dowod : d) {
+            cc.getKara().getDowody().add(dowod);
+        }
         e.getTextChannel().sendMessage("Pomyślnie zapisano dowód!").queue();
         cd.save(cc);
         clear();

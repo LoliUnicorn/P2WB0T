@@ -23,13 +23,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.kamil0024.core.Main;
-import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.logger.Log;
 
 import java.io.InputStream;
@@ -110,7 +108,7 @@ public class KaryJSON {
     @Nullable
     public Kara getByName(String name) {
         for (Kara kara : getKary()) {
-            if (kara.getPowod().toLowerCase().equals(name.toLowerCase())) return kara;
+            if (kara.getPowod().equalsIgnoreCase(name)) return kara;
         }
         return null;
     }
@@ -140,7 +138,7 @@ public class KaryJSON {
 
     @Data
     @AllArgsConstructor
-    public class Tiery {
+    public static class Tiery {
         private int maxWarns;
         private String duration;
         private KaryEnum type;

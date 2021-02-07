@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,16 +34,12 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class StatusCommand extends Command {
@@ -58,7 +55,7 @@ public class StatusCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (context.getArgs().get(0) == null) throw new UsageException();
         TextChannel txt = context.getJDA().getTextChannelById(Ustawienia.instance.channel.status);
         if (txt == null) throw new NullPointerException("Kanal do statusu jest nullem");

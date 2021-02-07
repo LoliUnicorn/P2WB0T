@@ -24,7 +24,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.logger.Log;
 

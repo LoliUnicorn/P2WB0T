@@ -20,13 +20,13 @@
 package pl.kamil0024.commands.system;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ForumCommand extends Command {
 
@@ -37,7 +37,7 @@ public class ForumCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         EmbedBuilder eb = new EmbedBuilder();
         HashMap<Integer, String[]> tak = new HashMap<>();
         StringBuilder sb = new StringBuilder();

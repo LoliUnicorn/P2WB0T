@@ -24,6 +24,7 @@ import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
@@ -65,7 +66,7 @@ public class RecordingCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgs().get(0);
         if (arg == null) throw new UsageException();
         AudioManager manager = context.getGuild().getAudioManager();
@@ -106,7 +107,7 @@ public class RecordingCommand extends Command {
                 return false;
             } else {
                 Message msg = context.sendTranslate("recording.saving",
-                        context.getJDA().getEmoteById(Ustawienia.instance.emote.load).getAsMention()).complete();
+                        Objects.requireNonNull(context.getJDA().getEmoteById(Ustawienia.instance.emote.load)).getAsMention()).complete();
 
                 RecordingConfig rc = new RecordingConfig(getHandler().getId());
                 rc.setEndTime(new Date().getTime());

@@ -44,7 +44,6 @@ import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
-import pl.kamil0024.logs.logger.FakeMessage;
 import pl.kamil0024.ticket.config.ChannelTicketConfig;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 

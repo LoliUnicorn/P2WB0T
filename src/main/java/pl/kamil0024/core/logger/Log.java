@@ -26,14 +26,10 @@ import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class Log {
-
-    public Log() { }
 
     public static void newError(String msg, Class klasa, @Nullable Object... args) {
         String format = String.format(msg, args);

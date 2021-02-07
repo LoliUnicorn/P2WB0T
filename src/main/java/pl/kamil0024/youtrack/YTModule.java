@@ -39,7 +39,7 @@ public class YTModule implements Modul {
     @Inject EventWaiter eventWaiter;
 
     private boolean start = false;
-    private YouTrack youTrack;
+    private final YouTrack youTrack;
 
     private MessageListener msgListener;
 

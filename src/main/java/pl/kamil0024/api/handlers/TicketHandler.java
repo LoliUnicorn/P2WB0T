@@ -26,9 +26,7 @@ import pl.kamil0024.api.Response;
 import pl.kamil0024.core.database.TicketDao;
 import pl.kamil0024.core.database.config.TicketConfig;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class TicketHandler implements HttpHandler {
 

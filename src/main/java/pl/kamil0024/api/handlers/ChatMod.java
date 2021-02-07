@@ -34,8 +34,8 @@ import java.util.Map;
 
 public class ChatMod implements HttpHandler {
 
-    private ShardManager api;
-    private APIModule apiModule;
+    private final ShardManager api;
+    private final APIModule apiModule;
 
     public ChatMod(ShardManager api, APIModule apiModule) {
         this.api = api;

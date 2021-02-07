@@ -22,6 +22,7 @@ package pl.kamil0024.music.commands.privates;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -49,7 +50,7 @@ public class PrivatePlayCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!check(context)) return false;
 
         String link = context.getArgs().get(0);

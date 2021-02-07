@@ -25,7 +25,6 @@ import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
@@ -214,6 +213,7 @@ public class CommandContext {
 
         @Nullable
         public Integer getNumber(@Nullable String num) {
+            if (num == null) return null;
             Integer n = null;
             try {
                 n = Integer.parseInt(num);
@@ -223,6 +223,7 @@ public class CommandContext {
 
         @Nullable
         public Double getDouble(@Nullable String num) {
+            if (num == null) return null;
             Double n = null;
             try {
                 n = Double.parseDouble(num);

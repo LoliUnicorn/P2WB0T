@@ -28,7 +28,6 @@ import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.awt.*;
-import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
@@ -51,8 +50,8 @@ public class CheckMk {
             eb.setColor(Color.red);
             eb.setFooter("Podejrzane konto!");
             eb.addField("Nick", UserUtil.getLogName(getMember()), false);
-            eb.addField("Powód", "Konto bez rangi oraz krótsze niż **14 dni**!", false);
-            eb.addField(null, "Sprawdź czy te konto nie omija blacklisty lub bana", false);
+            eb.addField("Powód", "Konto bez rangi oraz data stworzenia krótsza niż **14 dni**!", false);
+            eb.addField("", "Sprawdź czy te konto nie omija blacklisty lub bana", false);
             txt.sendMessage(eb.build()).queue();
         }
 

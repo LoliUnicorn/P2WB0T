@@ -31,13 +31,13 @@ public class ChatModStatsConfig {
     private String nick;
     private int liczbaKar = 0;
 
-    public static boolean containsId(String id, List<ChatModStatsConfig> c) {
+    public static boolean consId(String id, List<ChatModStatsConfig> c) {
         for (ChatModStatsConfig e : c) {
             if (e.getId().equals(id)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 }

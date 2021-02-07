@@ -30,8 +30,8 @@ import pl.kamil0024.core.database.config.UserinfoConfig;
 
 public class Karainfo implements HttpHandler {
 
-    @Inject private CaseDao caseDao;
-    @Inject private APIModule api;
+    @Inject private final CaseDao caseDao;
+    @Inject private final APIModule api;
 
     public Karainfo(CaseDao caseDao, APIModule api) {
         this.caseDao = caseDao;
@@ -39,7 +39,7 @@ public class Karainfo implements HttpHandler {
     }
 
     @Override
-    public void handleRequest(HttpServerExchange ex) throws Exception {
+    public void handleRequest(HttpServerExchange ex) {
         if (!CheckToken.checkToken(ex)) return;
 
         try {

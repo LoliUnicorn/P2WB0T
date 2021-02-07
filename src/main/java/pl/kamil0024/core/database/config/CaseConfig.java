@@ -24,11 +24,7 @@ import gg.amy.pgorm.annotations.PrimaryKey;
 import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.Kara;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Table("cases")
 @GIndex({"id"})

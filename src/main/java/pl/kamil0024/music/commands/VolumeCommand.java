@@ -20,11 +20,11 @@
 package pl.kamil0024.music.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.util.UsageException;
 import pl.kamil0024.music.MusicModule;
 
 @SuppressWarnings("DuplicatedCode")
@@ -42,7 +42,7 @@ public class VolumeCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         if (!PlayCommand.isVoice(context.getGuild().getSelfMember())) {
             context.sendTranslate("leave.nochannel").queue();
             return false;

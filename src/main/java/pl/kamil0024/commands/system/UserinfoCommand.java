@@ -27,13 +27,13 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.bdate.BDate;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.text.SimpleDateFormat;
@@ -52,7 +52,7 @@ public class UserinfoCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy `@` HH:mm:ss");
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -62,7 +62,7 @@ public class UserinfoCommand extends Command {
 
         Member member = null;
         try {
-            member = context.getGuild().retrieveMemberById(user.getId()).complete();;
+            member = context.getGuild().retrieveMemberById(user.getId()).complete();
         } catch (ErrorResponseException ignored) {}
 
         eb.setColor(UserUtil.getColor(context.getMember()));

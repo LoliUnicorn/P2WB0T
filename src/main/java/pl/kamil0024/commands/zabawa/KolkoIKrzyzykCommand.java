@@ -20,6 +20,7 @@
 package pl.kamil0024.commands.zabawa;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.kolkoikrzyzyk.KolkoIKrzyzykManager;
 import pl.kamil0024.commands.kolkoikrzyzyk.entites.Zaproszenie;
 import pl.kamil0024.core.command.Command;
@@ -29,7 +30,7 @@ import pl.kamil0024.core.util.UsageException;
 
 public class KolkoIKrzyzykCommand extends Command {
 
-    private KolkoIKrzyzykManager kolkoIKrzyzykManager;
+    private final KolkoIKrzyzykManager kolkoIKrzyzykManager;
 
     public KolkoIKrzyzykCommand(KolkoIKrzyzykManager kolkoIKrzyzykManager) {
         name = "kolkoikrzyzyk";
@@ -42,11 +43,11 @@ public class KolkoIKrzyzykCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         String arg = context.getArgs().get(0);
         if (arg == null) throw new UsageException();
 
-        if (arg.toLowerCase().equals("akceptuj")) {
+        if (arg.equalsIgnoreCase("akceptuj")) {
             Integer id = context.getParsed().getNumber(context.getArgs().get(1));
             if (id == null) {
                 context.sendTranslate("kolkoikrzyzyk.emptyid").queue();
@@ -71,7 +72,7 @@ public class KolkoIKrzyzykCommand extends Command {
                 return false;
             }
 
-            if (member.getUser().isBot() || member.getUser().isFake()) {
+            if (member.getUser().isBot()) {
                 context.sendTranslate("kolkoikrzyzyk.bot").queue();
                 return false;
             }

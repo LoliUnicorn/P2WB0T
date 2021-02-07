@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.utils.TimeUtil;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -38,7 +39,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
 
 public class ClearCommand extends Command {
 
-    private StatsModule statsModule;
+    private final StatsModule statsModule;
 
     public ClearCommand(StatsModule statsModule) {
         name = "clear";
@@ -50,10 +51,10 @@ public class ClearCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandContext context) {
+    public boolean execute(@NotNull CommandContext context) {
         User user = null;
-        Integer liczba = null;
-        TextChannel kanal = null;
+        Integer liczba;
+        TextChannel kanal;
 
         if (context.getParsed().getUser(context.getArgs().get(0)) == null) {
             liczba = context.getParsed().getNumber(context.getArgs().get(0));
