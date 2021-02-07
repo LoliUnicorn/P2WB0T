@@ -150,7 +150,7 @@ public class CommandsModule implements Modul {
         cmd.add(new ModulesCommand(modulManager));
         cmd.add(new ClearCommand(statsModule));
         cmd.add(new CytujCommand());
-        cmd.add(new CheckCommand(caseDao));
+        cmd.add(new CheckCommand(caseDao, eventWaiter));
         cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
         cmd.add(new RebootCommand());
         cmd.add(new ShellCommand());
@@ -162,7 +162,7 @@ public class CommandsModule implements Modul {
 
         // Moderacyjne:
         cmd.add(new StatusCommand(eventWaiter));
-        cmd.add(new KarainfoCommand(caseDao));
+        cmd.add(new KarainfoCommand(caseDao, eventWaiter));
         cmd.add(new UnmuteCommand(caseDao, modLog));
         cmd.add(new TempmuteCommand(caseDao, modLog, statsModule));
         cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog, statsModule));

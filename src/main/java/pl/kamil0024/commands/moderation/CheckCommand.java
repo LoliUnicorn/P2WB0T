@@ -24,27 +24,34 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
+import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.util.EmbedPageintaor;
+import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UserUtil;
+import pl.kamil0024.core.util.kary.Kara;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckCommand extends Command {
 
     private final CaseDao caseDao;
+    private final EventWaiter eventWaiter;
 
-    public CheckCommand(CaseDao caseDao) {
+    public CheckCommand(CaseDao caseDao, EventWaiter eventWaiter) {
         name = "check";
         permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         cooldown = 5;
         this.caseDao = caseDao;
+        this.eventWaiter = eventWaiter;
     }
 
     @Override
@@ -70,9 +77,9 @@ public class CheckCommand extends Command {
         }
         Member mem = context.getParsed().getMember(user.getId());
 
-        String kara = "???";
+        Kara kara = null;
         List<CaseConfig> kary = caseDao.getAll(user.getId());
-        if (!kary.isEmpty()) kara = String.valueOf(kary.get(kary.size() - 1).getKara().getKaraId());
+        if (!kary.isEmpty()) kara = kary.get(kary.size() - 1).getKara();
 
         eb.addField(context.getTranslate("check.name"), UserUtil.getLogName(user), false);
         eb.addField(context.getTranslate("check.ban"), maBana ? "Tak" : "Nie", false);
@@ -80,8 +87,13 @@ public class CheckCommand extends Command {
             eb.addField(context.getTranslate("check.mute"), MuteCommand.hasMute(mem) ? "Tak" : "Nie", false);
         }
         eb.addField(context.getTranslate("check.onserwer"), mem != null ? "Tak" : "Nie", false);
-        eb.addField(context.getTranslate("check.lastcase"), "ID: " + kara, false);
-        context.send(eb.build()).queue();
+        eb.addField(context.getTranslate("check.lastcase"), "ID: " + (kara == null ? "???" : kara.getKaraId()), false);
+
+        List<EmbedBuilder> list = new ArrayList<>();
+        list.add(eb);
+        if (kara != null) list.add(ModLog.getEmbed(kara, context.getShardManager(), false, true));
+        new EmbedPageintaor(list, context.getUser(), eventWaiter, context.getJDA())
+                .create(context.getChannel());
         return true;
     }
 }

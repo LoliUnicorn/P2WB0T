@@ -72,21 +72,12 @@ public class DowodCommand extends Command {
 
         if (arg == null) throw new UsageException();
         if (equalsIgnoreCase(typ, "list", "lista")) {
-            Color c = UserUtil.getColor(context.getMember());
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
             List<EmbedBuilder> pages = new ArrayList<>();
             CaseConfig cc = caseDao.get(arg);
             if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
                 for (Dowod dowod : cc.getKara().getDowody()) {
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setImage(dowod.getImage());
-                    eb.setColor(c);
-                    eb.addField(context.getTranslate("dowod.reporter"), UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
-
-                    if (dowod.getContent() != null && !dowod.getContent().isEmpty()) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
-                    if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
-                    eb.addField(" ", context.getTranslate("dowod.reportid") + " " + dowod.getId(), false);
-                    pages.add(eb);
+                    pages.add(getEmbed(dowod, context));
                 }
                 pages.forEach(p -> futurePages.add(new FutureTask<>(() -> p)));
             } else {
@@ -152,6 +143,18 @@ public class DowodCommand extends Command {
             }
         }
         return false;
+    }
+
+    public static EmbedBuilder getEmbed(Dowod dowod, CommandContext context) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setImage(dowod.getImage());
+        eb.setColor(UserUtil.getColor(context.getMember()));
+        eb.addField(context.getTranslate("dowod.reporter"), UserUtil.getFullName(context.getJDA(), dowod.getUser()), false);
+
+        if (dowod.getContent() != null && !dowod.getContent().isEmpty()) eb.addField("Treść zgłoszenia: ", dowod.getContent(), false);
+        if (dowod.getImage() != null) eb.setImage(getImageUrl(dowod.getImage()));
+        eb.addField(" ", context.getTranslate("dowod.reportid") + " " + dowod.getId(), false);
+        return eb;
     }
 
     public static String getImageUrl(String content) {

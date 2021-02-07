@@ -19,6 +19,7 @@
 
 package pl.kamil0024.commands.moderation;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.commands.ModLog;
 import pl.kamil0024.core.command.Command;
@@ -27,19 +28,28 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
+import pl.kamil0024.core.util.EmbedPageintaor;
+import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.UsageException;
+import pl.kamil0024.core.util.kary.Dowod;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class KarainfoCommand extends Command {
 
     private final CaseDao caseDao;
+    private final EventWaiter eventWaiter;
 
-    public KarainfoCommand(CaseDao caseDao) {
+    public KarainfoCommand(CaseDao caseDao, EventWaiter eventWaiter) {
         name = "karainfo";
         aliases.add("infokara");
         permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
 
         this.caseDao = caseDao;
+        this.eventWaiter = eventWaiter;
     }
 
     @Override
@@ -52,7 +62,16 @@ public class KarainfoCommand extends Command {
             context.send(context.getTranslate("karainfo.invalid")).queue();
             return false;
         }
-        context.send(ModLog.getEmbed(cc.getKara(), context.getShardManager(), false, true).build()).queue();
+        List<EmbedBuilder> list = new ArrayList<>();
+        list.add(ModLog.getEmbed(cc.getKara(), context.getShardManager(), false, true));
+        if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
+            for (Dowod dowod : cc.getKara().getDowody()) {
+                list.add(DowodCommand.getEmbed(dowod, context));
+            }
+        }
+
+        new EmbedPageintaor(list, context.getUser(), eventWaiter, context.getJDA())
+                .create(context.getChannel());
         return true;
     }
 

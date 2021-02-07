@@ -44,6 +44,7 @@ public class EmbedPageintaor {
     private final List<EmbedBuilder> pages;
     private int thisPage = 1;
     private boolean isPun;
+    private boolean customFooter = false;
 
     private Message botMsg;
     private long botMsgId;
@@ -159,12 +160,17 @@ public class EmbedPageintaor {
 
     private MessageEmbed render(int page) {
         EmbedBuilder pageEmbed = pages.get(page - 1);
-        pageEmbed.setFooter(String.format("%s/%s", page, pages.size()), null);
+        if (!customFooter) pageEmbed.setFooter(String.format("%s/%s", page, pages.size()), null);
         return pageEmbed.build();
     }
 
     public EmbedPageintaor setPun(boolean bol) {
         isPun = bol;
+        return this;
+    }
+
+    public EmbedPageintaor setCustomFooter(boolean bol) {
+        this.customFooter = bol;
         return this;
     }
     
