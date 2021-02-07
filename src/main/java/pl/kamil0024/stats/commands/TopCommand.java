@@ -150,7 +150,7 @@ public class TopCommand extends Command {
                         if (o instanceof String) cell.setCellValue((String) o);
                         else if (o instanceof Integer) cell.setCellValue((Integer) o);
                     }
-                    
+
                 }
 
                 try {
@@ -160,9 +160,8 @@ public class TopCommand extends Command {
                     workbook.write(outputStream);
                     workbook.close();
                     outputStream.close();
-                    msg.editMessage("Wysyłam raport...").complete();
-                    context.getChannel().sendFile(f, f.getName()).complete();
-                    msg.editMessage("Raport wysłany!").queue();
+                    context.getChannel().sendFile(f, f.getName()).content("Raport z " + dni + " dni").complete();
+                    msg.delete().queue();
                 } catch (Exception e) {
                     msg.editMessage("Nie udało się stworzyć pliku! Napisz do Kamila").queue();
                     Log.newError(e, getClass());
