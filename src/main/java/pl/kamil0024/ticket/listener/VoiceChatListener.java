@@ -182,7 +182,6 @@ public class VoiceChatListener extends ListenerAdapter {
                         Message mmsg = txt.sendMessage(msg).allowedMentions(Collections.singleton(Message.MentionType.USER)).complete();
                         deleteMessage(memId, channelJoined.getJDA());
                         messagesCache.put(memId, mmsg.getId() + "-" + vcType.name());
-                        pingCache.put(vcType.name(), true);
                     }
                 }
             } catch (Exception e) {
@@ -266,6 +265,7 @@ public class VoiceChatListener extends ListenerAdapter {
 
     private String getMentions(VcType type, Guild g) {
         if (pingCache.getIfPresent(type.name()) != null && pingCache.getIfPresent(type.name())) return "";
+        pingCache.put(type.name(), true);
         List<Member> l = g.getMembersWithRoles(g.getRoleById(Ustawienia.instance.rangi.ekipa))
                 .stream().filter(m -> UserUtil.getPermLevel(m).getNumer() >= PermLevel.HELPER.getNumer() && filtr(m))
                 .collect(Collectors.toList());
