@@ -22,9 +22,14 @@ package pl.kamil0024.stats.commands;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
@@ -33,10 +38,13 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.NieobecnosciDao;
 import pl.kamil0024.core.database.StatsDao;
 import pl.kamil0024.core.database.config.StatsConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.*;
 import pl.kamil0024.nieobecnosci.config.Nieobecnosc;
 import pl.kamil0024.stats.entities.Statystyka;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -75,6 +83,7 @@ public class TopCommand extends Command {
             List<StatsConfig> staty = statsDao.getAll();
             if (staty.isEmpty()) {
                 msg.editMessage(context.getTranslate("top.lol")).queue();
+                return;
             }
 
             HashMap<String, Suma> mapa = new HashMap<>();
@@ -99,6 +108,68 @@ public class TopCommand extends Command {
             }
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
             int rank = 1;
+            if (context.getArgs().get(1) != null && context.getArgs().get(1).equalsIgnoreCase("exel")) {
+                XSSFWorkbook workbook = new XSSFWorkbook();
+                XSSFSheet sheet = workbook.createSheet("Chatmod Stats");
+                int rowCount = 0;
+
+                Row row = sheet.createRow(++rowCount);
+                int column = 0;
+                Object[] obj = new Object[]{
+                        "Administrator",
+                        "Liczba kar",
+                        "Usunięte wiadomości",
+                        "Wysłane wiadomości",
+                        "Ma nieobecność?",
+                        "Otatnia nieobecność"};
+                for (Object o : obj) {
+                    Cell cell = row.createCell(++column);
+                    cell.setCellValue((String) o);
+                }
+
+                for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
+                    row = sheet.createRow(++rowCount);
+
+                    User user = context.getParsed().getUser(entry.getKey());
+                    Nieobecnosc lastNb = nieobecnosciDao.lastNieobecnosc(user.getId());
+
+                    Statystyka stat = mapa.get(entry.getKey()).getStatystyka();
+
+                    obj = new Object[] {
+                            UserUtil.getMcNick(context.getGuild().getMemberById(user.getId()), true),
+                            stat.getWyrzuconych() + stat.getZbanowanych() + stat.getZmutowanych(),
+                            stat.getUsunietychWiadomosci(),
+                            stat.getNapisanychWiadomosci(),
+                            nieobecnosciDao.hasNieobecnosc(user.getId()) ? "Tak" : "Nie",
+                            lastNb != null ? sdf.format(new Date(lastNb.getEnd())) : "???"
+                    };
+
+                    column = 0;
+                    for (Object o : obj) {
+                        Cell cell = row.createCell(++column);
+                        if (o instanceof String) cell.setCellValue((String) o);
+                        else if (o instanceof Integer) cell.setCellValue((Integer) o);
+                    }
+                    
+                }
+
+                try {
+                    File f = new File("chatmodstats.xlsx");
+                    if (!f.createNewFile()) throw new Exception("f.createFile jest na false");
+                    FileOutputStream outputStream = new FileOutputStream(f);
+                    workbook.write(outputStream);
+                    workbook.close();
+                    outputStream.close();
+                    msg.editMessage("Wysyłam raport...").complete();
+                    context.getChannel().sendFile(f, f.getName()).complete();
+                    msg.editMessage("Raport wysłany!").queue();
+                } catch (Exception e) {
+                    msg.editMessage("Nie udało się stworzyć pliku! Napisz do Kamila").queue();
+                    Log.newError(e, getClass());
+                    return;
+                }
+                return;
+            }
             for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
                 EmbedBuilder eb = new EmbedBuilder();
                 User user = context.getParsed().getUser(entry.getKey());
