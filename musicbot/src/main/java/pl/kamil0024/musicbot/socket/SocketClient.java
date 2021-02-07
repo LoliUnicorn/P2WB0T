@@ -39,15 +39,14 @@ import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class SocketClient extends Thread {
 
     private final static Gson GSON = new Gson();
 
-    Socket socket;
+    Socket socket = null;
     OutputStream output;
     PrintWriter writer;
 
@@ -72,12 +71,12 @@ public class SocketClient extends Thread {
                    writer = new PrintWriter(output, true);
                    writer.println("setBotId: " + Ustawienia.instance.bot.botId);
                    break;
+               } catch(UnknownHostException ignored) {
                } catch (Exception e) {
                    Log.error("Nie udało się połączyć z serwerem!");
                    e.printStackTrace();
                }
            }
-
 
            new Thread(() -> {
                try {
@@ -130,6 +129,7 @@ public class SocketClient extends Thread {
             }
 
             if (!inChannel) {
+                response.setSuccess(false);
                 response.setErrorMessage("bot nie jest na żadnym kanale!");
                 sendMessage(response);
                 return;
@@ -160,12 +160,14 @@ public class SocketClient extends Thread {
                 public void noMatches() {
                     Response r = new Response(socketAction, false, "message", "nie znaleziono dopasowań", null);
                     sendMessage(r);
+                    if (serwerManager.getPlayer().getPlayingTrack() == null) serwerManager.destroy();
                 }
 
                 @Override
                 public void loadFailed(FriendlyException exception) {
                     Response r = new Response(socketAction, false, "message", "nie udało się dodać piosenki do kolejki! Error: " + exception.getLocalizedMessage(), null);
                     sendMessage(r);
+                    if (serwerManager.getPlayer().getPlayingTrack() == null) serwerManager.destroy();
                 }
             });
 

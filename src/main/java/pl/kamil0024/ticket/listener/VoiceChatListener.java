@@ -154,35 +154,39 @@ public class VoiceChatListener extends ListenerAdapter {
         if (!channelJoined.getParent().getId().equals(Ustawienia.instance.ticket.strefaPomocy)) return;
 
         Runnable task = () -> {
-            GuildVoiceState state = channelJoined.getGuild().retrieveMemberById(memId).complete().getVoiceState();
-            if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
-                Long col = cooldownCache.getIfPresent(memId);
-                if (col == null || col - new Date().getTime() <= 0) {
-                    TextChannel txt = channelJoined.getGuild().getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
-                    if (txt == null) {
-                        Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
-                        return;
+            try {
+                GuildVoiceState state = channelJoined.getGuild().retrieveMemberById(memId).complete().getVoiceState();
+                if (state != null && state.getChannel() != null && state.getChannel().getId().equals(id)) {
+                    Long col = cooldownCache.getIfPresent(memId);
+                    if (col == null || col - new Date().getTime() <= 0) {
+                        TextChannel txt = channelJoined.getGuild().getJDA().getTextChannelById(Ustawienia.instance.ticket.notificationChannel);
+                        if (txt == null) {
+                            Log.newError("Kanał do powiadomień ticketów jest nullem!", VoiceChatListener.class);
+                            return;
+                        }
+                        VcType vcType = VcType.MINECRAFT;
+                        cooldownCache.put(memId, new DateTime().plusMinutes(10).getMillis());
+                        String msg = String.format("Użytkownik <@%s> czeka na ", memId);
+                        String name = channelJoined.getName().toLowerCase();
+                        if (name.contains("discord")) {
+                            vcType = VcType.DISCORD;
+                            msg += "kanale pomocy serwera Discord\n\n" + getMentions(VcType.DISCORD, channelJoined.getGuild());
+                        } else if (name.contains("p2w")) {
+                            vcType = VcType.P2W;
+                            msg += "kanale pomocy forum P2W\n\n" + getMentions(VcType.P2W, channelJoined.getGuild());
+                        } else if (name.contains("minecraft")) {
+                            msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
+                        } else {
+                            msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
+                        }
+                        Message mmsg = txt.sendMessage(msg).allowedMentions(Collections.singleton(Message.MentionType.USER)).complete();
+                        deleteMessage(memId, channelJoined.getJDA());
+                        messagesCache.put(memId, mmsg.getId() + "-" + vcType.name());
+                        pingCache.put(vcType.name(), true);
                     }
-                    VcType vcType = VcType.MINECRAFT;
-                    cooldownCache.put(memId, new DateTime().plusMinutes(10).getMillis());
-                    String msg = String.format("Użytkownik <@%s> czeka na ", memId);
-                    String name = channelJoined.getName().toLowerCase();
-                    if (name.contains("discord")) {
-                        vcType = VcType.DISCORD;
-                        msg += "kanale pomocy serwera Discord\n\n" + getMentions(VcType.DISCORD, channelJoined.getGuild());
-                    } else if (name.contains("p2w")) {
-                        vcType = VcType.P2W;
-                        msg += "kanale pomocy forum P2W\n\n" + getMentions(VcType.P2W, channelJoined.getGuild());
-                    } else if (name.contains("minecraft")) {
-                        msg += "kanale pomocy serwera Minecraft\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
-                    } else {
-                        msg += "kanale pomocy, który nie jest wpisany do bota lol (" + name + ")\n\n" + getMentions(VcType.MINECRAFT, channelJoined.getGuild());
-                    }
-                    Message mmsg = txt.sendMessage(msg).allowedMentions(Collections.singleton(Message.MentionType.USER)).complete();
-                    deleteMessage(memId, channelJoined.getJDA());
-                    messagesCache.put(memId, mmsg.getId() + "-" + vcType.name());
-                    pingCache.put(vcType.name(), true);
                 }
+            } catch (Exception e) {
+                Log.newError(e, getClass());
             }
         };
         ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
@@ -278,7 +282,7 @@ public class VoiceChatListener extends ListenerAdapter {
         StringBuilder s = new StringBuilder();
         for (Member entry : l) {
             s.append(entry.getAsMention()).append(", ");
-	}
+	    }
 
         return s.toString();
     }

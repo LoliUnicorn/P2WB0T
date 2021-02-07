@@ -19,7 +19,6 @@
 
 package pl.kamil0024.musicbot.api.listeners;
 
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
@@ -28,14 +27,13 @@ import pl.kamil0024.musicbot.music.managers.MusicManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class LeaveWaiter {
 
-    private EventWaiter eventWaiter;
-    private MusicManager musicManager;
+    private final EventWaiter eventWaiter;
+    private final MusicManager musicManager;
 
-    private List<String> czekaja;
+    private final List<String> czekaja;
 
     public LeaveWaiter(EventWaiter eventWaiter, MusicManager musicManager) {
         this.eventWaiter = eventWaiter;
@@ -50,7 +48,7 @@ public class LeaveWaiter {
         eventWaiter.waitForEvent(GuildVoiceJoinEvent.class, this::checkJoin, this::event,
                 1, TimeUnit.MINUTES,
                 () -> {
-                    if (LeaveVcListener.leave(vc)) {
+                    if (LeaveVcListener.leave(vc) || vc.getMembers().size() == 1) {
                         musicManager.getGuildAudioPlayer(vc.getGuild()).destroy();
                     }
                     czekaja.remove(vc.getGuild().getId());

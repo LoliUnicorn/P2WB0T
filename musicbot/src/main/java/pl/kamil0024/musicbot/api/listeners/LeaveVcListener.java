@@ -37,19 +37,17 @@ import java.util.stream.Collectors;
 public class LeaveVcListener extends ListenerAdapter {
 
     private final MusicManager musicManager;
-    private EventWaiter eventWaiter;
     private final LeaveWaiter leaveWaiter;
 
     public LeaveVcListener(MusicManager musicManager, EventWaiter eventWaiter) {
         this.musicManager = musicManager;
-        this.eventWaiter = eventWaiter;
         this.leaveWaiter = new LeaveWaiter(eventWaiter, musicManager);
     }
 
     @Override
     public void onGuildVoiceMove(@Nonnull GuildVoiceMoveEvent event) {
-        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
-        if (!event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
+        if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId) ||
+                !event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
             return;
         }
         Guild guild = event.getGuild();
