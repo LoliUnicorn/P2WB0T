@@ -96,6 +96,7 @@ public class Ustawienia {
         public String wiadomosci = def;
         public String moddc = def;
         public String loginieobecnosci = def;
+        public String logidowodow = def;
     }
 
     public static class Inne {

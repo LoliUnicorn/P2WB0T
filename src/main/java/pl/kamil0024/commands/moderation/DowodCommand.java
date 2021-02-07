@@ -22,8 +22,11 @@ package pl.kamil0024.commands.moderation;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageActivity;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.entities.AbstractMessage;
 import org.jetbrains.annotations.NotNull;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -39,6 +42,8 @@ import pl.kamil0024.core.util.kary.Dowod;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -195,17 +200,34 @@ public class DowodCommand extends Command {
         if (content.isEmpty() && at.isEmpty()) return null;
 
         int id = 1;
+        boolean deleteMsg = true;
+        Message m = null;
+        TextChannel txt = msg.getJDA().getTextChannelById(Ustawienia.instance.channel.logidowodow);
+
         if (!at.isEmpty()) {
+
             for (Message.Attachment entry : at) {
+                if (txt != null) {
+                    try {
+                        InputStream f = entry.retrieveInputStream().get();
+                        m = txt.sendFile(f, "dowod").complete();
+                        if (m.getAttachments().isEmpty()) { // Czyli nigdy
+                            m = null;
+                        }
+                    } catch (Exception e) { deleteMsg = false; }
+                }
+
                 Dowod d = new Dowod();
-                d.setImage(entry.getUrl());
+                d.setImage(m == null ? entry.getUrl() : m.getAttachments().get(0).getUrl());
                 if (id == 1) d.setContent(content);
                 d.setUser(msg.getAuthor().getId());
                 d.setId(id);
                 dowody.add(d);
                 id++;
             }
+
         }
+        if (deleteMsg) msg.delete().queue();
         return dowody;
     }
 
