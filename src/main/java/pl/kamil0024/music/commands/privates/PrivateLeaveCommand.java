@@ -19,10 +19,7 @@
 
 package pl.kamil0024.music.commands.privates;
 
-<<<<<<< HEAD
-=======
 import org.jetbrains.annotations.NotNull;
->>>>>>> socket
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;

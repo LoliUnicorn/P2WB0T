@@ -27,20 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-<<<<<<< HEAD
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
-import pl.kamil0024.core.util.DynamicEmbedPageinator;
-import pl.kamil0024.core.util.EmbedPageintaor;
-import pl.kamil0024.core.util.EventWaiter;
-import pl.kamil0024.music.commands.PlayCommand;
-=======
-import pl.kamil0024.core.socket.SocketClient;
-import pl.kamil0024.core.socket.SocketManager;
->>>>>>> socket
 import pl.kamil0024.music.commands.QueueCommand;
 
 import java.awt.*;

@@ -345,44 +345,6 @@ public class B0T {
         Runtime.getRuntime().addShutdownHook(shutdownThread);
     }
 
-<<<<<<< HEAD
-//    public void loadMusic() {
-//        try {
-//            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
-//            if (g == null) return;
-//
-//            for (Integer port : musicAPI.getPorts()) {
-//                MusicRestAction action = musicAPI.getAction(port);
-//                VoiceStateConfig vsc = new VoiceStateConfig(musicAPI.getClientByPort(port));
-//
-//                VoiceChannel vc = action.getVoiceChannel();
-//                if (vc == null) continue;
-//                vsc.setVoiceChannel(vc.getId());
-//
-//                MusicResponse queue = action.getQueue();
-//                if (queue.isError()) continue;
-//
-//                ArrayList<String> kurwa = new ArrayList<>();
-//                for (Object o : queue.json.getJSONArray("data")) {
-//                    PrivateQueueCommand.Track trak = new Gson()
-//                            .fromJson(o.toString(), PrivateQueueCommand.Track.class);
-//                    kurwa.add(trak.getIdentifier());
-//                }
-//                vsc.setQueue(kurwa);
-//                MusicResponse mr = action.getPlayingTrack();
-//                PrivateQueueCommand.Track trak = new Gson()
-//                        .fromJson(mr.json.getJSONObject("data").toString(), PrivateQueueCommand.Track.class);
-//                vsc.setAktualnaPiosenka(trak.getIdentifier());
-//                voiceStateDao.save(vsc);
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-=======
->>>>>>> socket
     public static class EventBusErrorHandler implements SubscriberExceptionHandler {
         public static final EventBusErrorHandler instance = new EventBusErrorHandler();
 

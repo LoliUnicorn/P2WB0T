@@ -23,18 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
-<<<<<<< HEAD
-import pl.kamil0024.core.command.enums.PermLevel;
-import pl.kamil0024.core.musicapi.MusicAPI;
-import pl.kamil0024.core.musicapi.MusicResponse;
-import pl.kamil0024.core.musicapi.MusicRestAction;
 import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
-import pl.kamil0024.music.commands.PlayCommand;
-=======
-import pl.kamil0024.core.socket.SocketClient;
-import pl.kamil0024.core.socket.SocketManager;
->>>>>>> socket
 
 @SuppressWarnings("DuplicatedCode")
 public class PrivateSkipCommand extends Command {
