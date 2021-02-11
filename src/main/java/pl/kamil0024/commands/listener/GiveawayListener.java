@@ -130,71 +130,81 @@ public class GiveawayListener {
         kc.removeIf(k -> !k.isAktywna());
 
         for (GiveawayConfig config : kc) {
-            TextChannel tc = api.getTextChannelById(config.getKanalId());
-
-            boolean end = false;
-            if (config.getEnd() - new Date().getTime() <= 0) {
-                config.setAktywna(false);
-                end = true;
-                new Thread(() -> giveawayDao.save(config)).start();
-            }
-
-            Message msg = null;
             try {
-                msg = Objects.requireNonNull(tc).retrieveMessageById(config.getMessageId()).complete();
-            } catch (Exception ignored) { }
+                TextChannel tc = api.getTextChannelById(config.getKanalId());
 
-            if (msg == null) {
-                config.setMessageId(null);
-                createMessage(config);
-            }
+                boolean end = false;
+                if (config.getEnd() - new Date().getTime() <= 0) {
+                    config.setAktywna(false);
+                    end = true;
+                    giveawayDao.save(config);
+                }
 
-            if (msg != null && end) {
-                List<String> listaLudzi = new ArrayList<>();
-                List<String> wygrani = new ArrayList<>();
+                Message msg = null;
+                try {
+                    msg = Objects.requireNonNull(tc).retrieveMessageById(config.getMessageId()).complete();
+                } catch (Exception ignored) { }
 
-                for (MessageReaction rec : msg.getReactions()) {
-                    if (rec.getReactionEmote().isEmoji() && rec.getReactionEmote().getEmoji().equals(TADA)) {
-                        listaLudzi = rec.retrieveUsers().complete().stream()
-                                .filter(u -> !u.isBot())
-                                .map(User::getId)
-                                .collect(Collectors.toList());
+                Log.debug("msg: " + msg);
+
+                if (msg == null) {
+                    config.setMessageId(null);
+                    createMessage(config);
+                    continue;
+                }
+
+                Log.debug("end? " + end);
+                if (end) {
+                    List<String> listaLudzi = new ArrayList<>();
+                    List<String> wygrani = new ArrayList<>();
+
+                    for (MessageReaction rec : msg.getReactions()) {
+                        if (rec.getReactionEmote().isEmoji() && rec.getReactionEmote().getEmoji().equals(TADA)) {
+                            listaLudzi = rec.retrieveUsers().complete().stream()
+                                    .filter(u -> !u.isBot())
+                                    .map(User::getId)
+                                    .collect(Collectors.toList());
+                        }
                     }
-                }
 
-                Log.debug("Lista ludzi: " + listaLudzi);
+                    Log.debug("Lista ludzi: " + listaLudzi);
 
-                if (config.getWygranychOsob() <= listaLudzi.size()) config.setWinners(listaLudzi);
-                else {
-                    Log.debug("while");
-                    while (config.getWygranychOsob() != wygrani.size()) {
-                        String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
-                        Log.debug("Dodaje " + wygral + " do wygranych ludzi");
-                        wygrani.add(wygral);
-                        listaLudzi.remove(wygral);
+                    if (config.getWygranychOsob() <= listaLudzi.size()) {
+                        Log.debug("tak");
+                        config.setWinners(listaLudzi);
+                    } else {
+                        Log.debug("while");
+                        while (config.getWygranychOsob() != wygrani.size()) {
+                            String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
+                            Log.debug("Dodaje " + wygral + " do wygranych ludzi");
+                            wygrani.add(wygral);
+                            listaLudzi.remove(wygral);
+                        }
+                        Log.debug("Kończę while");
                     }
-                    Log.debug("Kończę while");
+
+                    config.setWinners(wygrani);
+                    giveawayDao.save(config);
+                    msg.clearReactions().queue();
+
+                    StringBuilder sb = new StringBuilder();
+                    String f = "<@%s>";
+                    String link = "https://discord.com/channels/%s/%s/%s";
+                    link = String.format(link, Ustawienia.instance.bot.guildId, config.getKanalId(), config.getMessageId());
+                    for (String winner : config.getWinners()) {
+                        sb.append(String.format(f, winner)).append("`,` ");
+                    }
+                    msg.getChannel().sendMessage(TADA + " Gratulacje dla tych osób: " + sb.toString() +
+                            "\nWygrali: " + config.getNagroda() +
+                            "\n\n" + link).allowedMentions(Collections.singleton(Message.MentionType.USER)).queue();
                 }
 
-                config.setWinners(wygrani);
-                giveawayDao.save(config);
-                msg.clearReactions().queue();
-
-                StringBuilder sb = new StringBuilder();
-                String f = "<@%s>";
-                String link = "https://discord.com/channels/%s/%s/%s";
-                link = String.format(link, Ustawienia.instance.bot.guildId, config.getKanalId(), config.getMessageId());
-                for (String winner : config.getWinners()) {
-                    sb.append(String.format(f, winner)).append("`,` ");
-                }
-                msg.getChannel().sendMessage(TADA + " Gratulacje dla tych osób: " + sb.toString() +
-                        "\nWygrali: " + config.getNagroda() +
-                        "\n\n" + link).allowedMentions(Collections.singleton(Message.MentionType.USER)).queue();
+                msg.editMessage(createEmbed(config).build()).queue();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            if (msg != null) msg.editMessage(createEmbed(config).build()).queue();
-
         }
+
     }
 
 }
