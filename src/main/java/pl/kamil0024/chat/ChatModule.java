@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.chat.listener.ChatListener;
 import pl.kamil0024.chat.listener.KaryListener;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.RedisManager;

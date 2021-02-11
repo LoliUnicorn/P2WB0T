@@ -25,7 +25,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import pl.kamil0024.bdate.Timespan;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.commands.system.CytujCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;

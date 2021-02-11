@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import pl.kamil0024.commands.moderation.MuteCommand;
+import pl.kamil0024.moderation.commands.MuteCommand;
 import pl.kamil0024.core.Ustawienia;
 
 import javax.annotation.Nonnull;

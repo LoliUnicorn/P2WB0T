@@ -26,9 +26,9 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import pl.kamil0024.chat.Action;
-import pl.kamil0024.commands.ModLog;
-import pl.kamil0024.commands.moderation.MuteCommand;
-import pl.kamil0024.commands.moderation.PunishCommand;
+import pl.kamil0024.moderation.listeners.ModLog;
+import pl.kamil0024.moderation.commands.MuteCommand;
+import pl.kamil0024.moderation.commands.PunishCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.CaseDao;
@@ -40,9 +40,7 @@ import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.stats.StatsModule;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.concurrent.TimeUnit;
 
 public class KaryListener extends ListenerAdapter {

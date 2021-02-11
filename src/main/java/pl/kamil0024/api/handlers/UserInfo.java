@@ -29,7 +29,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.commands.moderation.MuteCommand;
+import pl.kamil0024.moderation.commands.MuteCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.util.UserUtil;
 

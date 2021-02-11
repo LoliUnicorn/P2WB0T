@@ -27,7 +27,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;

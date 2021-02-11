@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.commands.moderation;
+package pl.kamil0024.moderation.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -94,6 +94,7 @@ public class CheckCommand extends Command {
         if (kara != null) list.add(ModLog.getEmbed(kara, context.getShardManager(), false, true));
         new EmbedPageintaor(list, context.getUser(), eventWaiter, context.getJDA())
                 .create(context.getChannel());
+
         return true;
     }
 }

@@ -42,7 +42,8 @@ import pl.kamil0024.antiraid.AntiRaidModule;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.chat.ChatModule;
 import pl.kamil0024.commands.CommandsModule;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.ModerationModule;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.commands.dews.RebootCommand;
 import pl.kamil0024.core.arguments.ArgumentManager;
 import pl.kamil0024.core.command.CommandExecute;
@@ -288,6 +289,7 @@ public class B0T {
         modulManager.getModules().add(weryfikacjaModule);
         modulManager.getModules().add(new TicketModule(api, ticketDao, redisManager, eventWaiter));
         modulManager.getModules().add(new AntiRaidModule(api, antiRaidDao, redisManager, caseDao, modLog));
+        modulManager.getModules().add(new ModerationModule(commandManager, eventWaiter, caseDao, statsModule, nieobecnosciManager, nieobecnosciDao, modLog, karyJSON, multiDao));
         if (youTrack != null) modulManager.getModules().add(new YTModule(commandManager, api, eventWaiter, youTrack));
 
         for (Modul modul : modulManager.getModules()) {

@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.commands.moderation;
+package pl.kamil0024.moderation.commands;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
-import pl.kamil0024.commands.ModLog;
+import pl.kamil0024.moderation.listeners.ModLog;
+import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
@@ -34,16 +35,15 @@ import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
-@SuppressWarnings("DuplicatedCode")
-public class UnbanCommand extends Command {
+public class UnmuteCommand extends Command {
 
     private final CaseDao caseDao;
     private final ModLog modLog;
 
-    public UnbanCommand(CaseDao caseDao, ModLog modLog) {
-        name = "unban";
+    public UnmuteCommand(CaseDao caseDao, ModLog modLog) {
+        name = "unmute";
         permLevel = PermLevel.CHATMOD;
         category = CommandCategory.MODERATION;
         this.caseDao = caseDao;
@@ -52,37 +52,28 @@ public class UnbanCommand extends Command {
 
     @Override
     public boolean execute(@NotNull CommandContext context) {
-        User u = context.getParsed().getUser(context.getArgs().get(0));
-        if (u == null) {
-            context.sendTranslate("kick.badmember");
+        Member mem = context.getParsed().getMember(context.getArgs().get(0));
+        if (mem == null) {
+            context.sendTranslate("kick.badmember").queue();
             return false;
         }
 
+        if (!MuteCommand.hasMute(mem)) {
+            context.send("Taki użytkownik nie jest wyciszony!");
+            return false;
+        }
+        Role r = mem.getGuild().getRoleById(Ustawienia.instance.muteRole);
         String powod = context.getArgsToString(1);
         if (powod == null) {
             context.send(context.getTranslate("unban.reason")).queue();
             return false;
         }
-
         try {
-            boolean jest = false;
-            List<Guild.Ban> bans = context.getGuild().retrieveBanList().complete();
-            for (Guild.Ban b : bans) {
-                if (b.getUser().getId().equals(u.getId())) {
-                    jest = true;
-                    break;
-                }
-            }
-            if (!jest) {
-                context.sendTranslate("unban.donthave").queue();
-                return false;
-            }
+            context.getGuild().removeRoleFromMember(mem, Objects.requireNonNull(r)).complete();
+            context.sendTranslate("unmute.succes", UserUtil.getName(mem.getUser()), powod).queue();
 
-            context.getGuild().unban(u).complete();
-            context.sendTranslate("unban.succes", UserUtil.getName(u), powod).queue();
-
-            for (CaseConfig kara1 : caseDao.getAktywe(u.getId())) {
-                if (kara1.getKara().getTypKary() == KaryEnum.TEMPBAN || kara1.getKara().getTypKary() == KaryEnum.BAN) {
+            for (CaseConfig kara1 : caseDao.getAktywe(mem.getId())) {
+                if (kara1.getKara().getTypKary() == KaryEnum.MUTE || kara1.getKara().getTypKary() == KaryEnum.TEMPMUTE) {
                     caseDao.delete(kara1.getKara().getKaraId());
                     kara1.getKara().setAktywna(false);
                     caseDao.save(kara1);
@@ -90,16 +81,16 @@ public class UnbanCommand extends Command {
             }
 
             Kara kara = new Kara();
-            kara.setKaranyId(u.getId());
-            kara.setMcNick("-");
+            kara.setKaranyId(mem.getId());
+            kara.setMcNick(UserUtil.getMcNick(mem));
             kara.setAdmId(context.getUser().getId());
             kara.setPowod(powod);
             kara.setTimestamp(new Date().getTime());
-            kara.setTypKary(KaryEnum.UNBAN);
+            kara.setTypKary(KaryEnum.UNMUTE);
             Kara.put(caseDao, kara, modLog);
             return true;
         } catch (Exception e) {
-            context.send("Wystąpił błąd przy zdejmowaniu unbana: " + e.getLocalizedMessage()).queue();
+            context.send("Nie udało się odcyszyć użytkownika! " + e.getMessage());
             return false;
         }
     }

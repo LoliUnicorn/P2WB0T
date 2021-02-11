@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package pl.kamil0024.commands;
+package pl.kamil0024.moderation.listeners;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,9 +33,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import pl.kamil0024.bdate.util.BLanguage;
-import pl.kamil0024.commands.moderation.MuteCommand;
-import pl.kamil0024.commands.moderation.TempbanCommand;
-import pl.kamil0024.commands.moderation.TempmuteCommand;
+import pl.kamil0024.moderation.commands.MuteCommand;
+import pl.kamil0024.moderation.commands.TempbanCommand;
+import pl.kamil0024.moderation.commands.TempmuteCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;

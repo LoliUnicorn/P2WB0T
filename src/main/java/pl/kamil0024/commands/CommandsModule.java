@@ -43,11 +43,12 @@ import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.core.util.Tlumaczenia;
 import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
+import pl.kamil0024.moderation.commands.StatusCommand;
+import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.music.MusicModule;
 import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.commands.dews.*;
-import pl.kamil0024.commands.moderation.*;
 import pl.kamil0024.commands.system.*;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.weryfikacja.WeryfikacjaModule;
@@ -148,32 +149,14 @@ public class CommandsModule implements Modul {
         cmd.add(new McpremiumCommand());
         cmd.add(new RemindmeCommand(remindDao, eventWaiter));
         cmd.add(new ModulesCommand(modulManager));
-        cmd.add(new ClearCommand(statsModule));
         cmd.add(new CytujCommand());
-        cmd.add(new CheckCommand(caseDao, eventWaiter));
         cmd.add(new GiveawayCommand(giveawayDao, eventWaiter, giveawayListener));
         cmd.add(new RebootCommand());
         cmd.add(new ShellCommand());
         cmd.add(new ArchiwizujCommand());
-        cmd.add(new MultiCommand(multiDao, eventWaiter));
         cmd.add(new PogodaCommand());
         cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
         cmd.add(new RecordingCommand(recordingDao, eventWaiter));
-
-        // Moderacyjne:
-        cmd.add(new StatusCommand(eventWaiter));
-        cmd.add(new KarainfoCommand(caseDao, eventWaiter));
-        cmd.add(new UnmuteCommand(caseDao, modLog));
-        cmd.add(new TempmuteCommand(caseDao, modLog, statsModule));
-        cmd.add(new PunishCommand(karyJSON, eventWaiter, caseDao, modLog, statsModule));
-        cmd.add(new KickCommand(caseDao, modLog, statsModule));
-        cmd.add(new BanCommand(caseDao, modLog, statsModule));
-        cmd.add(new TempbanCommand(caseDao, modLog, statsModule));
-        cmd.add(new UnbanCommand(caseDao, modLog));
-        cmd.add(new MuteCommand(caseDao, modLog, statsModule));
-        cmd.add(new HistoryCommand(caseDao, eventWaiter));
-        cmd.add(new NieobecnoscCommand(nieobecnosciManager, eventWaiter, nieobecnosciDao));
-        cmd.add(new DowodCommand(caseDao, eventWaiter));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
