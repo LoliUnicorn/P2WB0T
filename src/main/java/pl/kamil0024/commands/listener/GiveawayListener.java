@@ -164,39 +164,34 @@ public class GiveawayListener {
                                     .filter(u -> !u.isBot())
                                     .map(User::getId)
                                     .collect(Collectors.toList());
+                            Log.debug("Lista ludzi: " + listaLudzi);
                         }
                     }
 
-                    Log.debug("Lista ludzi: " + listaLudzi);
+                    Log.debug("1");
 
-                    if (config.getWygranychOsob() <= listaLudzi.size()) {
-                        Log.debug("tak");
-                        config.setWinners(listaLudzi);
-                    } else {
-                        Log.debug("while");
-                        while (config.getWygranychOsob() != wygrani.size()) {
-                            String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
-                            Log.debug("Dodaje " + wygral + " do wygranych ludzi");
-                            wygrani.add(wygral);
-                            listaLudzi.remove(wygral);
-                        }
-                        Log.debug("Kończę while");
+                    while (config.getWygranychOsob() != wygrani.size()) {
+                        String wygral = listaLudzi.get(rand.nextInt(listaLudzi.size() - 1));
+                        Log.debug("Dodaje " + wygral + " do wygranych ludzi");
+                        wygrani.add(wygral);
+                        listaLudzi.remove(wygral);
                     }
+                    Log.debug("Kończę while");
 
                     config.setWinners(wygrani);
-                    giveawayDao.save(config);
                     msg.clearReactions().queue();
 
                     StringBuilder sb = new StringBuilder();
                     String f = "<@%s>";
                     String link = "https://discord.com/channels/%s/%s/%s";
                     link = String.format(link, Ustawienia.instance.bot.guildId, config.getKanalId(), config.getMessageId());
-                    for (String winner : config.getWinners()) {
+                    for (String winner : wygrani) {
                         sb.append(String.format(f, winner)).append("`,` ");
                     }
                     msg.getChannel().sendMessage(TADA + " Gratulacje dla tych osób: " + sb.toString() +
                             "\nWygrali: " + config.getNagroda() +
                             "\n\n" + link).allowedMentions(Collections.singleton(Message.MentionType.USER)).queue();
+                    giveawayDao.save(config);
                 }
 
                 msg.editMessage(createEmbed(config).build()).queue();
