@@ -27,6 +27,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
+import pl.kamil0024.core.command.CommandExecute;
+import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.SocketClient;
@@ -67,6 +69,12 @@ public class PrivateYouTubeCommand extends Command {
 
         String tytul = context.getArgsToString(0);
         if (context.getArgs().get(0) == null) throw new UsageException();
+
+        if (context.getArgs().get(0).startsWith("https://")) {
+            context.sendTranslate("youtube.anothercmd", context.getPrefix()).queue();
+            return false;
+        }
+
         List<AudioTrack> audioTrackList = new ArrayList<>();
 
         try {
