@@ -161,7 +161,8 @@ public class CommandContext {
         }
         if (args.toString().isEmpty()) return null;
         String st = args.toString();
-        return st.substring(1);
+        if (st.startsWith(" ")) return st.substring(1);
+        return st;
     }
 
     public ParsedArgumenty getParsed() {
