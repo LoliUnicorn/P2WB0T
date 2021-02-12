@@ -207,7 +207,6 @@ public class DowodCommand extends Command {
         TextChannel txt = msg.getJDA().getTextChannelById(Ustawienia.instance.channel.logidowodow);
 
         if (!at.isEmpty()) {
-
             for (Message.Attachment entry : at) {
                 if (txt != null) {
                     try {
@@ -228,6 +227,7 @@ public class DowodCommand extends Command {
                 id++;
             }
         }
+        else dowody.add(new Dowod(1, msg.getAuthor().getId(), content, null));
 
         if (deleteMsg && !inCmd) msg.delete().queue();
         return dowody;
