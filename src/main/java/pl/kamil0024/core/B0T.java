@@ -23,6 +23,8 @@ import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
+import io.sentry.Sentry;
+import io.sentry.SentryLevel;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
@@ -171,6 +173,13 @@ public class B0T {
 
         tlumaczenia.setLang(Ustawienia.instance.language);
         tlumaczenia.load();
+
+        Sentry.init(option -> {
+           option.setDsn(Ustawienia.instance.sentry.dns);
+           option.setRelease("P2WB0T@" + WERSJA);
+           option.setShutdownTimeout(5000);
+           option.setServerName("s1.p2w");
+        });
 
         YouTrackBuilder ytbuilder = new YouTrackBuilder();
         ytbuilder.setApiUrl(Ustawienia.instance.yt.url);

@@ -183,7 +183,6 @@ public class DowodCommand extends Command {
         });
     }
 
-
     public static String getImageUrl(Message msg) {
         Matcher matcher = Pattern.compile("(http(s)?):\\/\\/(www\\.)?[?a-zA-Z0-9@:-]{2,256}\\.[a-z]{2,24}" +
                         "\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*\\.(a?png|jpe?g|gif|webp|tiff|svg))",

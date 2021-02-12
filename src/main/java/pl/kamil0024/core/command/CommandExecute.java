@@ -19,6 +19,9 @@
 
 package pl.kamil0024.core.command;
 
+import io.sentry.Sentry;
+import io.sentry.SentryEvent;
+import io.sentry.SentryLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
@@ -189,6 +192,17 @@ public class CommandExecute extends ListenerAdapter {
             omegalul.printStackTrace();
             Log.newError("`%s` uzyl komendy %s (%s) ale wystapil blad: %s", CommandExecute.class, e.getAuthor().getName(), c.getName(), c.getClass().getName(), omegalul);
             Log.newError(omegalul, CommandExecute.class);
+
+            SentryEvent event = new SentryEvent();
+            io.sentry.protocol.User user = new io.sentry.protocol.User();
+            user.setId(e.getAuthor().getId());
+            user.setUsername(UserUtil.getName(e.getAuthor()));
+            event.setUser(user);
+            event.setLevel(SentryLevel.ERROR);
+            event.setLogger(getClass().getName());
+            event.setThrowable(omegalul);
+            Sentry.captureEvent(event);
+
             e.getChannel().sendMessage(String.format("Wystąpił błąd! `%s`.", omegalul)).queue();
         }
         if (udaloSie && jegoPerm.getNumer() < PermLevel.DEVELOPER.getNumer()) setCooldown(e.getAuthor(), c);

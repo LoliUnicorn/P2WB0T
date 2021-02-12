@@ -19,7 +19,11 @@
 
 package pl.kamil0024.core.logger;
 
+import io.sentry.Sentry;
+import io.sentry.SentryEvent;
+import io.sentry.SentryLevel;
 import org.slf4j.LoggerFactory;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
 
 import javax.annotation.Nullable;
@@ -42,30 +46,11 @@ public class Log {
     }
 
     public static void newError(Throwable e, Class klasa) {
-        StringWriter er = new StringWriter();
-        e.printStackTrace(new PrintWriter(er));
-
-        boolean strona = false;
-        StringBuilder sb = new StringBuilder();
-        sb.append("```\n");
-        for (String s : er.toString().split("\n")) {
-            sb.append(s);
-            if (sb.toString().toLowerCase().length() >= 1800) {
-                sb.append("\n```");
-                WebhookUtil web = new WebhookUtil();
-                web.setType(WebhookUtil.LogType.ERROR);
-                web.setMessage(sb.toString().replaceAll(" {4}at ", "").replaceAll("    at ", ""));
-                web.send();
-                sb = new StringBuilder();
-                strona = true;
-            }
-        }
-        if (!strona) {
-            WebhookUtil web = new WebhookUtil();
-            web.setType(WebhookUtil.LogType.ERROR);
-            web.setMessage(sb.toString().replaceAll(" {4}at ", "") + "\n```");
-            web.send();
-        }
+        SentryEvent event = new SentryEvent();
+        event.setLevel(SentryLevel.ERROR);
+        event.setLogger(klasa.getName());
+        event.setThrowable(e);
+        Sentry.captureEvent(event);
         LoggerFactory.getLogger(klasa).error("Error", e);
     }
 

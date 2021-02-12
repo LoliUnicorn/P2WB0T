@@ -50,6 +50,7 @@ public class Ustawienia {
     public Apelacje apelacje = new Apelacje();
     public Rekrutacyjny rekrutacyjny = new Rekrutacyjny();
     public Zespoly zespoly = new Zespoly();
+    public Sentry sentry = new Sentry();
 
     public static class Roles {
         public String helperRole = def;
@@ -219,6 +220,10 @@ public class Ustawienia {
     public static class Zespoly {
         public List<String> zespoly = new ArrayList<>();
         public Map<String, List<String>> liderzy = new HashMap<>();
+    }
+
+    public static class Sentry {
+        public String dns = def;
     }
 
 }
