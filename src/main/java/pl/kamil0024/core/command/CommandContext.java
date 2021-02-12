@@ -150,7 +150,7 @@ public class CommandContext {
     }
 
     public String getArgsToString(Integer num) {
-        StringBuffer args = new StringBuffer();
+        StringBuilder args = new StringBuilder();
         int size = 1;
         for (Map.Entry<Integer, String> a : getArgs().entrySet()) {
             if (a.getKey() >= num) {
@@ -160,7 +160,8 @@ public class CommandContext {
             size++;
         }
         if (args.toString().isEmpty()) return null;
-        return args.toString();
+        String st = args.toString();
+        return st.substring(1);
     }
 
     public ParsedArgumenty getParsed() {
