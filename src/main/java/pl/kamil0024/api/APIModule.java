@@ -593,6 +593,8 @@ public class APIModule implements Modul {
         routes.get("api/recording", new RecordingHandler(recordingDao));
         routes.get("api/ticket/stats", new TicketStatsHandler(ticketDao));
 
+        routes.get("api/chatmod/stats", new ChatmodStats(statsDao, this));
+
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")
                 .setHandler(path()

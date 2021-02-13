@@ -134,10 +134,9 @@ public class TopCommand extends Command {
         return true;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
     @Data
     @AllArgsConstructor
-    private class Suma {
+    public static class Suma {
         private Integer nadaneKary;
         private Statystyka statystyka;
     }

@@ -85,6 +85,7 @@ public class PrivateYouTubeCommand extends Command {
             context.sendTranslate("youtube.bad").queue();
             return false;
         }
+
         HashMap<Integer, AudioTrack> mapa = new HashMap<>();
 
         BetterStringBuilder bsb = new BetterStringBuilder();
