@@ -68,9 +68,11 @@ public class ChatmodStats implements HttpHandler {
 
            Map<String, TopCommand.Suma> finalStats = new HashMap<>();
            for (Map.Entry<String, Integer> entry : sortByValue(top).entrySet()) {
-               UserinfoConfig user = apiModule.getUserConfig(entry.getKey());
-               if (user.getMcNick() == null) continue;
-               finalStats.put(user.getMcNick(), mapa.get(entry.getKey()));
+               try {
+                   UserinfoConfig user = apiModule.getUserConfig(entry.getKey());
+                   if (user.getMcNick() == null) continue;
+                   finalStats.put(user.getMcNick(), mapa.get(entry.getKey()));
+               } catch (Exception ignored) { }
            }
            Response.sendObjectResponse(ex, finalStats);
 
