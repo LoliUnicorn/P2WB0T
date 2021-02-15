@@ -253,21 +253,22 @@ public class B0T {
         RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
         EmbedRedisManager embedRedisManager  = new EmbedRedisManager(redisManager);
 
-        CaseDao          caseDao             = new CaseDao(databaseManager);
-        UserDao          userDao             = new UserDao(databaseManager);
-        NieobecnosciDao  nieobecnosciDao     = new NieobecnosciDao(databaseManager);
-        RemindDao        remindDao           = new RemindDao(databaseManager);
-        GiveawayDao      giveawayDao         = new GiveawayDao(databaseManager);
-        StatsDao         statsDao            = new StatsDao(databaseManager);
-                    this.voiceStateDao       = new VoiceStateDao(databaseManager);
-        MultiDao         multiDao            = new MultiDao(databaseManager);
-        TicketDao        ticketDao           = new TicketDao(databaseManager);
-        ApelacjeDao      apelacjeDao         = new ApelacjeDao(databaseManager);
-        AnkietaDao       ankietaDao          = new AnkietaDao(databaseManager, api);
-        WeryfikacjaDao   weryfikacjaDao      = new WeryfikacjaDao(databaseManager);
-        AcBanDao         acBanDao            = new AcBanDao(databaseManager);
-        RecordingDao     recordingDao        = new RecordingDao(databaseManager);
-        AntiRaidDao      antiRaidDao         = new AntiRaidDao(databaseManager);
+        CaseDao            caseDao             = new CaseDao(databaseManager);
+        UserDao            userDao             = new UserDao(databaseManager);
+        NieobecnosciDao    nieobecnosciDao     = new NieobecnosciDao(databaseManager);
+        RemindDao          remindDao           = new RemindDao(databaseManager);
+        GiveawayDao        giveawayDao         = new GiveawayDao(databaseManager);
+        StatsDao           statsDao            = new StatsDao(databaseManager);
+                      this.voiceStateDao       = new VoiceStateDao(databaseManager);
+        MultiDao           multiDao            = new MultiDao(databaseManager);
+        TicketDao          ticketDao           = new TicketDao(databaseManager);
+        ApelacjeDao        apelacjeDao         = new ApelacjeDao(databaseManager);
+        AnkietaDao         ankietaDao          = new AnkietaDao(databaseManager, api);
+        WeryfikacjaDao     weryfikacjaDao      = new WeryfikacjaDao(databaseManager);
+        AcBanDao           acBanDao            = new AcBanDao(databaseManager);
+        RecordingDao       recordingDao        = new RecordingDao(databaseManager);
+        AntiRaidDao        antiRaidDao         = new AntiRaidDao(databaseManager);
+        DeletedMessagesDao deletedMessagesDao  = new DeletedMessagesDao(databaseManager);
 
         ArrayList<Object> listeners = new ArrayList<>();
         CommandExecute commandExecute = new CommandExecute(commandManager, tlumaczenia, argumentManager, userDao);
@@ -284,12 +285,12 @@ public class B0T {
 
         APIModule apiModule = new APIModule(api, caseDao, redisManager, nieobecnosciDao, statsDao, voiceStateDao, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, acBanDao, recordingDao);
         WeryfikacjaModule weryfikacjaModule = new WeryfikacjaModule(apiModule, multiDao, modLog, caseDao, weryfikacjaDao);
-        modulManager.getModules().add(new LogsModule(api, statsModule, redisManager));
+        modulManager.getModules().add(new LogsModule(api, statsModule, redisManager, deletedMessagesDao));
         modulManager.getModules().add(new ChatModule(api, karyJSON, caseDao, modLog, statsModule, redisManager));
 //        modulManager.getModules().add(new StatusModule(api));
         modulManager.getModules().add(new NieobecnosciModule(api, nieobecnosciDao, nieobecnosciManager));
         modulManager.getModules().add(new LiczydloModule(api));
-        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao, socketManager));
+        modulManager.getModules().add(new CommandsModule(commandManager, tlumaczenia, api, eventWaiter, karyJSON, caseDao, modulManager, commandExecute, userDao, modLog, nieobecnosciDao, remindDao, giveawayDao, statsModule, musicModule, multiDao, nieobecnosciManager, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, recordingDao, socketManager, deletedMessagesDao));
         modulManager.getModules().add(new RekruModule(api, commandManager));
         modulManager.getModules().add(musicModule);
         modulManager.getModules().add(statsModule);

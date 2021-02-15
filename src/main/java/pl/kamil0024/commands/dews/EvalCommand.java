@@ -54,32 +54,33 @@ public class EvalCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(EvalCommand.class);
 
-    @Inject private final EventWaiter eventWaiter;
-    @Inject private final CommandManager commandManager;
-    @Inject private final CaseDao caseDao;
-    @Inject private final ModLog modLog;
-    @Inject private final KaryJSON karyJSON;
-    @Inject private final Tlumaczenia tlumaczenia;
-    @Inject private final CommandExecute commandExecute;
-    @Inject private final UserDao userDao;
-    @Inject private final NieobecnosciDao nieobecnosciDao;
-    @Inject private final RemindDao remindDao;
-    @Inject private final ModulManager modulManager;
-    @Inject private final GiveawayListener giveawayListener;
-    @Inject private final GiveawayDao giveawayDao;
-    @Inject private final StatsModule statsModule;
-    @Inject private final MultiDao multiDao;
-    @Inject private final MusicModule musicModule;
-    @Inject private final YouTrack youTrack;
-    @Inject private final TicketDao ticketDao;
-    @Inject private final ApelacjeDao apelacjeDao;
-    @Inject private final AnkietaDao ankietaDao;
-    @Inject private final EmbedRedisManager embedRedisManager;
-    @Inject private final WeryfikacjaDao weryfikacjaDao;
-    @Inject private final WeryfikacjaModule weryfikacjaModule;
-    @Inject private final SocketManager socketManager;
+    private final EventWaiter eventWaiter;
+    private final CommandManager commandManager;
+    private final CaseDao caseDao;
+    private final ModLog modLog;
+    private final KaryJSON karyJSON;
+    private final Tlumaczenia tlumaczenia;
+    private final CommandExecute commandExecute;
+    private final UserDao userDao;
+    private final NieobecnosciDao nieobecnosciDao;
+    private final RemindDao remindDao;
+    private final ModulManager modulManager;
+    private final GiveawayListener giveawayListener;
+    private final GiveawayDao giveawayDao;
+    private final StatsModule statsModule;
+    private final MultiDao multiDao;
+    private final MusicModule musicModule;
+    private final YouTrack youTrack;
+    private final TicketDao ticketDao;
+    private final ApelacjeDao apelacjeDao;
+    private final AnkietaDao ankietaDao;
+    private final EmbedRedisManager embedRedisManager;
+    private final WeryfikacjaDao weryfikacjaDao;
+    private final WeryfikacjaModule weryfikacjaModule;
+    private final SocketManager socketManager;
+    private final DeletedMessagesDao deletedMessagesDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, SocketManager socketManager) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, SocketManager socketManager, DeletedMessagesDao deletedMessagesDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -109,6 +110,7 @@ public class EvalCommand extends Command {
         this.weryfikacjaDao = weryfikacjaDao;
         this.weryfikacjaModule = weryfikacjaModule;
         this.socketManager = socketManager;
+        this.deletedMessagesDao = deletedMessagesDao;
     }
 
     @Override
@@ -146,6 +148,7 @@ public class EvalCommand extends Command {
         shell.setVariable("weryfikacjaModule", weryfikacjaModule);
         shell.setVariable("gson", new Gson());
         shell.setVariable("socketManager", socketManager);
+        shell.setVariable("deletedMessagesDao", deletedMessagesDao);
 
         long ms = System.currentTimeMillis();
         Object value;

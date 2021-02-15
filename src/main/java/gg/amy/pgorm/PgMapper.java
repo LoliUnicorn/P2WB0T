@@ -555,7 +555,7 @@ public class PgMapper<T> {
         });
         return data;
     }
-
+    
     public List<T> getAllTicketsByFiltr(int offset, String admId, boolean read) {
         final List<T> data = new ArrayList<>();
         String msg = String.format("SELECT * FROM %s WHERE NOT(data::jsonb @> '{\"ocena\": -1}') AND data::jsonb @> '{\"spam\": false}' AND (data->>'readBy')::jsonb ?? '%s' ORDER BY data->>'createdTime';", table.value(), admId);

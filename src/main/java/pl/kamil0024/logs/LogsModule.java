@@ -20,6 +20,7 @@
 package pl.kamil0024.logs;
 
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.core.database.DeletedMessagesDao;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.logs.logger.Logger;
@@ -38,17 +39,19 @@ public class LogsModule implements Modul {
     private Logger logger;
     private final StatsModule statsModule;
     private final RedisManager redisManager;
+    private final DeletedMessagesDao deletedMessagesDao;
 
-    public LogsModule(ShardManager api, StatsModule statsModule, RedisManager redisManager) {
+    public LogsModule(ShardManager api, StatsModule statsModule, RedisManager redisManager, DeletedMessagesDao deletedMessagesDao) {
         this.api = api;
         this.statsModule = statsModule;
         this.redisManager = redisManager;
+        this.deletedMessagesDao = deletedMessagesDao;
     }
     
     @Override
     public boolean startUp() {
         messageManager = new MessageManager(redisManager);
-        logger = new Logger(messageManager, api, statsModule);
+        logger = new Logger(messageManager, api, statsModule, deletedMessagesDao);
         api.addEventListener(messageManager, logger);
         setStart(true);
         return true;

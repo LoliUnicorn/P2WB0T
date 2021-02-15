@@ -33,6 +33,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.database.DeletedMessagesDao;
+import pl.kamil0024.core.database.config.DeletedMessagesConfig;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.stats.StatsModule;
@@ -40,6 +42,7 @@ import pl.kamil0024.stats.StatsModule;
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class Logger extends ListenerAdapter {
@@ -47,11 +50,13 @@ public class Logger extends ListenerAdapter {
     private final MessageManager manager;
     private final ShardManager jda;
     private final StatsModule statsModule;
+    private final DeletedMessagesDao deletedMessagesDao;
 
-    public Logger(MessageManager manager, ShardManager jda, StatsModule statsModule) {
+    public Logger(MessageManager manager, ShardManager jda, StatsModule statsModule, DeletedMessagesDao deletedMessagesDao) {
         this.manager = manager;
         this.jda = jda;
         this.statsModule = statsModule;
+        this.deletedMessagesDao = deletedMessagesDao;
     }
 
     @Override
@@ -82,6 +87,8 @@ public class Logger extends ListenerAdapter {
         eb.addField("Treść wiadomości:", content, false);
         sendLog(eb);
         manager.getMap().invalidate(event.getMessageId());
+
+        deletedMessagesDao.save(DeletedMessagesConfig.convert(msg, new Date().getTime()));
     }
 
     @Override
