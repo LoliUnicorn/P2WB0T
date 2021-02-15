@@ -31,13 +31,14 @@ import pl.kamil0024.logs.logger.FakeMessage;
 @Data
 @AllArgsConstructor
 public class DeletedMessagesConfig {
+    public DeletedMessagesConfig() { }
 
     public DeletedMessagesConfig(String id) {
         this.id = id;
     }
 
     @PrimaryKey
-    private final String id;
+    private String id = "";
 
     private long createdDate;
     private long deletedDate;
