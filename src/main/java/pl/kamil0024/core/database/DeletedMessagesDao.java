@@ -28,7 +28,7 @@ import java.util.List;
 
 public class DeletedMessagesDao implements Dao<DeletedMessagesConfig>  {
 
-    private final PgMapper<DeletedMessagesConfig> mapper;
+    public final PgMapper<DeletedMessagesConfig> mapper;
 
     public DeletedMessagesDao(DatabaseManager databaseManager) {
         if (databaseManager == null) throw new IllegalStateException("databaseManager == null");
@@ -42,11 +42,11 @@ public class DeletedMessagesDao implements Dao<DeletedMessagesConfig>  {
     }
 
     public List<DeletedMessagesConfig> getFromChannel(String channelId) {
-        return mapper.loadManyBySubkey("data->>'channelId'", channelId);
+        return mapper.loadRaw(String.format("SELECT * FROM deletedmessage WHERE data->>'channelId' = '%s';", channelId));
     }
 
     public List<DeletedMessagesConfig> getFromUser(String userId) {
-        return mapper.loadManyBySubkey("data->>'userId'", userId);
+        return mapper.loadRaw(String.format("SELECT * FROM deletedmessage WHERE data->>'userId' = '%s';", userId));
     }
 
     @Override
