@@ -23,28 +23,30 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import org.json.JSONObject;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.database.CaseDao;
 
 @AllArgsConstructor
-public class AddMember implements HttpHandler {
+public class HistoryListHandler implements HttpHandler {
 
     private final ShardManager api;
+    private final CaseDao caseDao;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    public void handleRequest(HttpServerExchange ex)  {
-        if (!Response.checkIp(ex)) return;
+    public void handleRequest(HttpServerExchange ex) {
+        if (!Response.checkToken(ex)) return;
+
         try {
-            JSONObject json = new JSONObject(Response.getBody(ex.getInputStream()));
-            api.getGuildById(Ustawienia.instance.bot.guildId)
-                    .addMember(json.getString("token"), ex.getQueryParameters().get("id").getFirst())
-                    .complete();
-            Response.sendResponse(ex, "Pomyślnie dodano");
+            int offset = Integer.parseInt(ex.getQueryParameters().get("offset").getFirst());
+            if (offset < 0) throw new UnsupportedOperationException("offset nie może być mniejsze od 0");
+
+            Response.sendObjectResponse(ex,
+                    caseDao.getAllByOffset(offset).stream().map(c -> MemberHistoryHandler.ApiCaseConfig.convert(c.getKara(), api)));
+
         } catch (Exception e) {
-            Response.sendErrorResponse(ex, "Błąd!", e.getMessage());
+            Response.sendErrorResponse(ex, "Błąd", "Nie udało się wysłać requesta: " + e.getLocalizedMessage());
         }
+
     }
 
 }

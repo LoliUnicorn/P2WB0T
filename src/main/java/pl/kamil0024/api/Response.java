@@ -38,7 +38,7 @@ public class Response {
 
     public static void sendErrorResponse(HttpServerExchange ex, String body, String description) {
         ex.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        ex.getResponseSender().send(gson.toJson(new ToJSON(false, null, new Error(body, description), null)), StandardCharsets.UTF_8);
+        ex.getResponseSender().send(gson.toJson(new ToJSON(false, null, new ToJSON.Error(body, description), null)), StandardCharsets.UTF_8);
     }
 
     public static void sendResponse(HttpServerExchange ex, String msg) {
@@ -51,7 +51,6 @@ public class Response {
         ex.getResponseSender().send(gson.toJson(new ToJSON(true, null, null, data)), StandardCharsets.UTF_8);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkIp(HttpServerExchange ex) {
         String host = ex.getSourceAddress().getAddress().getHostAddress();
         if (host.isEmpty() || !Ustawienia.instance.api.whitelist.contains(host)) {
@@ -59,6 +58,21 @@ public class Response {
             return false;
         }
         return true;
+    }
+
+    public static boolean checkToken(HttpServerExchange ex) {
+        try {
+            String auth = ex.getRequestHeaders().get("Authorization").getFirst();
+            if (!Ustawienia.instance.api.tokens.contains(auth)) {
+                Response.sendErrorResponse(ex, "Brak autoryzacji", "Token jest nieprawidłowy.");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            Response.sendErrorResponse(ex, "Brak autoryzacji", "Token jest nieprawidłowy.");
+            return false;
+        }
+
     }
 
     public static String getBody(InputStream is) {
@@ -73,13 +87,14 @@ public class Response {
         private final String msg;
         private final Error error;
         private final Object data;
-    }
 
-    @Data
-    @AllArgsConstructor
-    public static class Error {
-        private final String body;
-        private final String description;
+        @Data
+        @AllArgsConstructor
+        public static class Error {
+            private final String body;
+            private final String description;
+        }
+
     }
 
 }
