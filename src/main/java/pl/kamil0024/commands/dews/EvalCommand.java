@@ -79,8 +79,9 @@ public class EvalCommand extends Command {
     private final WeryfikacjaModule weryfikacjaModule;
     private final SocketManager socketManager;
     private final DeletedMessagesDao deletedMessagesDao;
+    private final AcBanDao acBanDao;
 
-    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, SocketManager socketManager, DeletedMessagesDao deletedMessagesDao) {
+    public EvalCommand(EventWaiter eventWaiter, CommandManager commandManager, CaseDao caseDao, ModLog modLog, KaryJSON karyJSON, Tlumaczenia tlumaczenia, CommandExecute commandExecute, UserDao userDao, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, ModulManager modulManager, GiveawayListener giveawayListener, GiveawayDao giveawayDao, StatsModule statsModule, MultiDao multiDao, MusicModule musicModule, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, SocketManager socketManager, DeletedMessagesDao deletedMessagesDao, AcBanDao acBanDao) {
         name = "eval";
         aliases.add("ev");
         category = CommandCategory.DEVS;
@@ -111,6 +112,7 @@ public class EvalCommand extends Command {
         this.weryfikacjaModule = weryfikacjaModule;
         this.socketManager = socketManager;
         this.deletedMessagesDao = deletedMessagesDao;
+        this.acBanDao = acBanDao;
     }
 
     @Override
@@ -149,6 +151,7 @@ public class EvalCommand extends Command {
         shell.setVariable("gson", new Gson());
         shell.setVariable("socketManager", socketManager);
         shell.setVariable("deletedMessagesDao", deletedMessagesDao);
+        shell.setVariable("acBanDao", acBanDao);
 
         long ms = System.currentTimeMillis();
         Object value;
