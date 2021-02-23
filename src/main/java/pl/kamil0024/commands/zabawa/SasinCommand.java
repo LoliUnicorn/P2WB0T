@@ -31,7 +31,7 @@ import java.math.RoundingMode;
 public class SasinCommand extends Command {
 
     public SasinCommand() {
-        name = "asin";
+        name = "sasin";
         category = CommandCategory.ZABAWA;
         enabledInRekru = true;
     }
