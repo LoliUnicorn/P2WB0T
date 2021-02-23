@@ -19,7 +19,6 @@
 
 package pl.kamil0024.commands;
 
-import com.google.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Message;
@@ -31,6 +30,7 @@ import pl.kamil0024.commands.listener.GiveawayListener;
 import pl.kamil0024.commands.listener.GuildListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
+import pl.kamil0024.commands.zabawa.SasinCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
@@ -159,6 +159,7 @@ public class CommandsModule implements Modul {
         cmd.add(new PogodaCommand());
         cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
         cmd.add(new RecordingCommand(recordingDao, eventWaiter));
+        cmd.add(new SasinCommand());
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);

@@ -81,12 +81,6 @@ public class UserUtil {
         return Color.GREEN;
     }
 
-    public static String getName(JDA jda, String id) {
-        User u = jda.retrieveUserById(id).complete();
-        if (u == null) return null;
-        return getName(u);
-    }
-
     public static String getName(User u) {
         return u.getName() + "#" + u.getDiscriminator();
     }
@@ -120,7 +114,7 @@ public class UserUtil {
             if (seeNick) return getName(member.getUser());
             else return "-";
         }
-        if (nick.contains("[")) nick = nick.split(" ")[1];
+        if (nick.contains("[")) nick = nick.split("] ")[1];
         return nick;
     }
 

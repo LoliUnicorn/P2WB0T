@@ -40,8 +40,6 @@ import pl.kamil0024.core.util.kary.Dowod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,6 +73,10 @@ public class DowodCommand extends Command {
             List<FutureTask<EmbedBuilder>> futurePages = new ArrayList<>();
             List<EmbedBuilder> pages = new ArrayList<>();
             CaseConfig cc = caseDao.get(arg);
+            if (cc.getKara() == null) {
+                context.sendTranslate("dowod.invalidcase").queue();
+                return false;
+            }
             if (cc.getKara().getDowody() != null && !cc.getKara().getDowody().isEmpty()) {
                 for (Dowod dowod : cc.getKara().getDowody()) {
                     pages.add(getEmbed(dowod, context));

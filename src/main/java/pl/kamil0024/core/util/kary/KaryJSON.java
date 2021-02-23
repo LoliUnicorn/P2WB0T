@@ -127,7 +127,7 @@ public class KaryJSON {
 
     @Data
     @AllArgsConstructor
-    public class Kara {
+    public static class Kara {
         public Kara() {}
 
         private int id;

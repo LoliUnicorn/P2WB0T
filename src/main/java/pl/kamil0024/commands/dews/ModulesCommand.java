@@ -33,11 +33,13 @@ import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.module.ModulManager;
 import pl.kamil0024.core.util.BetterStringBuilder;
+import pl.kamil0024.core.util.Error;
 import pl.kamil0024.core.util.UserUtil;
 
 import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ModulesCommand extends Command {
 
@@ -60,7 +62,7 @@ public class ModulesCommand extends Command {
 
         String red = CommandExecute.getReaction(context.getUser(), false).getAsMention();
         String green = CommandExecute.getReaction(context.getUser(), true).getAsMention();
-        String load = context.getJDA().getEmoteById(Ustawienia.instance.emote.load).getAsMention();
+        String load = Objects.requireNonNull(context.getJDA().getEmoteById(Ustawienia.instance.emote.load)).getAsMention();
 
         if (arg == null) {
             BetterStringBuilder sb = new BetterStringBuilder();
@@ -130,7 +132,7 @@ public class ModulesCommand extends Command {
             }
         }
 
-        if (arg.toLowerCase().equals("stop")) {
+        if (arg.equalsIgnoreCase("stop")) {
             if (!modul.isStart()) {
                 context.send("Ten moduł jest zatrzymany!").queue();
                 return false;
@@ -146,7 +148,7 @@ public class ModulesCommand extends Command {
             }
         }
 
-        context.send(HelpCommand.getUsage(context).build()).queue();
+        Error.usageError(context);
         return false;
     }
 

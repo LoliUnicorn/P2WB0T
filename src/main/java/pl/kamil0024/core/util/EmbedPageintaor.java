@@ -97,7 +97,7 @@ public class EmbedPageintaor {
     }
 
     private void onMessageReactionAdd(MessageReactionAddEvent event) {
-        if (event.getUser().getIdLong() != userId || event.getMessageIdLong() != botMsgId) return;
+        if (event.getUserIdLong() != userId || event.getMessageIdLong() != botMsgId) return;
 
         if (!event.getReactionEmote().isEmote()) {
             switch (event.getReactionEmote().getName()) {
@@ -150,7 +150,7 @@ public class EmbedPageintaor {
                 case RIGHT_EMOJI:
                 case LAST_EMOJI:
                 case STOP_EMOJI:
-                    return event.getUser().getIdLong() == userId;
+                    return event.getUserIdLong() == userId;
                 default:
                     return false;
             }

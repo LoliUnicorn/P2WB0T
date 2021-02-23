@@ -50,7 +50,7 @@ public class DeletedMessagesDao implements Dao<DeletedMessagesConfig>  {
     }
 
     public void delete(String id) {
-        mapper.getStore().sql(String.format("DELETE FROM deletedmessage WHERE id='%s'"));
+        mapper.getStore().sql(String.format("DELETE FROM deletedmessage WHERE id='%s'", id));
     }
 
     @Override

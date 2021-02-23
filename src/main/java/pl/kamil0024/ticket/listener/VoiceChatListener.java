@@ -48,6 +48,7 @@ import pl.kamil0024.ticket.config.ChannelTicketConfig;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -239,7 +240,8 @@ public class VoiceChatListener extends ListenerAdapter {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private void checkRemoveTicket(VoiceChannel voiceChannel) {
+    private void checkRemoveTicket(@Nullable VoiceChannel voiceChannel) {
+        if (voiceChannel == null) return;
         if (voiceChannel.getMembers().size() == 0
                 && voiceChannel.getParent().getId().equals(Ustawienia.instance.ticket.createChannelCategory)
                 && !voiceChannel.getId().equals(Ustawienia.instance.ticket.vcToCreate)) {

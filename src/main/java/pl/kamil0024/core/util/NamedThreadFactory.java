@@ -19,6 +19,8 @@
 
 package pl.kamil0024.core.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,7 +36,7 @@ public class NamedThreadFactory implements ThreadFactory {
         namePrefix = prefix + "-thread-";
     }
 
-    public Thread newThread(Runnable r) {
+    public Thread newThread(@NotNull Runnable r) {
         Thread t = new Thread(group, r,
                 namePrefix + threadNumber.getAndIncrement(),
                 0);

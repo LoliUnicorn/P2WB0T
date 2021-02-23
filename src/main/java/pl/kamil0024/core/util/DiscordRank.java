@@ -20,7 +20,6 @@
 package pl.kamil0024.core.util;
 
 import lombok.Getter;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import pl.kamil0024.core.Ustawienia;

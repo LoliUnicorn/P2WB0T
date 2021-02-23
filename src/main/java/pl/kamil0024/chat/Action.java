@@ -23,14 +23,11 @@ import lombok.Data;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.chat.listener.KaryListener;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.CommandExecute;
 import pl.kamil0024.core.util.UserUtil;
-import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.logs.logger.FakeMessage;
 
 import java.awt.*;
@@ -54,7 +51,7 @@ public class Action {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(Color.red);
 
-        eb.addField("Użytkownik", UserUtil.getFullNameMc(api.getMemberById(getMsg().getAuthor())), false);
+        eb.addField("Użytkownik", UserUtil.getFullNameMc(Objects.requireNonNull(api.getMemberById(getMsg().getAuthor()))), false);
         eb.addField("Treść wiadomości", getMsg().getContent(), false);
         eb.addField("Kanał", String.format("<#%s>", getMsg().getChannel()), false);
         eb.addField("Za co ukarać?", kara.getPowod(), false);
@@ -69,7 +66,7 @@ public class Action {
         txt.sendMessage(eb.build()).queue(m -> {
                 m.addReaction(CommandExecute.getReaction(api.getSelfMember().getUser(), true)).queue();
                 m.addReaction(CommandExecute.getReaction(api.getSelfMember().getUser(), false)).queue();
-                m.addReaction(api.getEmoteById("623630774171729931")).queue();
+                m.addReaction(Objects.requireNonNull(api.getEmoteById("623630774171729931"))).queue();
                 setBotMsg(m.getId());
                 karyListener.getEmbedy().put(m.getId(), this);
         });

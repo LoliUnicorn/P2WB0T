@@ -27,8 +27,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandContext;
-import pl.kamil0024.core.command.CommandExecute;
-import pl.kamil0024.core.command.CommandManager;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.socket.SocketClient;

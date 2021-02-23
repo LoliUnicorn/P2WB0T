@@ -181,6 +181,7 @@ public class StatusCommand extends Command {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static String getMsg(@Nullable Emote derp, @Nullable Emote feerko, @Nullable Emote roizy, @Nullable String botMsg) {
         String xd = "\uD83D\uDD36";
         BetterStringBuilder sb = new BetterStringBuilder();

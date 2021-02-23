@@ -23,12 +23,9 @@ import io.sentry.Sentry;
 import io.sentry.SentryEvent;
 import io.sentry.SentryLevel;
 import org.slf4j.LoggerFactory;
-import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
 
 import javax.annotation.Nullable;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 

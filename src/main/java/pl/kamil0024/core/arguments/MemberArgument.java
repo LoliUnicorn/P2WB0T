@@ -26,8 +26,6 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.command.CommandContext;
 
-import java.util.regex.Pattern;
-
 @SuppressWarnings("DuplicatedCode")
 public class MemberArgument extends Args {
 

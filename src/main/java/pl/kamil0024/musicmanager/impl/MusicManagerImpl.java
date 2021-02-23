@@ -26,8 +26,6 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import pl.kamil0024.musicmanager.MusicManager;
 
-import javax.sound.midi.VoiceStatus;
-
 @Data
 public class MusicManagerImpl implements MusicManager {
 

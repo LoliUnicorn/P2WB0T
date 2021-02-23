@@ -22,9 +22,7 @@ import com.google.common.eventbus.SubscriberExceptionContext;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.inject.Inject;
 import io.sentry.Sentry;
-import io.sentry.SentryLevel;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
@@ -89,29 +87,19 @@ import java.util.concurrent.Executors;
 
 import static pl.kamil0024.core.util.Statyczne.WERSJA;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "OptionalGetWithoutIsPresent"})
 public class B0T {
 
     private static final Logger logger = LoggerFactory.getLogger(B0T.class);
-
-    @Getter private HashMap<String, Modul> moduls;
-
-    @Inject private CommandManager commandManager;
-    @Inject private ArgumentManager argumentManager;
-    @Inject private DatabaseManager databaseManager;
-
     private static final File cfg = new File("config.json");
 
     private Ustawienia ustawienia;
-    private Tlumaczenia tlumaczenia;
-    private Thread shutdownThread;
-
     private StatsModule statsModule;
     private ShardManager api;
     private ModulManager modulManager;
     private MusicModule musicModule;
     private SocketManager socketManager;
-    private VoiceStateDao voiceStateDao;
+
+    @Getter private final HashMap<String, Modul> modules;
 
     @SneakyThrows
     public B0T(String token) {
@@ -135,10 +123,10 @@ public class B0T {
 
         AsyncEventBus eventBus = new AsyncEventBus(Executors.newFixedThreadPool(16), EventBusErrorHandler.instance);
         
-        moduls = new HashMap<>();
-        tlumaczenia = new Tlumaczenia();
-        argumentManager = new ArgumentManager();
-        commandManager = new CommandManager();
+        modules = new HashMap<>();
+        Tlumaczenia tlumaczenia = new Tlumaczenia();
+        ArgumentManager argumentManager = new ArgumentManager();
+        CommandManager commandManager = new CommandManager();
 
         argumentManager.registerAll();
         shutdownThread();
@@ -148,7 +136,7 @@ public class B0T {
 
         if (!cfg.exists()) {
             api.shutdown();
-            Log.newError("Nie ma pliku konfiguracyjnego!", B0T.class);
+            Log.error("Nie ma pliku konfiguracyjnego!", B0T.class);
             System.exit(1);
         }
 
@@ -238,8 +226,10 @@ public class B0T {
             }
             return true;
         }).findAny();
+        //noinspection OptionalGetWithoutIsPresent
+        JDA getshard = shard.get();
 
-        databaseManager = new DatabaseManager();
+        DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.load();
 
         try {
@@ -250,7 +240,7 @@ public class B0T {
         SocketServer socketServer = new SocketServer(eventBus, socketManager);
         socketServer.start();
 
-        RedisManager     redisManager        = new RedisManager(shard.get().getSelfUser().getIdLong());
+        RedisManager     redisManager        = new RedisManager(getshard.getSelfUser().getIdLong());
         EmbedRedisManager embedRedisManager  = new EmbedRedisManager(redisManager);
 
         CaseDao            caseDao             = new CaseDao(databaseManager);
@@ -259,7 +249,7 @@ public class B0T {
         RemindDao          remindDao           = new RemindDao(databaseManager);
         GiveawayDao        giveawayDao         = new GiveawayDao(databaseManager);
         StatsDao           statsDao            = new StatsDao(databaseManager);
-                      this.voiceStateDao       = new VoiceStateDao(databaseManager);
+        VoiceStateDao      voiceStateDao       = new VoiceStateDao(databaseManager);
         MultiDao           multiDao            = new MultiDao(databaseManager);
         TicketDao          ticketDao           = new TicketDao(databaseManager);
         ApelacjeDao        apelacjeDao         = new ApelacjeDao(databaseManager);
@@ -320,7 +310,7 @@ public class B0T {
                     logger.debug(tlumaczenia.get("module.loading.success", modul.getName(), commands));
                 }
 
-                moduls.put(modul.getName(), modul);
+                modules.put(modul.getName(), modul);
             } catch (Exception ignored) {
                 logger.error(tlumaczenia.get("module.loading.fail"));
             }
@@ -328,7 +318,7 @@ public class B0T {
 
         api.setStatus(OnlineStatus.ONLINE);
         api.setActivity(Activity.playing(tlumaczenia.get("status.hi", WERSJA)));
-        logger.info("Zalogowano jako {}", shard.get().getSelfUser());
+        logger.info("Zalogowano jako {}", getshard.getSelfUser());
 
         if (api.getGuildById(Ustawienia.instance.bot.guildId) == null) {
             api.shutdown();
@@ -338,7 +328,7 @@ public class B0T {
     }
 
     public void shutdownThread() {
-        this.shutdownThread = new Thread(() -> {
+        Thread shutdownThread = new Thread(() -> {
             logger.info("Zamykam...");
             RebootCommand.reboot = true;
             api.setStatus(OnlineStatus.DO_NOT_DISTURB);

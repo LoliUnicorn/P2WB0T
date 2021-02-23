@@ -32,7 +32,6 @@ import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.GiveawayDao;
 import pl.kamil0024.core.database.config.GiveawayConfig;
-import pl.kamil0024.core.logger.Log;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;

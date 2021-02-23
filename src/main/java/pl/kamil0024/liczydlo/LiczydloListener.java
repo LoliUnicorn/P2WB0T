@@ -19,14 +19,11 @@
 
 package pl.kamil0024.liczydlo;
 
-import com.google.inject.Inject;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.Ustawienia;
 
 import javax.annotation.Nonnull;
@@ -35,12 +32,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LiczydloListener extends ListenerAdapter {
-
-    @Inject private final ShardManager api;
-
-    public LiczydloListener(ShardManager api) {
-        this.api = api;
-    }
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
@@ -79,12 +70,6 @@ public class LiczydloListener extends ListenerAdapter {
         if (!event.getChannel().getId().equals(Ustawienia.instance.channel.liczek)) return;
         event.getMessage().delete().complete();
     }
-
-    @Override
-    public void onGuildMessageDelete(@Nonnull GuildMessageDeleteEvent event) {
-        if (!event.getChannel().getId().equals(Ustawienia.instance.channel.liczek)) return;
-    }
-
 
     private List<Message> getHistoryList(TextChannel txt) {
         List<Message> msgs = new ArrayList<>();

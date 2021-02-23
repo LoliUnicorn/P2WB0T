@@ -22,17 +22,11 @@ package pl.kamil0024.ticket;
 import com.google.inject.Inject;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.database.TicketDao;
-import pl.kamil0024.core.database.config.TicketConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.RedisManager;
 import pl.kamil0024.core.util.EventWaiter;
 import pl.kamil0024.ticket.config.TicketRedisManager;
 import pl.kamil0024.ticket.listener.VoiceChatListener;
-
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class TicketModule implements Modul {
 

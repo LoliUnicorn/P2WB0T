@@ -34,7 +34,6 @@ import pl.kamil0024.core.util.kary.Dowod;
 import pl.kamil0024.core.util.kary.Kara;
 import pl.kamil0024.core.util.kary.KaryEnum;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

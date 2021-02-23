@@ -24,11 +24,8 @@ import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.commands.system.UserinfoCommand;
 import pl.kamil0024.core.database.CaseDao;
 import pl.kamil0024.core.database.config.CaseConfig;
-import pl.kamil0024.core.util.kary.Kara;
-
 @AllArgsConstructor
 public class HistoryByIdHandler implements HttpHandler {
 

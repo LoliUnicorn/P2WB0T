@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+@SuppressWarnings("ConstantConditions")
 public class NetworkUtil {
     private NetworkUtil() {}
 

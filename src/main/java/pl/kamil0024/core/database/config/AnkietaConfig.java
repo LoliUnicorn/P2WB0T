@@ -60,15 +60,8 @@ public class AnkietaConfig {
     private boolean aktywna = true;
 
     @Data
+    @AllArgsConstructor
     public static class Opcja {
-        public Opcja() { }
-
-        public Opcja(int id, String text, String emoji) {
-            this.id = id;
-            this.text = text;
-            this.emoji = emoji;
-        }
-
         private int id;
         private String text;
         private String emoji;

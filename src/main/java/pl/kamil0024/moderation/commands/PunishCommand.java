@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import pl.kamil0024.core.util.Error;
 import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.commands.system.HelpCommand;
 import pl.kamil0024.core.Ustawienia;
@@ -80,7 +81,7 @@ public class PunishCommand extends Command {
         }
         String arg = context.getArgs().get(0);
         if (arg == null) {
-            context.send(HelpCommand.getUsage(context).build()).queue();
+            Error.usageError(context);
             return false;
         }
         if (arg.equalsIgnoreCase("info")) {
@@ -133,7 +134,12 @@ public class PunishCommand extends Command {
         Integer numer = context.getParsed().getNumber(context.getArgs().get(1));
 
         ArrayList<Member> osoby = new ArrayList<>();
-        Message msg = context.send("Ładuje...").reference(context.getMessage()).complete();
+        Message msg;
+        try {
+            msg = context.sendTranslate("generic.loading").reference(context.getMessage()).complete();
+        } catch (Exception e) {
+            msg = context.sendTranslate("generic.loading").complete();
+        }
 
         if (arg.contains(",")) {
             for (String s : arg.split(",")) {
@@ -181,14 +187,16 @@ public class PunishCommand extends Command {
         Emote green = CommandExecute.getReaction(context.getUser(), true);
         msg.addReaction(Objects.requireNonNull(green)).queue();
         msg.addReaction(Objects.requireNonNull(red)).queue();
-        //noinspection ConstantConditions
+
+        final Message fmsg = msg;
+
         eventWaiter.waitForEvent(MessageReactionAddEvent.class,
-                (event) -> event.getUser().getId().equals(context.getUser().getId()) && event.getMessageId().equals(msg.getId()),
+                (event) -> event.getUserId().equals(context.getUser().getId()) && event.getMessageId().equals(fmsg.getId()),
                 (event) -> {
             try {
                 if (event.getReactionEmote().getId().equals(red.getId())) {
                     context.getMessage().delete().complete();
-                    msg.delete().complete();
+                    fmsg.delete().complete();
                     return;
                 }
                 if (event.getReactionEmote().getId().equals(green.getId())) {
@@ -198,14 +206,14 @@ public class PunishCommand extends Command {
                         event.getChannel().retrieveMessageById(event.getMessageId()).complete().delete().complete();
                     } catch (Exception ignored) {}
                 }
-                msg.clearReactions().complete();
+                fmsg.clearReactions().complete();
             } catch (Exception ignored) {}
             },
                 30, TimeUnit.SECONDS,
                 () -> {
             try {
-                msg.getChannel().sendMessage(String.format("<@%s>, twój czas na odpowiedź minął!", context.getUser().getId())).queue();
-                msg.delete().queue();
+                fmsg.getChannel().sendMessage(context.getTranslate("punish.endtime", context.getUser().getAsMention())).queue();
+                fmsg.delete().queue();
             } catch (Exception ignored) { }
         });
         return true;
@@ -316,7 +324,7 @@ public class PunishCommand extends Command {
                 () -> {
                     if (!kurwaBylaAkcja.get()) {
                         try {
-                            msg.getChannel().sendMessage(String.format("<@%s>, twój czas na odpowiedź minął!", context.getUser().getId())).queue();
+                            msg.getChannel().sendMessage(context.getTranslate("punish.endtime", context.getUser().getAsMention())).queue();
                             msg.delete().complete();
                         } catch (Exception ignored) { }
                     }

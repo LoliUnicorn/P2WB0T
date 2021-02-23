@@ -19,14 +19,12 @@
 
 package pl.kamil0024.liczydlo;
 
-import com.google.inject.Inject;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.module.Modul;
 
 public class LiczydloModule implements Modul {
 
-    @Inject
-    ShardManager api;
+    private final ShardManager api;
 
     private boolean start = false;
     private LiczydloListener liczydloListener;
@@ -37,7 +35,7 @@ public class LiczydloModule implements Modul {
 
     @Override
     public boolean startUp() {
-        this.liczydloListener = new LiczydloListener(api);
+        this.liczydloListener = new LiczydloListener();
         api.addEventListener(liczydloListener);
         setStart(true);
         return true;

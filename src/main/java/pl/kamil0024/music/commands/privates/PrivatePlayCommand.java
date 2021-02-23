@@ -30,6 +30,7 @@ import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.socket.SocketClient;
 import pl.kamil0024.core.socket.SocketManager;
+import pl.kamil0024.core.util.Error;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.music.commands.PlayCommand;
 
@@ -55,7 +56,7 @@ public class PrivatePlayCommand extends Command {
 
         String link = context.getArgs().get(0);
         if (link == null) {
-            context.send(HelpCommand.getUsage(context).build()).queue();
+            Error.usageError(context);
             return false;
         }
 

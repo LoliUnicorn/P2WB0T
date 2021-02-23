@@ -19,14 +19,8 @@ package pl.kamil0024.core.util.kary;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
-import pl.kamil0024.core.Ustawienia;
 
-import javax.annotation.CheckReturnValue;
 import java.util.Comparator;
 import java.util.List;
 

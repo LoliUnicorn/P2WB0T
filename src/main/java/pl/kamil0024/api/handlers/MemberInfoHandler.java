@@ -22,21 +22,11 @@ package pl.kamil0024.api.handlers;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.api.Response;
-import pl.kamil0024.core.Ustawienia;
-import pl.kamil0024.core.command.enums.PermLevel;
 import pl.kamil0024.core.database.config.UserinfoConfig;
-import pl.kamil0024.core.util.UserUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class MemberInfoHandler implements HttpHandler {

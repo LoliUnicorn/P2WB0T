@@ -30,8 +30,4 @@ public class Error {
         context.getEvent().getChannel().sendMessage(eb.build()).queue();
     }
 
-    public static EmbedBuilder getUsageEmbed(CommandContext context) {
-        return HelpCommand.getUsage(context);
-    }
-
 }
