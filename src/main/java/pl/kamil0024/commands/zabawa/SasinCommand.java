@@ -47,10 +47,11 @@ public class SasinCommand extends Command {
             if (sasiny.intValue() == sasiny.doubleValue()) sasinyStr = String.valueOf(sasiny.intValue());
             else sasinyStr = sasiny.toPlainString();
             context.sendTranslate("sasin.result", liczba, sasinyStr).reference(context.getMessage()).queue();
+            return true;
         } catch (Exception e) {
             context.send("Zła liczba!").queue();
+            return false;
         }
-        return false;
     }
 
 }
