@@ -104,7 +104,7 @@ public class QueueCommand extends Command {
     }
 
     public static String getImageUrl(AudioTrack audtioTrack) {
-        return String.format("https://i.ytimg.com/vi_webp/%s/sddefault.webp", audtioTrack.getIdentifier());
+        return String.format("https://i.ytimg.com/vi/%s/maxresdefault.jpg ", audtioTrack.getIdentifier());
     }
 
     public static String getImageUrl(String audtioTrack) {

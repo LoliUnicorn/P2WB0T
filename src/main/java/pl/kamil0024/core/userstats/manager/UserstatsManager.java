@@ -66,7 +66,7 @@ public class UserstatsManager extends ListenerAdapter {
         this.voiceStateConfig = redisManager.new CacheRetriever<VoiceStateConfig>() {}.getCache(-1);
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(this::load, 30, 30, TimeUnit.MINUTES);
+        executorSche.scheduleWithFixedDelay(this::load, 30, 30, TimeUnit.MINUTES);
         loadVoice();
     }
 
@@ -83,9 +83,7 @@ public class UserstatsManager extends ListenerAdapter {
             cal.set(Calendar.MILLISECOND, 0);
 
             String primKey = cal.getTime().getTime() + "-" + event.getMessage().getAuthor().getId();
-
             UserstatsConfig.Config conf = config.getOrElse(primKey, new UserstatsConfig.Config(0L, 0L, new HashMap<>()));
-
 
             conf.setMessageCount(conf.getMessageCount() + 1);
 

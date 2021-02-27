@@ -21,7 +21,6 @@ package pl.kamil0024.moderation.listeners;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
@@ -86,14 +85,17 @@ public class ModLog extends ListenerAdapter {
         }, 2, 2, TimeUnit.MINUTES);
     }
 
-    @SneakyThrows
     @Override
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
         if (!event.getGuild().getId().equals(Ustawienia.instance.bot.guildId)) return;
-        Thread.sleep(10000);
-        List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
-        checkKara(event.getMember(), false, cc);
-        //checkKara(event, true, caseDao.getNickAktywne(nick));
+        new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException ignored) { }
+            List<CaseConfig> cc = caseDao.getAktywe(event.getUser().getId());
+            checkKara(event.getMember(), false, cc);
+            //checkKara(event, true, caseDao.getNickAktywne(nick));
+        }).start();
     }
 
     public synchronized void checkKara(Member event, boolean nick, List<CaseConfig> cc) {
@@ -106,19 +108,19 @@ public class ModLog extends ListenerAdapter {
             if (adm == null) adm = event.getGuild().getSelfMember().getUser();
             switch (k.getTypKary()) {
                 case BAN:
-                    powod = check + "jest permanentnie zbanowane!";
+                    powod = check + "ma permanentną blokadę";
                     event.getGuild().ban(event, 0, powod).complete();
                     break;
                 case MUTE:
-                    powod = check + "jest permanentnie wyciszone";
+                    powod = check + "ma permanentne wyciszenie";
                     event.getGuild().addRoleToMember(event, Objects.requireNonNull(api.getRoleById(Ustawienia.instance.muteRole))).complete();
                     break;
                 case TEMPBAN:
-                    powod = check + "jest tymczasowo zbanowane";
+                    powod = check + "ma tymczasową blokadę";
                     TempbanCommand.tempban(event.getUser(), adm, k.getPowod(), k.getDuration(), caseDao, this, true, event.getGuild(), UserUtil.getMcNick(event));
                     break;
                 case TEMPMUTE:
-                    powod = check + "jest tymczasowo wyciszone";
+                    powod = check + "me tymczasowe wyciszenie";
                     TempmuteCommand.tempmute(event, adm, k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
             }

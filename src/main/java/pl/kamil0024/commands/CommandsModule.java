@@ -128,7 +128,7 @@ public class CommandsModule implements Modul {
         this.userstatsManager = userstatsManager;
 
         ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
-        executorSche.scheduleAtFixedRate(() -> tak(api), 0, 5, TimeUnit.MINUTES);
+        executorSche.scheduleWithFixedDelay(() -> tak(api), 0, 5, TimeUnit.MINUTES);
     }
 
     @Override

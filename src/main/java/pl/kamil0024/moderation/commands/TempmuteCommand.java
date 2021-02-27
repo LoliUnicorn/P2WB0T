@@ -110,7 +110,7 @@ public class TempmuteCommand extends Command {
             return "Nie udalo sie dac muta";
         }
         try {
-            user.getGuild().kickVoiceMember(user).queue();
+            user.getGuild().kickVoiceMember(user).complete();
         } catch (Exception ignored) {}
 
         if (!isPun) {
