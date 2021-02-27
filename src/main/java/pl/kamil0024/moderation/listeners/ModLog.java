@@ -120,7 +120,7 @@ public class ModLog extends ListenerAdapter {
                     TempbanCommand.tempban(event.getUser(), adm, k.getPowod(), k.getDuration(), caseDao, this, true, event.getGuild(), UserUtil.getMcNick(event));
                     break;
                 case TEMPMUTE:
-                    powod = check + "me tymczasowe wyciszenie";
+                    powod = check + "ma tymczasowe wyciszenie";
                     TempmuteCommand.tempmute(event, adm, k.getPowod(), k.getDuration(), caseDao, this, true);
                     break;
             }
@@ -143,7 +143,7 @@ public class ModLog extends ListenerAdapter {
                 kara.setDuration(config.getKara().getDuration());
             } catch (Exception ignored) { }
 
-            if (!k.getPowod().contains("Te konto jest") && k.getKaraId() != 0) {
+            if (!k.getPowod().contains("Te konto ma") && k.getKaraId() != 0) {
                 if (nick) {
                     kara.setAktywna(true);
                     CaseConfig caseconfig = new CaseConfig(event.getId());
