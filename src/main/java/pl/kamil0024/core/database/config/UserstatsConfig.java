@@ -25,11 +25,13 @@ import gg.amy.pgorm.annotations.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Table("userstats")
-@GIndex({"date", "members"})
+@GIndex({"date", "memberslist"})
 @Data
 @AllArgsConstructor
 public class UserstatsConfig {
@@ -47,11 +49,16 @@ public class UserstatsConfig {
     private String date;
 
     private Map<String, Config> members = new HashMap<>();
+    private List<String> memberslist = new ArrayList<>();
 
     @Data
     @AllArgsConstructor
     public static class Config {
+        public Config() { }
+
         private long messageCount;
+        private Long voiceTimestamp = 0L;
+
         private Map<String, Long> channels;
     }
 

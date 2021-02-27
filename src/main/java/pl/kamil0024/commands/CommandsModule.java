@@ -31,6 +31,7 @@ import pl.kamil0024.commands.listener.GuildListener;
 import pl.kamil0024.commands.zabawa.KolkoIKrzyzykCommand;
 import pl.kamil0024.commands.zabawa.PogodaCommand;
 import pl.kamil0024.commands.zabawa.SasinCommand;
+import pl.kamil0024.commands.zabawa.StatsCommand;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.command.Command;
 import pl.kamil0024.core.command.CommandExecute;
@@ -47,13 +48,11 @@ import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
 import pl.kamil0024.moderation.commands.StatusCommand;
 import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.music.MusicModule;
-import pl.kamil0024.nieobecnosci.NieobecnosciManager;
 import pl.kamil0024.stats.StatsModule;
 import pl.kamil0024.commands.dews.*;
 import pl.kamil0024.commands.system.*;
 import pl.kamil0024.core.database.*;
 import pl.kamil0024.weryfikacja.WeryfikacjaModule;
-import pl.kamil0024.youtrack.YouTrack;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -79,7 +78,6 @@ public class CommandsModule implements Modul {
     private final StatsModule statsModule;
     private final MusicModule musicModule;
     private final MultiDao multiDao;
-    private final YouTrack youTrack;
     private final TicketDao ticketDao;
     private final ApelacjeDao apelacjeDao;
     private final AnkietaDao ankietaDao;
@@ -100,7 +98,11 @@ public class CommandsModule implements Modul {
     GuildListener guildListener;
     GiveawayListener giveawayListener;
 
+<<<<<<< HEAD
+    public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, RecordingDao recordingDao, SocketManager socketManager, DeletedMessagesDao deletedMessagesDao, AcBanDao acBanDao, UserstatsManager userstatsManager) {
+=======
     public CommandsModule(CommandManager commandManager, Tlumaczenia tlumaczenia, ShardManager api, EventWaiter eventWaiter, KaryJSON karyJSON, CaseDao caseDao, ModulManager modulManager, CommandExecute commandExecute, UserDao userDao, ModLog modLog, NieobecnosciDao nieobecnosciDao, RemindDao remindDao, GiveawayDao giveawayDao, StatsModule statsModule, MusicModule musicModule, MultiDao multiDao, NieobecnosciManager nieobecnosciManager, YouTrack youTrack, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, WeryfikacjaDao weryfikacjaDao, WeryfikacjaModule weryfikacjaModule, RecordingDao recordingDao, SocketManager socketManager, DeletedMessagesDao deletedMessagesDao, AcBanDao acBanDao, UserstatsManager userstatsManager) {
+>>>>>>> master
         this.commandManager = commandManager;
         this.tlumaczenia = tlumaczenia;
         this.api = api;
@@ -117,7 +119,6 @@ public class CommandsModule implements Modul {
         this.statsModule = statsModule;
         this.musicModule = musicModule;
         this.multiDao = multiDao;
-        this.youTrack = youTrack;
         this.ticketDao = ticketDao;
         this.apelacjeDao = apelacjeDao;
         this.ankietaDao = ankietaDao;
@@ -148,7 +149,11 @@ public class CommandsModule implements Modul {
         cmd.add(new BotinfoCommand(commandManager, modulManager, socketManager));
         cmd.add(new HelpCommand(commandManager));
         cmd.add(new PoziomCommand());
+<<<<<<< HEAD
+        cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, socketManager, deletedMessagesDao, acBanDao, userstatsManager));
+=======
         cmd.add(new EvalCommand(eventWaiter, commandManager, caseDao, modLog, karyJSON, tlumaczenia, commandExecute, userDao, nieobecnosciDao, remindDao, modulManager, giveawayListener, giveawayDao, statsModule, multiDao, musicModule, youTrack, ticketDao, apelacjeDao, ankietaDao, embedRedisManager, weryfikacjaDao, weryfikacjaModule, socketManager, deletedMessagesDao, acBanDao, userstatsManager));
+>>>>>>> master
         cmd.add(new ForumCommand());
         cmd.add(new UserinfoCommand());
         cmd.add(new McpremiumCommand());
@@ -163,6 +168,7 @@ public class CommandsModule implements Modul {
         cmd.add(new KolkoIKrzyzykCommand(kolkoIKrzyzykManager));
         cmd.add(new RecordingCommand(recordingDao, eventWaiter));
         cmd.add(new SasinCommand());
+        cmd.add(new StatsCommand(userstatsManager.userstatsDao));
 
         cmd.forEach(commandManager::registerCommand);
         setStart(true);
