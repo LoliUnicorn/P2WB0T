@@ -30,6 +30,7 @@ import pl.kamil0024.core.command.CommandContext;
 import pl.kamil0024.core.command.enums.CommandCategory;
 import pl.kamil0024.core.database.UserstatsDao;
 import pl.kamil0024.core.database.config.UserstatsConfig;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.util.BetterStringBuilder;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.moderation.listeners.ModLog;
@@ -57,80 +58,84 @@ public class StatsCommand extends Command {
         final Message msg = context.sendTranslate("generic.loading").complete();
 
         new Thread(() -> {
+            try {
+                long wszystkieWiadomosci = 0, cztery = 0, siedem = 0, dwadziescia = 0;
+                long vcAll = 0, vcCzternascie = 0, vcSiedem = 0, vcDoba = 0;
 
-            long wszystkieWiadomosci = 0, cztery = 0, siedem = 0, dwadziescia = 0;
-            long vcAll = 0, vcCzternascie = 0, vcSiedem = 0, vcDoba = 0;
+                Map<String, Long> kanaly = new HashMap<>();
 
-            Map<String, Long> kanaly = new HashMap<>();
+                List<UserstatsConfig> conf = userstatsDao.getFromMember(context.getUser().getId(), 30);
+                if (conf.isEmpty()) {
+                    msg.editMessage("Nie masz żadnych statystyk! Spróbuj ponownie później.").queue();
+                    return;
+                }
 
-            List<UserstatsConfig> conf = userstatsDao.getFromMember(context.getUser().getId(), 30);
-            if (conf.isEmpty()) {
-                msg.editMessage("Nie mamy Twoich statystyk :(").queue();
-                return;
+                for (UserstatsConfig entry : conf) {
+                    UserstatsConfig.Config memStat = entry.getMembers().get(context.getUser().getId());
+                    if (memStat == null) continue;
+                    wszystkieWiadomosci += memStat.getMessageCount();
+                    vcAll += memStat.getVoiceTimestamp();
+                    if (Long.parseLong(entry.getDate()) >= getRawDate(1)) {
+                        vcDoba += memStat.getVoiceTimestamp();
+                        dwadziescia += memStat.getMessageCount();
+                    }
+                    if (Long.parseLong(entry.getDate()) >= getRawDate(7)) {
+                        vcSiedem += memStat.getVoiceTimestamp();
+                        siedem += memStat.getMessageCount();
+                    }
+                    if (Long.parseLong(entry.getDate()) >= getRawDate(14)) {
+                        vcCzternascie += memStat.getVoiceTimestamp();
+                        cztery += memStat.getMessageCount();
+                    }
+
+                    for (Map.Entry<String, Long> channelEntry : memStat.getChannels().entrySet()) {
+                        long suma = kanaly.getOrDefault(channelEntry.getKey(), 0L);
+                        kanaly.put(channelEntry.getKey(), suma + channelEntry.getValue());
+                    }
+
+                }
+
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setColor(UserUtil.getColor(context.getMember()));
+                eb.setTimestamp(Instant.now());
+                eb.setFooter("Statystyki: " + UserUtil.getMcNick(context.getMember(), true));
+                eb.setThumbnail(context.getUser().getAvatarUrl());
+                eb.setDescription("Statystyki liczone od: `" + DATE + "`");
+
+                BetterStringBuilder sb = new BetterStringBuilder();
+
+                String s = "%s: `%s wiadomości`";
+                String vs = "%s: `%s`";
+                sb.appendLine(String.format(s, "__30 dni__", wszystkieWiadomosci));
+                sb.appendLine(String.format(s, "14 dni", cztery));
+                sb.appendLine(String.format(s, "7 dni", siedem));
+                sb.appendLine(String.format(s, "24 godz.", dwadziescia));
+                eb.addField("Wiadomości", sb.toString(), false);
+
+                sb = new BetterStringBuilder();
+                sb.appendLine(String.format(vs, "__30 dni__", format(vcAll)));
+                sb.appendLine(String.format(vs, "14 dni", format(vcCzternascie)));
+                sb.appendLine(String.format(vs, "7 dni", format(vcSiedem)));
+                sb.appendLine(String.format(vs, "24 godz.", format(vcDoba)));
+                eb.addField("Kanały głosowe", sb.toString(), false);
+
+                sb = new BetterStringBuilder();
+                int i = 1;
+                for (Map.Entry<String, Long> entry : sortByValue(kanaly).entrySet()) {
+                    sb.appendLine(String.format("%s. <#%s>: `%s wiadomości`", i, entry.getKey(), entry.getValue()));
+                    if (i == 3) break;
+                    i++;
+                }
+                eb.addField("Najbardziej aktywne kanały", sb.build(), false);
+
+                MessageBuilder mb = new MessageBuilder();
+                mb.setEmbed(eb.build());
+                msg.delete().queue();
+                context.send(eb.build()).queue();
+            } catch (Exception e) {
+                Log.newError(e, getClass());
+                msg.editMessage("Nie masz żadnych statystyk! Spróbuj ponownie później.").queue();
             }
-
-            for (UserstatsConfig entry : conf) {
-                UserstatsConfig.Config memStat = entry.getMembers().get(context.getUser().getId());
-                if (memStat == null) continue;
-                wszystkieWiadomosci += memStat.getMessageCount();
-                vcAll += memStat.getVoiceTimestamp();
-                if (Long.parseLong(entry.getDate()) >= getRawDate(1)) {
-                    vcDoba += memStat.getVoiceTimestamp();
-                    dwadziescia += memStat.getMessageCount();
-                }
-                if (Long.parseLong(entry.getDate()) >= getRawDate(7)) {
-                    vcSiedem += memStat.getVoiceTimestamp();
-                    siedem += memStat.getMessageCount();
-                }
-                if (Long.parseLong(entry.getDate()) >= getRawDate(14)) {
-                    vcCzternascie += memStat.getVoiceTimestamp();
-                    cztery += memStat.getMessageCount();
-                }
-
-                for (Map.Entry<String, Long> channelEntry : memStat.getChannels().entrySet()) {
-                    long suma = kanaly.getOrDefault(channelEntry.getKey(), 0L);
-                    kanaly.put(channelEntry.getKey(), suma + channelEntry.getValue());
-                }
-
-            }
-
-            EmbedBuilder eb = new EmbedBuilder();
-            eb.setColor(UserUtil.getColor(context.getMember()));
-            eb.setTimestamp(Instant.now());
-            eb.setFooter("Statystyki: " + UserUtil.getMcNick(context.getMember(), true));
-            eb.setThumbnail(context.getUser().getAvatarUrl());
-            eb.setDescription("Statystyki liczone od: `" + DATE + "`");
-
-            BetterStringBuilder sb = new BetterStringBuilder();
-
-            String s = "%s: `%s wiadomości`";
-            String vs = "%s: `%s`";
-            sb.appendLine(String.format(s, "__30 dni__", wszystkieWiadomosci));
-            sb.appendLine(String.format(s, "14 dni", cztery));
-            sb.appendLine(String.format(s, "7 dni", siedem));
-            sb.appendLine(String.format(s, "24 godz.", dwadziescia));
-            eb.addField("Wiadomości", sb.toString(), false);
-
-            sb = new BetterStringBuilder();
-            sb.appendLine(String.format(vs, "__30 dni__", format(vcAll)));
-            sb.appendLine(String.format(vs, "14 dni", format(vcCzternascie)));
-            sb.appendLine(String.format(vs, "7 dni", format(vcSiedem)));
-            sb.appendLine(String.format(vs, "24 godz.", format(vcDoba)));
-            eb.addField("Kanały głosowe", sb.toString(), false);
-
-            sb = new BetterStringBuilder();
-            int i = 1;
-            for (Map.Entry<String, Long> entry : sortByValue(kanaly).entrySet()) {
-                sb.appendLine(String.format("%s. <#%s>: `%s wiadomości`", i, entry.getKey(), entry.getValue()));
-                if (i == 3) break;
-                i++;
-            }
-            eb.addField("Najbardziej aktywne kanały", sb.build(), false);
-
-            MessageBuilder mb = new MessageBuilder();
-            mb.setContent(null);
-            mb.setEmbed(eb.build());
-            msg.editMessage(mb.build()).queue();
         }).start();
         return true;
     }
