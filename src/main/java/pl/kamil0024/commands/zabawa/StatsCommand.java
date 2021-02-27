@@ -112,12 +112,14 @@ public class StatsCommand extends Command {
                 sb.appendLine(String.format(s, "24 godz.", dwadziescia));
                 eb.addField("Wiadomości", sb.toString(), false);
 
-                sb = new BetterStringBuilder();
-                sb.appendLine(String.format(vs, "__30 dni__", format(vcAll)));
-                sb.appendLine(String.format(vs, "14 dni", format(vcCzternascie)));
-                sb.appendLine(String.format(vs, "7 dni", format(vcSiedem)));
-                sb.appendLine(String.format(vs, "24 godz.", format(vcDoba)));
-                eb.addField("Kanały głosowe", sb.toString(), false);
+                if (vcAll != 0) {
+                    sb = new BetterStringBuilder();
+                    sb.appendLine(String.format(vs, "__30 dni__", format(vcAll)));
+                    sb.appendLine(String.format(vs, "14 dni", format(vcCzternascie)));
+                    sb.appendLine(String.format(vs, "7 dni", format(vcSiedem)));
+                    sb.appendLine(String.format(vs, "24 godz.", format(vcDoba)));
+                    eb.addField("Kanały głosowe", sb.toString(), false);
+                }
 
                 sb = new BetterStringBuilder();
                 int i = 1;
