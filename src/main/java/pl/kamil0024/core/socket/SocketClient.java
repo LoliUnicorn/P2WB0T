@@ -27,15 +27,26 @@ import pl.kamil0024.core.logger.Log;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class SocketClient {
 
     private final Socket socket;
     private final AsyncEventBus eventBus;
 
-    @Getter private PrintWriter writer;
-    @Getter private final int socketId;
-    @Getter @Setter private String botId;
+    @Getter
+    private PrintWriter writer;
+    @Getter
+    private final int socketId;
+
+    @Getter @Setter
+    private String voiceChannel = null;
+
+    @Getter
+    private final ArrayList<String> tracksList = new ArrayList<>();
+
+    @Getter @Setter
+    private String botId;
 
     public SocketClient(Socket socket, AsyncEventBus eventBus, int socketId) {
         this.socket = socket;

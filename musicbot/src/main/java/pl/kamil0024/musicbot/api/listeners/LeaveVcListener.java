@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
+import pl.kamil0024.musicbot.socket.SocketClient;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -38,10 +39,12 @@ public class LeaveVcListener extends ListenerAdapter {
 
     private final MusicManager musicManager;
     private final LeaveWaiter leaveWaiter;
+    private final SocketClient client;
 
-    public LeaveVcListener(MusicManager musicManager, EventWaiter eventWaiter) {
+    public LeaveVcListener(MusicManager musicManager, EventWaiter eventWaiter, SocketClient client) {
         this.musicManager = musicManager;
         this.leaveWaiter = new LeaveWaiter(eventWaiter, musicManager);
+        this.client = client;
     }
 
     @Override
@@ -55,6 +58,7 @@ public class LeaveVcListener extends ListenerAdapter {
             return;
         }
         musicManager.getMusicManagers().get(guild.getIdLong()).destroy();
+        client.sendMessage("setChannel: null");
     }
 
     @Override
@@ -66,6 +70,7 @@ public class LeaveVcListener extends ListenerAdapter {
         }
         if (event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
             musicManager.getMusicManagers().get(guild.getIdLong()).destroy();
+            client.sendMessage("setChannel: null");
             return;
         }
 
@@ -75,7 +80,7 @@ public class LeaveVcListener extends ListenerAdapter {
         }
 
         if (leave(event.getChannelLeft())) {
-            leaveWaiter.initWaiter(event.getChannelLeft());
+            leaveWaiter.initWaiter(event.getChannelLeft(), client);
         }
 
     }

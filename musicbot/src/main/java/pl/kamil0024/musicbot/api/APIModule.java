@@ -27,6 +27,7 @@ import pl.kamil0024.musicbot.core.Ustawienia;
 import pl.kamil0024.musicbot.core.module.Modul;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
+import pl.kamil0024.musicbot.socket.SocketClient;
 
 @Getter
 public class APIModule implements Modul {
@@ -34,23 +35,25 @@ public class APIModule implements Modul {
     private final ShardManager api;
     private final MusicManager musicManager;
     private final EventWaiter eventWaiter;
+    private final SocketClient client;
     private boolean start = false;
 
     private final Guild guild;
 
     private LeaveVcListener leaveVcListener;
 
-    public APIModule(ShardManager api, MusicManager musicManager, EventWaiter eventWaiter) {
+    public APIModule(ShardManager api, MusicManager musicManager, EventWaiter eventWaiter, SocketClient client) {
         this.api = api;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
         this.musicManager = musicManager;
         this.eventWaiter = eventWaiter;
+        this.client = client;
     }
 
     @Override
     public boolean startUp() {
-        this.leaveVcListener = new LeaveVcListener(musicManager, eventWaiter);
+        this.leaveVcListener = new LeaveVcListener(musicManager, eventWaiter, client);
         api.addEventListener(leaveVcListener);
         return true;
     }

@@ -69,7 +69,7 @@ public class SocketClient extends Thread {
                    socket = new Socket("localhost", 7070);
                    output = socket.getOutputStream();
                    writer = new PrintWriter(output, true);
-                   writer.println("setBotId: " + Ustawienia.instance.bot.botId);
+                   sendMessage("setBotId: " + Ustawienia.instance.bot.botId);
                    break;
                } catch(UnknownHostException ignored) {
                } catch (Exception e) {
@@ -180,7 +180,9 @@ public class SocketClient extends Thread {
                     response = action.disconnect();
                     break;
                 case "connect":
-                    response = action.connect((String) socketAction.getArgs().get("voiceChannel"));
+                    String ch = (String) socketAction.getArgs().get("voiceChannel");
+                    response = action.connect(ch);
+                    if (response.isSuccess()) sendMessage("setChannel: " + ch);
                     break;
                 case "playingtrack":
                     response = action.playingTrack();
@@ -215,7 +217,9 @@ public class SocketClient extends Thread {
         writer.println(GSON.toJson(response));
     }
 
-
+    public void sendMessage(String msg) {
+        writer.println(msg);
+    }
 
     @Data
     @AllArgsConstructor
@@ -241,5 +245,7 @@ public class SocketClient extends Thread {
         private Object data;
 
     }
+
+    // TODO: Event 'onVoiceChatLeave - jeżeli wychodzący to będzie bot to sendMessage("setChannel: null")'
 
 }

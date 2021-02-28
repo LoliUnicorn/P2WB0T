@@ -35,6 +35,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.musicbot.core.Ustawienia;
+import pl.kamil0024.musicbot.socket.SocketClient;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,8 +45,8 @@ import java.util.Map;
 public class MusicManager {
 
     private final ShardManager api;
-
     private final AudioPlayerManager playerManager;
+
     @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
     public YoutubeAudioSourceManager youtubeSourceManager;
@@ -55,6 +56,7 @@ public class MusicManager {
         this.musicManagers = new HashMap<>();
         this.playerManager = new DefaultAudioPlayerManager();
         this.youtubeSourceManager = new YoutubeAudioSourceManager(true);
+
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
 

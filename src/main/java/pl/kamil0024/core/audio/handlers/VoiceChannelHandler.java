@@ -22,6 +22,10 @@ package pl.kamil0024.core.audio.handlers;
 import lombok.Getter;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
+import net.dv8tion.jda.api.audio.hooks.ConnectionListener;
+import net.dv8tion.jda.api.audio.hooks.ConnectionStatus;
+import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
 import pl.kamil0024.core.logger.Log;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class VoiceChannelHandler implements AudioReceiveHandler {
+public class VoiceChannelHandler implements AudioReceiveHandler, ConnectionListener {
 
     private final List<byte[]> bytes = new ArrayList<>();
 
@@ -81,6 +85,23 @@ public class VoiceChannelHandler implements AudioReceiveHandler {
     public void handleCombinedAudio(CombinedAudio combinedAudio) {
         if (combinedAudio.getUsers().isEmpty()) return;
         bytes.add(combinedAudio.getAudioData(1.0f));
+    }
+
+
+    @Override
+    public void onPing(long ping) {
+
+    }
+
+    @Override
+    public void onStatusChange(@NotNull ConnectionStatus status) {
+
+    }
+
+    @Override
+    public void onUserSpeaking(@NotNull User user, boolean speaking) {
+        Log.debug("User: " + user.getId());
+        Log.debug("speaking: " + speaking);
     }
 
 }

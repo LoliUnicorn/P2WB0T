@@ -32,7 +32,6 @@ import pl.kamil0024.musicbot.core.module.ModulManager;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.core.util.Statyczne;
 import pl.kamil0024.musicbot.core.util.Tlumaczenia;
-import pl.kamil0024.musicbot.music.MusicModule;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 import pl.kamil0024.musicbot.socket.SocketClient;
 
@@ -124,13 +123,13 @@ public class B0T {
         this.modulManager = new ModulManager();
 
         MusicManager musicManager = new MusicManager(api);
-        APIModule apiModule = new APIModule(api, musicManager, eventWaiter);
-
         SocketClient client = new SocketClient(musicManager, api);
+
         client.start();
 
+        APIModule apiModule = new APIModule(api, musicManager, eventWaiter, client);
+
         modulManager.getModules().add(apiModule);
-        modulManager.getModules().add(new MusicModule(api, musicManager));
 
         for (Modul modul : modulManager.getModules()) {
             try {

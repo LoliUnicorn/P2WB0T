@@ -49,6 +49,7 @@ public class PrivateLeaveCommand extends Command {
         }
         socketManager.getAction(context.getMember().getId(), context.getChannel().getId(), client.getSocketId())
                 .disconnect();
+        client.setVoiceChannel(null);
         return true;
 
     }

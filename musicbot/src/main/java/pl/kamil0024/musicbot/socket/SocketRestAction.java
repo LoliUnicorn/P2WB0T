@@ -72,7 +72,7 @@ public class SocketRestAction {
         VoiceChannel vc = api.getVoiceChannelById(channelId);
 
         if (vc == null) {
-            response.setErrorMessage("Nie udało się znaleźć kanału o ID: " + channelId);;
+            response.setErrorMessage("Nie udało się znaleźć kanału o ID: " + channelId);
             return response;
         }
 

@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import pl.kamil0024.musicbot.core.util.EventWaiter;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
+import pl.kamil0024.musicbot.socket.SocketClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class LeaveWaiter {
         this.czekaja = new ArrayList<>();
     }
 
-    public void initWaiter(VoiceChannel vc) {
+    public void initWaiter(VoiceChannel vc, SocketClient socketClient) {
         if (czekaja.contains(vc.getGuild().getId())) return;
 
         czekaja.add(vc.getGuild().getId());
@@ -50,6 +51,7 @@ public class LeaveWaiter {
                 () -> {
                     if (LeaveVcListener.leave(vc) || vc.getMembers().size() == 1) {
                         musicManager.getGuildAudioPlayer(vc.getGuild()).destroy();
+                        socketClient.sendMessage("setChannel: null");
                     }
                     czekaja.remove(vc.getGuild().getId());
                 }
