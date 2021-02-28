@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WeryfikacjaModule extends ListenerAdapter implements Modul {
 
-    private final APIModule apiModule;
+    public final APIModule apiModule;
     private final MultiDao multiDao;
     private final ModLog modLog;
     private final CaseDao caseDao;
