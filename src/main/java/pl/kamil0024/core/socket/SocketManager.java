@@ -77,7 +77,14 @@ public class SocketManager {
         }
 
         try {
-            Response response = SocketServer.GSON.fromJson(socketJson.getJson(), Response.class);
+            Response response;
+            try {
+                response = SocketServer.GSON.fromJson(socketJson.getJson(), Response.class);
+            } catch (Exception e) {
+                Log.newError("Nie udało się zamienić tekstu na JSONa!\nJSON: " + socketJson.getJson(), getClass());
+                return;
+            }
+
             if (response.getAction().getTopic().equals("shutdown")) return;
 
             TextChannel txt = api.getTextChannelById(response.getAction().getChannelId());
@@ -124,8 +131,7 @@ public class SocketManager {
             }
 
         } catch (Exception e) {
-            Log.newError("Wystapil blad podczas przetwarzania wiadomosci od socketa! W logach masz wiecej informacji", getClass());
-            Log.error(socketJson.getJson());
+            Log.newError("Wystapil blad podczas przetwarzania wiadomosci od socketa! W logach masz wiecej informacji\nJSON: " + socketJson.getJson(), getClass());
             Log.newError(e, getClass());
         }
 
