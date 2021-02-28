@@ -131,7 +131,7 @@ public class APIModule implements Modul {
         routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
         routes.get("api/youtrack/reports", new YouTrackReport(api));
         routes.post("api/react/addmember/{id}", new AddMember(api));
-
+// k
         routes.post("api/weryfikacja/join", new WeryfikacjaJoinHandler(this, api));
 
         this.server = Undertow.builder()

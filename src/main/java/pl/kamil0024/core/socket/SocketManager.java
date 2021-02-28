@@ -70,10 +70,11 @@ public class SocketManager {
             clients.get(socketJson.getId()).setBotId(id);
             botIds.put(socketJson.getId(), id);
             return;
-        } else if (socketJson.getJson().startsWith("setChannel: ")) {
+        } else if (socketJson.getJson().startsWith("setChannel:")) {
             String channelId = socketJson.getJson().split("setChannel: ")[1];
             if (channelId.equals("null")) clients.get(socketJson.getId()).setVoiceChannel(null);
             else clients.get(socketJson.getId()).setVoiceChannel(channelId);
+            return;
         }
 
         try {
