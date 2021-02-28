@@ -25,6 +25,8 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.bdate.BDate;
+import pl.kamil0024.core.command.enums.PermLevel;
+import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.database.CaseDao;
@@ -219,7 +221,12 @@ public class WeryfikacjaModule extends ListenerAdapter implements Modul {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (!event.getChannel().getId().equals("740157959207780362") || event.getUser().isBot() || !event.isFromGuild()) return;
-        event.getReaction().removeReaction().queue();
+
+        try {
+            if (UserUtil.getPermLevel(event.getMember()).getNumer() < PermLevel.MODERATOR.getNumer()) {
+                event.getReaction().removeReaction().queue();
+            }
+        } catch (Exception ignored) { }
 
         DiscordInviteConfig conf = apiModule.getNewWery().getIfPresent(event.getUserId());
         if (conf == null) return;
