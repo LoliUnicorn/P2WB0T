@@ -60,6 +60,7 @@ public class APIModule implements Modul {
     private final DeletedMessagesDao deletedMessagesDao;
 
     private final Cache<DiscordInviteConfig> dcCache;
+    private final Cache<DiscordInviteConfig> newWery;
 
     private final Guild guild;
 
@@ -82,6 +83,7 @@ public class APIModule implements Modul {
         this.deletedMessagesDao = deletedMessagesDao;
 
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(3600);
+        this.newWery = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(3600);
     }
 
     @Override
@@ -129,6 +131,8 @@ public class APIModule implements Modul {
         routes.get("api/discord/{token}/{nick}/{ranga}/{kod}", new DiscordInvite(this));
         routes.get("api/youtrack/reports", new YouTrackReport(api));
         routes.post("api/react/addmember/{id}", new AddMember(api));
+
+        routes.post("api/weryfikacja/join", new WeryfikacjaJoinHandler(this, api));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

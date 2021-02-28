@@ -88,8 +88,7 @@ public class RecordingCommand extends Command {
 
             VoiceChannelHandler h = new VoiceChannelHandler(String.valueOf(new Random().nextInt(Integer.MAX_VALUE)), context.getUser().getId());
             manager.setReceivingHandler(h);
-            manager.setConnectionListener(h);
-            
+
             setHandler(h);
             try {
                 manager.openAudioConnection(PlayCommand.getVc(context.getMember()));

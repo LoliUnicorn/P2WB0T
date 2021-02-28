@@ -21,6 +21,7 @@ package pl.kamil0024.weryfikacja;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pl.kamil0024.api.APIModule;
 import pl.kamil0024.bdate.BDate;
@@ -96,19 +97,26 @@ public class WeryfikacjaModule extends ListenerAdapter implements Modul {
                     .queue(m -> m.delete().queueAfter(11, TimeUnit.SECONDS));
             return;
         }
+        executeCode(member.getId(), dc, channel, g);
+    }
 
-        WeryfikacjaConfig wc = weryfikacjaDao.get(dc.getNick());
-        if (wc != null && !wc.getDiscordId().equals(member.getId())) {
+    public void executeCode(String userId, DiscordInviteConfig config, MessageChannel channel, Guild g) {
+
+        Member member = g.getMemberById(userId);
+        if (member == null) return;
+
+        WeryfikacjaConfig wc = weryfikacjaDao.get(config.getNick());
+        if (wc != null && !wc.getDiscordId().equals(userId)) {
             channel.sendMessage(member.getAsMention() + " nick, na którym próbujesz wejść ma już przypisane konto Discord. Jedno konto Minecraft może być przypisane **tylko** do jednego konta Discord! Jeżeli straciłeś/aś dostęp do starego konta, napisz do nas!")
                     .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
-            apiModule.getDcCache().invalidate(dc.getKod());
+            apiModule.getDcCache().invalidate(config.getKod());
             return;
         }
 
         Role ranga = null;
         String nickname = null;
 
-        switch (dc.getRanga()) {
+        switch (config.getRanga()) {
             case "Gracz":
                 ranga = g.getRoleById(Ustawienia.instance.rangi.gracz);
                 nickname = "";
@@ -169,15 +177,15 @@ public class WeryfikacjaModule extends ListenerAdapter implements Modul {
         }
 
         try {
-            g.modifyNickname(member, nickname + " " + dc.getNick()).complete();
+            g.modifyNickname(member, nickname + " " + config.getNick()).complete();
         } catch (Exception ignored) {}
 
         MultiConfig conf = multiDao.get(member.getId());
-        conf.getNicki().add(new Nick(nickname + " " + dc.getNick(), new BDate().getTimestamp()));
+        conf.getNicki().add(new Nick(nickname + " " + config.getNick(), new BDate().getTimestamp()));
         multiDao.save(conf);
 
         modLog.checkKara(member, true,
-                caseDao.getNickAktywne(dc.getNick().replace(" ", "")));
+                caseDao.getNickAktywne(config.getNick().replace(" ", "")));
 
         channel.sendMessage(member.getAsMention() + ", pomyślnie zweryfikowano. Witamy na serwerze sieci P2W!")
                 .allowedMentions(Collections.singleton(Message.MentionType.USER))
@@ -188,12 +196,12 @@ public class WeryfikacjaModule extends ListenerAdapter implements Modul {
             mk.check();
         }
 
-        WeryfikacjaConfig werc = new WeryfikacjaConfig(dc.getNick());
+        WeryfikacjaConfig werc = new WeryfikacjaConfig(config.getNick());
         werc.setDiscordId(member.getId());
         werc.setTime(new Date().getTime());
         weryfikacjaDao.save(werc);
 
-        apiModule.getDcCache().invalidate(dc.getKod());
+        apiModule.getDcCache().invalidate(config.getKod());
     }
 
     @Override
@@ -204,7 +212,20 @@ public class WeryfikacjaModule extends ListenerAdapter implements Modul {
         try {
             event.getMessage().delete().complete();
         } catch (Exception ignored) { }
+
         executeCode(event.getMember(), event.getChannel(), msg, event.getGuild());
+    }
+
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent event) {
+        if (!event.getChannel().getId().equals("740157959207780362") || event.getUser().isBot() || !event.isFromGuild()) return;
+        event.getReaction().removeReaction().queue();
+
+        DiscordInviteConfig conf = apiModule.getNewWery().getIfPresent(event.getUserId());
+        if (conf == null) return;
+
+        executeCode(event.getUserId(), conf, event.getChannel(), event.getGuild());
+        apiModule.getNewWery().invalidate(event.getUserId());
     }
 
 }
