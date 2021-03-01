@@ -131,7 +131,6 @@ public class SocketRestAction {
         if (manager.getPlayer().getPlayingTrack() != null) {
             klele.add(manager.getPlayer().getPlayingTrack());
         }
-
         if (klele.isEmpty()) {
             response.setSuccess(false);
             response.setMessageType("message");
@@ -139,7 +138,6 @@ public class SocketRestAction {
             return response;
         }
         List<String> traki = new ArrayList<>();
-        traki.add(0, manager.getPlayer().getPlayingTrack().getIdentifier());
         klele.forEach(t -> traki.add(t.getIdentifier()));
         response.setSuccess(true);
         response.setMessageType("list");
