@@ -122,12 +122,12 @@ public class B0T {
 
         this.modulManager = new ModulManager();
 
+
+
         MusicManager musicManager = new MusicManager(api);
-        SocketClient client = new SocketClient(musicManager, api);
+        musicManager.socketClient.start();
 
-        client.start();
-
-        APIModule apiModule = new APIModule(api, musicManager, eventWaiter, client);
+        APIModule apiModule = new APIModule(api, musicManager, eventWaiter);
 
         modulManager.getModules().add(apiModule);
 

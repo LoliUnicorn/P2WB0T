@@ -88,6 +88,14 @@ public class SocketManager {
 
             if (response.getAction().getTopic().equals("shutdown")) return;
 
+            if (response.getAction().getTopic().equals("queueupdate")) {
+                SocketClient socket = clients.get(response.getAction().getSocketId());
+                String[] queueListData = SocketServer.GSON.fromJson(socketJson.getJson(), String[].class);
+                socket.setTracksList(Arrays.asList(queueListData));
+                Log.debug("Queue socketa wynosi teraz: " + socketJson.getJson());
+                return;
+            }
+
             TextChannel txt = api.getTextChannelById(response.getAction().getChannelId());
             if (txt == null) throw new NullPointerException("Kanal jakims cudem jest nullem");
             String ping = String.format("<@%s>", response.getAction().getMemberId());

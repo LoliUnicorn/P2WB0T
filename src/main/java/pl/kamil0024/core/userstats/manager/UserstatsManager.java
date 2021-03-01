@@ -102,9 +102,19 @@ public class UserstatsManager extends ListenerAdapter {
         new Thread(() -> {
             try {
                 Set<Map.Entry<String, UserstatsConfig.Config>> saveConf = config.asMap().entrySet();
+                Map<String, VoiceStateConfig> voiceConf = voiceStateConfig.asMap();
                 try {
                     config.invalidateAll();
                 } catch (JedisDataException ignored) { }
+                try {
+                    voiceStateConfig.invalidateAll();
+                } catch (JedisDataException ignored) { }
+
+                Date date = new Date();
+                for (Map.Entry<String, VoiceStateConfig> entry : voiceConf.entrySet()) {
+                    entry.getValue().setLastDate(date.getTime());
+                    entry.getValue().setFullTimestamp(entry.getValue().getFullTimestamp() + (date.getTime() - entry.getValue().getLastDate()));
+                }
 
                 Map<Long, UserstatsConfig> map = new HashMap<>();
 
@@ -114,6 +124,11 @@ public class UserstatsManager extends ListenerAdapter {
                         String sdate = split[0];
                         String member = split[1];
                         long ldate = Long.parseLong(sdate);
+
+                        VoiceStateConfig vsc = voiceConf.get(sdate + "-" + member);
+                        if (vsc != null) {
+                            entry.getValue().setVoiceTimestamp(vsc.getFullTimestamp());
+                        }
 
                         UserstatsConfig conf = map.getOrDefault(ldate, new UserstatsConfig(ldate));
                         conf.getMembers().put(member, entry.getValue());
@@ -125,7 +140,7 @@ public class UserstatsManager extends ListenerAdapter {
                         Log.newError(e, getClass());
                     }
                 }
-                
+
                 for (UserstatsConfig v : map.values()) {
                     UserstatsConfig dConf = userstatsDao.get(v.getDate());
                     if (dConf == null) {
@@ -149,6 +164,7 @@ public class UserstatsManager extends ListenerAdapter {
                     }
                 }
 
+                loadVoice();
             } catch (Exception e) {
                 Log.newError(e, getClass());
             }

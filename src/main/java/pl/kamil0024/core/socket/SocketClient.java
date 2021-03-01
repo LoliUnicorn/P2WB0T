@@ -28,6 +28,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SocketClient {
 
@@ -42,8 +43,8 @@ public class SocketClient {
     @Getter @Setter
     private String voiceChannel = null;
 
-    @Getter
-    private final ArrayList<String> tracksList = new ArrayList<>();
+    @Getter @Setter
+    private List<String> tracksList = new ArrayList<>();
 
     @Getter @Setter
     private String botId;

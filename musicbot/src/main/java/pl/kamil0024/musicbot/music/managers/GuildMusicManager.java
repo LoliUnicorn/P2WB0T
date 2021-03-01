@@ -27,8 +27,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.musicbot.music.managers.entity.AudioPlayerSendHandler;
+import pl.kamil0024.musicbot.socket.SocketClient;
+import pl.kamil0024.musicbot.socket.SocketRestAction;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,16 +41,18 @@ public class GuildMusicManager extends AudioEventAdapter {
     @Getter public AudioPlayer player;
     @Getter public AudioManager audioManager;
     @Getter public AudioPlayerManager manager;
+    @Getter public SocketClient socketClient;
 
     @Getter public final BlockingQueue<AudioTrack> queue;
 
     @Getter @Setter public AudioTrack aktualnaPiosenka = null;
     @Getter @Setter public Boolean destroy = false;
 
-    public GuildMusicManager(AudioPlayerManager manager, AudioManager audioManager) {
+    public GuildMusicManager(AudioPlayerManager manager, AudioManager audioManager, SocketClient socketClient) {
         this.audioManager = audioManager;
         this.queue = new LinkedBlockingQueue<>();
         this.manager = manager;
+        this.socketClient = socketClient;
         player = this.manager.createPlayer();
         player.addListener(this);
     }
@@ -73,6 +78,8 @@ public class GuildMusicManager extends AudioEventAdapter {
             destroy();
             return null;
         }
+        SocketRestAction action = new SocketRestAction(socketClient.api, socketClient.musicManager);
+        socketClient.sendMessage(action.updateQueue());
 
         player.startTrack(next, false);
         setAktualnaPiosenka(next);

@@ -42,13 +42,13 @@ public class APIModule implements Modul {
 
     private LeaveVcListener leaveVcListener;
 
-    public APIModule(ShardManager api, MusicManager musicManager, EventWaiter eventWaiter, SocketClient client) {
+    public APIModule(ShardManager api, MusicManager musicManager, EventWaiter eventWaiter) {
         this.api = api;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
         this.musicManager = musicManager;
         this.eventWaiter = eventWaiter;
-        this.client = client;
+        this.client = musicManager.socketClient;
     }
 
     @Override

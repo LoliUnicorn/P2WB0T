@@ -46,6 +46,7 @@ public class MusicManager {
 
     private final ShardManager api;
     private final AudioPlayerManager playerManager;
+    public final SocketClient socketClient;
 
     @Getter public final Map<Long, GuildMusicManager> musicManagers;
 
@@ -56,6 +57,7 @@ public class MusicManager {
         this.musicManagers = new HashMap<>();
         this.playerManager = new DefaultAudioPlayerManager();
         this.youtubeSourceManager = new YoutubeAudioSourceManager(true);
+        this.socketClient = new SocketClient(this, api);
 
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
@@ -76,7 +78,7 @@ public class MusicManager {
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null || musicManager.getPlayer() == null || musicManager.getDestroy()) {
-            musicManager = new GuildMusicManager(playerManager, guild.getAudioManager());
+            musicManager = new GuildMusicManager(playerManager, guild.getAudioManager(), socketClient);
             musicManagers.put(guildId, musicManager);
         }
 

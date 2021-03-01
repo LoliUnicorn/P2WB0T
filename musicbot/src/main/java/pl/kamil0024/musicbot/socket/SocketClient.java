@@ -28,6 +28,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
@@ -37,6 +40,7 @@ import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -50,12 +54,14 @@ public class SocketClient extends Thread {
     OutputStream output;
     PrintWriter writer;
 
-    private final MusicManager musicManager;
-    private final ShardManager api;
+    public final MusicManager musicManager;
+    public final ShardManager api;
 
     public SocketClient(MusicManager musicManager, ShardManager api) {
         this.musicManager = musicManager;
         this.api = api;
+        LeaveListener listener = new LeaveListener();
+        api.addEventListener(listener);
     }
 
     @Override
@@ -182,13 +188,15 @@ public class SocketClient extends Thread {
                 case "connect":
                     String ch = (String) socketAction.getArgs().get("voiceChannel");
                     response = action.connect(ch);
-                    if (response.isSuccess()) sendMessage("setChannel: " + ch);
                     break;
                 case "playingtrack":
                     response = action.playingTrack();
                     break;
                 case "queue":
                     response = action.queue();
+                    break;
+                case "queueupdate":
+                    response = action.updateQueue();
                     break;
                 case "shutdown":
                     response = action.shutdown();
@@ -246,6 +254,22 @@ public class SocketClient extends Thread {
 
     }
 
-    // TODO: Event 'onVoiceChatLeave - jeżeli wychodzący to będzie bot to sendMessage("setChannel: null")'
+    private class LeaveListener extends ListenerAdapter {
+
+        @Override
+        public void onGuildVoiceLeave(@Nonnull GuildVoiceLeaveEvent event) {
+            if (event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
+                sendMessage("setChannel: null");
+            }
+        }
+
+        @Override
+        public void onGuildVoiceJoin(@Nonnull GuildVoiceJoinEvent event) {
+            if (event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
+                sendMessage("setChannel: " + event.getChannelJoined().getId());
+            }
+        }
+
+    }
 
 }

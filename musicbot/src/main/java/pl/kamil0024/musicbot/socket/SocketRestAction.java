@@ -28,13 +28,11 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.musicbot.api.handlers.Connect;
 import pl.kamil0024.musicbot.api.handlers.QueueHandler;
-import pl.kamil0024.musicbot.core.logger.Log;
 import pl.kamil0024.musicbot.music.managers.GuildMusicManager;
 import pl.kamil0024.musicbot.music.managers.MusicManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +120,26 @@ public class SocketRestAction {
         klele.forEach(t -> traki.add(new QueueHandler.Track(t)));
         response.setSuccess(true);
         response.setMessageType("queuelist");
+        response.setData(traki);
+        return response;
+    }
+
+    public SocketClient.Response updateQueue() {
+        SocketClient.Response response = new SocketClient.Response();
+        GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
+        List<AudioTrack> klele = new ArrayList<>(manager.getQueue());
+
+        if (klele.isEmpty() && manager.getPlayer().getPlayingTrack() == null) {
+            response.setSuccess(false);
+            response.setMessageType("message");
+            response.setErrorMessage("kolejka jest pusta!");
+            return response;
+        }
+        List<String> traki = new ArrayList<>();
+        traki.add(0, manager.getPlayer().getPlayingTrack().getIdentifier());
+        klele.forEach(t -> traki.add(t.getIdentifier()));
+        response.setSuccess(true);
+        response.setMessageType("list");
         response.setData(traki);
         return response;
     }

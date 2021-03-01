@@ -58,7 +58,6 @@ public class LeaveVcListener extends ListenerAdapter {
             return;
         }
         musicManager.getMusicManagers().get(guild.getIdLong()).destroy();
-        client.sendMessage("setChannel: null");
     }
 
     @Override
@@ -70,7 +69,6 @@ public class LeaveVcListener extends ListenerAdapter {
         }
         if (event.getEntity().getId().equals(event.getGuild().getSelfMember().getId())) {
             musicManager.getMusicManagers().get(guild.getIdLong()).destroy();
-            client.sendMessage("setChannel: null");
             return;
         }
 
