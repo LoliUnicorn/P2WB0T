@@ -128,8 +128,11 @@ public class SocketRestAction {
         SocketClient.Response response = new SocketClient.Response();
         GuildMusicManager manager = musicManager.getGuildAudioPlayer(Connect.getGuild(api));
         List<AudioTrack> klele = new ArrayList<>(manager.getQueue());
+        if (manager.getPlayer().getPlayingTrack() != null) {
+            klele.add(manager.getPlayer().getPlayingTrack());
+        }
 
-        if (klele.isEmpty() && manager.getPlayer().getPlayingTrack() == null) {
+        if (klele.isEmpty()) {
             response.setSuccess(false);
             response.setMessageType("message");
             response.setErrorMessage("kolejka jest pusta!");

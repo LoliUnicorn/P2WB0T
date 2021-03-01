@@ -89,6 +89,11 @@ public class SocketManager {
             if (response.getAction().getTopic().equals("shutdown")) return;
 
             if (response.getAction().getTopic().equals("queueupdate")) {
+                if (!response.isSuccess()) {
+                    Log.error("Nie udało się aktualizować kolejki!");
+                    Log.error(SocketServer.GSON.toJson(socketJson));
+                    return;
+                }
                 SocketClient socket = clients.get(response.getAction().getSocketId());
                 String[] queueListData = SocketServer.GSON.fromJson(socketJson.getJson(), String[].class);
                 socket.setTracksList(Arrays.asList(queueListData));

@@ -151,6 +151,7 @@ public class SocketClient extends Thread {
                     musicManager.play(guild, serwerManager, track, vc);
                     Response r = new Response(socketAction, true, "embedtrack", null, new QueueHandler.Track(track));
                     sendMessage(r);
+                    sendMessage(action.updateQueue());
                 }
 
                 @Override
@@ -160,6 +161,7 @@ public class SocketClient extends Thread {
                     }
                     Response r = new Response(socketAction, true, "message", null, "dodano " + playlist.getTracks().size() + " piosenek do kolejki (max. limit w kolejce to **10**).");
                     sendMessage(r);
+                    sendMessage(action.updateQueue());
                 }
 
                 @Override
