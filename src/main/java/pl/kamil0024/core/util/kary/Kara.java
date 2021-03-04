@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.Nullable;
 import pl.kamil0024.core.util.DowodWaiter;
 import pl.kamil0024.moderation.listeners.ModLog;
 import pl.kamil0024.core.Ustawienia;
@@ -83,9 +84,9 @@ public class Kara {
         return cc;
     }
 
-    public static synchronized void put(CaseDao caseDao, Kara kara, ModLog modLog, EventWaiter eventWaiter, String userId, TextChannel channel, CaseDao cd) {
+    public static synchronized void put(CaseDao caseDao, Kara kara, ModLog modLog, EventWaiter eventWaiter, String userId, @Nullable TextChannel channel, CaseDao cd) {
         CaseConfig cc = put(caseDao, kara, modLog);
-        if (eventWaiter != null) {
+        if (eventWaiter != null && channel != null) {
             new DowodWaiter(userId, cc, cd, channel, eventWaiter, null).start();
         }
     }

@@ -223,7 +223,7 @@ public class PunishCommand extends Command {
         return Kara.check(context, osoba.getUser()) == null && !MuteCommand.hasMute(osoba);
     }
 
-    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod, @Nullable EventWaiter eventWaiter) {
+    public static void putPun(KaryJSON.Kara kara, List<Member> osoby, Member member, @Nullable TextChannel txt, CaseDao caseDao, ModLog modLog, StatsModule statsModule, @Nullable Dowod dowod, @Nullable EventWaiter eventWaiter) {
         for (Member osoba : osoby) {
             int jegoWarny = 1;
             List<CaseConfig> cc = caseDao.getAllPunAktywne(osoba.getId());
@@ -244,7 +244,7 @@ public class PunishCommand extends Command {
                 }
             }
 
-            if (!member.getId().equals(Ustawienia.instance.bot.botId) && !txt.getId().equals(Ustawienia.instance.channel.moddc)) {
+            if (txt != null && !member.getId().equals(Ustawienia.instance.bot.botId) && !txt.getId().equals(Ustawienia.instance.channel.moddc)) {
                 String msg = "Daje karę **%s** dla **%s** za **%s** na czas **%s**";
                 txt.sendMessage(String.format(msg, KaryEnum.getName(jegoTier.getType()), UserUtil.getMcNick(osoba), kara.getPowod(), jegoTier.getDuration()))
                         .queue(m -> m.delete().queueAfter(8, TimeUnit.SECONDS));
@@ -296,7 +296,7 @@ public class PunishCommand extends Command {
                 default:
                     Log.newError("Typ " + jegoTier.getType().name() + " nie jest wpisany!", PunishCommand.class);
             }
-            if (osoby.size() == 1 && eventWaiter != null) {
+            if (osoby.size() == 1 && eventWaiter != null && txt != null) {
                 Kara.put(caseDao, karaBuilder, modLog, eventWaiter, member.getId(), txt, caseDao);
             } else Kara.put(caseDao, karaBuilder, modLog);
         }

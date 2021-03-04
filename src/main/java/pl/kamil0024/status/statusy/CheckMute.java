@@ -30,6 +30,7 @@ import pl.kamil0024.core.Ustawienia;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -56,15 +57,15 @@ public class CheckMute extends TimerTask {
                 if (ryba == null) throw new NullPointerException("rola wyciszony jest nullem");
                 assert !member.getRoles().contains(ekipa) && !member.getRoles().contains(ryba);
                 try {
-                    List<String> statusy = WulgarneStatusy.getAvtivity(member);
-                    String inv = WulgarneStatusy.containsLink(statusy);
-                    String wulgarne = WulgarneStatusy.containsSwear(statusy);
+                    List<String> statusy = new ArrayList<>(); // WulgarneStatusy.getAvtivity(member);
+                    String inv = ""; // WulgarneStatusy.containsLink(statusy);
+                    String wulgarne = ""; // WulgarneStatusy.containsSwear(statusy);
                     if ((inv != null && !inv.isEmpty()) || (wulgarne != null && !wulgarne.isEmpty())) {
                         String powod = inv == null ? wulgarne : inv;
                         if (powod.isEmpty()) throw new NullPointerException("powod jest nullem");
                         if (!member.getRoles().contains(ryba) && !member.getRoles().contains(ekipa)) {
                             guild.addRoleToMember(member, ryba).queue();
-                            String txt = WulgarneStatusy.getPrivateChannel(member);
+                            String txt = ""; //WulgarneStatusy.getPrivateChannel(member);
                             if (txt != null) {
                                 TextChannel tc = guild.getTextChannelById(txt);
                                 if (tc != null) {

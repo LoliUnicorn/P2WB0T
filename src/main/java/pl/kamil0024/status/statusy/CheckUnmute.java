@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import pl.kamil0024.core.util.UserUtil;
 import pl.kamil0024.core.util.WebhookUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -55,12 +56,12 @@ public class CheckUnmute extends TimerTask {
 
         for (Member member : txt.getMembers()) {
             if (member.getRoles().contains(ryba)) {
-                List<String> statusy = WulgarneStatusy.getAvtivity(member);
-                String inv = WulgarneStatusy.containsLink(statusy);
-                String wulgarne = WulgarneStatusy.containsSwear(statusy);
+                List<String> statusy = new ArrayList<>(); // WulgarneStatusy.getAvtivity(member);
+                String inv = ""; // WulgarneStatusy.containsLink(statusy);
+                String wulgarne = ""; // WulgarneStatusy.containsSwear(statusy);
                 if (inv == null && wulgarne == null) {
                     guild.removeRoleFromMember(member, ryba).queue();
-                    String stringtxt = WulgarneStatusy.getPrivateChannel(member);
+                    String stringtxt = ""; // WulgarneStatusy.getPrivateChannel(member);
                     if (stringtxt != null) {
                         TextChannel tc = guild.getTextChannelById(stringtxt);
                         if (tc != null) {

@@ -35,7 +35,11 @@ import pl.kamil0024.core.database.config.DiscordInviteConfig;
 import pl.kamil0024.core.module.Modul;
 import pl.kamil0024.core.redis.Cache;
 import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.util.kary.KaryJSON;
 import pl.kamil0024.embedgenerator.entity.EmbedRedisManager;
+import pl.kamil0024.moderation.listeners.ModLog;
+import pl.kamil0024.stats.StatsModule;
+import pl.kamil0024.status.StatusModule;
 
 import static io.undertow.Handlers.path;
 
@@ -58,18 +62,26 @@ public class APIModule implements Modul {
     private final AcBanDao acBanDao;
     private final RecordingDao recordingDao;
     private final DeletedMessagesDao deletedMessagesDao;
+    private final StatusModule statusModule;
+
+    private final KaryJSON karyJSON;
+    private final ModLog modLog;
+    private final StatsModule statsModule;
 
     private final Cache<DiscordInviteConfig> dcCache;
     private final Cache<DiscordInviteConfig> newWery;
 
     private final Guild guild;
 
-    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, AcBanDao acBanDao, RecordingDao recordingDao, DeletedMessagesDao deletedMessagesDao) {
+    public APIModule(ShardManager api, CaseDao caseDao, RedisManager redisManager, NieobecnosciDao nieobecnosciDao, StatsDao statsDao, VoiceStateDao voiceStateDao, TicketDao ticketDao, ApelacjeDao apelacjeDao, AnkietaDao ankietaDao, EmbedRedisManager embedRedisManager, AcBanDao acBanDao, RecordingDao recordingDao, DeletedMessagesDao deletedMessagesDao, KaryJSON karyJSON, ModLog modLog, StatsModule statsModule, StatusModule statusModule) {
         this.api = api;
         this.redisManager = redisManager;
         this.guild = api.getGuildById(Ustawienia.instance.bot.guildId);
         if (guild == null) throw new UnsupportedOperationException("Gildia docelowa jest nullem!");
 
+        this.karyJSON = karyJSON;
+        this.modLog = modLog;
+        this.statsModule = statsModule;
         this.caseDao = caseDao;
         this.nieobecnosciDao = nieobecnosciDao;
         this.statsDao = statsDao;
@@ -81,6 +93,7 @@ public class APIModule implements Modul {
         this.acBanDao = acBanDao;
         this.recordingDao = recordingDao;
         this.deletedMessagesDao = deletedMessagesDao;
+        this.statusModule = statusModule;
 
         this.dcCache = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(3600);
         this.newWery = redisManager.new CacheRetriever<DiscordInviteConfig>() {}.getCache(3600);
@@ -133,6 +146,8 @@ public class APIModule implements Modul {
         routes.post("api/react/addmember/{id}", new AddMember(api));
 
         routes.post("api/weryfikacja/join", new WeryfikacjaJoinHandler(this, api));
+
+        routes.post("api/case/put", new CasePuyHandler(statusModule, karyJSON, modLog, statsModule, api, caseDao));
 
         this.server = Undertow.builder()
                 .addHttpListener(Ustawienia.instance.api.port, "0.0.0.0")

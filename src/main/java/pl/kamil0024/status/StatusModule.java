@@ -19,40 +19,77 @@
 
 package pl.kamil0024.status;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import pl.kamil0024.core.Ustawienia;
+import pl.kamil0024.core.logger.Log;
 import pl.kamil0024.core.module.Modul;
-import pl.kamil0024.status.listeners.ChangeNickname;
-import pl.kamil0024.status.statusy.CheckMute;
-import pl.kamil0024.status.statusy.CheckUnmute;
+import pl.kamil0024.core.redis.Cache;
+import pl.kamil0024.core.redis.RedisManager;
+import pl.kamil0024.core.util.NetworkUtil;
+import pl.kamil0024.status.statusy.WulgarneStatusy;
 
-import java.util.Timer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class StatusModule implements Modul {
 
-    private boolean start = false;
-    private ChangeNickname changeNickname;
-
     private final ShardManager api;
+    public final Cache<String> cache;
 
-
-    public StatusModule(ShardManager api) {
+    public StatusModule(ShardManager api, RedisManager redisManager) {
         this.api = api;
+        this.cache = redisManager.new CacheRetriever<String>() {}.getCache(7200);
     }
+
+    private boolean start = false;
+    private final WulgarneStatusy wulgarneStatusy = new WulgarneStatusy();
 
     @Override
     public boolean startUp() {
-        this.changeNickname = new ChangeNickname();
-        Timer tim = new Timer();
-        tim.schedule(new CheckMute(api), 0, 120000); // 300000
-        tim.schedule(new CheckUnmute(api), 0, 120000); // 180000
-        api.addEventListener(changeNickname);
+        ScheduledExecutorService executorSche = Executors.newSingleThreadScheduledExecutor();
+        executorSche.scheduleAtFixedRate(() -> check(api), 0, 30, TimeUnit.MINUTES);
+
         setStart(true);
         return true;
     }
 
+    private void check(ShardManager api) {
+        try {
+            Map<String, String> statusy = new HashMap<>();
+            Guild g = api.getGuildById(Ustawienia.instance.bot.guildId);
+            if (g != null) {
+
+                for (Member member : g.getMembers()) {
+                    List<String> atc = wulgarneStatusy.getAvtivity(member);
+                    if (atc.isEmpty() || cache.getIfPresent(member.getId()) != null) continue;
+                    String swear = wulgarneStatusy.containsSwear(atc);
+                    if (swear != null) statusy.put(member.getId(), swear);
+                    else {
+                        swear = wulgarneStatusy.containsLink(atc);
+                        if (swear != null) statusy.put(member.getId(), swear);
+                    }
+                    if (swear != null) cache.put(member.getId(), swear);
+                }
+
+                if (!statusy.isEmpty()) {
+                    NetworkUtil.post(Ustawienia.instance.dash.baseUrl + "/api/statusy/put", statusy);
+                }
+
+            }
+
+         } catch (Exception e) {
+            Log.newError(e, getClass());
+        }
+    }
+
     @Override
     public boolean shutDown() {
-        api.removeEventListener(changeNickname);
         setStart(false);
         return true;
     }
@@ -71,4 +108,5 @@ public class StatusModule implements Modul {
     public void setStart(boolean bol) {
         start = bol;
     }
+
 }

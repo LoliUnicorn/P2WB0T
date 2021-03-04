@@ -78,14 +78,17 @@ public class ChatListener extends ListenerAdapter {
         this.caseDao = caseDao;
         this.statsModule = statsModule;
         this.karyListener = karyListener;
+        this.przeklenstwa = loadPrzeklenstwa();
+    }
 
+    public static List<String> loadPrzeklenstwa() {
         InputStream res = Main.class.getClassLoader().getResourceAsStream("przeklenstwa.api");
         if (res == null) {
             Log.newError("Plik przeklenstwa.api jest nullem", ChatListener.class);
             throw new NullPointerException("Plik przeklenstwa.api jest nullem");
         }
 
-        this.przeklenstwa = new ArrayList<>();
+        List<String> przeklenstwa = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(res, UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) { przeklenstwa.add(line); }
@@ -93,6 +96,7 @@ public class ChatListener extends ListenerAdapter {
             e.printStackTrace();
         }
         if (przeklenstwa.isEmpty()) Log.newError("Lista przeklenstw jest nullem!", ChatListener.class);
+        return przeklenstwa;
     }
 
     @Override

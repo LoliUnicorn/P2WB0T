@@ -18,14 +18,14 @@
 package pl.kamil0024.core.util;
 
 import lombok.Getter;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import okhttp3.*;
 import okhttp3.Response;
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 @SuppressWarnings("ConstantConditions")
 public class NetworkUtil {
@@ -52,6 +52,19 @@ public class NetworkUtil {
                 .build();
         Response res = client.newCall(req).execute();
         return res.body() == null ? null : new JSONArray(res.body().string());
+    }
+
+    public static JSONResponse post(String url, Object data) throws IOException {
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json"), GsonUtil.toJSON(data));
+
+        Request req = new Request.Builder()
+                .header(UA, USER_AGENT)
+                .post(body)
+                .url(url)
+                .build();
+        Response res = client.newCall(req).execute();
+        return res.body() == null ? null : new JSONResponse(res.body().string(), res.code());
     }
 
     public static String encodeURIComponent(String s) {
